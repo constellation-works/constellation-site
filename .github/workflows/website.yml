@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - "public/**"
+      - "wrangler.toml"
       - ".github/workflows/website.yml"
   pull_request:
     paths:
       - "public/**"
+      - "wrangler.toml"
       - ".github/workflows/website.yml"
   workflow_dispatch:
 
