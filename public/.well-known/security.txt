@@ -1,0 +1,10 @@
+# https://constellation-works.com/.well-known/security.txt
+# Report a vulnerability in Constellation projects (Orbit, orbit-research,
+# this site). Please use GitHub's private vulnerability reporting so the
+# report stays confidential until a fix ships.
+
+Contact: https://github.com/constellation-works/constellation-site/security/advisories/new
+Expires: 2027-09-06T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://constellation-works.com/.well-known/security.txt
+Policy: https://github.com/constellation-works/constellation-site/security
