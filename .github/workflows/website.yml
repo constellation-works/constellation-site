@@ -1,0 +1,78 @@
+name: Website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/**"
+      - ".github/workflows/website.yml"
+  pull_request:
+    paths:
+      - "public/**"
+      - ".github/workflows/website.yml"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  publish:
+    name: Publish to Cloudflare Pages
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    concurrency:
+      group: website-production
+      cancel-in-progress: false
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.deployment-url }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Resolve existing Pages project
+        id: target
+        env:
+          PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$PAGES_PROJECT" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+            echo "Set production environment variable CLOUDFLARE_PAGES_PROJECT to the existing Pages project serving constellation-works.com" >&2
+            exit 1
+          fi
+          printf 'project=%s\n' "$PAGES_PROJECT" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy static site
+        id: deploy
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: "4.129.0"
+          command: pages deploy public --project-name=${{ steps.target.outputs.project }} --branch=main --commit-hash=${{ github.sha }}
+
+      - name: Verify deployment and custom domain
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+          PUBLIC_URL: https://constellation-works.com
+        shell: bash
+        run: |
+          set -euo pipefail
+          verify_site() {
+            local base_url="${1%/}"
+            for _ in {1..12}; do
+              if curl --fail --silent --show-error --max-time 20 "$base_url/" \
+                | grep -Fq 'Separate repos, one front door.'; then
+                return 0
+              fi
+              sleep 5
+            done
+            echo "expected homepage did not reach $base_url" >&2
+            return 1
+          }
+          test -n "$DEPLOYMENT_URL"
+          verify_site "$DEPLOYMENT_URL"
+          verify_site "$PUBLIC_URL"
