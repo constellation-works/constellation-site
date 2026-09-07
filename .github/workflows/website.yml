@@ -65,9 +65,13 @@ jobs:
           set -euo pipefail
           verify_site() {
             local base_url="${1%/}"
+            local body
             for _ in {1..12}; do
-              if curl --fail --silent --show-error --max-time 20 "$base_url/" \
-                | grep -Fq 'one front door.'; then
+              # Buffer the response instead of piping into grep: grep -q exits on the
+              # first match, curl then fails to write to the closed pipe (exit 23), and
+              # pipefail would fail the check on a page that is actually correct.
+              body="$(curl --fail --silent --show-error --max-time 20 "$base_url/" || true)"
+              if printf '%s' "$body" | grep -Fq 'one front door.'; then
                 return 0
               fi
               sleep 5
