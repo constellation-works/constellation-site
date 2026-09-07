@@ -13,40 +13,70 @@
 <meta property="og:url" content="https://constellation-works.com/">
 <meta property="og:image" content="https://constellation-works.com/brand/png/cw-lockup-light-1520.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
+/* Light is the base palette; the dark field is the primary direction and takes
+   over under prefers-color-scheme, with [data-theme] winning in both directions. */
 :root {
-  --ink: #0F1A2E;
-  --paper: #EEF2F7;
-  --bg: var(--paper);
-  --fg: var(--ink);
+  --bg: #EEF2F7;
+  --fg: #0F1A2E;
+  --lede: #33415C;
   --muted: #5A6880;
+  --eyebrow: #5A6880;
   --rule: #D4DCE8;
+  --rule-strong: #C6D0E0;
   --card: #FFFFFF;
-  --accent: #2C5FA8;
-  --shadow: 0 1px 2px rgba(15, 26, 46, .06), 0 8px 24px rgba(15, 26, 46, .05);
-  --sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
-  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  --maxw: 1080px;
+  --card-rule: #D4DCE8;
+  --link: #2C5FA8;
+  --link-hover: #0F1A2E;
+  --num: #2C5FA8;
+  --btn-fg: #EEF2F7;
+  --glow-1: rgba(44, 95, 168, .16);
+  --glow-2: rgba(44, 95, 168, .06);
+  --glow-0: rgba(238, 242, 247, 0);
+  --sans: "Helvetica Neue", Helvetica, system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --maxw: 1180px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: var(--ink);
-    --fg: var(--paper);
+    --bg: #0B1526;
+    --fg: #EEF2F7;
+    --lede: #A8B6CE;
     --muted: #8E9CB4;
-    --rule: #22304C;
-    --card: #16233B;
-    --accent: #8FB4EC;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+    --eyebrow: #6E7F9C;
+    --rule: #1B2942;
+    --rule-strong: #2A3A58;
+    --card: #131F35;
+    --card-rule: #22304C;
+    --link: #8FB4EC;
+    --link-hover: #C3D8F6;
+    --num: #2C5FA8;
+    --btn-fg: #0B1526;
+    --glow-1: rgba(44, 95, 168, .28);
+    --glow-2: rgba(44, 95, 168, .10);
+    --glow-0: rgba(11, 21, 38, 0);
   }
 }
 :root[data-theme="dark"] {
-  --bg: var(--ink);
-  --fg: var(--paper);
+  --bg: #0B1526;
+  --fg: #EEF2F7;
+  --lede: #A8B6CE;
   --muted: #8E9CB4;
-  --rule: #22304C;
-  --card: #16233B;
-  --accent: #8FB4EC;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+  --eyebrow: #6E7F9C;
+  --rule: #1B2942;
+  --rule-strong: #2A3A58;
+  --card: #131F35;
+  --card-rule: #22304C;
+  --link: #8FB4EC;
+  --link-hover: #C3D8F6;
+  --num: #2C5FA8;
+  --btn-fg: #0B1526;
+  --glow-1: rgba(44, 95, 168, .28);
+  --glow-2: rgba(44, 95, 168, .10);
+  --glow-0: rgba(11, 21, 38, 0);
 }
 
 * { box-sizing: border-box; }
@@ -59,9 +89,23 @@ body {
   font-size: 17px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 a { color: inherit; }
-.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 40px; position: relative; }
+
+/* A single soft field behind the mark — atmosphere, not a decorative wash. */
+.glow {
+  position: absolute; top: -220px; right: -180px;
+  width: 1000px; height: 1000px; border-radius: 50%;
+  background: radial-gradient(circle, var(--glow-1) 0%, var(--glow-2) 38%, var(--glow-0) 68%);
+  pointer-events: none; z-index: 0;
+}
+
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--eyebrow); margin: 0;
+}
 
 /* ---------- header ---------- */
 header {
@@ -70,40 +114,47 @@ header {
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   backdrop-filter: saturate(180%) blur(12px);
 }
-.bar { display: flex; align-items: center; gap: 16px; height: 64px; }
+.bar { display: flex; align-items: center; gap: 16px; height: 76px; }
 .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; margin-right: auto; }
 .brand svg { width: 30px; height: 30px; display: block; }
 .brand b { font-weight: 600; letter-spacing: -.02em; font-size: 17px; white-space: nowrap; }
 .brand b span { color: var(--muted); font-weight: 500; }
-nav { display: flex; gap: 22px; font-size: 15px; }
+nav { display: flex; gap: 26px; font-size: 15px; }
 nav a { color: var(--muted); text-decoration: none; }
 nav a:hover { color: var(--fg); }
 
 /* ---------- hero ---------- */
-.hero { padding: 92px 0 76px; border-bottom: 1px solid var(--rule); }
-.hero-grid { display: grid; grid-template-columns: 1fr 260px; gap: 56px; align-items: center; }
+.hero { border-bottom: 1px solid var(--rule); position: relative; overflow: hidden; }
+.hero-grid {
+  padding: 116px 40px 104px;
+  display: grid; grid-template-columns: minmax(0, 1fr) 400px;
+  gap: 64px; align-items: center;
+}
+.hero .eyebrow { margin-bottom: 28px; }
 h1 {
-  font-size: clamp(34px, 5.2vw, 54px);
-  line-height: 1.08; letter-spacing: -.035em;
-  font-weight: 600; margin: 0 0 22px;
-  text-wrap: balance;
+  font-size: clamp(42px, 6vw, 84px);
+  line-height: 1.02; letter-spacing: -.045em;
+  font-weight: 600; margin: 0 0 28px;
 }
-.lede { font-size: clamp(17px, 2vw, 20px); color: var(--muted); margin: 0 0 30px; max-width: 46ch; }
-.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+h1 .second { color: var(--muted); }
+.lede { font-size: clamp(17px, 1.6vw, 20px); line-height: 1.55; color: var(--lede); margin: 0 0 38px; max-width: 30ch; }
+.cta { display: flex; gap: 12px; }
 .btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 18px; border-radius: 8px;
-  font-size: 15px; font-weight: 500; text-decoration: none;
-  border: 1px solid var(--rule); transition: transform .12s ease, border-color .12s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 13px 22px; border-radius: 8px;
+  font-size: 15.5px; font-weight: 500; text-decoration: none;
+  border: 1px solid var(--rule-strong);
+  transition: transform .12s ease, border-color .12s ease;
 }
+.btn svg { width: 15px; height: 15px; }
 .btn:hover { transform: translateY(-1px); border-color: var(--muted); }
-.btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.btn.primary { background: var(--fg); color: var(--btn-fg); border-color: var(--fg); }
+.btn.primary svg { stroke: var(--btn-fg); }
 
 /* orrery */
-.orrery { justify-self: center; width: 240px; height: 240px; color: var(--fg); opacity: .92; }
-.orrery .ring { fill: none; stroke: currentColor; stroke-width: 3.4; opacity: .42; }
-.orrery .body { fill: currentColor; }
-.orrery .core { fill: currentColor; }
+.orrery { justify-self: center; width: 400px; height: 400px; color: var(--fg); }
+.orrery .ring { fill: none; stroke: currentColor; stroke-width: 1.6; opacity: .42; }
+.orrery .body, .orrery .core { fill: currentColor; }
 
 /* Bodies ride their own ellipse via a CSS motion path, so they stay on the ring
    and stay round. offset-distance alone is animated, so reduced-motion parks
@@ -121,56 +172,74 @@ h1 {
 }
 @keyframes orbit { from { offset-distance: 0%; } to { offset-distance: 100%; } }
 
-/* ---------- model ---------- */
-.model { padding: 68px 0; border-bottom: 1px solid var(--rule); }
-.eyebrow {
-  font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--muted); margin: 0 0 26px;
+/* ---------- the model ---------- */
+.model { border-bottom: 1px solid var(--rule); position: relative; }
+.model .wrap { padding-top: 78px; padding-bottom: 84px; }
+.model .eyebrow { margin-bottom: 44px; }
+.points { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; }
+.points > div {
+  display: flex; flex-direction: column; gap: 12px;
+  border-top: 1px solid var(--rule-strong); padding-top: 20px;
 }
-.points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-.points h3 { font-size: 17px; margin: 0 0 8px; letter-spacing: -.01em; font-weight: 600; }
-.points p { margin: 0; color: var(--muted); font-size: 15.5px; }
+.num { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; color: var(--num); }
+.points h3 { font-size: 19px; margin: 0; letter-spacing: -.015em; font-weight: 600; }
+.points p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.62; }
 
 /* ---------- projects ---------- */
-.projects { padding: 68px 0 80px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 18px; }
+.projects { position: relative; }
+.projects .wrap { padding-top: 78px; padding-bottom: 96px; }
+.projects .eyebrow { margin-bottom: 32px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .card {
-  background: var(--card); border: 1px solid var(--rule); border-radius: 12px;
-  padding: 24px; display: flex; flex-direction: column; gap: 10px;
-  transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+  background: var(--card); border: 1px solid var(--card-rule); border-radius: 14px;
+  padding: 32px; display: flex; flex-direction: column; gap: 14px;
+  transition: transform .14s ease, border-color .14s ease;
 }
-.card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--muted); }
-.card .top { display: flex; align-items: baseline; gap: 10px; }
-.card h3 { margin: 0; font-size: 18px; letter-spacing: -.015em; font-weight: 600; }
+.card:hover { transform: translateY(-2px); border-color: var(--muted); }
+.card .top { display: flex; align-items: baseline; gap: 12px; }
+.card h3 { margin: 0; font-size: 24px; letter-spacing: -.02em; font-weight: 600; }
 .tag {
-  font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--muted); border: 1px solid var(--rule); border-radius: 999px; padding: 2px 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--rule-strong); border-radius: 999px; padding: 3px 10px;
 }
-.card p { margin: 0; color: var(--muted); font-size: 15px; flex: 1; }
-.links { display: flex; gap: 16px; font-size: 14px; margin-top: 4px; }
-.links a { color: var(--accent); text-decoration: none; font-weight: 500; }
-.links a:hover { text-decoration: underline; }
+.card p { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.62; flex: 1; }
+.links { display: flex; gap: 20px; font-size: 14.5px; margin-top: 6px; }
+.links a { color: var(--link); text-decoration: none; font-weight: 500; }
+.links a:hover { color: var(--link-hover); text-decoration: underline; }
 
 /* ---------- footer ---------- */
-footer { border-top: 1px solid var(--rule); padding: 34px 0 56px; color: var(--muted); font-size: 14.5px; }
-.foot { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
-.foot a { color: var(--muted); }
-.foot .sp { margin-left: auto; }
+footer { border-top: 1px solid var(--rule); position: relative; }
+footer .wrap {
+  padding-top: 34px; padding-bottom: 56px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 16px;
+  color: var(--eyebrow); font-size: 14.5px;
+}
+footer a { color: var(--eyebrow); }
+footer .sp { margin-left: auto; }
 
-@media (max-width: 860px) {
-  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-  .orrery { justify-self: start; width: 180px; height: 180px; }
-  .points { grid-template-columns: 1fr; gap: 26px; }
-  .hero { padding: 62px 0 54px; }
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 48px; padding: 78px 40px 72px; }
+  .orrery { justify-self: start; width: 300px; height: 300px; }
+  .points { grid-template-columns: 1fr; gap: 30px; }
+  .grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
-  /* Keep the lockup on one line and out of the nav's way. */
-  .wrap { padding: 0 20px; }
+  /* Keep the lockup on one line and out of the nav's way; CTAs go full-width
+     so both clear a 44px touch target. */
+  .wrap, .hero-grid { padding-left: 20px; padding-right: 20px; }
+  .hero-grid { padding-top: 44px; padding-bottom: 46px; gap: 42px; }
   .brand b { font-size: 15px; }
   .brand b span { display: none; }
   .brand svg { width: 26px; height: 26px; }
-  nav { gap: 15px; font-size: 14px; }
-  .orrery { width: 150px; height: 150px; }
+  .bar { height: 60px; }
+  nav { gap: 16px; font-size: 14px; }
+  .cta { flex-direction: column; }
+  .btn { height: 50px; padding: 0 22px; font-size: 16px; }
+  .orrery { justify-self: center; width: 220px; height: 220px; }
+  .model .wrap, .projects .wrap { padding-top: 44px; padding-bottom: 48px; }
+  .card { padding: 22px; }
+  .card h3 { font-size: 20px; }
+  footer .sp { margin-left: 0; }
 }
 </style>
 </head>
@@ -206,14 +275,18 @@ footer { border-top: 1px solid var(--rule); padding: 34px 0 56px; color: var(--m
 
 <section class="hero">
   <div class="wrap hero-grid">
-    <div>
-      <h1>Separate repos, one front door.</h1>
+    <div class="glow" aria-hidden="true"></div>
+    <div style="position: relative;">
+      <p class="eyebrow">Local-first engineering for AI coding agents</p>
+      <h1>Separate repos,<br><span class="second">one front door.</span></h1>
       <p class="lede">
-        Constellation is a set of independent, local-first projects — an engineering
-        framework for AI coding agents, and the reproducible research tooling built on it.
+        A set of independent, local-first projects — an engineering framework for AI
+        coding agents, and the reproducible research tooling built on it.
       </p>
       <div class="cta">
-        <a class="btn primary" href="https://orbit-cli.com">Orbit &rarr;</a>
+        <a class="btn primary" href="https://orbit-cli.com">Explore Orbit
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
         <a class="btn" href="#projects">All projects</a>
       </div>
     </div>
@@ -243,16 +316,19 @@ footer { border-top: 1px solid var(--rule); padding: 34px 0 56px; color: var(--m
     <p class="eyebrow">The model</p>
     <div class="points">
       <div>
+        <span class="num">01</span>
         <h3>Local-first</h3>
         <p>Work runs on hardware you own, against checkouts you control. No hosted control
         plane sits between you and your own repositories.</p>
       </div>
       <div>
+        <span class="num">02</span>
         <h3>Every change is a task</h3>
         <p>Agent work is durable and reviewable rather than transient — a task record, a
         structured audit of every tool call, and a backlog that survives the session.</p>
       </div>
       <div>
+        <span class="num">03</span>
         <h3>Independent repos</h3>
         <p>Each project stands alone with its own history and release cadence. The umbrella
         is a router, not a monorepo.</p>
@@ -287,15 +363,12 @@ footer { border-top: 1px solid var(--rule); padding: 34px 0 56px; color: var(--m
         </div>
       </article>
 
-
-
-
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap foot">
+  <div class="wrap">
     <span>&copy; 2026 constellation works</span>
     <span class="sp"><a href="https://github.com/constellation-works">github.com/constellation-works</a></span>
   </div>
