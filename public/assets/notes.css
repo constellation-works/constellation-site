@@ -256,7 +256,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 /* ---------- narrower screens: one column, margin content moves inline ---------- */
 @media (max-width: 1000px) {
   .note, .index { display: block; max-width: 36em; }
-  .rail { display: flex; flex-wrap: wrap; gap: 4px 20px; padding: 0; margin: 0 0 22px; }
+  .rail { display: flex; flex-wrap: wrap; gap: 4px 20px; padding: 24px 0 0; margin: 48px 0 0; border-top: 1px solid var(--rule); }
   .rail p { margin: 0; }
   .rail .files { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; flex-basis: 100%; }
   .rail .files li { margin: 0; }

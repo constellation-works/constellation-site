@@ -221,12 +221,14 @@ def build_note(note):
     # Everything beside index.md is published; the link card is not listed as data.
     files = sorted(f for f in src.iterdir() if f.is_file() and f.name != "index.md")
     data = [f for f in files if f.name != note.get("image")]
+    # The rail comes last so narrow screens list the data after the text; wide screens
+    # still place it in the margin beside the title (grid-row in notes.css).
     body = f"""<article class="note">
-{rail(note, data)}
 <h1>{e(note['title'])}</h1>
 {meta_block(note)}
 <p class="summary">{e(note['summary'])}</p>
 {render_body(note['body'])}
+{rail(note, data)}
 </article>"""
     dest = OUT / note["slug"]
     dest.mkdir(parents=True)
