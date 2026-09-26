@@ -120,7 +120,7 @@ header {
 /* Matches the logo lockup: Geist 500, lowercase, second word muted. */
 .brand b { font-weight: 500; letter-spacing: -.02em; font-size: 17px; white-space: nowrap; }
 .brand b span { color: var(--muted); }
-nav { display: flex; gap: 26px; font-size: 15px; }
+nav { display: flex; align-items: center; gap: 26px; font-size: 15px; }
 nav a { color: var(--muted); text-decoration: none; }
 nav a:hover { color: var(--fg); }
 /* Theme toggle. Delivered `hidden` and unhidden by the inline script, so a page
@@ -285,9 +285,9 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
   .brand svg { width: 26px; height: 26px; }
   .bar { height: 60px; }
   nav { gap: 14px; font-size: 14px; }
-  /* The bar cannot seat the lockup, three links and a 44px toggle at 390px;
-     the hero CTA and the Orbit card already carry the Orbit link. */
-  nav .nav-orbit { display: none; }
+  /* The bar cannot seat the lockup, four links and a 44px toggle at 390px;
+     the hero CTAs already carry the Orbit and projects links. */
+  nav .nav-orbit, nav .nav-projects { display: none; }
   .theme { width: 44px; height: 44px; margin-left: 0; }
   .install { display: flex; width: 100%; font-size: 13px; padding: 10px 8px 10px 14px; }
   .install code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -325,7 +325,8 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
       <b>constellation<span> works</span></b>
     </a>
     <nav>
-      <a href="#projects">Projects</a>
+      <a class="nav-projects" href="#projects">Projects</a>
+      <a href="/notes/">Notes</a>
       <a class="nav-orbit" href="https://orbit-cli.com">Orbit</a>
       <a href="https://github.com/constellation-works">GitHub</a>
       <button class="theme" type="button" aria-label="Switch to light theme" hidden>
