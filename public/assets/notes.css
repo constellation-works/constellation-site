@@ -120,6 +120,13 @@ main.wrap { padding-top: 88px; padding-bottom: 112px; }
 .status { display: inline-flex; align-items: center; gap: 8px; color: var(--proposed); }
 .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 
+/* Under the title: author, dates, tags, as aligned label and value rows. */
+.meta { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 20px; margin: -4px 0 32px; font-size: 14px; line-height: 1.55; }
+.meta div { display: contents; }
+.meta dt { color: var(--muted); }
+.meta dd { margin: 0; color: var(--fg); }
+.meta .tag + .tag::before { content: ", "; }
+
 /* ---------- type ---------- */
 h1 {
   font-size: clamp(36px, 4.4vw, 54px); line-height: 1.06; letter-spacing: -.038em;
