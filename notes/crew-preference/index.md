@@ -59,24 +59,42 @@ its picks match the menu; above 1 means it favours its own provider.
 
 All 47 assignments named a crew on the menu.
 
-| Orchestrator | Own provider | Own-provider picks | Expected from menu | Score |
-|---|---|--:|--:|--:|
-| `astra` | OpenAI | 6 of 14 | 6.0 | 1.00 |
-| `opus` | Anthropic | 5 of 19 | 5.4 | 0.92 |
-| `gemini-flash` | Google | 3 of 14 | 2.0 | 1.50 |
+<figure class="wide strip" aria-labelledby="strip-cap">
+<figcaption id="strip-cap"><strong>Own-provider picks against the menu.</strong> The tick is
+the share each orchestrator would give its own provider by picking from the menu at
+random; the dot is the share it actually gave, on a 0 to 50% scale. Score is picked
+divided by expected.</figcaption>
+<div class="key" aria-hidden="true"><span class="k-dot">Picked</span><span class="k-tick">Menu share</span></div>
+<div role="table" aria-labelledby="strip-cap">
+<div class="head" role="row"><span role="columnheader">Orchestrator</span><span class="axis" role="columnheader" aria-label="Own-provider share, 0 to 50%"><span style="--x:0">0%</span><span style="--x:50">25%</span><span style="--x:100">50%</span></span><span role="columnheader">Picked</span><span role="columnheader">Expected</span><span role="columnheader">Score</span></div>
+<div class="row" role="row"><span class="who" role="rowheader"><code>astra</code><small>OpenAI</small></span><span class="track" style="--exp:85.71;--obs:85.71" role="cell"><span class="sr-only">43% own-provider picks against a 43% menu share</span><i class="tick"></i><i class="gap"></i><i class="dot"></i></span><span role="cell">6 of 14</span><span role="cell">6.0</span><span role="cell">1.00</span></div>
+<div class="row" role="row"><span class="who" role="rowheader"><code>opus</code><small>Anthropic</small></span><span class="track" style="--exp:57.14;--obs:52.63" role="cell"><span class="sr-only">26% own-provider picks against a 29% menu share</span><i class="tick"></i><i class="gap"></i><i class="dot"></i></span><span role="cell">5 of 19</span><span role="cell">5.4</span><span role="cell">0.92</span></div>
+<div class="row" role="row"><span class="who" role="rowheader"><code>gemini-flash</code><small>Google</small></span><span class="track" style="--exp:28.57;--obs:42.86" role="cell"><span class="sr-only">21% own-provider picks against a 14% menu share</span><i class="tick"></i><i class="gap"></i><i class="dot"></i></span><span role="cell">3 of 14</span><span role="cell">2.0</span><span role="cell">1.50</span></div>
+</div>
+</figure>
 
 `astra` matched the menu exactly. `opus` came in slightly under, and gave OpenAI
 models the most tasks (10 of 19). `gemini-flash` is the only score above 1, and it
 rests on one extra task: three self-assignments where two were expected.
 
 No orchestrator leaned on a single crew. Each used all seven, and no crew got more
-than 21% of any orchestrator's tasks:
+than 21% of any orchestrator's tasks.
 
-| Orchestrator | `sol` | `grok` | `gemini-flash` | `opus` | `sonnet` | `luna` | `terra` |
-|---|--:|--:|--:|--:|--:|--:|--:|
-| `astra` | 2 | 1 | 1 | 3 | 3 | 1 | 3 |
-| `opus` | 3 | 3 | 1 | 3 | 2 | 3 | 4 |
-| `gemini-flash` | 2 | 1 | 3 | 2 | 3 | 2 | 1 |
+<figure class="wide heat" aria-labelledby="heat-cap">
+<figcaption id="heat-cap"><strong>Tasks each orchestrator gave each crew.</strong> Darker
+cells hold more tasks; bold marks the orchestrator's own provider.</figcaption>
+<div class="table"><table>
+<thead>
+<tr><th rowspan="2">Orchestrator</th><th colspan="2">Anthropic</th><th colspan="3">OpenAI</th><th>xAI</th><th>Google</th></tr>
+<tr><th><code>opus</code></th><th><code>sonnet</code></th><th><code>sol</code></th><th><code>luna</code></th><th><code>terra</code></th><th><code>grok</code></th><th><code>gemini-flash</code></th></tr>
+</thead>
+<tbody>
+<tr><th scope="row"><code>astra</code></th><td class="l3">3</td><td class="l3">3</td><td class="l2"><strong>2</strong></td><td class="l1"><strong>1</strong></td><td class="l3"><strong>3</strong></td><td class="l1">1</td><td class="l1">1</td></tr>
+<tr><th scope="row"><code>opus</code></th><td class="l3"><strong>3</strong></td><td class="l2"><strong>2</strong></td><td class="l3">3</td><td class="l3">3</td><td class="l4">4</td><td class="l3">3</td><td class="l1">1</td></tr>
+<tr><th scope="row"><code>gemini-flash</code></th><td class="l2">2</td><td class="l3">3</td><td class="l2">2</td><td class="l2">2</td><td class="l1">1</td><td class="l1">1</td><td class="l3"><strong>3</strong></td></tr>
+</tbody>
+</table></div>
+</figure>
 
 ## What the reasons say
 

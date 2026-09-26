@@ -14,7 +14,7 @@ Front matter is `key: value` lines between `---` fences:
     image:    optional file in the note's directory for og:image (1200x630)
 
 Drafts are skipped unless --drafts is passed, so merging a draft never publishes it.
-With --drafts they build with a draft banner and noindex, for local review.
+With --drafts they build marked as drafts and noindex, for local review.
 
 Usage:  python3 build.py [--drafts]     (needs `markdown`; see README.md)
 """
@@ -72,9 +72,11 @@ def render_body(md):
         md, extensions=["tables", "fenced_code", "toc"], output_format="html"
     )
     # Tables scroll inside their own box so a wide one never scrolls the page.
-    return out.replace("<table>", '<div class="table"><table>').replace(
+    out = out.replace("<table>", '<div class="table"><table>').replace(
         "</table>", "</table></div>"
     )
+    # A quote's attribution is the paragraph that starts with an em dash.
+    return out.replace("<p>\u2014 ", '<p class="by">\u2014 ')
 
 
 def human(d):
@@ -163,30 +165,47 @@ def page(title, description, url, body, image=None, draft=False, kind="website")
 """
 
 
-def banner(note):
+def status(note):
     if note["status"] != "draft":
         return ""
-    return '<p class="draft">Draft. Not published; built with --drafts for review.</p>\n'
+    return '<p class="status">Draft, not published</p>\n'
+
+
+def size(path):
+    n = path.stat().st_size
+    return f"{n} B" if n < 1024 else f"{round(n / 1024)} KB"
+
+
+def rail(note, files):
+    """Margin column: date or draft status, then the files the note publishes."""
+    date = note["date"]
+    when = f'<p><time datetime="{date.isoformat()}">{human(date)}</time></p>\n' if date else ""
+    items = "".join(
+        f'<li><a href="{html.escape(f.name)}">{html.escape(f.name)}</a> {size(f)}</li>\n'
+        for f in files
+    )
+    listing = f'<ul class="files">\n<li>Data</li>\n{items}</ul>\n' if files else ""
+    return f'<aside class="rail">\n{when}{status(note)}{listing}</aside>'
 
 
 def build_note(note):
     e = html.escape
     url = f"{SITE}/notes/{note['slug']}/"
     image = f"{url}{note['image']}" if note.get("image") else None
-    date = note["date"]
-    time = f'<time datetime="{date.isoformat()}">{human(date)}</time>' if date else human(date)
+    src = SRC / note["slug"]
+    # Everything beside index.md is published; the link card is not listed as data.
+    files = sorted(f for f in src.iterdir() if f.is_file() and f.name != "index.md")
+    data = [f for f in files if f.name != note.get("image")]
     body = f"""<article class="note">
-{banner(note)}<p class="eyebrow"><a href="/notes/">Notes</a> · {time}</p>
+{rail(note, data)}
 <h1>{e(note['title'])}</h1>
 <p class="summary">{e(note['summary'])}</p>
 {render_body(note['body'])}
 </article>"""
     dest = OUT / note["slug"]
     dest.mkdir(parents=True)
-    src = SRC / note["slug"]
-    for f in src.iterdir():
-        if f.name != "index.md" and f.is_file():
-            shutil.copy2(f, dest / f.name)
+    for f in files:
+        shutil.copy2(f, dest / f.name)
     title = f"{note['title']} — Constellation Works"
     (dest / "index.html").write_text(
         page(title, note["summary"], url, body, image, note["status"] == "draft", "article"),
@@ -198,18 +217,17 @@ def build_index(notes):
     e = html.escape
     items = "".join(
         f"""<li>
-  {banner(n)}<p class="eyebrow">{human(n['date'])}</p>
-  <h2><a href="/notes/{n['slug']}/">{e(n['title'])}</a></h2>
-  <p>{e(n['summary'])}</p>
+  <div class="when"><p>{human(n['date']) if n['date'] else ''}</p>{status(n)}</div>
+  <div><h2><a href="/notes/{n['slug']}/">{e(n['title'])}</a></h2>
+  <p>{e(n['summary'])}</p></div>
 </li>
 """
         for n in notes
-    ) or '<li><p>Nothing published yet.</p></li>\n'
+    ) or '<li><div></div><p>No notes are published yet.</p></li>\n'
     body = f"""<section class="index">
-<p class="eyebrow">Notes</p>
 <h1>Notes</h1>
 <p class="summary">Research and operating data from building and running Orbit, a
-local-first runtime for coding agents. Each note links the data behind it.</p>
+local-first runtime for coding agents. Each note publishes the data behind it.</p>
 <ul class="notes">
 {items}</ul>
 </section>"""
