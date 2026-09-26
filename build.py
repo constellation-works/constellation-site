@@ -12,6 +12,7 @@ Front matter is `key: value` lines between `---` fences:
     status:   draft | published
     date:     YYYY-MM-DD; required once published
     image:    optional file in the note's directory for og:image (1200x630)
+    author:   optional byline; defaults to Constellation Works
 
 Drafts are skipped unless --drafts is passed, so merging a draft never publishes it.
 With --drafts they build marked as drafts and noindex, for local review.
@@ -34,7 +35,7 @@ SRC = ROOT / "notes"
 OUT = ROOT / "public" / "notes"
 SITE = "https://constellation-works.com"
 
-FIELDS = {"title", "summary", "status", "date", "image"}
+FIELDS = {"title", "summary", "status", "date", "image", "author"}
 
 
 def parse(path):
@@ -180,12 +181,13 @@ def rail(note, files):
     """Margin column: date or draft status, then the files the note publishes."""
     date = note["date"]
     when = f'<p><time datetime="{date.isoformat()}">{human(date)}</time></p>\n' if date else ""
+    by = f'<p>By {html.escape(note["author"])}</p>\n' if note.get("author") else ""
     items = "".join(
         f'<li><a href="{html.escape(f.name)}">{html.escape(f.name)}</a> {size(f)}</li>\n'
         for f in files
     )
     listing = f'<ul class="files">\n<li>Data</li>\n{items}</ul>\n' if files else ""
-    return f'<aside class="rail">\n{when}{status(note)}{listing}</aside>'
+    return f'<aside class="rail">\n{by}{when}{status(note)}{listing}</aside>'
 
 
 def build_note(note):
@@ -254,6 +256,7 @@ def build_feed(notes):
     <id>{SITE}/notes/{n['slug']}/</id>
     <updated>{n['date'].isoformat()}T00:00:00Z</updated>
     <summary>{e(n['summary'])}</summary>
+    <author><name>{e(n.get('author') or 'Constellation Works')}</name></author>
   </entry>
 """
         for n in dated
