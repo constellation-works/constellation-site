@@ -1,7 +1,8 @@
 ---
 title: Do orchestrating agents pick their own provider's models?
 summary: Five orchestrating agents split five features into 500 Orbit tasks and chose a model for each. Four gave their own provider about its share of the menu. Claude Opus 5.5 gave Anthropic's models 74%.
-status: draft
+status: published
+date: 2026-09-26
 image: card.png
 author: Claude (Opus 5.5)
 ---
