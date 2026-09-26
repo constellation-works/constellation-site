@@ -3,80 +3,80 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Constellation — local-first tools and research</title>
-<meta name="description" content="Orbit, the engineering framework for AI coding agents, and the reproducible research tooling built on top of it.">
+<title>Constellation Works — local-first tools and research</title>
+<meta name="description" content="Constellation Works builds Orbit, a local-first runtime for coding agents, and the research tooling taking shape beside it.">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/brand/png/cw-favicon-180.png">
-<meta property="og:title" content="Constellation">
-<meta property="og:description" content="A family of independent, local-first repositories. Separate repos, one front door.">
+<meta property="og:title" content="Constellation Works">
+<meta property="og:description" content="Constellation Works builds Orbit, a local-first runtime for coding agents, and the research tooling taking shape beside it.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://constellation-works.com/">
 <meta property="og:image" content="https://constellation-works.com/brand/png/cw-lockup-light-1520.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
 /* Light is the base palette; the dark field is the primary direction and takes
    over under prefers-color-scheme, with [data-theme] winning in both directions. */
 :root {
-  --bg: #EEF2F7;
-  --fg: #0F1A2E;
-  --lede: #33415C;
-  --muted: #5A6880;
-  --eyebrow: #5A6880;
-  --rule: #D4DCE8;
-  --rule-strong: #C6D0E0;
-  --card: #FFFFFF;
-  --card-rule: #D4DCE8;
-  --link: #2C5FA8;
-  --link-hover: #0F1A2E;
-  --num: #2C5FA8;
-  --btn-fg: #EEF2F7;
-  --glow-1: rgba(44, 95, 168, .16);
-  --glow-2: rgba(44, 95, 168, .06);
-  --glow-0: rgba(238, 242, 247, 0);
-  --sans: "Helvetica Neue", Helvetica, system-ui, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --bg: #FFFFFF;
+  --fg: #17171A;
+  --lede: #30313A;
+  --muted: #5F606B;
+  --eyebrow: #5F606B;
+  --rule: #ECEEF3;
+  --rule-strong: #D8DBE2;
+  --card: #F4F5F8;
+  --card-rule: #D8DBE2;
+  --link: #2F67D8;
+  --link-hover: #173B84;
+  --num: #2F67D8;
+  --btn-fg: #FFFFFF;
+  --glow-1: rgba(47, 103, 216, .12);
+  --glow-2: rgba(47, 103, 216, .04);
+  --glow-0: rgba(255, 255, 255, 0);
+  --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --maxw: 1180px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0B1526;
-    --fg: #EEF2F7;
-    --lede: #A8B6CE;
-    --muted: #8E9CB4;
-    --eyebrow: #6E7F9C;
-    --rule: #1B2942;
-    --rule-strong: #2A3A58;
-    --card: #131F35;
-    --card-rule: #22304C;
-    --link: #8FB4EC;
-    --link-hover: #C3D8F6;
-    --num: #2C5FA8;
-    --btn-fg: #0B1526;
-    --glow-1: rgba(44, 95, 168, .28);
-    --glow-2: rgba(44, 95, 168, .10);
-    --glow-0: rgba(11, 21, 38, 0);
+    --bg: #0A0A0A;
+    --fg: #EDEDF0;
+    --lede: #C7C7CC;
+    --muted: #9B9BA3;
+    --eyebrow: #9B9BA3;
+    --rule: #1B1B21;
+    --rule-strong: #26262B;
+    --card: #17171A;
+    --card-rule: #26262B;
+    --link: #8AB3FF;
+    --link-hover: #C9DDFF;
+    --num: #6E9FFF;
+    --btn-fg: #0A0A0A;
+    --glow-1: rgba(110, 159, 255, .16);
+    --glow-2: rgba(110, 159, 255, .05);
+    --glow-0: rgba(10, 10, 10, 0);
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0B1526;
-  --fg: #EEF2F7;
-  --lede: #A8B6CE;
-  --muted: #8E9CB4;
-  --eyebrow: #6E7F9C;
-  --rule: #1B2942;
-  --rule-strong: #2A3A58;
-  --card: #131F35;
-  --card-rule: #22304C;
-  --link: #8FB4EC;
-  --link-hover: #C3D8F6;
-  --num: #2C5FA8;
-  --btn-fg: #0B1526;
-  --glow-1: rgba(44, 95, 168, .28);
-  --glow-2: rgba(44, 95, 168, .10);
-  --glow-0: rgba(11, 21, 38, 0);
+  --bg: #0A0A0A;
+  --fg: #EDEDF0;
+  --lede: #C7C7CC;
+  --muted: #9B9BA3;
+  --eyebrow: #9B9BA3;
+  --rule: #1B1B21;
+  --rule-strong: #26262B;
+  --card: #17171A;
+  --card-rule: #26262B;
+  --link: #8AB3FF;
+  --link-hover: #C9DDFF;
+  --num: #6E9FFF;
+  --btn-fg: #0A0A0A;
+  --glow-1: rgba(110, 159, 255, .16);
+  --glow-2: rgba(110, 159, 255, .05);
+  --glow-0: rgba(10, 10, 10, 0);
 }
 
 * { box-sizing: border-box; }
@@ -117,8 +117,9 @@ header {
 .bar { display: flex; align-items: center; gap: 16px; height: 76px; }
 .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; margin-right: auto; }
 .brand svg { width: 30px; height: 30px; display: block; }
-.brand b { font-weight: 600; letter-spacing: -.02em; font-size: 17px; white-space: nowrap; }
-.brand b span { color: var(--muted); font-weight: 500; }
+/* Matches the logo lockup: Geist 500, lowercase, second word muted. */
+.brand b { font-weight: 500; letter-spacing: -.02em; font-size: 17px; white-space: nowrap; }
+.brand b span { color: var(--muted); }
 nav { display: flex; gap: 26px; font-size: 15px; }
 nav a { color: var(--muted); text-decoration: none; }
 nav a:hover { color: var(--fg); }
@@ -176,7 +177,7 @@ h1 .second { color: var(--muted); }
 .install .copy[hidden] { display: none; }
 .install .copy:hover, .install .copy[data-state="ok"] { color: var(--link); }
 .install .copy:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-.install .copy[data-state="error"] { color: #C0392B; }
+.install .copy[data-state="error"] { color: #B3261E; }
 :root[data-theme="dark"] .install .copy[data-state="error"] { color: #FF9D9D; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .install .copy[data-state="error"] { color: #FF9D9D; } }
 .sr-only { border: 0; clip-path: inset(50%); height: 1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
@@ -342,9 +343,9 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
       <p class="eyebrow">Local-first engineering for AI coding agents</p>
       <h1>Separate repos,<br><span class="second">one front door.</span></h1>
       <p class="lede">
-        Independent, local-first projects: an engineering framework for AI coding
-        agents, and the tools taking shape beside it — code graphs, idea lineage,
-        reproducible research.
+        Independent, local-first projects: Orbit, a runtime for coding agents, and
+        the tools taking shape beside it — code graphs, idea lineage, reproducible
+        research.
       </p>
       <div class="install">
         <span class="prompt" aria-hidden="true">$</span>
@@ -417,7 +418,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 
       <article class="card">
         <div class="top"><h3>Orbit</h3><span class="tag">Rust · released</span></div>
-        <p>The engineering framework for AI coding agents. A durable task for every change,
+        <p>A local-first runtime for coding agents. A durable task for every change,
         structured audit of every tool call, conflict-aware parallel dispatch, and continuous
         review sweeps that file findings back into the backlog.</p>
         <div class="links">
@@ -462,7 +463,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 
 <footer>
   <div class="wrap">
-    <span>&copy; 2026 constellation works</span>
+    <span>&copy; 2026 Constellation Works</span>
     <span class="sp">
       <a href="https://github.com/constellation-works/homebrew-tap">Homebrew tap</a>
       <a href="https://github.com/constellation-works">github.com/constellation-works</a>
