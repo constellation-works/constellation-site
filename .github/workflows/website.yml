@@ -5,11 +5,15 @@ on:
     branches: [main]
     paths:
       - "public/**"
+      - "notes/**"
+      - "build.py"
       - "wrangler.toml"
       - ".github/workflows/website.yml"
   pull_request:
     paths:
       - "public/**"
+      - "notes/**"
+      - "build.py"
       - "wrangler.toml"
       - ".github/workflows/website.yml"
   workflow_dispatch:
@@ -17,6 +21,25 @@ on:
 permissions: {}
 
 jobs:
+  # Builds the Notes section on pull requests so a broken note fails before merge.
+  # Drafts are skipped here exactly as in production.
+  build:
+    name: Build notes
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Build notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install --quiet markdown==3.8.2
+          "$RUNNER_TEMP/venv/bin/python" build.py
+
   publish:
     name: Publish to Cloudflare Pages
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -45,6 +68,14 @@ jobs:
             exit 1
           fi
           printf 'project=%s\n' "$PAGES_PROJECT" >> "$GITHUB_OUTPUT"
+
+      - name: Build notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install --quiet markdown==3.8.2
+          "$RUNNER_TEMP/venv/bin/python" build.py
 
       - name: Deploy static site
         id: deploy
