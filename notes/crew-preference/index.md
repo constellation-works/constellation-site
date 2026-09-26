@@ -38,13 +38,13 @@ of seven crews, all available:
 
 | Crew | Provider |
 |---|---|
-| `opus`, `sonnet` | Anthropic (Claude Opus, Claude Sonnet) |
-| `sol`, `luna`, `terra` | OpenAI (GPT models, run through Codex) |
-| `grok` | xAI (Grok) |
-| `gemini-flash` | Google (Gemini Flash) |
+| `opus`, `sonnet` | Anthropic: Claude Opus 5, Claude Sonnet 5 |
+| `sol`, `luna`, `terra` | OpenAI: GPT-5.6 Sol, Luna, and Terra, run through Codex |
+| `grok` | xAI: Grok |
+| `gemini-flash` | Google: Gemini 3.8 Flash |
 
-The orchestrators were `astra` (an OpenAI model that is not on the menu), `opus`, and
-`gemini-flash`. The last two could assign work to themselves. Tasks stayed
+The orchestrators were `astra` (GPT-6 Astra, an OpenAI model that is not on the menu),
+`opus`, and `gemini-flash`. The last two could assign work to themselves. Tasks stayed
 `proposed` and nothing was dispatched, so availability could not come back into it.
 The prompt did not mention provider preference. It did require a one-line reason for
 each crew choice.
