@@ -10,9 +10,13 @@ Front matter is `key: value` lines between `---` fences:
     title:    required
     summary:  required; used for the index, meta description and feed
     status:   draft | published
-    date:     YYYY-MM-DD; required once published
+    date:     YYYY-MM-DD, the day it was first published; required once published
+    updated:  optional YYYY-MM-DD of the last material change; defaults to date
     image:    optional file in the note's directory for og:image (1200x630)
-    author:   optional byline; defaults to Constellation Works
+    author:   optional comma-separated authors; defaults to Constellation Works
+    tags:     optional comma-separated topics
+
+Author, created and updated dates and tags are shown under the page title.
 
 Drafts are skipped unless --drafts is passed, so merging a draft never publishes it.
 With --drafts they build marked as drafts and noindex, for local review.
@@ -35,7 +39,7 @@ SRC = ROOT / "notes"
 OUT = ROOT / "public" / "notes"
 SITE = "https://constellation-works.com"
 
-FIELDS = {"title", "summary", "status", "date", "image", "author"}
+FIELDS = {"title", "summary", "status", "date", "updated", "image", "author", "tags"}
 
 
 def parse(path):
@@ -61,6 +65,11 @@ def parse(path):
         sys.exit(f"{path}: a published note needs a date")
     else:
         meta["date"] = None
+    meta["updated"] = datetime.date.fromisoformat(meta["updated"]) if meta.get("updated") else meta["date"]
+    if meta["updated"] and meta["date"] and meta["updated"] < meta["date"]:
+        sys.exit(f"{path}: updated is before date")
+    meta["tags"] = [t.strip() for t in meta.get("tags", "").split(",") if t.strip()]
+    meta["authors"] = [a.strip() for a in meta.get("author", "").split(",") if a.strip()] or ["Constellation Works"]
     if meta.get("image") and not (path.parent / meta["image"]).is_file():
         sys.exit(f"{path}: image {meta['image']} not found")
     meta["slug"] = path.parent.name
@@ -177,17 +186,31 @@ def size(path):
     return f"{n} B" if n < 1024 else f"{round(n / 1024)} KB"
 
 
+def meta_block(note):
+    """Under the title: author, created and updated dates, tags."""
+    e = html.escape
+
+    def when(d):
+        return f'<time datetime="{d.isoformat()}">{human(d)}</time>' if d else "Not published"
+
+    names = [e(a) for a in note["authors"]]
+    byline = names[0] if len(names) == 1 else ", ".join(names[:-1]) + " and " + names[-1]
+    rows = [("Author" if len(names) == 1 else "Authors", byline), ("Created", when(note["date"])),
+            ("Updated", when(note["updated"]))]
+    if note["tags"]:
+        rows.append(("Tags", "".join(f'<span class="tag">{e(t)}</span>' for t in note["tags"])))
+    items = "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in rows)
+    return f'<dl class="meta">{items}</dl>'
+
+
 def rail(note, files):
-    """Margin column: date or draft status, then the files the note publishes."""
-    date = note["date"]
-    when = f'<p><time datetime="{date.isoformat()}">{human(date)}</time></p>\n' if date else ""
-    by = f'<p>By {html.escape(note["author"])}</p>\n' if note.get("author") else ""
+    """Margin column: draft status, then the files the note publishes."""
     items = "".join(
         f'<li><a href="{html.escape(f.name)}">{html.escape(f.name)}</a> {size(f)}</li>\n'
         for f in files
     )
     listing = f'<ul class="files">\n<li>Data</li>\n{items}</ul>\n' if files else ""
-    return f'<aside class="rail">\n{by}{when}{status(note)}{listing}</aside>'
+    return f'<aside class="rail">\n{status(note)}{listing}</aside>'
 
 
 def build_note(note):
@@ -201,6 +224,7 @@ def build_note(note):
     body = f"""<article class="note">
 {rail(note, data)}
 <h1>{e(note['title'])}</h1>
+{meta_block(note)}
 <p class="summary">{e(note['summary'])}</p>
 {render_body(note['body'])}
 </article>"""
@@ -248,16 +272,16 @@ local-first runtime for coding agents. Each note publishes the data behind it.</
 def build_feed(notes):
     e = html.escape
     dated = [n for n in notes if n["date"]]
-    updated = max((n["date"] for n in dated), default=datetime.date(2026, 1, 1))
+    updated = max((n["updated"] for n in dated), default=datetime.date(2026, 1, 1))
     entries = "".join(
         f"""  <entry>
     <title>{e(n['title'])}</title>
     <link href="{SITE}/notes/{n['slug']}/"/>
     <id>{SITE}/notes/{n['slug']}/</id>
-    <updated>{n['date'].isoformat()}T00:00:00Z</updated>
+    <published>{n['date'].isoformat()}T00:00:00Z</published>
+    <updated>{n['updated'].isoformat()}T00:00:00Z</updated>
     <summary>{e(n['summary'])}</summary>
-    <author><name>{e(n.get('author') or 'Constellation Works')}</name></author>
-  </entry>
+{''.join(f'    <author><name>{e(a)}</name></author>' + chr(10) for a in n['authors'])}{''.join(f'    <category term="{e(t)}"/>' + chr(10) for t in n['tags'])}  </entry>
 """
         for n in dated
     )
