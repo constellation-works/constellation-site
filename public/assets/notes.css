@@ -165,8 +165,8 @@ figure .table { margin-bottom: 0; }
 figcaption { font-size: 15px; line-height: 1.5; color: var(--muted); margin: 0 0 18px; max-width: 36em; }
 figcaption strong { color: var(--fg); }
 
-/* Strip: expected (tick) against picked (dot) per orchestrator, on one 0–50% scale. */
-.strip { --label: 9.5rem; --num: 5.5rem; }
+/* Strip: a reference share (tick) against the orchestrator's own share (dot), on one shared scale. */
+.strip { --label: 11.5rem; --num: 4.5rem; }
 .strip .head, .strip .row {
   display: grid; grid-template-columns: var(--label) minmax(0, 1fr) var(--num) var(--num) 3.5rem;
   column-gap: 16px; align-items: center;
@@ -183,7 +183,7 @@ figcaption strong { color: var(--fg); }
 .strip .who small { color: var(--muted); font-size: 14px; }
 .strip .track {
   position: relative; height: 52px;
-  /* Hairline gridlines at 0, 25 and 50 percent. */
+  /* Hairline gridlines at the start, middle and end of the scale. */
   background:
     linear-gradient(var(--rule), var(--rule)) 0 0 / 1px 100% no-repeat,
     linear-gradient(var(--rule), var(--rule)) 50% 0 / 1px 100% no-repeat,
