@@ -342,8 +342,6 @@ in Orbit's configuration docs.
 
 ## Next
 
-- Put the names `sonnet` and `opus` on other providers' models, to see whether Opus
-  5.5 follows the name or the provider behind it.
 - Check the live store for the same pattern since Opus 5.5 became the `opus` crew's
   model.
 
