@@ -108,8 +108,11 @@ main.wrap { padding-top: 88px; padding-bottom: 112px; }
 .note > *, .index > * { grid-column: text; min-width: 0; }
 .note > h1, .note > .wide, .note > .table { grid-column: text / -1; max-width: 50em; }
 
-/* The margin column: date, status, files. Sentence case, one size, muted. */
-.note > .rail { grid-column: rail; grid-row: 1 / span 3; }
+/* The margin column: date, status, files. Sentence case, one size, muted.
+   It spans the title, details, summary and the first paragraphs, so a long file list
+   runs down beside the text instead of stretching the rows under the title. A section
+   heading that would land beside it moves below it, still level with its paragraph. */
+.note > .rail { grid-column: rail; grid-row: 1 / span 8; }
 .rail { font-size: 14px; line-height: 1.5; color: var(--muted); padding-top: 12px; }
 .rail p { margin: 0 0 4px; }
 .rail .files { list-style: none; padding: 0; margin: 24px 0 0; }
