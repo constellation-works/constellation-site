@@ -2,8 +2,8 @@
    keep the two in step when either changes.
 
    Layout: a margin column carries the note's date, status, data files and section
-   headings; the text column holds the argument at about 69 characters a line;
-   figures and wide tables run past the text into the bleed column. */
+   headings; the text column holds the argument at about 69 characters a line, and
+   tables and figures keep to the same width. Only the title runs into the bleed column. */
 :root {
   --bg: #FFFFFF;
   --fg: #17171A;
@@ -106,7 +106,7 @@ main.wrap { padding-top: 88px; padding-bottom: 112px; }
   align-items: start;
 }
 .note > *, .index > * { grid-column: text; min-width: 0; }
-.note > h1, .note > .wide, .note > .table { grid-column: text / -1; max-width: 50em; }
+.note > h1 { grid-column: text / -1; max-width: 50em; }
 
 /* The margin column: date, status, files. Sentence case, one size, muted.
    It spans the title, details, summary and the first paragraphs, so a long file list
@@ -165,7 +165,7 @@ strong { font-weight: 600; }
 .table { overflow-x: auto; margin: 8px 0 2em; }
 table { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.45; font-variant-numeric: tabular-nums; }
 th, td { padding: 9px 16px 9px 0; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
-thead th { font-weight: 400; color: var(--muted); font-size: 14px; border-bottom-color: var(--rule-strong); vertical-align: bottom; }
+thead th { font-weight: 400; color: var(--muted); font-size: 14px; border-bottom-color: var(--rule-strong); vertical-align: bottom; white-space: normal; }
 th:last-child, td:last-child { padding-right: 0; }
 tbody tr:last-child > * { border-bottom: 0; }
 
