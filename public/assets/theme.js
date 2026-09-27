@@ -1,12 +1,11 @@
 // Theme toggle for the Notes pages; the same behaviour as the inline script in
-// index.html. The button ships `hidden`, so without JavaScript the page keeps
-// prefers-color-scheme and shows no dead control.
+// index.html. Light is the default; dark applies only when chosen here. The button
+// ships `hidden`, so without JavaScript the page stays light and shows no dead control.
 (function () {
   var root = document.documentElement;
-  var mq = window.matchMedia('(prefers-color-scheme: dark)');
   function current() {
     var set = root.getAttribute('data-theme');
-    return set === 'dark' || set === 'light' ? set : (mq.matches ? 'dark' : 'light');
+    return set === 'dark' ? 'dark' : 'light';
   }
   function label(b) {
     b.setAttribute('aria-label', 'Switch to ' + (current() === 'dark' ? 'light' : 'dark') + ' theme');
