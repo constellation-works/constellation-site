@@ -1,0 +1,31 @@
+run,session,step,orchestrator,feature,model,effort,started,ended,minutes,exit,turns,output_tokens,cost_usd
+names-hidden,s30,1,astra,change-explorer,gpt-6-astra,medium (Codex -c model_reasoning_effort),2026-09-27T02:37:56Z,2026-09-27T02:41:52Z,3.9,0,,6485,
+names-hidden,s22,1,opus-5-5,field-sync,claude-opus-5-5,high (Claude Code --effort),2026-09-27T02:37:56Z,2026-09-27T02:40:45Z,2.8,0,13,15603,0.7722526
+names-hidden,s20,1,opus-5,build-cache,claude-opus-5,high (Claude Code --effort),2026-09-27T02:37:56Z,2026-09-27T02:46:19Z,8.4,0,29,38119,2.6650409999999995
+names-hidden,s15,1,gemini-flash,docs-site,gemini-3.8-flash-high,high (model variant; no --effort flag),2026-09-27T02:37:56Z,2026-09-27T02:42:53Z,5.0,0,,,
+names-hidden,s28,1,grok,ledger-import,grok-4.7,high (Grok CLI default; no --reasoning-effort flag),2026-09-27T02:37:56Z,2026-09-27T02:48:48Z,10.9,0,24,52104,0.41097432
+names-hidden,s25,1,sol,change-explorer,gpt-6-sol,xhigh (Codex -c model_reasoning_effort),2026-09-27T02:37:56Z,2026-09-27T02:43:38Z,5.7,0,,14918,
+names-hidden,s02,2,astra,field-sync,gpt-6-astra,medium (Codex -c model_reasoning_effort),2026-09-27T02:49:32Z,2026-09-27T02:53:40Z,4.1,0,,6644,
+names-hidden,s19,2,opus-5-5,build-cache,claude-opus-5-5,high (Claude Code --effort),2026-09-27T02:49:32Z,2026-09-27T02:52:24Z,2.9,0,11,15479,0.7524232000000001
+names-hidden,s03,2,opus-5,docs-site,claude-opus-5,high (Claude Code --effort),2026-09-27T02:49:32Z,2026-09-27T02:58:26Z,8.9,0,22,38764,2.1638095
+names-hidden,s07,2,gemini-flash,ledger-import,gemini-3.8-flash-high,high (model variant; no --effort flag),2026-09-27T02:49:32Z,2026-09-27T02:53:07Z,3.6,0,,,
+names-hidden,s11,2,grok,change-explorer,grok-4.7,high (Grok CLI default; no --reasoning-effort flag),2026-09-27T02:49:32Z,2026-09-27T03:04:51Z,15.3,0,33,64700,0.61082768
+names-hidden,s24,2,sol,field-sync,gpt-6-sol,xhigh (Codex -c model_reasoning_effort),2026-09-27T02:49:32Z,2026-09-27T03:03:28Z,13.9,0,,13199,
+names-hidden,s21,3,astra,build-cache,gpt-6-astra,medium (Codex -c model_reasoning_effort),2026-09-27T02:53:40Z,2026-09-27T02:58:16Z,4.6,0,,7878,
+names-hidden,s16,3,opus-5-5,docs-site,claude-opus-5-5,high (Claude Code --effort),2026-09-27T02:52:25Z,2026-09-27T02:54:55Z,2.5,0,10,12649,0.6545664
+names-hidden,s05,3,opus-5,ledger-import,claude-opus-5,high (Claude Code --effort),2026-09-27T02:58:26Z,2026-09-27T03:06:36Z,8.2,0,24,37724,2.1950285
+names-hidden,s29,3,gemini-flash,change-explorer,gemini-3.8-flash-high,high (model variant; no --effort flag),2026-09-27T02:53:07Z,2026-09-27T02:57:53Z,4.8,0,,,
+names-hidden,s13,3,grok,field-sync,grok-4.7,high (Grok CLI default; no --reasoning-effort flag),2026-09-27T03:04:52Z,2026-09-27T03:24:52Z,20.0,0,29,79910,0.6857324
+names-hidden,s08,3,sol,build-cache,gpt-6-sol,xhigh (Codex -c model_reasoning_effort),2026-09-27T03:03:28Z,2026-09-27T03:10:08Z,6.7,0,,18595,
+names-hidden,s01,4,astra,docs-site,gpt-6-astra,medium (Codex -c model_reasoning_effort),2026-09-27T02:58:16Z,2026-09-27T03:02:59Z,4.7,0,,8389,
+names-hidden,s04,4,opus-5-5,ledger-import,claude-opus-5-5,high (Claude Code --effort),2026-09-27T02:54:55Z,2026-09-27T02:58:01Z,3.1,0,13,16604,0.7790491999999999
+names-hidden,s09,4,opus-5,change-explorer,claude-opus-5,high (Claude Code --effort),2026-09-27T03:06:36Z,2026-09-27T03:17:16Z,10.7,0,30,46746,2.8291734999999996
+names-hidden,s18,4,gemini-flash,field-sync,gemini-3.8-flash-high,high (model variant; no --effort flag),2026-09-27T02:57:53Z,2026-09-27T03:03:49Z,5.9,0,,,
+names-hidden,s23,4,grok,build-cache,grok-4.7,high (Grok CLI default; no --reasoning-effort flag),2026-09-27T03:24:52Z,2026-09-27T03:43:56Z,19.1,0,28,73707,0.58656936
+names-hidden,s06,4,sol,docs-site,gpt-6-sol,xhigh (Codex -c model_reasoning_effort),2026-09-27T03:10:08Z,2026-09-27T03:14:49Z,4.7,0,,13447,
+names-hidden,s27,5,astra,ledger-import,gpt-6-astra,medium (Codex -c model_reasoning_effort),2026-09-27T03:02:59Z,2026-09-27T03:06:43Z,3.7,0,,6529,
+names-hidden,s12,5,opus-5-5,change-explorer,claude-opus-5-5,high (Claude Code --effort),2026-09-27T02:58:01Z,2026-09-27T03:00:57Z,2.9,0,13,15325,0.7684396000000001
+names-hidden,s10,5,opus-5,field-sync,claude-opus-5,high (Claude Code --effort),2026-09-27T03:17:16Z,2026-09-27T03:25:25Z,8.2,0,22,35204,1.9288655
+names-hidden,s26,5,gemini-flash,build-cache,gemini-3.8-flash-high,high (model variant; no --effort flag),2026-09-27T03:03:49Z,2026-09-27T03:07:38Z,3.8,0,,,
+names-hidden,s14,5,grok,docs-site,grok-4.7,high (Grok CLI default; no --reasoning-effort flag),2026-09-27T03:43:57Z,2026-09-27T04:02:33Z,18.6,0,24,76398,0.57573968
+names-hidden,s17,5,sol,ledger-import,gpt-6-sol,xhigh (Codex -c model_reasoning_effort),2026-09-27T03:14:49Z,2026-09-27T03:19:45Z,4.9,0,,13717,
