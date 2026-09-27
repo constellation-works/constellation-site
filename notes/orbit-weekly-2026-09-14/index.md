@@ -33,34 +33,20 @@ from that record, not from a benchmark.
 | … failed | 56 | 510 |
 | Task run failure rate | 7.4% | 17.8% |
 
-## Crews this week
-
-The crews in the tables below, with the model their runs recorded this week and the effort
-level set for them.
-
-| Crew | Model | Effort |
-|---|---|---|
-| `luna` | gpt-5.6-luna | xhigh |
-| `opus` | claude-opus-5 | high |
-| `gemini-flash` | gemini-3.8-flash-high | high |
-| `grok` | grok-4.6 | high |
-| `sonnet` | claude-sonnet-5 | high |
-| `astra` | gpt-6-astra | medium |
-| `sol` | gpt-5.6-sol | high |
-
 ## Regressions by crew
 
 A landed task counts as *regressed* when a later task is filed as a fix for a regression
 it caused (Orbit records this as a `regression_from` relation). The table covers tasks an
 agent finished in the week, by the crew that holds each task. The last column is each
-crew's mix of assessed complexity.
+crew's mix of assessed complexity. Beside each crew, in brackets, are the model its runs
+recorded this week and the effort level set for it.
 
 | Crew | Done | Regressed | Rate | Low / medium / hard / other |
 |---|--:|--:|--:|---|
-| `luna` | 22 | 2 | 9.1% | 19 / 3 / 0 / 0 |
-| `opus` | 96 | 16 | 16.7% | 2 / 69 / 25 / 0 |
-| `gemini-flash` | 17 | 3 | 17.6% | 14 / 3 / 0 / 0 |
-| `grok` | 62 | 15 | 24.2% | 3 / 58 / 1 / 0 |
+| `luna` (gpt-5.6-luna; xhigh) | 22 | 2 | 9.1% | 19 / 3 / 0 / 0 |
+| `opus` (claude-opus-5; high) | 96 | 16 | 16.7% | 2 / 69 / 25 / 0 |
+| `gemini-flash` (gemini-3.8-flash; high) | 17 | 3 | 17.6% | 14 / 3 / 0 / 0 |
+| `grok` (grok-4.6; high) | 62 | 15 | 24.2% | 3 / 58 / 1 / 0 |
 
 Left out of the table: the `system` crew (10 done, 0 regressed), and crews with fewer than 10 done tasks: `astra` (8 done, 4 regressed), `sonnet` (6 done, 1 regressed) and `sol` (4 done, 0 regressed).
 
@@ -90,13 +76,13 @@ retried task counts more than once, and only successful steps are timed.
 
 | Crew | Low | Medium | Hard |
 |---|--:|--:|--:|
-| `opus` | 6.9 (2) | 12.6 (67) | 39.6 (25) |
-| `grok` | 11.8 (3) | 17.1 (56) | 21.2 (1) |
-| `luna` | 13.3 (19) | 16.4 (3) | 52.9 (1) |
-| `gemini-flash` | 13.9 (14) | 20.9 (3) | — |
-| `sonnet` | 9.4 (3) | 11.9 (3) | — |
-| `astra` | — | — | 35.1 (5) |
-| `sol` | — | 15.9 (2) | — |
+| `opus` (claude-opus-5; high) | 6.9 (2) | 12.6 (67) | 39.6 (25) |
+| `grok` (grok-4.6; high) | 11.8 (3) | 17.1 (56) | 21.2 (1) |
+| `luna` (gpt-5.6-luna; xhigh) | 13.3 (19) | 16.4 (3) | 52.9 (1) |
+| `gemini-flash` (gemini-3.8-flash; high) | 13.9 (14) | 20.9 (3) | — |
+| `sonnet` (claude-sonnet-5; high) | 9.4 (3) | 11.9 (3) | — |
+| `astra` (gpt-6-astra; medium) | — | — | 35.1 (5) |
+| `sol` (gpt-5.6-sol; high) | — | 15.9 (2) | — |
 
 214 successful steps in total. Not shown: 7 by the `system` crew. Medians are in the data file.
 
