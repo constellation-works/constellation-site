@@ -3,7 +3,11 @@
 
    Layout: a margin column carries the note's date, status, data files and section
    headings; the text column holds the argument at about 69 characters a line, and
-   tables and figures keep to the same width. Only the title runs into the bleed column. */
+   figures keep to the same width. Tables start at the text width and may grow into the
+   bleed column when their columns need it, as the title does.
+
+   Light is the default palette whatever the system setting; the dark field applies only
+   when the reader picks it with the toggle ([data-theme="dark"]). */
 :root {
   --bg: #FFFFFF;
   --fg: #17171A;
@@ -19,21 +23,6 @@
   --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --maxw: 1180px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0A0A0A;
-    --fg: #EDEDF0;
-    --lede: #C7C7CC;
-    --muted: #9B9BA3;
-    --rule: #1F1F25;
-    --rule-strong: #26262B;
-    --card: #17171A;
-    --link: #8AB3FF;
-    --link-hover: #C9DDFF;
-    --accent: #6E9FFF;
-    --proposed: #F2B35E;
-  }
 }
 :root[data-theme="dark"] {
   --bg: #0A0A0A;
@@ -92,10 +81,6 @@ nav a:hover, nav a[aria-current] { color: var(--fg); }
 .theme svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .theme .sun { display: none; } .theme .moon { display: block; }
 :root[data-theme="dark"] .theme .sun { display: block; } :root[data-theme="dark"] .theme .moon { display: none; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme .sun { display: block; }
-  :root:not([data-theme="light"]) .theme .moon { display: none; }
-}
 
 /* ---------- the page grid ---------- */
 main.wrap { padding-top: 88px; padding-bottom: 112px; }
@@ -107,6 +92,9 @@ main.wrap { padding-top: 88px; padding-bottom: 112px; }
 }
 .note > *, .index > * { grid-column: text; min-width: 0; }
 .note > h1 { grid-column: text / -1; max-width: 50em; }
+/* A table is as wide as its columns need: never narrower than the text column, never
+   wider than text plus bleed. It scrolls only past that. */
+.note > .table { grid-column: text / -1; justify-self: start; width: fit-content; min-width: min(100%, 36em); max-width: 100%; }
 
 /* The margin column: date, status, files. Sentence case, one size, muted.
    It spans the title, details, summary and the first paragraphs, so a long file list
@@ -258,7 +246,10 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 
 /* ---------- narrower screens: one column, margin content moves inline ---------- */
 @media (max-width: 1000px) {
-  .note, .index { display: block; max-width: 36em; }
+  .index { display: block; max-width: 36em; }
+  /* One column: text keeps its measure, tables may use the full width. */
+  .note { display: block; }
+  .note > :not(.table) { max-width: 36em; }
   .rail { display: flex; flex-wrap: wrap; gap: 4px 20px; padding: 24px 0 0; margin: 48px 0 0; border-top: 1px solid var(--rule); }
   .rail p { margin: 0; }
   .rail .files { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; flex-basis: 100%; }

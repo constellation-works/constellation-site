@@ -17,8 +17,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-/* Light is the base palette; the dark field is the primary direction and takes
-   over under prefers-color-scheme, with [data-theme] winning in both directions. */
+/* Light is the default palette whatever the system setting; the dark field applies
+   only when the reader picks it with the toggle ([data-theme="dark"]). */
 :root {
   --bg: #FFFFFF;
   --fg: #17171A;
@@ -39,26 +39,6 @@
   --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --maxw: 1180px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0A0A0A;
-    --fg: #EDEDF0;
-    --lede: #C7C7CC;
-    --muted: #9B9BA3;
-    --eyebrow: #9B9BA3;
-    --rule: #1B1B21;
-    --rule-strong: #26262B;
-    --card: #17171A;
-    --card-rule: #26262B;
-    --link: #8AB3FF;
-    --link-hover: #C9DDFF;
-    --num: #6E9FFF;
-    --btn-fg: #0A0A0A;
-    --glow-1: rgba(110, 159, 255, .16);
-    --glow-2: rgba(110, 159, 255, .05);
-    --glow-0: rgba(10, 10, 10, 0);
-  }
 }
 :root[data-theme="dark"] {
   --bg: #0A0A0A;
@@ -124,7 +104,7 @@ nav { display: flex; align-items: center; gap: 26px; font-size: 15px; }
 nav a { color: var(--muted); text-decoration: none; }
 nav a:hover { color: var(--fg); }
 /* Theme toggle. Delivered `hidden` and unhidden by the inline script, so a page
-   without JavaScript keeps prefers-color-scheme and shows no dead control. The
+   without JavaScript stays light and shows no dead control. The
    icon shows the mode you would switch to. */
 .theme {
   display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px;
@@ -137,10 +117,6 @@ nav a:hover { color: var(--fg); }
 .theme svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .theme .sun { display: none; } .theme .moon { display: block; }
 :root[data-theme="dark"] .theme .sun { display: block; } :root[data-theme="dark"] .theme .moon { display: none; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme .sun { display: block; }
-  :root:not([data-theme="light"]) .theme .moon { display: none; }
-}
 
 /* ---------- hero ---------- */
 .hero { border-bottom: 1px solid var(--rule); position: relative; overflow: hidden; }
@@ -179,7 +155,6 @@ h1 .second { color: var(--muted); }
 .install .copy:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .install .copy[data-state="error"] { color: #B3261E; }
 :root[data-theme="dark"] .install .copy[data-state="error"] { color: #FF9D9D; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .install .copy[data-state="error"] { color: #FF9D9D; } }
 .sr-only { border: 0; clip-path: inset(50%); height: 1px; overflow: hidden; padding: 0; position: absolute; white-space: nowrap; width: 1px; }
 .cta { display: flex; gap: 12px; }
 .btn {
@@ -237,7 +212,6 @@ h1 .second { color: var(--muted); }
    reads first without a second visual system. */
 .tag.wip { color: var(--num); border-color: var(--num); }
 :root[data-theme="dark"] .tag.wip { color: var(--link); border-color: var(--rule-strong); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag.wip { color: var(--link); border-color: var(--rule-strong); } }
 .card.wip { opacity: .82; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .card {
@@ -475,15 +449,14 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 <script>
 // The only script on the page: the theme toggle and the install-bar Copy control.
 // Both controls ship `hidden` and are unhidden here, so without JavaScript the
-// page keeps prefers-color-scheme and shows the command with no dead button.
+// page stays light and shows the command with no dead button.
 (function () {
   var root = document.documentElement;
   var KEY = 'theme';
-  var mq = window.matchMedia('(prefers-color-scheme: dark)');
 
   function current() {
     var set = root.getAttribute('data-theme');
-    return set === 'dark' || set === 'light' ? set : (mq.matches ? 'dark' : 'light');
+    return set === 'dark' ? 'dark' : 'light';
   }
   function apply(theme, persist) {
     root.setAttribute('data-theme', theme);
