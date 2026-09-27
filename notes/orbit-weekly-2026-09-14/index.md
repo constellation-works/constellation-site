@@ -2,6 +2,7 @@
 title: Orbit weekly report: September 14–20, 2026
 summary: 226 tasks landed, 63 regressions were filed, 7.4% of task runs failed (17.8% the week before) and 33 frictions were reported. Regressions by crew, completion and implementation time by complexity, and pipeline reliability from Constellation Works' own Orbit store.
 status: published
+date: 2026-09-27
 image: card.png
 author: Constellation Works
 tags: weekly report, regressions, reliability, crews
