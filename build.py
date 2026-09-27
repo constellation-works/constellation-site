@@ -26,6 +26,7 @@ Usage:  python3 build.py [--drafts]     (needs `markdown`; see README.md)
 
 import argparse
 import datetime
+import hashlib
 import html
 import pathlib
 import re
@@ -40,6 +41,13 @@ OUT = ROOT / "public" / "notes"
 SITE = "https://constellation-works.com"
 
 FIELDS = {"title", "summary", "status", "date", "updated", "image", "author", "tags"}
+
+
+def asset(name):
+    """URL of a file in public/assets/ with a content hash, so a changed file is
+    fetched again instead of served from a browser cache (the host caches for hours)."""
+    digest = hashlib.sha256((ROOT / "public" / "assets" / name).read_bytes()).hexdigest()
+    return f"/assets/{name}?v={digest[:10]}"
 
 
 def parse(path):
@@ -125,7 +133,7 @@ HEADER = """<header>
   </div>
 </header>"""
 
-FOOTER = """<footer>
+FOOTER = f"""<footer>
   <div class="wrap">
     <span>&copy; 2026 Constellation Works</span>
     <span class="sp">
@@ -134,7 +142,7 @@ FOOTER = """<footer>
     </span>
   </div>
 </footer>
-<script src="/assets/theme.js"></script>"""
+<script src="{asset('theme.js')}"></script>"""
 
 
 def page(title, description, url, body, image=None, draft=False, kind="website"):
@@ -161,8 +169,8 @@ def page(title, description, url, body, image=None, draft=False, kind="website")
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/notes.css">
-<script src="/assets/theme-init.js"></script>
+<link rel="stylesheet" href="{asset('notes.css')}">
+<script src="{asset('theme-init.js')}"></script>
 </head>
 <body>
 {HEADER}
