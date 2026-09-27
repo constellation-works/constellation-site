@@ -1,0 +1,339 @@
+{
+  "window": {
+    "start": "2026-09-14T00:00:00+00:00",
+    "end": "2026-09-21T00:00:00+00:00",
+    "days": 7
+  },
+  "generated_at": "2026-09-27T06:05:51.690797+00:00",
+  "params": {
+    "min_n": 10,
+    "exclude": [
+      "system"
+    ]
+  },
+  "read": {
+    "workspaces": 9,
+    "tasks": 3487,
+    "runs": 18773,
+    "frictions": 685
+  },
+  "hand_finished_excluded": 1,
+  "regression": {
+    "scoreboard": [
+      {
+        "crew": "luna",
+        "model": "gpt-6-luna",
+        "done": 22,
+        "regressed": 2,
+        "rate": 0.0909,
+        "complexity_mix": {
+          "low": 19,
+          "medium": 3
+        },
+        "median_days_since_done": 1.3
+      },
+      {
+        "crew": "opus",
+        "model": "claude-opus-5-5",
+        "done": 96,
+        "regressed": 16,
+        "rate": 0.1667,
+        "complexity_mix": {
+          "hard": 25,
+          "medium": 69,
+          "low": 2
+        },
+        "median_days_since_done": 0.9
+      },
+      {
+        "crew": "gemini-flash",
+        "model": "gemini-3.8-flash-high",
+        "done": 17,
+        "regressed": 3,
+        "rate": 0.1765,
+        "complexity_mix": {
+          "low": 14,
+          "medium": 3
+        },
+        "median_days_since_done": 0.8
+      },
+      {
+        "crew": "grok",
+        "model": "grok-4.7",
+        "done": 62,
+        "regressed": 15,
+        "rate": 0.2419,
+        "complexity_mix": {
+          "low": 3,
+          "medium": 58,
+          "hard": 1
+        },
+        "median_days_since_done": 1.0
+      }
+    ],
+    "excluded": [
+      {
+        "crew": "astra",
+        "model": "gpt-6-astra",
+        "done": 8,
+        "regressed": 4,
+        "rate": 0.5,
+        "complexity_mix": {
+          "hard": 7,
+          "medium": 1
+        },
+        "median_days_since_done": 1.0
+      },
+      {
+        "crew": "sol",
+        "model": "gpt-6-sol",
+        "done": 4,
+        "regressed": 0,
+        "rate": 0.0,
+        "complexity_mix": {
+          "medium": 4
+        },
+        "median_days_since_done": 7.0
+      },
+      {
+        "crew": "sonnet",
+        "model": "claude-sonnet-5",
+        "done": 6,
+        "regressed": 1,
+        "rate": 0.1667,
+        "complexity_mix": {
+          "medium": 3,
+          "low": 3
+        },
+        "median_days_since_done": 6.9
+      },
+      {
+        "crew": "system",
+        "model": "gpt-6-luna",
+        "done": 10,
+        "regressed": 0,
+        "rate": 0.0,
+        "complexity_mix": {
+          "low": 8,
+          "medium": 2
+        },
+        "median_days_since_done": 1.2
+      }
+    ]
+  },
+  "regressions_filed": {
+    "total": 63,
+    "by_culprit_crew": [
+      {
+        "crew": "opus",
+        "filed": 20
+      },
+      {
+        "crew": "(no crew recorded)",
+        "filed": 15
+      },
+      {
+        "crew": "grok",
+        "filed": 13
+      },
+      {
+        "crew": "astra",
+        "filed": 6
+      },
+      {
+        "crew": "gemini-flash",
+        "filed": 5
+      },
+      {
+        "crew": "sol",
+        "filed": 2
+      },
+      {
+        "crew": "fable",
+        "filed": 1
+      },
+      {
+        "crew": "luna",
+        "filed": 1
+      }
+    ]
+  },
+  "completion": [
+    {
+      "complexity": "low",
+      "done": 49,
+      "regressed": 6,
+      "regression_rate": 0.1224,
+      "cycle_time_hours": {
+        "n": 49,
+        "median": 0.3,
+        "p90": 0.7,
+        "mean": 0.4
+      },
+      "done_without_start": 0
+    },
+    {
+      "complexity": "medium",
+      "done": 143,
+      "regressed": 19,
+      "regression_rate": 0.1329,
+      "cycle_time_hours": {
+        "n": 142,
+        "median": 0.2,
+        "p90": 0.5,
+        "mean": 0.3
+      },
+      "done_without_start": 1
+    },
+    {
+      "complexity": "hard",
+      "done": 33,
+      "regressed": 16,
+      "regression_rate": 0.4848,
+      "cycle_time_hours": {
+        "n": 33,
+        "median": 0.7,
+        "p90": 1.5,
+        "mean": 1.5
+      },
+      "done_without_start": 0
+    }
+  ],
+  "pipeline": {
+    "total": {
+      "runs": 1277,
+      "states": {
+        "success": 1173,
+        "cancelled": 16,
+        "failed": 87,
+        "interrupted": 1
+      },
+      "failure_rate": 0.0681,
+      "median_success_minutes": 7.6
+    },
+    "by_role": {
+      "child": {
+        "runs": 733,
+        "states": {
+          "success": 670,
+          "cancelled": 14,
+          "failed": 49
+        },
+        "failure_rate": 0.0668,
+        "median_success_minutes": 14.0
+      },
+      "top-level": {
+        "runs": 544,
+        "states": {
+          "success": 503,
+          "cancelled": 2,
+          "failed": 38,
+          "interrupted": 1
+        },
+        "failure_rate": 0.0699,
+        "median_success_minutes": 0.1
+      }
+    },
+    "by_job": [
+      {
+        "job": "task_auto_pipeline",
+        "runs": 233,
+        "states": {
+          "success": 213,
+          "failed": 17,
+          "cancelled": 3
+        },
+        "failure_rate": 0.073,
+        "median_success_minutes": 14.5
+      },
+      {
+        "job": "task_gate_pipeline",
+        "runs": 232,
+        "states": {
+          "success": 214,
+          "failed": 15,
+          "cancelled": 3
+        },
+        "failure_rate": 0.0647,
+        "median_success_minutes": 14.4
+      },
+      {
+        "job": "task_pr_pipeline",
+        "runs": 231,
+        "states": {
+          "success": 214,
+          "failed": 11,
+          "cancelled": 6
+        },
+        "failure_rate": 0.0476,
+        "median_success_minutes": 14.4
+      },
+      {
+        "job": "worktree_gc_pipeline",
+        "runs": 207,
+        "states": {
+          "success": 207
+        },
+        "failure_rate": 0.0,
+        "median_success_minutes": 0.0
+      },
+      {
+        "job": "ci_failure_sweep_pipeline",
+        "runs": 192,
+        "states": {
+          "success": 182,
+          "failed": 10
+        },
+        "failure_rate": 0.0521,
+        "median_success_minutes": 0.1
+      },
+      {
+        "job": "task_pilot_pipeline",
+        "runs": 158,
+        "states": {
+          "success": 121,
+          "cancelled": 4,
+          "failed": 33
+        },
+        "failure_rate": 0.2089,
+        "median_success_minutes": 3.9
+      },
+      {
+        "job": "workspace_auto_pipeline",
+        "runs": 17,
+        "states": {
+          "success": 16,
+          "interrupted": 1
+        },
+        "failure_rate": 0.0,
+        "median_success_minutes": 74.6
+      },
+      {
+        "job": "dependabot_alert_sweep_pipeline",
+        "runs": 6,
+        "states": {
+          "success": 6
+        },
+        "failure_rate": 0.0,
+        "median_success_minutes": 0.1
+      },
+      {
+        "job": "task_local_pipeline",
+        "runs": 1,
+        "states": {
+          "failed": 1
+        },
+        "failure_rate": 1.0,
+        "median_success_minutes": null
+      }
+    ]
+  },
+  "friction": {
+    "reported": 33,
+    "by_status": {
+      "resolved": 31,
+      "open": 2
+    }
+  },
+  "redacted": "Workspace names, task IDs and per-task lists removed before publication; counts are unchanged."
+}
