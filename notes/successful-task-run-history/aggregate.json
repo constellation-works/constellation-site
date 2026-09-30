@@ -1,0 +1,156 @@
+{
+  "cohort_since_inclusive": "2026-09-21T00:00:00Z",
+  "cohort_until_exclusive": "2026-09-28T00:00:00Z",
+  "coverage": {
+    "exclusions": {
+      "no_successful_pr_pipeline_run_by_cutoff": 19
+    },
+    "first_done_event_types": {
+      "forced": 10,
+      "landing_completed": 1,
+      "review_approved": 3,
+      "status_changed": 436
+    },
+    "first_done_tasks": 450,
+    "run_store_rows_at_read": 20898,
+    "selected_invocation_first": "2026-09-20T23:41:14.826857Z",
+    "selected_invocation_last": "2026-09-27T23:53:24.046560Z",
+    "task_bundles_examined": 3294
+  },
+  "delivery_run_states": {
+    "cancelled": 9,
+    "failed": 8,
+    "interrupted": 11,
+    "success": 431
+  },
+  "diagnostics": {
+    "earlier_runs_with_recovery_invocation": 8,
+    "explicit_retry_sources_in_selected_runs": 8,
+    "final_run_finished_after_task_done": 399,
+    "final_runs_with_multiple_implementation_invocations": 0,
+    "final_runs_with_recovery_invocation": 28,
+    "final_runs_without_implementation_invocation": 1,
+    "run_id_candidate_invocations_excluded_by_task_links": 12,
+    "runs_started_before_cohort_week": 1,
+    "runs_with_explicit_retry_source": 16,
+    "selected_run_ids_repeated_across_workspaces": 17,
+    "selected_runs_with_recovery_invocation": 36,
+    "selected_runs_without_implementation_invocation": 27
+  },
+  "final_run_recorded_models": {
+    "claude-opus-5": 41,
+    "claude-opus-5-5": 66,
+    "claude-sonnet-5": 18,
+    "gemini-3.8-flash-high": 15,
+    "gpt-5.6-luna": 1,
+    "gpt-5.6-sol": 30,
+    "gpt-5.6-terra": 11,
+    "gpt-6-astra": 38,
+    "gpt-6-luna": 45,
+    "gpt-6-sol": 123,
+    "grok-4.6": 17,
+    "grok-4.7": 26
+  },
+  "groups": {
+    "all": {
+      "all_delivery_run_ms": 633947407,
+      "delivery_runs": 459,
+      "earlier_over_final_ratio": 0.015069243713237914,
+      "earlier_run_ms": 9411287,
+      "final_successful_run_ms": 624536120,
+      "median_all_delivery_run_ms": 1331481,
+      "median_final_successful_run_ms": 1307423,
+      "median_paired_earlier_over_final_ratio": 0.0,
+      "tasks": 431
+    },
+    "hard": {
+      "all_delivery_run_ms": 262070708,
+      "delivery_runs": 186,
+      "earlier_over_final_ratio": 0.006555192666979286,
+      "earlier_run_ms": 1706736,
+      "final_successful_run_ms": 260363972,
+      "median_all_delivery_run_ms": 1362687.5,
+      "median_final_successful_run_ms": 1321132.5,
+      "median_paired_earlier_over_final_ratio": 0.0,
+      "tasks": 174
+    },
+    "low": {
+      "all_delivery_run_ms": 116958223,
+      "delivery_runs": 90,
+      "earlier_over_final_ratio": 0.010966412135985624,
+      "earlier_run_ms": 1268699,
+      "final_successful_run_ms": 115689524,
+      "median_all_delivery_run_ms": 1173095.0,
+      "median_final_successful_run_ms": 1163898.5,
+      "median_paired_earlier_over_final_ratio": 0.0,
+      "tasks": 88
+    },
+    "medium": {
+      "all_delivery_run_ms": 245305043,
+      "delivery_runs": 180,
+      "earlier_over_final_ratio": 0.026942997433268823,
+      "earlier_run_ms": 6435852,
+      "final_successful_run_ms": 238869191,
+      "median_all_delivery_run_ms": 1375447.5,
+      "median_final_successful_run_ms": 1360590.5,
+      "median_paired_earlier_over_final_ratio": 0.0,
+      "tasks": 166
+    },
+    "multiple_runs": {
+      "all_delivery_run_ms": 38908240,
+      "delivery_runs": 48,
+      "earlier_over_final_ratio": 0.31905963304074153,
+      "earlier_run_ms": 9411287,
+      "final_successful_run_ms": 29496953,
+      "median_all_delivery_run_ms": 1652774.0,
+      "median_final_successful_run_ms": 1387097.0,
+      "median_paired_earlier_over_final_ratio": 0.08370165923733779,
+      "tasks": 20
+    },
+    "one_run": {
+      "all_delivery_run_ms": 595039167,
+      "delivery_runs": 411,
+      "earlier_over_final_ratio": 0.0,
+      "earlier_run_ms": 0,
+      "final_successful_run_ms": 595039167,
+      "median_all_delivery_run_ms": 1290127,
+      "median_final_successful_run_ms": 1290127,
+      "median_paired_earlier_over_final_ratio": 0.0,
+      "tasks": 411
+    },
+    "xhard": {
+      "all_delivery_run_ms": 9613433,
+      "delivery_runs": 3,
+      "earlier_over_final_ratio": 0.0,
+      "earlier_run_ms": 0,
+      "final_successful_run_ms": 9613433,
+      "median_all_delivery_run_ms": 2487721,
+      "median_final_successful_run_ms": 2487721,
+      "median_paired_earlier_over_final_ratio": 0.0,
+      "tasks": 3
+    }
+  },
+  "invocation_activities": {
+    "implement_one": {
+      "duration_ms": 590327129,
+      "invocations": 432,
+      "with_provider_cost": 168
+    },
+    "pr_conflict_recovery": {
+      "duration_ms": 3834083,
+      "invocations": 8,
+      "with_provider_cost": 0
+    },
+    "step_failure_recovery": {
+      "duration_ms": 3619822,
+      "invocations": 28,
+      "with_provider_cost": 0
+    }
+  },
+  "observation_cutoff_exclusive": "2026-09-30T00:00:00Z",
+  "read_finished_at": "2026-09-30T04:06:52.527527Z",
+  "read_started_at": "2026-09-30T04:06:51.692648Z",
+  "schema_version": 1,
+  "scope": "Constellation Works building Orbit; PR-pipeline delivery runs for first-done tasks",
+  "source_revision": "08c6556d9dde350b505e880290be484f2fb09519"
+}
