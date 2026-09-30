@@ -96,7 +96,8 @@ The two recovery activities are `step_failure_recovery` and
 where both are declared recovery hooks. No other activity is inferred to be
 recovery from its duration, outcome or name. Calls are included only when both
 their leaf-run identity and exact task link match and their timestamp precedes
-the cutoff. The selected invocation timestamps range from September 20 at
+the cutoff. Invocation timestamps record persistence time, rather than the
+activity's start time. The selected invocation timestamps range from September 20 at
 23:41:14 UTC through September 27 at 23:53:24 UTC.
 
 Twenty-seven selected runs have no matched `implement_one` invocation; one is a

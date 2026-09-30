@@ -63,8 +63,8 @@ Across all 459 included delivery runs, there are 36 recorded calls to the two
 recovery activities checked here: 28 to `step_failure_recovery` and 8 to
 `pr_conflict_recovery`. Their recorded durations sum to 2.1 hours. That time is
 already inside the pipeline totals above; adding it again would double-count it.
-The two groups also overlap: recovery can happen in an earlier run or in the
-final success.
+Eight of the runs with recorded recovery were earlier runs; the other 28 were
+final successes.
 
 Invocation coverage has limits. Twenty-seven included runs have no matching
 implementation invocation, including one final success. Missing telemetry is
