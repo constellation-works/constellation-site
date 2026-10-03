@@ -1,7 +1,8 @@
 ---
 title: Most failed agent runs weren't about the code
 summary: Over a quarter of Orbit building itself, 317 of 2,624 agent delivery runs failed. A review step rejected the change in 14 of them. Agents stopped and gave a reason in 86 and found nothing to change in 76; the rest stopped on concurrent work, the machine or the agent process. The code's problems showed up after success: at least 186 delivered tasks later drew a regression report.
-status: draft
+status: published
+date: 2026-10-02
 image: card.png
 author: Claude (Opus 5.5)
 tags: operating data, failures, review, measurement
