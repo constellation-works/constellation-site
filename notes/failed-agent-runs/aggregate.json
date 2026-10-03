@@ -1,0 +1,375 @@
+{
+  "schema_version": 1,
+  "scope": "Constellation Works building Orbit: leaf delivery runs in Orbit's own repository",
+  "window_since_inclusive": "2026-07-06T00:00:00Z",
+  "window_until_exclusive": "2026-10-01T00:00:00Z",
+  "observation_cutoff_exclusive": "2026-10-01T00:00:00Z",
+  "read_started_at": "2026-10-03T03:58:48.528948+00:00",
+  "runs": {
+    "finished": 2624,
+    "by_state": {
+      "success": 2222,
+      "failed": 317,
+      "cancelled": 43,
+      "interrupted": 42
+    },
+    "by_pipeline": {
+      "task_local_pipeline": 6,
+      "task_pr_pipeline": 2618
+    },
+    "runs_not_single_task": 0,
+    "with_review_step": 1557,
+    "with_review_step_by_state": {
+      "success": 1334,
+      "failed": 168,
+      "cancelled": 29,
+      "interrupted": 26
+    },
+    "with_review_step_by_month": {
+      "2026-07": 4,
+      "2026-08": 7,
+      "2026-09": 1546
+    },
+    "by_month": {
+      "2026-07": {
+        "success": 229,
+        "failed": 58,
+        "cancelled": 5,
+        "interrupted": 2
+      },
+      "2026-08": {
+        "success": 432,
+        "failed": 64,
+        "cancelled": 2,
+        "interrupted": 14
+      },
+      "2026-09": {
+        "success": 1561,
+        "failed": 195,
+        "cancelled": 36,
+        "interrupted": 26
+      }
+    }
+  },
+  "failed": {
+    "total": 317,
+    "without_failed_step_message": 0,
+    "by_group": {
+      "agent_stopped": 86,
+      "nothing_to_change": 76,
+      "concurrent_work": 54,
+      "machine": 49,
+      "agent_process": 38,
+      "change_rejected": 14
+    },
+    "by_category": {
+      "agent_declared_failure": 86,
+      "no_change_to_ship": 76,
+      "conflict_or_stale_base": 30,
+      "agent_process_ended": 28,
+      "host_or_repository_setup": 27,
+      "checkout_changed_during_run": 24,
+      "orbit_defect": 22,
+      "change_rejected_by_review": 14,
+      "missing_handoff_summary": 10
+    },
+    "by_category_and_month": {
+      "host_or_repository_setup": {
+        "2026-07": 6,
+        "2026-08": 5,
+        "2026-09": 16
+      },
+      "agent_declared_failure": {
+        "2026-07": 6,
+        "2026-08": 11,
+        "2026-09": 69
+      },
+      "checkout_changed_during_run": {
+        "2026-07": 12,
+        "2026-08": 1,
+        "2026-09": 11
+      },
+      "orbit_defect": {
+        "2026-07": 14,
+        "2026-08": 2,
+        "2026-09": 6
+      },
+      "agent_process_ended": {
+        "2026-07": 5,
+        "2026-08": 12,
+        "2026-09": 11
+      },
+      "no_change_to_ship": {
+        "2026-07": 8,
+        "2026-08": 16,
+        "2026-09": 52
+      },
+      "conflict_or_stale_base": {
+        "2026-07": 4,
+        "2026-08": 6,
+        "2026-09": 20
+      },
+      "change_rejected_by_review": {
+        "2026-08": 5,
+        "2026-09": 9
+      },
+      "missing_handoff_summary": {
+        "2026-07": 3,
+        "2026-08": 6,
+        "2026-09": 1
+      }
+    },
+    "agent_declared_themes": {
+      "no_code_given": 26,
+      "could_not_verify_here": 24,
+      "not_permitted": 12,
+      "task_needs_a_decision": 11,
+      "not_finished": 10,
+      "checks_failed": 3
+    },
+    "agent_declared_codes": {
+      "(none given)": 26,
+      "validation_blocked": 12,
+      "review_incomplete": 4,
+      "cleanup_blocked": 4,
+      "implementation_incomplete": 3,
+      "native_validation_environment_unavailable": 1,
+      "runner_permission_denied": 1,
+      "security_validation_unavailable": 1,
+      "missing_sweep_cursor": 1,
+      "validation_incomplete": 1,
+      "blocked_awaiting_decision": 1,
+      "cleanup_denied": 1,
+      "environment_write_restricted": 1,
+      "codeql_unavailable": 1,
+      "scope_contradiction": 1,
+      "scope_boundary_ambiguous": 1,
+      "full_workspace_validation_failed": 1,
+      "orbit_task_update_unavailable": 1,
+      "task_state_read_only": 1,
+      "operator_publication_required": 1,
+      "incomplete_implementation": 1,
+      "duplicate_already_covered": 1,
+      "already_covered_by_other_task": 1,
+      "macos_reproduction_unavailable": 1,
+      "validation_blocker": 1,
+      "validation_failed": 1,
+      "validation_gate_failed": 1,
+      "live_enforcement_unproved": 1,
+      "preparation_requirement_conflict": 1,
+      "validation_timeout": 1,
+      "recovery_integrity_incomplete": 1,
+      "proof_contract_unresolved": 1,
+      "scope_ambiguity": 1,
+      "validation_environment_unavailable": 1,
+      "insufficient_runner_evidence": 1,
+      "dependency_blocked": 1,
+      "live_enforcement_unavailable": 1,
+      "enforcement_design_blocked": 1,
+      "post_merge_validation_required": 1,
+      "invalid_task_record": 1,
+      "recovery_prerequisite_blocked": 1,
+      "worktree_mismatch": 1
+    },
+    "agent_declared_distinct_codes": 41,
+    "runs_whose_task_came_from_an_alert_sweep_by_category": {
+      "no_change_to_ship": 47,
+      "conflict_or_stale_base": 13,
+      "agent_declared_failure": 12,
+      "host_or_repository_setup": 3,
+      "missing_handoff_summary": 2,
+      "change_rejected_by_review": 2
+    },
+    "tasks_with_a_failed_run": 280,
+    "after_first_failure_by_category": {
+      "host_or_repository_setup": {
+        "done_via_later_successful_run": 10,
+        "done_without_successful_run": 12,
+        "not_done_by_cutoff:archived": 1
+      },
+      "agent_declared_failure": {
+        "done_without_successful_run": 44,
+        "not_done_by_cutoff:archived": 8,
+        "done_via_later_successful_run": 20,
+        "not_done_by_cutoff:someday": 1,
+        "not_done_by_cutoff:rejected": 1
+      },
+      "checkout_changed_during_run": {
+        "done_without_successful_run": 23
+      },
+      "orbit_defect": {
+        "done_without_successful_run": 10,
+        "not_done_by_cutoff:rejected": 1,
+        "done_via_later_successful_run": 3,
+        "not_done_by_cutoff:archived": 3
+      },
+      "agent_process_ended": {
+        "done_via_later_successful_run": 13,
+        "done_without_successful_run": 13
+      },
+      "no_change_to_ship": {
+        "done_without_successful_run": 59,
+        "done_via_later_successful_run": 4,
+        "not_done_by_cutoff:rejected": 3,
+        "not_done_by_cutoff:archived": 4,
+        "not_done_by_cutoff:someday": 1
+      },
+      "conflict_or_stale_base": {
+        "done_without_successful_run": 25,
+        "not_done_by_cutoff:rejected": 1
+      },
+      "change_rejected_by_review": {
+        "done_without_successful_run": 8,
+        "done_via_later_successful_run": 5
+      },
+      "missing_handoff_summary": {
+        "done_without_successful_run": 5,
+        "done_via_later_successful_run": 2
+      }
+    },
+    "median_hours_first_failure_to_done_by_category": {
+      "host_or_repository_setup": 0.65,
+      "agent_declared_failure": 0.57,
+      "checkout_changed_during_run": 0.7,
+      "orbit_defect": 0.65,
+      "agent_process_ended": 0.74,
+      "no_change_to_ship": 0.33,
+      "conflict_or_stale_base": 0.85,
+      "change_rejected_by_review": 0.65,
+      "missing_handoff_summary": 0.55
+    }
+  },
+  "after_success": {
+    "tasks_delivered": 2218,
+    "tasks_with_regression_report": 186,
+    "regression_reports_against_delivered_tasks": 246,
+    "tasks_delivered_by_a_reviewed_run": 1333,
+    "of_those_with_regression_report": 134,
+    "delivered_by_month_of_last_success": {
+      "2026-07": 228,
+      "2026-08": 430,
+      "2026-09": 1560
+    },
+    "regressed_by_month_of_last_success": {
+      "2026-07": 7,
+      "2026-08": 26,
+      "2026-09": 153
+    }
+  },
+  "tasks_filed_in_window_by_month": {
+    "review_findings": {
+      "2026-07": 33,
+      "2026-08": 101,
+      "2026-09": 810
+    },
+    "ci_failure_repairs": {
+      "2026-08": 9,
+      "2026-09": 145
+    },
+    "regression_reports": {
+      "2026-07": 2,
+      "2026-08": 36,
+      "2026-09": 229
+    }
+  },
+  "rules": [
+    {
+      "category": "agent_declared_failure",
+      "group": "agent_stopped",
+      "pattern": "envelope status=\"(failed|timeout)\"|execution_summary begins with \\'Outcome: failed\\'"
+    },
+    {
+      "category": "no_change_to_ship",
+      "group": "nothing_to_change",
+      "pattern": "nothing to commit|no staged changes to commit"
+    },
+    {
+      "category": "change_rejected_by_review",
+      "group": "change_rejected",
+      "pattern": "review_gate_blocked|independent review did not succeed"
+    },
+    {
+      "category": "missing_handoff_summary",
+      "group": "agent_process",
+      "pattern": "requires a meaningful persisted execution_summary"
+    },
+    {
+      "category": "agent_process_ended",
+      "group": "agent_process",
+      "pattern": "provider exited|exited with code|wall-clock timeout|agent protocol violation"
+    },
+    {
+      "category": "checkout_changed_during_run",
+      "group": "concurrent_work",
+      "pattern": "primary_checkout_drift|worktree_integrity_ambiguous|worktree_head_changed"
+    },
+    {
+      "category": "conflict_or_stale_base",
+      "group": "concurrent_work",
+      "pattern": "conflict|is behind base|must be ahead of and not behind|moved from checkpoint"
+    },
+    {
+      "category": "host_or_repository_setup",
+      "group": "machine",
+      "pattern": "failed to spawn|Bubblewrap|write-grant anchor|snapshot Git state|squash merge|Squash merges|merge method|auto-merge|TLS handshake|git fetch|git push failed|untracked paths|not permitted by"
+    },
+    {
+      "category": "orbit_defect",
+      "group": "machine",
+      "pattern": "."
+    }
+  ],
+  "code_themes": {
+    "could_not_verify_here": [
+      "validation_blocked",
+      "validation_blocker",
+      "validation_incomplete",
+      "validation_timeout",
+      "validation_environment_unavailable",
+      "native_validation_environment_unavailable",
+      "security_validation_unavailable",
+      "codeql_unavailable",
+      "macos_reproduction_unavailable",
+      "live_enforcement_unavailable",
+      "live_enforcement_unproved",
+      "insufficient_runner_evidence",
+      "post_merge_validation_required"
+    ],
+    "checks_failed": [
+      "validation_failed",
+      "validation_gate_failed",
+      "full_workspace_validation_failed"
+    ],
+    "not_finished": [
+      "implementation_incomplete",
+      "incomplete_implementation",
+      "review_incomplete",
+      "recovery_integrity_incomplete",
+      "proof_contract_unresolved"
+    ],
+    "task_needs_a_decision": [
+      "scope_ambiguity",
+      "scope_contradiction",
+      "scope_boundary_ambiguous",
+      "preparation_requirement_conflict",
+      "already_covered_by_other_task",
+      "duplicate_already_covered",
+      "dependency_blocked",
+      "enforcement_design_blocked",
+      "blocked_awaiting_decision",
+      "invalid_task_record",
+      "recovery_prerequisite_blocked"
+    ],
+    "not_permitted": [
+      "cleanup_blocked",
+      "cleanup_denied",
+      "runner_permission_denied",
+      "environment_write_restricted",
+      "orbit_task_update_unavailable",
+      "task_state_read_only",
+      "operator_publication_required",
+      "missing_sweep_cursor",
+      "worktree_mismatch"
+    ]
+  }
+}
