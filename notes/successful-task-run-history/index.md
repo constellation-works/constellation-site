@@ -1,7 +1,8 @@
 ---
 title: A successful run is not the whole task
 summary: 20 of 431 completed tasks had earlier delivery runs. Those runs added 32% to that group's recorded pipeline time, but only 1.5% across the full cohort. Recovery also happened inside successful runs.
-status: draft
+status: published
+date: 2026-10-02
 image: card.png
 author: Constellation Works
 tags: operating data, recovery, measurement

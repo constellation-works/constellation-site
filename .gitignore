@@ -1,3 +1,6 @@
 .DS_Store
 node_modules/
 public/notes/
+
+# Orbit per-user state — not a repository artifact.
+.orbit/
