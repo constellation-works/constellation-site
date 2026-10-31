@@ -1,0 +1,2414 @@
+{
+ "schema_version": 1,
+ "experiment": {
+  "id": "exp-4e3e0399",
+  "name": "medium-tier-cheap-crews",
+  "status": "running",
+  "mode": "live",
+  "segment": 1,
+  "primary_metric": "cost_usd",
+  "guardrails": {
+   "delivery_done_rate": "-5pt",
+   "escaped_regressions": "+3pt",
+   "final_recoveries": "+0.2",
+   "review_repairs": "+0.5"
+  },
+  "min_sample": 60,
+  "max_days": 21,
+  "started_at": "2026-10-28T05:35:33.788996+00:00",
+  "horizon_at": "2026-11-18T05:35:33.788996+00:00"
+ },
+ "as_of": "2026-10-31T18:35:14.275160717+00:00",
+ "enrollment": {
+  "analysed": 230,
+  "forced_excluded": 0,
+  "surface_conflict_excluded": 0,
+  "explicit_crew_excluded": 10,
+  "interactive_excluded": 2,
+  "unreadable": 0
+ },
+ "arms": [
+  {
+   "effort_breakdown": [
+    {
+     "crew": null,
+     "model": "claude-haiku-5-5",
+     "reasoning_effort": "unknown",
+     "invocations": 2,
+     "tasks": 2,
+     "duration_ms": 2095171,
+     "input_tokens": 256,
+     "output_tokens": 211041,
+     "provider_cost_usd": 1.35643438,
+     "provider_cost_count": 2
+    },
+    {
+     "crew": null,
+     "model": "claude-opus-5-5",
+     "reasoning_effort": "unknown",
+     "invocations": 1,
+     "tasks": 1,
+     "duration_ms": 2248760,
+     "input_tokens": 254,
+     "output_tokens": 91009,
+     "provider_cost_usd": 8.584965199999996,
+     "provider_cost_count": 1
+    },
+    {
+     "crew": null,
+     "model": "claude-sonnet-5-5",
+     "reasoning_effort": "unknown",
+     "invocations": 7,
+     "tasks": 7,
+     "duration_ms": 5725166,
+     "input_tokens": 670,
+     "output_tokens": 212618,
+     "provider_cost_usd": 9.767936,
+     "provider_cost_count": 7
+    },
+    {
+     "crew": null,
+     "model": "gpt-6-luna",
+     "reasoning_effort": "unknown",
+     "invocations": 3,
+     "tasks": 2,
+     "duration_ms": 2870784,
+     "input_tokens": 24144148,
+     "output_tokens": 171230,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": null,
+     "model": "gpt-6.1-sol",
+     "reasoning_effort": "unknown",
+     "invocations": 29,
+     "tasks": 28,
+     "duration_ms": 26082593,
+     "input_tokens": 173055281,
+     "output_tokens": 803295,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": null,
+     "model": "gpt-6.1-terra",
+     "reasoning_effort": "unknown",
+     "invocations": 10,
+     "tasks": 10,
+     "duration_ms": 5423389,
+     "input_tokens": 65173003,
+     "output_tokens": 92785,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": null,
+     "model": "grok-4.7",
+     "reasoning_effort": "unknown",
+     "invocations": 2,
+     "tasks": 2,
+     "duration_ms": 3781510,
+     "input_tokens": 558164,
+     "output_tokens": 165260,
+     "provider_cost_usd": 12.415478,
+     "provider_cost_count": 2
+    },
+    {
+     "crew": null,
+     "model": "muse-spark-1.3-contributor",
+     "reasoning_effort": "unknown",
+     "invocations": 1,
+     "tasks": 1,
+     "duration_ms": 96637,
+     "input_tokens": 0,
+     "output_tokens": 0,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": null,
+     "model": "muse-wonder-1.0",
+     "reasoning_effort": "unknown",
+     "invocations": 29,
+     "tasks": 29,
+     "duration_ms": 20102018,
+     "input_tokens": 0,
+     "output_tokens": 0,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": "grok",
+     "model": "grok-4.7",
+     "reasoning_effort": "high",
+     "invocations": 4,
+     "tasks": 4,
+     "duration_ms": 8432960,
+     "input_tokens": 1140865,
+     "output_tokens": 331971,
+     "provider_cost_usd": 23.046681999999997,
+     "provider_cost_count": 4
+    },
+    {
+     "crew": "haiku",
+     "model": "claude-haiku-5-5",
+     "reasoning_effort": "xhigh",
+     "invocations": 4,
+     "tasks": 4,
+     "duration_ms": 806934,
+     "input_tokens": 98,
+     "output_tokens": 54430,
+     "provider_cost_usd": 0.13602869,
+     "provider_cost_count": 4
+    },
+    {
+     "crew": "muse-spark",
+     "model": "muse-spark-1.3-contributor",
+     "reasoning_effort": "xhigh",
+     "invocations": 1,
+     "tasks": 1,
+     "duration_ms": 52966,
+     "input_tokens": 0,
+     "output_tokens": 0,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": "muse-wonder",
+     "model": "muse-wonder-1.0",
+     "reasoning_effort": "high",
+     "invocations": 8,
+     "tasks": 8,
+     "duration_ms": 6497588,
+     "input_tokens": 0,
+     "output_tokens": 0,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": "opus",
+     "model": "claude-opus-5-5",
+     "reasoning_effort": "high",
+     "invocations": 1,
+     "tasks": 1,
+     "duration_ms": 1287629,
+     "input_tokens": 116,
+     "output_tokens": 129381,
+     "provider_cost_usd": 7.0786198,
+     "provider_cost_count": 1
+    },
+    {
+     "crew": "sol",
+     "model": "gpt-6.1-sol",
+     "reasoning_effort": "high",
+     "invocations": 3,
+     "tasks": 3,
+     "duration_ms": 932997,
+     "input_tokens": 8883393,
+     "output_tokens": 30353,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": "sonnet",
+     "model": "claude-sonnet-5-5",
+     "reasoning_effort": "high",
+     "invocations": 3,
+     "tasks": 3,
+     "duration_ms": 544773,
+     "input_tokens": 100,
+     "output_tokens": 26704,
+     "provider_cost_usd": 1.2710008000000002,
+     "provider_cost_count": 3
+    },
+    {
+     "crew": "terra",
+     "model": "gpt-6.1-terra",
+     "reasoning_effort": "high",
+     "invocations": 9,
+     "tasks": 9,
+     "duration_ms": 5280147,
+     "input_tokens": 43958947,
+     "output_tokens": 75160,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    }
+   ],
+   "name": "control",
+   "control": true,
+   "weight": 1,
+   "retired_segment": null,
+   "n": 112,
+   "segments": [
+    {
+     "segment": 1,
+     "n": 112
+    }
+   ],
+   "crew_mix": [
+    {
+     "crew": "muse-wonder",
+     "tasks": 37
+    },
+    {
+     "crew": "sol",
+     "tasks": 33
+    },
+    {
+     "crew": "terra",
+     "tasks": 23
+    },
+    {
+     "crew": "sonnet",
+     "tasks": 11
+    },
+    {
+     "crew": "grok",
+     "tasks": 4
+    },
+    {
+     "crew": "haiku",
+     "tasks": 2
+    },
+    {
+     "crew": "luna",
+     "tasks": 1
+    },
+    {
+     "crew": "opus",
+     "tasks": 1
+    }
+   ],
+   "assignment_digests": [
+    "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+   ],
+   "run_digests": [],
+   "drifted": false
+  },
+  {
+   "effort_breakdown": [
+    {
+     "crew": null,
+     "model": "claude-haiku-5-5",
+     "reasoning_effort": "unknown",
+     "invocations": 30,
+     "tasks": 27,
+     "duration_ms": 24202170,
+     "input_tokens": 2830,
+     "output_tokens": 2728220,
+     "provider_cost_usd": 17.250906649999994,
+     "provider_cost_count": 30
+    },
+    {
+     "crew": null,
+     "model": "gpt-6-luna",
+     "reasoning_effort": "unknown",
+     "invocations": 27,
+     "tasks": 26,
+     "duration_ms": 29708398,
+     "input_tokens": 303685676,
+     "output_tokens": 1453876,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": null,
+     "model": "gpt-6.1-sol",
+     "reasoning_effort": "unknown",
+     "invocations": 1,
+     "tasks": 1,
+     "duration_ms": 62193,
+     "input_tokens": 354077,
+     "output_tokens": 1884,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": null,
+     "model": "grok-4.7",
+     "reasoning_effort": "unknown",
+     "invocations": 2,
+     "tasks": 2,
+     "duration_ms": 1084746,
+     "input_tokens": 301577,
+     "output_tokens": 50772,
+     "provider_cost_usd": 3.426506,
+     "provider_cost_count": 2
+    },
+    {
+     "crew": null,
+     "model": "muse-spark-1.3-contributor",
+     "reasoning_effort": "unknown",
+     "invocations": 38,
+     "tasks": 38,
+     "duration_ms": 35195066,
+     "input_tokens": 0,
+     "output_tokens": 0,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": null,
+     "model": "muse-wonder-1.0",
+     "reasoning_effort": "unknown",
+     "invocations": 2,
+     "tasks": 2,
+     "duration_ms": 564364,
+     "input_tokens": 0,
+     "output_tokens": 0,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": "grok",
+     "model": "grok-4.7",
+     "reasoning_effort": "high",
+     "invocations": 1,
+     "tasks": 1,
+     "duration_ms": 6320050,
+     "input_tokens": 814170,
+     "output_tokens": 160928,
+     "provider_cost_usd": 15.044094,
+     "provider_cost_count": 1
+    },
+    {
+     "crew": "haiku",
+     "model": "claude-haiku-5-5",
+     "reasoning_effort": "xhigh",
+     "invocations": 10,
+     "tasks": 10,
+     "duration_ms": 10261106,
+     "input_tokens": 630,
+     "output_tokens": 682375,
+     "provider_cost_usd": 4.157496610000001,
+     "provider_cost_count": 10
+    },
+    {
+     "crew": "luna",
+     "model": "gpt-6-luna",
+     "reasoning_effort": "xhigh",
+     "invocations": 6,
+     "tasks": 6,
+     "duration_ms": 5941119,
+     "input_tokens": 58671553,
+     "output_tokens": 328311,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": "muse-spark",
+     "model": "muse-spark-1.3-contributor",
+     "reasoning_effort": "xhigh",
+     "invocations": 8,
+     "tasks": 8,
+     "duration_ms": 7187334,
+     "input_tokens": 0,
+     "output_tokens": 0,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": "muse-wonder-full",
+     "model": "muse-wonder-full-1.0",
+     "reasoning_effort": "high",
+     "invocations": 1,
+     "tasks": 1,
+     "duration_ms": 2797569,
+     "input_tokens": 0,
+     "output_tokens": 0,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    },
+    {
+     "crew": "sol",
+     "model": "gpt-6.1-sol",
+     "reasoning_effort": "high",
+     "invocations": 5,
+     "tasks": 3,
+     "duration_ms": 3475501,
+     "input_tokens": 16456746,
+     "output_tokens": 49318,
+     "provider_cost_usd": 0.0,
+     "provider_cost_count": 0
+    }
+   ],
+   "name": "cheap-pool",
+   "control": false,
+   "weight": 1,
+   "retired_segment": null,
+   "n": 118,
+   "segments": [
+    {
+     "segment": 1,
+     "n": 118
+    }
+   ],
+   "crew_mix": [
+    {
+     "crew": "muse-spark",
+     "tasks": 45
+    },
+    {
+     "crew": "haiku",
+     "tasks": 36
+    },
+    {
+     "crew": "luna",
+     "tasks": 31
+    },
+    {
+     "crew": "muse-wonder",
+     "tasks": 4
+    },
+    {
+     "crew": "sol",
+     "tasks": 1
+    },
+    {
+     "crew": "sonnet",
+     "tasks": 1
+    }
+   ],
+   "assignment_digests": [
+    "sha256:56965cba9b18f57ed779c84fab9fe69b7dd9837c21bf38aa78f9a0697b6a9893"
+   ],
+   "run_digests": [],
+   "drifted": false
+  }
+ ],
+ "sample_ratio": {
+  "chi_square": 0.1565217391304348,
+  "df": 1,
+  "p_value": 0.6923792683898182,
+  "alpha": 0.001,
+  "mismatch": false,
+  "segments": [
+   {
+    "segment": 1,
+    "weights": {
+     "cheap-pool": 1,
+     "control": 1
+    },
+    "observed": {
+     "cheap-pool": 118,
+     "control": 112
+    },
+    "expected": {
+     "cheap-pool": 115.0,
+     "control": 115.0
+    }
+   }
+  ]
+ },
+ "lagging": {
+  "open_tasks": 3,
+  "open_regression_windows": 224,
+  "regression_window_days": 14
+ },
+ "metrics": [
+  {
+   "metric": "implement_tokens",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "normalized_tokens",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 63,
+     "mean": 6498936.031746032,
+     "mean_interval": [
+      5273343.777777778,
+      7774966.794444445
+     ],
+     "median": 4952825.0,
+     "median_interval": [
+      4173036.0,
+      5767717.0
+     ],
+     "open": 2,
+     "unmeasured": 47,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 63,
+       "mean": 6498936.031746032,
+       "mean_interval": [
+        5260945.005555555,
+        7810783.047222221
+       ],
+       "median": 4952825.0,
+       "median_interval": [
+        4173036.0,
+        5889387.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 63,
+     "mean": 9339746.285714284,
+     "mean_interval": [
+      7362009.161507937,
+      11568123.371031746
+     ],
+     "median": 6319420.0,
+     "median_interval": [
+      5366237.0,
+      8562059.0
+     ],
+     "open": 1,
+     "unmeasured": 54,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 63,
+       "mean": 9339746.285714284,
+       "mean_interval": [
+        7359775.175396825,
+        11585692.142460316
+       ],
+       "median": 6319420.0,
+       "median_interval": [
+        5380687.0,
+        8562059.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 2223009.855350742,
+      "interval": [
+       74771.84829109056,
+       4425912.8890232975
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 62,
+       "n_control": 63,
+       "estimate": 2223009.855350742,
+       "interval": [
+        123287.15074884804,
+        4331135.992703532
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "total_tokens",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "normalized_tokens",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 70,
+     "mean": 7565883.628571428,
+     "mean_interval": [
+      6259335.597857143,
+      8924374.989642855
+     ],
+     "median": 6025177.0,
+     "median_interval": [
+      4925744.2625,
+      7697322.0
+     ],
+     "open": 2,
+     "unmeasured": 40,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 70,
+       "mean": 7565883.628571428,
+       "mean_interval": [
+        6154998.401071428,
+        8954306.679285713
+       ],
+       "median": 6025177.0,
+       "median_interval": [
+        4926847.0,
+        7835767.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 69,
+     "mean": 10247699.260869564,
+     "mean_interval": [
+      8274174.08115942,
+      12494327.557608694
+     ],
+     "median": 8047985.0,
+     "median_interval": [
+      6571126.0,
+      9809848.0
+     ],
+     "open": 1,
+     "unmeasured": 48,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 69,
+       "mean": 10247699.260869564,
+       "mean_interval": [
+        8132797.658695652,
+        12495911.081159418
+       ],
+       "median": 8047985.0,
+       "median_interval": [
+        6571126.0,
+        9809848.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 2102327.7978991605,
+      "interval": [
+       -96432.51882353,
+       4374615.444726889
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 68,
+       "n_control": 70,
+       "estimate": 2102327.7978991605,
+       "interval": [
+        -150126.17334033703,
+        4401525.014737396
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "cost_usd",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "usd",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 69,
+     "mean": 1.6130323333333336,
+     "mean_interval": [
+      1.15893944725,
+      2.174294184652174
+     ],
+     "median": 0.94044259,
+     "median_interval": [
+      0.68509226,
+      1.1972007000000002
+     ],
+     "open": 2,
+     "unmeasured": 41,
+     "cost_coverage": {
+      "reported": 13,
+      "estimated": 56,
+      "unmeasured": 41
+     },
+     "segments": [
+      {
+       "segment": 1,
+       "n": 69,
+       "mean": 1.6130323333333336,
+       "mean_interval": [
+        1.1200057190253625,
+        2.1656976604782607
+       ],
+       "median": 0.94044259,
+       "median_interval": [
+        0.68509226,
+        1.1972007000000002
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 66,
+     "mean": 0.8040746748484847,
+     "mean_interval": [
+      0.4737737177310604,
+      1.352030065087119
+     ],
+     "median": 0.48200732,
+     "median_interval": [
+      0.30466632,
+      0.5762832299999999
+     ],
+     "open": 1,
+     "unmeasured": 51,
+     "cost_coverage": {
+      "reported": 19,
+      "estimated": 47,
+      "unmeasured": 51
+     },
+     "segments": [
+      {
+       "segment": 1,
+       "n": 66,
+       "mean": 0.8040746748484847,
+       "mean_interval": [
+        0.4809961202935607,
+        1.3152474237367429
+       ],
+       "median": 0.48200732,
+       "median_interval": [
+        0.30717558,
+        0.5762832299999999
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": -0.808467406564103,
+      "interval": [
+       -1.5047806847600345,
+       -0.09602690210011398
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 65,
+       "n_control": 69,
+       "estimate": -0.808467406564103,
+       "interval": [
+        -1.4764680986923082,
+        -0.07580477726173493
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "lead_time",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "hours",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 110,
+     "mean": 1.6370404040404043,
+     "mean_interval": [
+      1.2020001893939398,
+      2.103382260101009
+     ],
+     "median": 0.7744444444444445,
+     "median_interval": [
+      0.6352777777777778,
+      0.8580555555555556
+     ],
+     "open": 2,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 110,
+       "mean": 1.6370404040404043,
+       "mean_interval": [
+        1.23704172979798,
+        2.110765214646463
+       ],
+       "median": 0.7744444444444445,
+       "median_interval": [
+        0.6380555555555556,
+        0.8491666666666666
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 114,
+     "mean": 1.6807651072124763,
+     "mean_interval": [
+      1.3361393153021448,
+      2.0776443713450283
+     ],
+     "median": 0.8423611111111111,
+     "median_interval": [
+      0.7156944444444444,
+      0.9819444444444444
+     ],
+     "open": 1,
+     "unmeasured": 3,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 114,
+       "mean": 1.6807651072124763,
+       "mean_interval": [
+        1.3186127558479532,
+        2.0671710526315783
+       ],
+       "median": 0.8423611111111111,
+       "median_interval": [
+        0.7130555555555556,
+        0.9823958333333324
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 0.014520559578082182,
+      "interval": [
+       -0.5817873307186912,
+       0.5778758950120673
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 113,
+       "n_control": 110,
+       "estimate": 0.014520559578082182,
+       "interval": [
+        -0.5677686365871104,
+        0.5384280107490844
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "implement_duration",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "minutes",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 98,
+     "mean": 14.182435544217697,
+     "mean_interval": [
+      12.03074076105442,
+      16.645306458333323
+     ],
+     "median": 10.666825,
+     "median_interval": [
+      9.515141666666668,
+      13.204
+     ],
+     "open": 2,
+     "unmeasured": 12,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 98,
+       "mean": 14.182435544217697,
+       "mean_interval": [
+        11.999269340986393,
+        16.576182444727888
+       ],
+       "median": 10.666825,
+       "median_interval": [
+        9.532966666666669,
+        13.301108333333334
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 107,
+     "mean": 17.218735669781935,
+     "mean_interval": [
+      15.008703200934576,
+      19.68840889408099
+     ],
+     "median": 15.096516666666666,
+     "median_interval": [
+      12.363483333333331,
+      16.6818
+     ],
+     "open": 1,
+     "unmeasured": 10,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 107,
+       "mean": 17.218735669781935,
+       "mean_interval": [
+        14.89178702102804,
+        19.71948494158877
+       ],
+       "median": 15.096516666666666,
+       "median_interval": [
+        12.363483333333331,
+        16.6818
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 2.386442285970988,
+      "interval": [
+       -0.5382769925234206,
+       5.5261699689545605
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 106,
+       "n_control": 98,
+       "estimate": 2.386442285970988,
+       "interval": [
+        -0.6026698404408991,
+        5.4749262285810545
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "turns_before_first_edit",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "turns",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 3,
+     "mean": 13.333333333333334,
+     "mean_interval": [
+      10.0,
+      15.0
+     ],
+     "median": 15.0,
+     "median_interval": [
+      10.0,
+      15.0
+     ],
+     "open": 2,
+     "unmeasured": 107,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 3,
+       "mean": 13.333333333333334,
+       "mean_interval": [
+        10.0,
+        15.0
+       ],
+       "median": 15.0,
+       "median_interval": [
+        10.0,
+        15.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 4,
+     "mean": 25.75,
+     "mean_interval": [
+      13.0,
+      37.25
+     ],
+     "median": 27.0,
+     "median_interval": [
+      8.0,
+      41.0
+     ],
+     "open": 1,
+     "unmeasured": 113,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 4,
+       "mean": 25.75,
+       "mean_interval": [
+        13.0,
+        37.25
+       ],
+       "median": 27.0,
+       "median_interval": [
+        8.0,
+        41.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 12.416666666666666,
+      "interval": [
+       0.8041666666666689,
+       24.0
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "medium",
+       "n_arm": 4,
+       "n_control": 3,
+       "estimate": 12.416666666666666,
+       "interval": [
+        0.8333333333333339,
+        23.916666666666664
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "result_bytes_before_first_edit",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "bytes",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 3,
+     "mean": 216339.0,
+     "mean_interval": [
+      195739.0,
+      242833.0
+     ],
+     "median": 210445.0,
+     "median_interval": [
+      195739.0,
+      242833.0
+     ],
+     "open": 2,
+     "unmeasured": 107,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 3,
+       "mean": 216339.0,
+       "mean_interval": [
+        195739.0,
+        242833.0
+       ],
+       "median": 210445.0,
+       "median_interval": [
+        195739.0,
+        242833.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 4,
+     "mean": 295251.75,
+     "mean_interval": [
+      134093.0,
+      518150.75
+     ],
+     "median": 202134.0,
+     "median_interval": [
+      132331.0,
+      644408.0
+     ],
+     "open": 1,
+     "unmeasured": 113,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 4,
+       "mean": 295251.75,
+       "mean_interval": [
+        135855.0,
+        518150.75
+       ],
+       "median": 202134.0,
+       "median_interval": [
+        132331.0,
+        644408.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 78912.75,
+      "interval": [
+       -82246.0,
+       315747.75
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "medium",
+       "n_arm": 4,
+       "n_control": 3,
+       "estimate": 78912.75,
+       "interval": [
+        -80484.0,
+        304995.3374999998
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "first_pass_acceptance",
+   "kind": "rate",
+   "better": "higher",
+   "unit": "rate",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 9,
+     "mean": 0.6666666666666666,
+     "mean_interval": [
+      0.3542021355803963,
+      0.879416181613089
+     ],
+     "successes": 6,
+     "open": 2,
+     "unmeasured": 101,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 9,
+       "mean": 0.6666666666666666,
+       "mean_interval": [
+        0.3542021355803963,
+        0.879416181613089
+       ],
+       "successes": 6
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 5,
+     "mean": 0.4,
+     "mean_interval": [
+      0.11762077423264784,
+      0.769275718723987
+     ],
+     "successes": 2,
+     "open": 1,
+     "unmeasured": 112,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 5,
+       "mean": 0.4,
+       "mean_interval": [
+        0.11762077423264784,
+        0.769275718723987
+       ],
+       "successes": 2
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": -0.2666666666666666,
+      "interval": [
+       -0.7777777777777778,
+       0.26666666666666666
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "medium",
+       "n_arm": 5,
+       "n_control": 9,
+       "estimate": -0.2666666666666666,
+       "interval": [
+        -0.7777777777777778,
+        0.26666666666666666
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "review_repairs",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "count",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 110,
+     "mean": 0.02727272727272727,
+     "mean_interval": [
+      0.0,
+      0.06363636363636363
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 2,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 110,
+       "mean": 0.02727272727272727,
+       "mean_interval": [
+        0.0,
+        0.06363636363636363
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 117,
+     "mean": 0.02564102564102564,
+     "mean_interval": [
+      0.0,
+      0.05982905982905983
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 1,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 117,
+       "mean": 0.02564102564102564,
+       "mean_interval": [
+        0.0,
+        0.05982905982905983
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": -0.0014106583072100304,
+      "interval": [
+       -0.03778605015673981,
+       0.04216300940438872
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 116,
+       "n_control": 110,
+       "estimate": -0.0014106583072100304,
+       "interval": [
+        -0.045466300940438874,
+        0.04216300940438872
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "step_recoveries",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "count",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 110,
+     "mean": 0.06363636363636363,
+     "mean_interval": [
+      0.01818181818181818,
+      0.10909090909090909
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 2,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 110,
+       "mean": 0.06363636363636363,
+       "mean_interval": [
+        0.01818181818181818,
+        0.10909090909090909
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 117,
+     "mean": 0.06837606837606838,
+     "mean_interval": [
+      0.02564102564102564,
+      0.11965811965811966
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 1,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 117,
+       "mean": 0.06837606837606838,
+       "mean_interval": [
+        0.02564102564102564,
+        0.11965811965811966
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 0.00532915360501568,
+      "interval": [
+       -0.05783699059561128,
+       0.06802507836990596
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 116,
+       "n_control": 110,
+       "estimate": 0.00532915360501568,
+       "interval": [
+        -0.05736677115987461,
+        0.06755485893416928
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "final_recoveries",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "count",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 110,
+     "mean": 0.08181818181818182,
+     "mean_interval": [
+      0.03636363636363636,
+      0.13636363636363635
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 2,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 110,
+       "mean": 0.08181818181818182,
+       "mean_interval": [
+        0.03636363636363636,
+        0.13636363636363635
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 117,
+     "mean": 0.08547008547008547,
+     "mean_interval": [
+      0.03418803418803419,
+      0.13675213675213677
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 1,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 117,
+       "mean": 0.08547008547008547,
+       "mean_interval": [
+        0.042735042735042736,
+        0.13675213675213677
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 0.004388714733542326,
+      "interval": [
+       -0.06739811912225704,
+       0.07476489028213168
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 116,
+       "n_control": 110,
+       "estimate": 0.004388714733542326,
+       "interval": [
+        -0.06598746081504701,
+        0.08244514106583073
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "failed_checks",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "count",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 110,
+     "mean": 0.02727272727272727,
+     "mean_interval": [
+      0.0,
+      0.06363636363636363
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 2,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 110,
+       "mean": 0.02727272727272727,
+       "mean_interval": [
+        0.0,
+        0.06363636363636363
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 117,
+     "mean": 0.008547008547008548,
+     "mean_interval": [
+      0.0,
+      0.03418803418803419
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 1,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 117,
+       "mean": 0.008547008547008548,
+       "mean_interval": [
+        0.0,
+        0.02564102564102564
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": -0.018652037617554858,
+      "interval": [
+       -0.05454545454545454,
+       0.01677115987460815
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 116,
+       "n_control": 110,
+       "estimate": -0.018652037617554858,
+       "interval": [
+        -0.05501567398119121,
+        0.008620689655172414
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "merge_conflicts",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "count",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 110,
+     "mean": 0.00909090909090909,
+     "mean_interval": [
+      0.0,
+      0.02727272727272727
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 2,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 110,
+       "mean": 0.00909090909090909,
+       "mean_interval": [
+        0.0,
+        0.02727272727272727
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 117,
+     "mean": 0.042735042735042736,
+     "mean_interval": [
+      0.008547008547008548,
+      0.08547008547008547
+     ],
+     "median": 0.0,
+     "median_interval": [
+      0.0,
+      0.0
+     ],
+     "open": 1,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 117,
+       "mean": 0.042735042735042736,
+       "mean_interval": [
+        0.008547008547008548,
+        0.08547008547008547
+       ],
+       "median": 0.0,
+       "median_interval": [
+        0.0,
+        0.0
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": 0.03401253918495298,
+      "interval": [
+       -0.0018808777429467072,
+       0.07758620689655173
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 116,
+       "n_control": 110,
+       "estimate": 0.03401253918495298,
+       "interval": [
+        -0.0014106583072100304,
+        0.07711598746081505
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "delivery_done_rate",
+   "kind": "rate",
+   "better": "higher",
+   "unit": "rate",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 110,
+     "mean": 1.0,
+     "mean_interval": [
+      0.9662560647018358,
+      1.0
+     ],
+     "successes": 110,
+     "open": 2,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 110,
+       "mean": 1.0,
+       "mean_interval": [
+        0.9662560647018358,
+        1.0
+       ],
+       "successes": 110
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 117,
+     "mean": 0.9743589743589745,
+     "mean_interval": [
+      0.9273169764853294,
+      0.9912419442961798
+     ],
+     "successes": 114,
+     "open": 1,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 117,
+       "mean": 0.9743589743589745,
+       "mean_interval": [
+        0.9273169764853294,
+        0.9912419442961798
+       ],
+       "successes": 114
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": -0.02586206896551724,
+      "interval": [
+       -0.06034482758620685,
+       0.0
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 116,
+       "n_control": 110,
+       "estimate": -0.02586206896551724,
+       "interval": [
+        -0.05193965517241377,
+        0.0
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "escaped_regressions",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "count",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 0,
+     "mean": null,
+     "mean_interval": null,
+     "open": 112,
+     "unmeasured": 0,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 0,
+       "mean": null,
+       "mean_interval": null
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 0,
+     "mean": null,
+     "mean_interval": null,
+     "open": 115,
+     "unmeasured": 3,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 0,
+       "mean": null,
+       "mean_interval": null
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": null,
+      "interval": null
+     },
+     "by_complexity": []
+    }
+   ]
+  },
+  {
+   "metric": "lines_changed",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "lines",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 108,
+     "mean": 560.6481481481482,
+     "mean_interval": [
+      388.6726851851852,
+      758.085185185185
+     ],
+     "median": 200.0,
+     "median_interval": [
+      155.5,
+      242.5
+     ],
+     "open": 2,
+     "unmeasured": 2,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 108,
+       "mean": 560.6481481481482,
+       "mean_interval": [
+        387.5560185185185,
+        762.1078703703703
+       ],
+       "median": 200.0,
+       "median_interval": [
+        162.0,
+        242.0
+       ]
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 114,
+     "mean": 443.2368421052632,
+     "mean_interval": [
+      318.3995614035088,
+      596.9524122807015
+     ],
+     "median": 168.0,
+     "median_interval": [
+      134.0,
+      251.0
+     ],
+     "open": 1,
+     "unmeasured": 3,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 114,
+       "mean": 443.2368421052632,
+       "mean_interval": [
+        315.93179824561406,
+        577.016447368421
+       ],
+       "median": 168.0,
+       "median_interval": [
+        136.0,
+        250.5
+       ]
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": -115.0817764667322,
+      "interval": [
+       -340.54095173713534,
+       119.20182522123866
+      ],
+      "cells_dropped": [
+       "hard"
+      ]
+     },
+     "by_complexity": [
+      {
+       "complexity": "hard",
+       "n_arm": 1,
+       "n_control": 0,
+       "estimate": null,
+       "interval": null
+      },
+      {
+       "complexity": "medium",
+       "n_arm": 113,
+       "n_control": 108,
+       "estimate": -115.0817764667322,
+       "interval": [
+        -340.47397779416593,
+        111.20113282530308
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "metric": "visual_landed_mismatches",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "weighted_findings",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 0,
+     "mean": null,
+     "mean_interval": null,
+     "open": 2,
+     "unmeasured": 110,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 0,
+       "mean": null,
+       "mean_interval": null
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 0,
+     "mean": null,
+     "mean_interval": null,
+     "open": 1,
+     "unmeasured": 117,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 0,
+       "mean": null,
+       "mean_interval": null
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": null,
+      "interval": null
+     },
+     "by_complexity": []
+    }
+   ]
+  },
+  {
+   "metric": "visual_review_repairs",
+   "kind": "mean",
+   "better": "lower",
+   "unit": "count",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 0,
+     "mean": null,
+     "mean_interval": null,
+     "open": 2,
+     "unmeasured": 110,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 0,
+       "mean": null,
+       "mean_interval": null
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 0,
+     "mean": null,
+     "mean_interval": null,
+     "open": 1,
+     "unmeasured": 117,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 0,
+       "mean": null,
+       "mean_interval": null
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": null,
+      "interval": null
+     },
+     "by_complexity": []
+    }
+   ]
+  },
+  {
+   "metric": "visual_verified_finding_rate",
+   "kind": "mean",
+   "better": "higher",
+   "unit": "rate",
+   "measured": true,
+   "arms": [
+    {
+     "arm": "control",
+     "n": 0,
+     "mean": null,
+     "mean_interval": null,
+     "open": 2,
+     "unmeasured": 110,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 0,
+       "mean": null,
+       "mean_interval": null
+      }
+     ]
+    },
+    {
+     "arm": "cheap-pool",
+     "n": 0,
+     "mean": null,
+     "mean_interval": null,
+     "open": 1,
+     "unmeasured": 117,
+     "segments": [
+      {
+       "segment": 1,
+       "n": 0,
+       "mean": null,
+       "mean_interval": null
+      }
+     ]
+    }
+   ],
+   "differences": [
+    {
+     "arm": "cheap-pool",
+     "overall": {
+      "estimate": null,
+      "interval": null
+     },
+     "by_complexity": []
+    }
+   ]
+  }
+ ],
+ "guardrails": [
+  {
+   "metric": "delivery_done_rate",
+   "threshold": "-5pt",
+   "arms": [
+    {
+     "arm": "cheap-pool",
+     "limit": -0.05,
+     "estimate": -0.02586206896551724,
+     "interval": [
+      -0.06034482758620685,
+      0.0
+     ],
+     "status": "straddles"
+    }
+   ]
+  },
+  {
+   "metric": "escaped_regressions",
+   "threshold": "+3pt",
+   "arms": [
+    {
+     "arm": "cheap-pool",
+     "limit": 3.0,
+     "estimate": null,
+     "interval": null,
+     "status": "unknown"
+    }
+   ]
+  },
+  {
+   "metric": "final_recoveries",
+   "threshold": "+0.2",
+   "arms": [
+    {
+     "arm": "cheap-pool",
+     "limit": 0.2,
+     "estimate": 0.004388714733542326,
+     "interval": [
+      -0.06739811912225704,
+      0.07476489028213168
+     ],
+     "status": "ok"
+    }
+   ]
+  },
+  {
+   "metric": "review_repairs",
+   "threshold": "+0.5",
+   "arms": [
+    {
+     "arm": "cheap-pool",
+     "limit": 0.5,
+     "estimate": -0.0014106583072100304,
+     "interval": [
+      -0.03778605015673981,
+      0.04216300940438872
+     ],
+     "status": "ok"
+    }
+   ]
+  }
+ ],
+ "verdict": {
+  "state": "inconclusive",
+  "arm": null,
+  "label": "inconclusive",
+  "horizon_reached": true,
+  "reasons": [
+   "arm `cheap-pool`'s delivery_done_rate guardrail straddles"
+  ]
+ },
+ "warnings": [
+  {
+   "kind": "lagging",
+   "message": "3 enrolled task(s) are still in flight and 224 landed task(s) are inside the 14-day regression window; their outcomes are open"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-19428 in arm `control` ran crew `sol`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-19384 in arm `control` ran crew `haiku`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-19492 in arm `control` ran crew `sol`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch",
+   "message": "task ORB-19385 in arm `cheap-pool` ran crew `sol`, outside the arm's crew pool (haiku, luna, muse-spark)"
+  },
+  {
+   "kind": "crew_mismatch",
+   "message": "task ORB-19501 in arm `cheap-pool` ran crew `muse-wonder`, outside the arm's crew pool (haiku, luna, muse-spark)"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-19321 in arm `control` ran crew `sol`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-19540 in arm `control` ran crew `sol`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch",
+   "message": "task ORB-19558 in arm `cheap-pool` ran crew `muse-wonder`, outside the arm's crew pool (haiku, luna, muse-spark)"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-19573 in arm `control` ran crew `muse-wonder`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch",
+   "message": "task ORB-19836 in arm `cheap-pool` ran crew `muse-wonder`, outside the arm's crew pool (haiku, luna, muse-spark)"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-19817 in arm `control` ran crew `sol`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-20116 in arm `control` ran crew `terra`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch",
+   "message": "task ORB-20160 in arm `cheap-pool` ran crew `sonnet`, outside the arm's crew pool (haiku, luna, muse-spark)"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-20175 in arm `control` ran crew `terra`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-20293 in arm `control` ran crew `sonnet`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch_unavailable",
+   "message": "task ORB-20296 in arm `control` ran crew `terra`, but the recorded admission pool for its delivery is unavailable, so a crew mismatch cannot be confirmed"
+  },
+  {
+   "kind": "crew_mismatch",
+   "message": "task ORB-20297 in arm `cheap-pool` ran crew `muse-wonder`, outside the arm's crew pool (haiku, luna, muse-spark)"
+  }
+ ]
+}
