@@ -1,0 +1,12 @@
+crew,model,tasks,tiers,regressions,per_task,expected,residual
+haiku,claude-haiku-5-5,234,"low: 195, medium: 39",9.25,0.04,25.4,-16.2
+muse-spark,muse-spark-1.3-contributor,207,"low: 157, medium: 50",32,0.15,27.8,4.2
+terra,gpt-6.1-terra,125,"hard: 5, low: 43, medium: 77",21.25,0.17,41.3,-20.1
+luna,gpt-6-luna,272,"hard: 1, low: 237, medium: 34",49.5,0.18,28.4,21.1
+sonnet,claude-sonnet-5-5,66,"hard: 8, low: 1, medium: 57",23.5,0.36,34.3,-10.8
+sol,gpt-6.1-sol,161,"hard: 62, low: 4, medium: 92, xhard: 3",68,0.42,130.0,-62.0
+opus@medium,claude-opus-5-5,30,hard: 30,13.25,0.44,40.9,-27.7
+muse-wonder,muse-wonder-1.0,165,"hard: 3, low: 2, medium: 160",102,0.62,68.0,34.0
+grok,grok-4.7,62,"hard: 5, medium: 57",46.25,0.75,30.6,15.7
+opus,claude-opus-5-5,90,"hard: 63, low: 6, medium: 7, xhard: 14",181.5,2.02,151.3,30.2
+muse-wonder-full,muse-wonder-full-1.0,12,hard: 12,48,4.0,16.4,31.6
