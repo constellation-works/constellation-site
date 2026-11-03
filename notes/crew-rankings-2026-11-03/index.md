@@ -34,7 +34,8 @@ and are left out.
 
 The tables show the 30 days to November 3, 06:33 UTC, with rows of 30 or more tasks.
 Rework comes with a 95% Wilson interval, because several rows are small. The last column
-is the same rework rate over only the latest 7 days. Every row with 10 or more tasks is
+is the same rework rate over only the latest 7 days, left blank where the crew ran fewer
+than 10 tasks on that tier. Every row with 10 or more tasks is
 in [by-tier.csv](by-tier.csv).
 
 The crews' models: muse-spark is Muse Spark 1.3 Contributor, muse-wonder Muse Wonder 1.0,
@@ -50,8 +51,8 @@ and gemini-flash Gemini 3.8 Flash.
 | terra · high | 43 | 100% | 2.3% (0.4–12.1) | 0% | 2.3% of 43 |
 | haiku · xhigh | 513 | 97.7% | 5.3% (3.6–7.5) | 1.6% | 2.1% of 195 |
 | luna · xhigh | 718 | 96.7% | 9.5% (7.5–11.8) | 2.4% | 2.9% of 238 |
-| gemini-flash · high | 144 | 88.2% | 10.4% (6.4–16.5) | 5.6% | none run |
-| sol · high | 56 | 85.7% | 23.2% (14.1–35.8) | 3.6% | under 10 |
+| gemini-flash · high | 144 | 88.2% | 10.4% (6.4–16.5) | 5.6% |  |
+| sol · high | 56 | 85.7% | 23.2% (14.1–35.8) | 3.6% |  |
 
 ### Medium
 
@@ -65,7 +66,7 @@ and gemini-flash Gemini 3.8 Flash.
 | sol · high | 960 | 92.9% | 16.0% (13.9–18.5) | 2.3% | 5.4% of 92 |
 | terra · high | 88 | 96.6% | 17.0% (10.6–26.2) | 2.3% | 19.5% of 77 |
 | luna · xhigh | 56 | 87.5% | 17.9% (10.0–29.8) | 7.1% | 8.8% of 34 |
-| opus · high | 56 | 87.5% | 21.4% (12.7–33.8) | 0% | under 10 |
+| opus · high | 56 | 87.5% | 21.4% (12.7–33.8) | 0% |  |
 
 ### Hard
 
