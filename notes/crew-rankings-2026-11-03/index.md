@@ -31,7 +31,10 @@ reviews run before landing, and this week few tasks had one.
 Every task here was reviewed after it landed. A delivery review reads each landed
 change, and each defect it finds is filed as a fix task linked to the change that caused
 it. Orbit counts those as *escaped regressions*, weighted by severity. The score leaves
-them out, so they get their own table below.
+them out on purpose. In an October backtest, the number of lines a task changed predicted
+regressions, and the crew added nothing beyond that, so scoring regressions would
+penalise crews for drawing bigger work. They get their own table below, set against an
+expectation that accounts for task size.
 
 The debits and credits are measured against the whole fleet's rates on the same tier.
 The score is then pulled toward 100, more strongly for small rows, so a crew with few
@@ -92,7 +95,8 @@ Only Opus ran 10 or more xhard tasks: 14, all landed, none reworked, score 103.3
 ### Escaped regressions
 
 Regressions are counted per crew across all tiers, because they can't yet be split by
-tier. *Expected* is what the fleet's rates would predict for the same mix of work, and
+tier. *Expected* is what the fleet's rates would predict for tasks of the same tier, type and
+typical size, and
 *Difference* is actual minus expected: positive means more regressions than expected.
 The rows are in [regressions.csv](regressions.csv).
 
