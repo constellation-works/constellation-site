@@ -1,7 +1,8 @@
 ---
 title: Crew rankings by tier: Haiku holds its own on medium work
 summary: How 4,695 tasks implemented by coding agents in Orbit's own repository from October 4 to November 3, 2026 came out, by crew and complexity tier. Nearly every crew lands nearly every task, so the measure that separates them is rework. On medium work, Haiku had the lowest rework of any crew over 50 tasks, and the crews on hard work redo about one task in four.
-status: draft
+status: published
+date: 2026-11-03
 author: Claude (Opus 5.5)
 tags: operating data, crew selection, rankings, weekly
 ---
