@@ -557,9 +557,26 @@ def sparkline(values_ms, field):
     }) + polylines + "</svg>"
 
 
+CELL_OPEN = re.compile(r"<t[dh]\b[^>]*>")
+
+
+def label_cells(row_html, headers):
+    """Tag each cell of a row with its column header, so the phone layout (which hides
+    the header row and stacks each row) can still name every figure."""
+    position = iter(range(len(headers)))
+
+    def tag(match):
+        column = next(position, None)
+        if column is None:
+            return match.group(0)
+        return match.group(0)[:-1] + f' data-label="{e(re.sub(r"<[^>]*>", "", headers[column]))}">'
+
+    return CELL_OPEN.sub(tag, row_html)
+
+
 def table(caption, headers, rows):
     head = "".join(f'<th scope="col">{header}</th>' for header in headers)
-    body = "".join("<tr>" + "".join(rows_cells) + "</tr>" for rows_cells in rows)
+    body = "".join("<tr>" + label_cells("".join(rows_cells), headers) + "</tr>" for rows_cells in rows)
     cap = f"<caption>{caption}</caption>" if caption else ""
     return f'<div class="table"><table>{cap}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 

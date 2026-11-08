@@ -209,6 +209,23 @@
   .hbar-plot { grid-column: 1 / -1; grid-row: 2; }
   .x-axis { margin-left: 2.2rem; }
 }
+/* Tables: on a phone notes.css stacks each row. Row headers (a crew with a long list of
+   member names) and figures must wrap inside the column, so the page never scrolls sideways.
+   Nothing is hidden: every cell keeps its data-label. */
+@media (max-width: 560px) {
+  .analytics .table { min-width: 0; max-width: 100%; }
+  .analytics table { width: 100%; max-width: 100%; }
+  .analytics th,
+  .analytics td { min-width: 0; overflow-wrap: anywhere; }
+  .analytics td::before { flex: 0 0 8rem; }
+  .analytics td > * { min-width: 0; }
+  .analytics tbody th[scope="row"] {
+    display: block;
+    text-align: left;
+    font-weight: 600;
+    padding: 0 0 4px;
+  }
+}
 @media (max-width: 380px) {
   .scores { grid-template-columns: 1fr; }
 }
