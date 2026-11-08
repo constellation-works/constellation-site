@@ -242,6 +242,34 @@ class MetricsPageTest(unittest.TestCase):
         parser.feed(cls.html)
         cls.tree = parser.root
 
+    def test_outcome_caveat_and_meta_description_match_board_filters(self):
+        caveats = elements(
+            self.tree,
+            lambda node: node.tag == "section" and node.attrs.get("id") == "caveats",
+        )
+        self.assertEqual(len(caveats), 1)
+        caveat_text = all_text(caveats[0])
+        self.assertIn("Duration uses succeeded runs.", caveat_text)
+        self.assertIn("Tokens and turns use done tasks.", caveat_text)
+        self.assertIn("Other boards have no outcome filter.", caveat_text)
+
+        expected = (
+            "30-day Orbit metrics: duration for succeeded runs; tokens and turns for done tasks; "
+            "plus completions, defects, cost, diff size and friction."
+        )
+        descriptions = elements(
+            self.tree,
+            lambda node: node.tag == "meta"
+            and node.attrs.get("name") == "description",
+        )
+        open_graph_descriptions = elements(
+            self.tree,
+            lambda node: node.tag == "meta"
+            and node.attrs.get("property") == "og:description",
+        )
+        self.assertEqual([node.attrs["content"] for node in descriptions], [expected])
+        self.assertEqual([node.attrs["content"] for node in open_graph_descriptions], [expected])
+
     def test_format_matches_the_dashboard_duration_rule(self):
         average = self.metrics["durations"]["current"]["all"]["avg"]
         self.assertEqual(local_ms(average), "18.9m")
