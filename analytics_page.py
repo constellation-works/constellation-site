@@ -144,33 +144,71 @@ def _snapshot_dirs(base):
     return sorted(dated)
 
 
-def _window_stamps(directory):
+def _window_label(page):
+    """(label, pointer) for a snapshot entry's picker/banner window.
+
+    Pages with one window name it directly. Multi-window pages keep the
+    shared fleet reliability range only as an explicitly labelled reference
+    and point at the per-board / cumulative windows on the page itself.
+    """
+    if page == "reliability":
+        return "fleet reliability window", None
+    if page == "metrics":
+        return "metrics window", "each board shows its own window"
+    if page == "experiments":
+        return (
+            "fleet reliability reference window",
+            "each experiment shows its cumulative observation window",
+        )
+    return (
+        "fleet reliability reference window",
+        "each board shows its own observation window",
+    )
+
+
+def _read_snapshot_json(directory, name):
+    try:
+        data = json.loads((pathlib.Path(directory) / name).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _window_stamps(directory, page=None):
     """Validated (since, until) stamps for a snapshot, or (None, None).
 
-    Only known window fields are read: meta.json's reliability window first,
-    then each page file's own window. Anything unparseable is ignored rather
-    than published.
+    The stamps are page-specific where a page has a single window:
+    reliability reads its own window and metrics reads the metrics
+    durations window. Agents and experiments have no single observation
+    window (settled reviewers, tier boards and cumulative experiments all
+    differ), so they fall back to meta.json's fleet reliability window,
+    which callers must label as a reference via _window_label. Anything
+    unparseable is ignored rather than published.
     """
     directory = pathlib.Path(directory)
-    candidates = []
-    try:
-        meta = json.loads((directory / "meta.json").read_text(encoding="utf-8"))
-        candidates.append(((meta.get("windows") or {}).get("reliability") or {}))
-    except (OSError, json.JSONDecodeError, AttributeError):
-        pass
-    for name, keys in (
-        ("metrics.json", ("durations", "window")),
-        ("scorecards.json", ("implementers", "window")),
-        ("reliability.json", ("window",)),
-    ):
-        try:
-            node = json.loads((directory / name).read_text(encoding="utf-8"))
-            for key in keys:
-                node = node.get(key) or {}
-            candidates.append(node)
-        except (OSError, json.JSONDecodeError, AttributeError):
-            continue
+    meta_windows = _read_snapshot_json(directory, "meta.json").get("windows") or {}
+    if not isinstance(meta_windows, dict):
+        meta_windows = {}
+    if page == "reliability":
+        candidates = [
+            _read_snapshot_json(directory, "reliability.json").get("window"),
+            meta_windows.get("reliability"),
+        ]
+    elif page == "metrics":
+        metrics = _read_snapshot_json(directory, "metrics.json")
+        candidates = [
+            (metrics.get("durations") or {}).get("window")
+            if isinstance(metrics.get("durations"), dict) else None,
+            meta_windows.get("metrics"),
+        ]
+    else:
+        candidates = [
+            meta_windows.get("reliability"),
+            _read_snapshot_json(directory, "reliability.json").get("window"),
+        ]
     for window in candidates:
+        if not isinstance(window, dict):
+            continue
         since, until = window.get("since"), window.get("until")
         if not (isinstance(since, str) and isinstance(until, str)
                 and _STAMP.fullmatch(since) and _STAMP.fullmatch(until)):
@@ -183,26 +221,30 @@ def _window_stamps(directory):
     return None, None
 
 
-def snapshot_entry(directory):
+def snapshot_entry(directory, page=None):
     directory = pathlib.Path(directory)
-    since, until = _window_stamps(directory)
+    since, until = _window_stamps(directory, page)
+    label, note = _window_label(page)
     return {
         "month": directory.name[:7],
         "date": directory.name,
         "directory": directory,
         "since": since,
         "until": until,
+        "page": page,
+        "window_label": label,
+        "window_note": note,
     }
 
 
-def latest_snapshot_entry(base, required=None):
+def latest_snapshot_entry(base, required=None, page=None):
     dated = _snapshot_dirs(base)
     if required:
         dated = [(day, path) for day, path in dated if (path / required).is_file()]
-    return snapshot_entry(dated[-1][1]) if dated else None
+    return snapshot_entry(dated[-1][1], page) if dated else None
 
 
-def monthly_archive_entries(base, required=None):
+def monthly_archive_entries(base, required=None, page=None):
     """Latest snapshot of each closed calendar month, newest month first."""
     dated = _snapshot_dirs(base)
     if not dated:
@@ -216,19 +258,24 @@ def monthly_archive_entries(base, required=None):
             continue
         by_month[day.isoformat()[:7]] = path
     months = sorted((m for m in by_month if m < open_month), reverse=True)
-    return [snapshot_entry(by_month[month]) for month in months]
+    return [snapshot_entry(by_month[month], page) for month in months]
 
 
 def month_label(month):
     return datetime.date(int(month[:4]), int(month[5:7]), 1).strftime("%B %Y")
 
 
-def _window_html(entry):
+def _window_html(entry, page=None):
     if not entry.get("since") or not entry.get("until"):
         return ""
+    label, note = _window_label(page if page is not None else entry.get("page"))
+    if page is None and entry.get("window_label"):
+        label = entry["window_label"]
+        note = entry.get("window_note")
+    pointer = f" ({e(note)})" if note else ""
     return (
-        f', window <time datetime="{e(entry["since"])}">{e(entry["since"][:10])}</time>'
-        f' to <time datetime="{e(entry["until"])}">{e(entry["until"][:10])}</time>'
+        f', {e(label)} <time datetime="{e(entry["since"])}">{e(entry["since"][:10])}</time>'
+        f' to <time datetime="{e(entry["until"])}">{e(entry["until"][:10])}</time>{pointer}'
     )
 
 
@@ -250,7 +297,7 @@ def snapshot_picker(page, latest, archives, current=None):
     items = [
         f'<li><a href="/analytics/{e(page)}/"{attrs}>Latest</a>'
         f' <span class="snapshot-detail">snapshot <time datetime="{e(latest["date"])}">{e(latest["date"])}</time>'
-        f'{_window_html(latest)}</span>{suffix}</li>'
+        f'{_window_html(latest, page)}</span>{suffix}</li>'
     ]
     for entry in archives:
         attrs, suffix = mark(current == entry["month"])
@@ -258,7 +305,7 @@ def snapshot_picker(page, latest, archives, current=None):
             f'<li><a href="/analytics/{e(page)}/{e(entry["month"])}/"{attrs}>'
             f'<time datetime="{e(entry["month"])}">{e(month_label(entry["month"]))}</time></a>'
             f' <span class="snapshot-detail">(<time datetime="{e(entry["month"])}">{e(entry["month"])}</time>)'
-            f' snapshot <time datetime="{e(entry["date"])}">{e(entry["date"])}</time>{_window_html(entry)}</span>{suffix}</li>'
+            f' snapshot <time datetime="{e(entry["date"])}">{e(entry["date"])}</time>{_window_html(entry, page)}</span>{suffix}</li>'
         )
     return (
         '<nav class="snapshot-picker" aria-label="Snapshot months">'
@@ -272,7 +319,7 @@ def archive_banner(page, entry):
     return (
         '<p class="archive-banner">Historical snapshot: this page shows the '
         f'<time datetime="{e(entry["month"])}">{e(month_label(entry["month"]))}</time> snapshot from '
-        f'<time datetime="{e(entry["date"])}">{e(entry["date"])}</time>{_window_html(entry)}. '
+        f'<time datetime="{e(entry["date"])}">{e(entry["date"])}</time>{_window_html(entry, page)}. '
         f'<a href="/analytics/{e(page)}/">Back to Latest</a>.</p>'
     )
 
@@ -280,8 +327,8 @@ def archive_banner(page, entry):
 def picker_html(base, page, required=None, current=None):
     return snapshot_picker(
         page,
-        latest_snapshot_entry(base, required),
-        monthly_archive_entries(base, required),
+        latest_snapshot_entry(base, required, page),
+        monthly_archive_entries(base, required, page),
         current,
     )
 
@@ -1681,7 +1728,7 @@ def build(root):
     dest.mkdir(parents=True)
     (dest / "index.html").write_text(render_page(root, metrics, day), encoding="utf-8")
     print(f"built metrics ({day}) -> {dest}")
-    for entry in monthly_archive_entries(base, "metrics.json"):
+    for entry in monthly_archive_entries(base, "metrics.json", "metrics"):
         archived = load_metrics(entry["directory"])
         month_dest = dest / entry["month"]
         month_dest.mkdir(parents=True)

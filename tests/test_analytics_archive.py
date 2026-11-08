@@ -1,5 +1,6 @@
 """Monthly snapshot archives and the snapshot picker on each analytics page."""
 
+import json
 import re
 import shutil
 import tempfile
@@ -112,6 +113,93 @@ class ArchiveBuildTest(unittest.TestCase):
             self.assertIn("2026-11", index)
             for slug in PAGES:
                 self.assertIn(f'href="/analytics/{slug}/2026-11/"', index, slug)
+
+    def test_picker_and_banner_use_page_windows_or_label_fleet_reference(self):
+        # Differing windows: reliability (2026-10-09..), a distinct metrics
+        # durations window, a settled-reviewer window from the previous
+        # month (2026-09-09.. in the real snapshot) and cumulative
+        # experiments starting 2026-10-28/31. None may be conflated.
+        reliability_since = "2026-10-09T17:22:36.488867042Z"
+        reliability_until = "2026-11-08T17:22:36.488867042Z"
+        metrics_since = "2026-10-05T00:00:00+00:00"
+        metrics_until = "2026-11-04T00:00:00+00:00"
+        with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+            root = make_root(tmp, ("2026-10-31", "2026-11-08", "2026-11-30", "2026-12-15"))
+            for directory in (root / "data" / "analytics").iterdir():
+                metrics_path = directory / "metrics.json"
+                metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+                metrics["durations"]["window"]["since"] = metrics_since
+                metrics["durations"]["window"]["until"] = metrics_until
+                metrics_path.write_text(json.dumps(metrics), encoding="utf-8")
+
+            latest_dir = root / "data" / "analytics" / "2026-12-15"
+            self.assertEqual(
+                analytics_page._window_stamps(latest_dir, "metrics"),
+                (metrics_since, metrics_until),
+            )
+            self.assertEqual(
+                analytics_page._window_stamps(latest_dir, "reliability"),
+                (reliability_since, reliability_until),
+            )
+            self.assertEqual(
+                analytics_page._window_stamps(latest_dir, "experiments"),
+                (reliability_since, reliability_until),
+            )
+            self.assertEqual(
+                analytics_page._window_stamps(latest_dir, "agents"),
+                (reliability_since, reliability_until),
+            )
+
+            build_all(root)
+            out = root / "public" / "analytics"
+
+            def banner(document):
+                match = re.search(r'<p class="archive-banner">.*?</p>', document, re.S)
+                self.assertIsNotNone(match)
+                return match.group(0)
+
+            expectations = {
+                "experiments": ("fleet reliability reference window", reliability_since,
+                                "each experiment shows its cumulative observation window"),
+                "agents": ("fleet reliability reference window", reliability_since,
+                           "each board shows its own observation window"),
+                "metrics": ("metrics window", metrics_since,
+                            "each board shows its own window"),
+                "reliability": ("fleet reliability window", reliability_since, None),
+            }
+            for slug, (label, since, pointer) in expectations.items():
+                live = (out / slug / "index.html").read_text(encoding="utf-8")
+                archive = (out / slug / "2026-11" / "index.html").read_text(encoding="utf-8")
+                for kind, picker, banner_html in (
+                    ("live", picker_html(live), None),
+                    ("archive", picker_html(archive), banner(archive)),
+                ):
+                    for fragment in (picker, banner_html):
+                        if fragment is None:
+                            continue
+                        self.assertIn(label, fragment, (slug, kind))
+                        self.assertIn(f'datetime="{since}"', fragment, (slug, kind))
+                        self.assertNotIn(", window <time", fragment, (slug, kind))
+                        if pointer:
+                            self.assertIn(pointer, fragment, (slug, kind))
+                    if slug == "reliability":
+                        self.assertNotIn("reference window", picker, (slug, kind))
+                    if slug == "metrics":
+                        self.assertNotIn(f'datetime="{reliability_since}"', picker, (slug, kind))
+                self.assertIn("2026-11-30", banner(archive), slug)
+                self.assertIn("Historical snapshot", banner(archive), slug)
+
+            # Each board's own period is preserved on the page body.
+            agents = (out / "agents" / "index.html").read_text(encoding="utf-8")
+            self.assertIn('datetime="2026-09-09T17:22:19Z"', agents)
+            experiments = (out / "experiments" / "index.html").read_text(encoding="utf-8")
+            self.assertIn('datetime="2026-10-31T18:36:15.786740Z"', experiments)
+            self.assertIn("Cumulative observations from experiment start", experiments)
+            metrics_page = (out / "metrics" / "index.html").read_text(encoding="utf-8")
+            self.assertIn(
+                f'datetime="{metrics_since}" data-format="stamp" data-field="durations.window.since"',
+                metrics_page,
+            )
 
     def test_picker_shows_only_latest_until_november_ends(self):
         with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
