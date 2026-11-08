@@ -147,6 +147,22 @@ def workflow_job_condition(workflow, job):
 
 
 class AgentsPageTest(unittest.TestCase):
+    def test_summary_and_descriptions_allow_earlier_settled_window(self):
+        data = scorecards()
+        self.assertLess(
+            data["reviewers"]["settled"]["window"]["until"],
+            data["reviewers"]["provisional"]["window"]["until"],
+        )
+        doc = build.render_agents_page(data, "2026-11-08")
+        self.assertIn("2026-09-09T09:11:48Z", section(doc, "reviewers-settled"))
+        summary = re.search(r'<p class="summary">(.*?)</p>', doc).group(1)
+        self.assertIn("Each scorecard shows its own window.", summary)
+        self.assertNotIn("last 30 days", summary.lower())
+        for attribute in ('name="description"', 'property="og:description"'):
+            description = re.search(rf'<meta {attribute} content="([^"]*)"', doc).group(1)
+            self.assertIn("each with its own window", description)
+            self.assertNotIn("last 30 days", description.lower())
+
     def test_website_workflow_routes_analytics_snapshot_changes(self):
         workflow = (ROOT / ".github" / "workflows" / "website.yml").read_text(
             encoding="utf-8"

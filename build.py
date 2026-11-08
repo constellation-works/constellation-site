@@ -667,7 +667,7 @@ def render_agents_body(scorecards, snapshot_date):
     sections = "\n".join(render_board(board) for board in boards)
     return f'''<article class="analytics">
 <h1>Agent scorecards</h1>
-<p class="summary">Implementer, reviewer and pilot crews over the last 30 days, taken from the daily public snapshot. How a score is built is <a href="/notes/crew-rankings-method/">how the crew rankings work</a>.</p>
+<p class="summary">Implementer, reviewer and pilot crews from the daily public snapshot. Each scorecard shows its own window. How a score is built is <a href="/notes/crew-rankings-method/">how the crew rankings work</a>.</p>
 <p class="as-of">Snapshot {e(snapshot_date)}.</p>
 <nav class="board-nav" aria-label="Scorecards">
 {nav}
@@ -679,7 +679,7 @@ def render_agents_body(scorecards, snapshot_date):
 def render_agents_page(scorecards, snapshot_date):
     return page(
         "Agent scorecards — Constellation Works",
-        "Implementer, reviewer and pilot scorecards over the last 30 days.",
+        "Implementer, reviewer and pilot scorecards from the daily public snapshot, each with its own window.",
         f"{SITE}/analytics/agents/",
         render_agents_body(scorecards, snapshot_date),
         current="analytics",
