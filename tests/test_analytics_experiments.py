@@ -189,11 +189,12 @@ class ExperimentsPageTest(unittest.TestCase):
             for arm in experiment["arms"]:
                 self.assertIn(arm["name"], doc)
             self.assertNotIn(experiment["id"], doc)
-        explore_first = next(x for x in concluded if x["name"] == "hard-tier-explore-first")
-        self.assertEqual(explore_first["primary_metric"], "implement_duration")
-        section = doc.split("<h2>" + build.html.escape(explore_first["name"]), 1)[1].split("</section>", 1)[0]
-        self.assertIn("<h3>Primary outcome</h3><h4>Implementation duration (exploratory, not a decision metric)</h4>", section)
-        for metric in explore_first["metrics"]:
+        self.assertNotIn("hard-tier-explore-first", doc)
+        by_model = next(x for x in concluded if x["name"] == "hard-tier-by-model")
+        self.assertEqual(by_model["primary_metric"], "cost_usd")
+        section = doc.split("<h2>" + build.html.escape(by_model["name"]), 1)[1].split("</section>", 1)[0]
+        self.assertIn("<h3>Primary outcome</h3><h4>Cost</h4>", section)
+        for metric in by_model["metrics"]:
             label = build.EXPERIMENT_METRICS[metric["metric"]][0]
             suffix = " (exploratory, not a decision metric)" if metric.get("exploratory") else ""
             self.assertIn(f"<h4>{label}{suffix}</h4>", section)
