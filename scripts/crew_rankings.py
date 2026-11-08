@@ -344,6 +344,11 @@ def main():
                      if t in m["places"] else "–" for t in shown]
             md.append(f"| {m['model']} ({m['best_crew']}) | " + " | ".join(cells)
                       + f" | {m['margin']:+.1f} | {m['points']} |")
+        if writer["source"] == "fallback":
+            why = ("a tie survived points, margin and tasks, so there is no MVP"
+                   if mvp["tie_break"] == "fallback"
+                   else f"the MVP's crew ({writer['mvp_crew_row']}) isn't configured here")
+            md += ["", f"The configured crew ({a.fallback_crew}) writes the note: {why}."]
     else:
         md.append(f"No tier had crews on {MIN_MODELS} or more models this week, so there is "
                   f"no MVP, and the configured crew ({a.fallback_crew}) writes the note.")
