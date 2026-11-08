@@ -62,9 +62,11 @@ denominator. The renderer reads only known aggregate counts and validated timest
 it does not publish job or activity identifiers, diagnostic labels or messages.
 
 `/analytics/experiments/` includes only concluded experiments from the newest snapshot.
-Each section shows the question, observed arms and crew mix, primary outcome and
-expandable secondary outcomes with per-arm means for every outcome, medians for
-non-rate outcomes, supplied intervals and metric-specific support. It prints the
+Each section shows the question, observed arms and crew mix, and a Difference from
+control chart as the default view: Primary then Guardrail metric groups, with
+exploratory metrics collapsed under `Other metrics (N)`. Per-arm means for every
+outcome, medians for non-rate outcomes, supplied intervals and metric-specific
+support appear only inside the collapsed `Raw per-arm outcomes` block. It prints the
 cumulative UTC window from experiment start to readout. The statistical verdict
 and recorded chosen arm are distinct: concluding an experiment does not imply a
 winner, and unavailable measurements stay unavailable.
