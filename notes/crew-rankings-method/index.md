@@ -67,7 +67,12 @@ reviews.
 This score is not centred on 100. Its centre is the fleet average for the week, which
 each table's key states, and a row above it is pulled back toward it. A reviewer's
 misses can surface up to 30 days after the review, so a recent review is *provisional*:
-the key says how many of the week's reviews still are, and those scores can still fall.
+the key says how many of the window's reviews still are, and those scores can still fall.
+
+The reviewer table covers the last 30 days, not the note's 7, and is labelled with its
+dates. Most of its reviews are still provisional. The plan is to score reviewers on a
+settled window instead: 7 days that ended 30 days ago, so no review in it can still
+change. Orbit's scorecard can't select that window yet.
 
 ### Pilots
 
@@ -80,27 +85,28 @@ Reviewer and pilot rows need the scorecard's minimum support, 10 units.
 
 ### MVP of the week
 
-One model is named MVP by a fixed rule, scored on the implementer tier tables the note
-shows that week. The all-tiers, reviewer and pilot tables appear in the note but don't
-count toward it.
+One model is named MVP by a fixed rule. Three rankings score, each with a weight: the
+all-tiers implementer ranking (100), reviewers (50) and pilots (20). The tier tables are
+in the note for the record and earn no points.
 
-- **Points.** In each counted tier, 1st place earns 5 points, 2nd 3 and 3rd 1. Places
-  below 3rd earn nothing.
-- **By model.** A model counts once per tier, through its best-scoring crew, so opus and
-  opus@medium are one entry. Places are taken against the next distinct model.
-- **Ties.** Equal points go to the larger *margin*: the sum, over the counted tiers, of the
-  model's score minus the next distinct model's score below it (0 in last place). Still
-  equal, the model with more tasks on those tiers wins. Still equal, there is no MVP.
+- **Points.** On each ranking, 1st place earns 5 points, 2nd 3 and 3rd 1, times the
+  ranking's weight out of 100: 5, 3 and 1 on all tiers, 2.5, 1.5 and 0.5 on reviewers,
+  and 1, 0.6 and 0.2 on pilots. Places below 3rd earn nothing.
+- **Enough models.** A ranking awards points only when 3 or more distinct models are
+  ranked on it. Below that it is shown without points, and the note says so.
+- **By model.** A model counts once per ranking, through its best-scoring crew, so opus
+  and opus@medium are one entry. Places are taken against the next distinct model.
+- **Ties.** Equal points go to the larger *weighted margin*: the sum, over the scoring
+  rankings, of the model's score minus the next distinct model's score, times the
+  ranking's weight out of 100 (0 in last place). Still equal, the model with more
+  settled units on those rankings wins. Still equal, there is no MVP.
 
-The note's MVP points table shows each model's place and points per tier, its margin and
-its total.
-
-The rule rewards placing near the top across tiers, not one large score: a model that
-places on two tiers can beat one that wins a single tier.
+The note's MVP points table shows each model's place and points on each ranking, its
+weighted margin and its total.
 
 The note is written by the MVP model's best crew, named with its points in the byline.
-When no tier has crews on 3 or more models, or a tie survives every tie-break, there is
-no MVP: the configured crew writes the note, and the note says so.
+When no ranking scores, or a tie survives every tie-break, there is no MVP: the
+configured crew writes the note, and the note says so.
 
 ## Limits
 

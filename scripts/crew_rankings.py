@@ -16,7 +16,8 @@ tables.md and facts.json are working files: delete them before the note ships.
 Usage, on the Orbit owner host:
 
     python3 scripts/crew_rankings.py notes/crew-rankings-<date> [--window 7d]
-        [--workspace orbit] [--from <dir>] [--fallback-crew opus] [--crews a,b,...]
+        [--workspace orbit] [--reviewer-window 30d] [--from <dir>]
+        [--fallback-crew opus] [--crews a,b,...]
     python3 scripts/crew_rankings.py --writer-only [same options]   # writer JSON only
 
 --from reads saved `--json` output instead of calling orbit: per-task.json,
@@ -32,10 +33,17 @@ The method is on the standing page notes/crew-rankings-method. In short:
   that tier (opus and opus@medium count once).
 - Reviewers and pilots rank the scorecard's ranked rows (at or above its
   minimum support). Their scores centre on the fleet average, not 100.
-- The MVP is a model, scored on the shown tier tables only: 5, 3 and 1 points
-  for 1st, 2nd and 3rd, each model counted once per tier through its best
-  crew. Ties go to the larger summed margin over the next distinct model, then
-  more tasks, then --fallback-crew. Its best crew writes the note.
+- The MVP is a model, scored on three rankings with weights: all tiers 100,
+  reviewers 50, pilots 20. Each ranking awards 5, 3 and 1 points for 1st, 2nd
+  and 3rd, times weight/100, and only when MIN_MODELS or more distinct models
+  are ranked on it. A model counts once per ranking, through its best crew,
+  placed against the next distinct model. Ties go to the larger weighted
+  margin over the next distinct model, then more settled units, then
+  --fallback-crew. Its best crew writes the note. The tier tables are shown
+  but don't score (Daniel, 2026-11-08).
+- Reviewers are read on --reviewer-window (30d), not --window. Interim: Daniel's
+  rule is a settled window of --window's length ending 30 days back, which
+  needs the scorecard's window end (ORB-23066).
 
 Rows with no recorded model are dropped everywhere.
 """
@@ -66,6 +74,11 @@ def wilson(k, n, z=1.96):
     centre = (p + z * z / (2 * n)) / den
     half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / den
     return max(0.0, centre - half) * 100, min(1.0, centre + half) * 100
+
+
+def day(ts):
+    """The YYYY-MM-DD date of an RFC 3339 timestamp."""
+    return ts[:10]
 
 
 def pct(x):
@@ -116,36 +129,56 @@ def ordinal(n):
     return ORDINAL.get(n, f"{n}th")
 
 
-def mvp_points(per_tier, shown):
-    """Score models on the shown tier tables: 5/3/1 points for 1st/2nd/3rd.
+# (key, title, weight): the rankings that score toward the MVP.
+MVP_RANKINGS = (("all_tiers", "All tiers", 100), ("reviewers", "Reviewers", 50),
+                ("pilots", "Pilots", 20))
 
-    A model counts once per tier, through its best-scoring crew, and is placed
-    against the next distinct model. Its margin is the sum, over the tiers, of
-    its score minus the next distinct model's score (0 in last place). Units
-    are all its crews' tasks on those tiers. Returns the models ranked by
-    points, then margin, then units.
+
+def fmt_pts(x):
+    return f"{x:g}"
+
+
+def mvp_points(tables):
+    """Score models on the weighted rankings: 5/3/1 points x weight/100.
+
+    `tables` maps each MVP_RANKINGS key to its ranked rows (best first, each
+    with crew, model, score and units). A ranking scores only when MIN_MODELS
+    or more distinct models are on it. A model counts once per ranking, through
+    its best crew, placed against the next distinct model. Its margin is the
+    sum of (score - next distinct model's score) x weight/100 (0 in last
+    place). Units are all its crews' units on the scoring rankings. Returns
+    (models ranked by points, margin, units; scoring keys; unscored keys).
     """
-    models = {}
-    for tier in shown:
+    models, scoring, unscored = {}, [], []
+    for key, _title, weight in MVP_RANKINGS:
+        rows = tables[key]
         best = {}
-        for r in sorted(per_tier[tier], key=lambda r: -r["score"]):
+        for r in sorted(rows, key=lambda r: -r["score"]):
             best.setdefault(r["model"], r)
+        if len(best) < MIN_MODELS:
+            unscored.append(key)
+            continue
+        scoring.append(key)
+        w = weight / 100
         order = list(best.values())
         for i, r in enumerate(order, 1):
-            m = models.setdefault(r["model"], {"model": r["model"], "points": 0, "margin": 0.0,
+            m = models.setdefault(r["model"], {"model": r["model"], "points": 0.0, "margin": 0.0,
                                                 "units": 0, "places": {}})
             below = order[i]["score"] if i < len(order) else r["score"]
-            m["points"] += PLACE_POINTS.get(i, 0)
-            m["margin"] += r["score"] - below
-            m["places"][tier] = {"place": i, "points": PLACE_POINTS.get(i, 0), "crew": r["crew"],
-                                 "score": r["score"], "margin": round(r["score"] - below, 1)}
-        for r in per_tier[tier]:
-            models[r["model"]]["units"] += r["tasks"]
+            pts = PLACE_POINTS.get(i, 0) * w
+            m["points"] += pts
+            m["margin"] += (r["score"] - below) * w
+            m["places"][key] = {"place": i, "points": round(pts, 2), "crew": r["crew"],
+                                "score": r["score"], "margin": round((r["score"] - below) * w, 1)}
+        for r in rows:
+            models[r["model"]]["units"] += r["units"]
     for m in models.values():
+        m["points"] = round(m["points"], 2)
         m["margin"] = round(m["margin"], 1)
-        # The model's best crew: its best placement, then its higher score there.
-        m["best_crew"] = min(m["places"].values(), key=lambda p: (p["place"], -p["score"]))["crew"]
-    return sorted(models.values(), key=lambda m: (-m["points"], -m["margin"], -m["units"]))
+        # The model's best crew: its place on the heaviest ranking it scored on.
+        m["best_crew"] = next(m["places"][k]["crew"] for k, _, _ in MVP_RANKINGS if k in m["places"])
+    ranking = sorted(models.values(), key=lambda m: (-m["points"], -m["margin"], -m["units"]))
+    return ranking, scoring, unscored
 
 
 def pick_mvp(ranking):
@@ -164,13 +197,13 @@ def pick_mvp(ranking):
         rule = "fallback"
     return {"model": top["model"], "best_crew": top["best_crew"], "points": top["points"],
             "margin": top["margin"], "units": top["units"], "tie_break": rule,
-            "tiers": {t: p for t, p in top["places"].items()}}
+            "rankings": dict(top["places"])}
 
 
 def pick_writer(mvp, fallback, crews):
     """The crew that writes the note: the MVP model's best crew, without @effort.
 
-    Falls back to `fallback` when no tier table counts, when a tie survives
+    Falls back to `fallback` when no ranking scores, when a tie survives
     points, margin and units, or when the crew isn't one of `crews` (the
     crews configured in the workspace; None skips that check).
     """
@@ -202,6 +235,8 @@ def main():
     ap.add_argument("out", nargs="?")
     ap.add_argument("--window", default="7d")
     ap.add_argument("--workspace", default="orbit")
+    ap.add_argument("--reviewer-window", default="30d",
+                    help="window for the reviewer scorecard (default 30d)")
     ap.add_argument("--from", dest="source")
     ap.add_argument("--fallback-crew", default="opus",
                     help="crew that writes the note when no MVP qualifies (default opus)")
@@ -223,7 +258,7 @@ def main():
         per_task = scorecard(a.window, a.workspace, "implementers", "--per-task")
         by_type = scorecard(a.window, a.workspace, "implementers", "--by-type")
         rows = scorecard(a.window, a.workspace, "implementers")
-        reviewers = scorecard(a.window, a.workspace, "reviewers")
+        reviewers = scorecard(a.reviewer_window, a.workspace, "reviewers")
         pilots = scorecard(a.window, a.workspace, "pilots")
 
     out = None if a.writer_only else pathlib.Path(a.out)
@@ -291,8 +326,10 @@ def main():
     write_csv(path("reviewers.csv"), rev_rows)
     write_csv(path("pilots.csv"), pil_rows)
 
-    # MVP: points for placing on the shown tier tables, by model.
-    ranking = mvp_points(per_tier, shown)
+    # MVP: weighted points on the all-tiers, reviewer and pilot rankings, by model.
+    units = lambda rs, k: [dict(r, units=r[k]) for r in rs]
+    ranking, scoring, unscored = mvp_points({
+        "all_tiers": units(all_rows, "tasks"), "reviewers": rev_rows, "pilots": pil_rows})
     mvp = pick_mvp(ranking)
     writer = pick_writer(mvp, a.fallback_crew, crews)
     if a.writer_only:
@@ -311,7 +348,7 @@ def main():
     for tier in shown:
         md += [f"### {tier.capitalize()} tier", "",
                "Score: the dashboard tier score, against the fleet's rates on this tier; "
-               "100 is the fleet average.", "",
+               "100 is the fleet average. Shown for the record; tier tables earn no MVP points.", "",
                "| Rank | Crew · effort | Score | Tasks | Landed | Reworked (95%) |",
                "|--:|---|--:|--:|--:|--:|"]
         for i, r in enumerate(per_tier[tier], 1):
@@ -323,10 +360,15 @@ def main():
     share = f"All {settled}" if prov == settled else f"{prov} of the {settled}"
     prov_note = (f" {share} reviews in the window are under 30 days old, "
                  "so missed regressions can still lower these scores.") if prov else ""
-    for title, card, unit, trows, extra in (
-            ("Reviewers", reviewers, "settled reviews", rev_rows, prov_note),
-            ("Pilots", pilots, "assessed tasks", pil_rows, "")):
-        md += [f"### {title}", "",
+    rev_dates = f" ({day(reviewers['since'])} to {day(reviewers['computed_at'])})"
+    for title, card, unit, trows, extra, key in (
+            ("Reviewers" + rev_dates, reviewers, "settled reviews", rev_rows, prov_note, "reviewers"),
+            ("Pilots", pilots, "assessed tasks", pil_rows, "", "pilots")):
+        md += [f"### {title}", ""]
+        if key in unscored:
+            md += [f"Fewer than {MIN_MODELS} models are ranked here, so this table earns no "
+                   "MVP points this week.", ""]
+        md += [
                term_key(card, unit, f"The fleet average is {card['fleet_average']:.1f}, not 100.{extra}"), "",
                f"| Rank | Crew · effort | Score | {unit.split()[-1].capitalize()} |",
                "|--:|---|--:|--:|"]
@@ -334,24 +376,30 @@ def main():
         md.append("")
     md += ["### MVP points", ""]
     if ranking:
-        md += ["Points: 5, 3 and 1 for 1st, 2nd and 3rd on each tier table above, by model "
-               "through its best crew; ties go to the larger margin over the next model, "
-               "then more tasks.", "",
-               "| Model | " + " | ".join(f"{t.capitalize()}" for t in shown) + " | Margin | Points |",
-               "|---|" + "--:|" * len(shown) + "--:|--:|"]
+        weights = {k: w for k, _, w in MVP_RANKINGS}
+        cols = [(k, t) for k, t, _ in MVP_RANKINGS if k in scoring]
+        md += ["Points: 5, 3 and 1 for 1st, 2nd and 3rd on each ranking, times its weight "
+               "(" + ", ".join(f"{t.lower()} {weights[k]}" for k, t in cols) + ", out of 100), "
+               "by model through its best crew. Ties go to the larger weighted margin over the "
+               "next model, then more settled units.", "",
+               "| Model | " + " | ".join(t for _, t in cols) + " | Weighted margin | Points |",
+               "|---|" + "--:|" * len(cols) + "--:|--:|"]
         for m in ranking:
-            cells = [f"{ordinal(m['places'][t]['place'])} · {m['places'][t]['points']}"
-                     if t in m["places"] else "–" for t in shown]
+            cells = [f"{ordinal(m['places'][k]['place'])} · {fmt_pts(m['places'][k]['points'])}"
+                     if k in m["places"] else "–" for k, _ in cols]
             md.append(f"| {m['model']} ({m['best_crew']}) | " + " | ".join(cells)
-                      + f" | {m['margin']:+.1f} | {m['points']} |")
+                      + f" | {m['margin']:+.1f} | {fmt_pts(m['points'])} |")
+        if unscored:
+            names = " and ".join(t.lower() for k, t, _ in MVP_RANKINGS if k in unscored)
+            md += ["", f"The {names} ranking had fewer than {MIN_MODELS} models, so it scored no points."]
         if writer["source"] == "fallback":
-            why = ("a tie survived points, margin and tasks, so there is no MVP"
+            why = ("a tie survived points, margin and units, so there is no MVP"
                    if mvp["tie_break"] == "fallback"
                    else f"the MVP's crew ({writer['mvp_crew_row']}) isn't configured here")
             md += ["", f"The configured crew ({a.fallback_crew}) writes the note: {why}."]
     else:
-        md.append(f"No tier had crews on {MIN_MODELS} or more models this week, so there is "
-                  f"no MVP, and the configured crew ({a.fallback_crew}) writes the note.")
+        md.append(f"No ranking had {MIN_MODELS} or more models this week, so there is no MVP, "
+                  f"and the configured crew ({a.fallback_crew}) writes the note.")
     md.append("")
     (out / "tables.md").write_text("\n".join(md))
 
@@ -363,6 +411,10 @@ def main():
         "fleet_average": {"implementers": rows["fleet_average"], "reviewers": reviewers["fleet_average"],
                           "pilots": pilots["fleet_average"]},
         "reviews_provisional": prov, "reviews_settled": settled,
+        "reviewer_window": {"window": a.reviewer_window, "since": reviewers["since"],
+                            "computed_at": reviewers["computed_at"]},
+        "mvp_rankings": {"weights": {k: w for k, _, w in MVP_RANKINGS},
+                         "scoring": scoring, "unscored": unscored},
         "tiers_shown": shown,
         "tiers_omitted": {t: [r["crew"] for r in per_tier[t]] for t in TIERS if t not in shown},
         "ranked": {"all_tiers": len(all_rows), "reviewers": len(rev_rows), "pilots": len(pil_rows),
