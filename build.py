@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Build the Notes section and the agent scorecards page.
+"""Build the Notes section, the agent scorecards page and the metrics page.
 
 Each note is a directory under notes/ holding index.md (front matter plus Markdown)
 and any files the note links to (data, images). Output is a page per note, a
 /notes/ index and an Atom feed. public/notes/ is generated: do not edit or commit it.
 
 /analytics/agents/ is rendered from the newest data/analytics/<YYYY-MM-DD>/scorecards.json.
-public/analytics/ is generated too: do not edit or commit it.
+/analytics/metrics/ is rendered from the newest data/analytics/<YYYY-MM-DD>/metrics.json
+via analytics_page.py. public/analytics/ is generated too: do not edit or commit it.
 
 Front matter is `key: value` lines between `---` fences:
 
@@ -37,6 +38,7 @@ import re
 import shutil
 import sys
 
+import analytics_page
 import markdown
 
 ROOT = pathlib.Path(__file__).parent
@@ -712,6 +714,7 @@ def main():
     skipped = len(notes) - len(shown)
     print(f"built {len(shown)} note(s) -> {OUT}" + (f"; skipped {skipped} draft(s)" if skipped else ""))
     build_agents()
+    analytics_page.build(ROOT)
 
 
 if __name__ == "__main__":

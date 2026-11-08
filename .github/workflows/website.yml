@@ -7,6 +7,8 @@ on:
       - "public/**"
       - "notes/**"
       - "build.py"
+      - "analytics_page.py"
+      - "data/analytics/**"
       - "wrangler.toml"
       - ".github/workflows/website.yml"
   pull_request:
@@ -14,6 +16,8 @@ on:
       - "public/**"
       - "notes/**"
       - "build.py"
+      - "analytics_page.py"
+      - "data/analytics/**"
       - "wrangler.toml"
       - ".github/workflows/website.yml"
   workflow_dispatch:
