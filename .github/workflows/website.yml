@@ -41,7 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m venv "$RUNNER_TEMP/venv"
-          "$RUNNER_TEMP/venv/bin/pip" install --quiet markdown==3.8.2
+          "$RUNNER_TEMP/venv/bin/pip" install --quiet --require-hashes -r .github/requirements/website.txt
           "$RUNNER_TEMP/venv/bin/python" build.py
 
   publish:
@@ -78,7 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m venv "$RUNNER_TEMP/venv"
-          "$RUNNER_TEMP/venv/bin/pip" install --quiet markdown==3.8.2
+          "$RUNNER_TEMP/venv/bin/pip" install --quiet --require-hashes -r .github/requirements/website.txt
           "$RUNNER_TEMP/venv/bin/python" build.py
 
       - name: Deploy static site
