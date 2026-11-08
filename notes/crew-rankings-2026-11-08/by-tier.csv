@@ -1,0 +1,14 @@
+tier,crew,model,effort,tasks,score,landed_pct,reworked_pct,reworked_lo,reworked_hi,prelanding_repaired_pct,prelanding_rejected_pct,prelanding_first_pass_accept_pct
+low,muse-spark,muse-spark-1.3-contributor,xhigh,150,100.8,99.3,1.3,0.4,4.7,0.0,0.0,0.0
+low,haiku,claude-haiku-5-5,xhigh,168,100.3,100.0,2.4,0.9,6.0,0.0,0.0,0.0
+low,terra,gpt-6.1-terra,high,69,100.1,98.6,2.9,0.8,10.0,0.0,0.0,0.0
+low,luna,gpt-6-luna,xhigh,169,98.8,97.0,2.4,0.9,5.9,0.0,0.0,0.0
+medium,sol,gpt-6.1-sol,high,127,107.8,96.9,3.9,1.7,8.9,0.0,0.0,0.0
+medium,sonnet,claude-sonnet-5-5,high,64,104.0,100.0,3.1,0.9,10.7,0.0,0.0,0.0
+medium,terra,gpt-6.1-terra,high,33,101.3,100.0,9.1,3.1,23.6,0.0,0.0,0.0
+medium,opus,claude-opus-5-5,"medium, high",10,100.9,100.0,10.0,1.8,40.4,0.0,0.0,0.0
+medium,grok,grok-4.7,high,51,98.0,92.2,2.0,0.3,10.3,0.0,0.0,0.0
+medium,muse-wonder,muse-wonder-1.0,high,126,95.1,98.4,0.8,0.1,4.4,0.0,0.0,0.0
+hard,opus@medium,claude-opus-5-5,medium,90,118.7,98.9,3.3,1.1,9.3,0.0,0.0,0.0
+hard,sol,gpt-6.1-sol,high,25,101.6,88.0,12.0,4.2,30.0,0.0,0.0,0.0
+hard,opus,claude-opus-5-5,"medium, high",17,81.5,100.0,11.8,3.3,34.3,0.0,0.0,0.0
