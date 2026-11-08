@@ -193,6 +193,59 @@ class ExperimentsPageTest(unittest.TestCase):
         self.assertNotIn("<script", chart)
         self.assertIn('class="sr-only">treatment:', chart)
 
+    def test_small_generic_differences_never_render_signed_zero(self):
+        import re
+
+        lead = {"metric": "lead_time_per_line", "unit": None, "better": "lower"}
+        repairs = {"metric": "review_repairs", "unit": None, "better": "lower"}
+        # Live-snapshot magnitudes must keep a non-zero signed value.
+        self.assertEqual(
+            build.experiment_difference(-0.0006036, lead), "-0.0006 hours/line")
+        self.assertEqual(
+            build.experiment_difference(0.001606, lead), "+0.0016 hours/line")
+        self.assertEqual(
+            build.experiment_difference(-0.0011446, repairs), "-0.0011 repairs/task")
+        self.assertEqual(
+            build.experiment_difference_interval(
+                [-0.0018127530072524732, 0.0008361674274996601], lead),
+            "-0.0018 hours/line to +0.0008 hours/line")
+        # Small per-arm means also stay non-zero through experiment_value.
+        self.assertEqual(
+            build.experiment_value(0.0018687083846129571, "hours/line"),
+            "0.0019 h / line")
+        signed_zero = re.compile(r"[+-]0(?![\d.])")
+        for text in (
+            build.experiment_difference(-0.0006036, lead),
+            build.experiment_difference(0.001606, lead),
+            build.experiment_difference(0.0002473267980663391, lead),
+            build.experiment_difference(-0.001082881708263405, lead),
+            build.experiment_difference(-0.0011446, repairs),
+            build.experiment_difference_interval(
+                [-0.04502442002442002, 0.042353479853479856], repairs),
+            build.experiment_value(0.0018687083846129571, "hours/line"),
+        ):
+            self.assertIsNone(signed_zero.search(text), text)
+        # Magnitudes far below 0.00005 never collapse to zero either.
+        for tiny in (5e-06, 1e-09):
+            for metric in (lead, repairs):
+                text = build.experiment_difference(tiny, metric)
+                self.assertIsNone(signed_zero.search(text), text)
+                text = build.experiment_difference(-tiny, metric)
+                self.assertIsNone(signed_zero.search(text), text)
+        # True zeros stay unsigned.
+        self.assertEqual(build.experiment_difference(0, repairs), "0 repairs/task")
+        self.assertEqual(build.experiment_difference(0.0, lead), "0 hours/line")
+
+    def test_committed_snapshot_has_no_signed_zero_diffs(self):
+        import re
+
+        directory = build.latest_analytics_dir()
+        data = json.loads((directory / "experiments.json").read_text())
+        doc = build.render_experiments_page(data, directory.name)
+        signed_zero = re.compile(r"[+-]0(?![\d.])")
+        chart = doc.partition('<div class="diff-chart">')[2]
+        self.assertIsNone(signed_zero.search(chart))
+
     def test_difference_without_arm_entry_is_not_measured(self):
         data = fixture()
         data["experiments"][0]["metrics"][0]["differences"] = []
