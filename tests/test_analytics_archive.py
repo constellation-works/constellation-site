@@ -46,6 +46,9 @@ def build_all(root):
 
 
 class MonthlyArchiveEntriesTest(unittest.TestCase):
+    def setUp(self):
+        SCRATCH.mkdir(parents=True, exist_ok=True)
+
     def test_latest_per_closed_month_with_floor_and_no_backfill(self):
         with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
             base = Path(tmp) / "analytics"
@@ -74,6 +77,9 @@ class MonthlyArchiveEntriesTest(unittest.TestCase):
 
 
 class ArchiveBuildTest(unittest.TestCase):
+    def setUp(self):
+        SCRATCH.mkdir(parents=True, exist_ok=True)
+
     def test_build_renders_archives_for_all_pages_from_two_month_fixture(self):
         with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
             root = make_root(tmp, ("2026-10-31", "2026-11-08", "2026-11-30", "2026-12-15"))
