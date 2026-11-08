@@ -928,7 +928,18 @@ def _plain(value):
         return f"{value:,.0f}"
     if abs(value) >= 10:
         return f"{value:.1f}".rstrip("0").rstrip(".")
-    return f"{value:.2f}".rstrip("0").rstrip(".")
+    text = f"{value:.2f}".rstrip("0").rstrip(".")
+    if text not in ("0", "-0"):
+        return text
+    # A non-zero magnitude below 0.005 would collapse to a signed zero that
+    # contradicts the better/worse verdict. Show significant figures instead,
+    # preferring plain decimals for readability and falling back to g-style
+    # for magnitudes too small for fixed notation.
+    for decimals in (4, 6, 8, 10):
+        candidate = f"{value:.{decimals}f}".rstrip("0").rstrip(".")
+        if candidate not in ("0", "-0", "", "-"):
+            return candidate
+    return f"{value:.4g}"
 
 
 def experiment_value(value, unit):
