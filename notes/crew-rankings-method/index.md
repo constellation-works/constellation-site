@@ -72,9 +72,10 @@ the key says how many of the window's reviews still are, and those scores can st
 
 The reviewer table covers the last 30 days, not the note's 7, and is labelled with its
 dates. Most of its reviews are still provisional, so for now the reviewer board earns no
-points toward the Implementer MVP. The plan is to score reviewers on a settled window: 7 days that ended 30 days
-ago, so no review in it can still change. Orbit's scorecard can't select that window
-yet.
+points toward the Implementer MVP. A settled window — 7 days that ended 30 days
+ago, so no review in it can still change — can be selected with the released scorecard
+using `--window 7d --until 30d`. The weekly notes keep publishing the last-30-day
+reviewer table described above until a later phase changes the selection.
 
 ### Pilots
 
