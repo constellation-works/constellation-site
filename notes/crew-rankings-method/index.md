@@ -70,9 +70,10 @@ misses can surface up to 30 days after the review, so a recent review is *provis
 the key says how many of the window's reviews still are, and those scores can still fall.
 
 The reviewer table covers the last 30 days, not the note's 7, and is labelled with its
-dates. Most of its reviews are still provisional. The plan is to score reviewers on a
-settled window instead: 7 days that ended 30 days ago, so no review in it can still
-change. Orbit's scorecard can't select that window yet.
+dates. Most of its reviews are still provisional, so for now the reviewer board earns no
+MVP points. The plan is to score reviewers on a settled window: 7 days that ended 30 days
+ago, so no review in it can still change. Orbit's scorecard can't select that window
+yet.
 
 ### Pilots
 
@@ -85,28 +86,38 @@ Reviewer and pilot rows need the scorecard's minimum support, 10 units.
 
 ### MVP of the week
 
-One model is named MVP by a fixed rule. Three rankings score, each with a weight: the
-all-tiers implementer ranking (100), reviewers (50) and pilots (20). The tier tables are
-in the note for the record and earn no points.
+The MVP is picked by a fixed rule, and the note's MVP section is generated from the data,
+not written around it. The writer adds at most one sentence of its own. "MVP" means the
+strongest observed implementer contribution under the fleet's actual assignments that
+week. It is not a verdict on a model's general capability.
 
-- **Points.** On each ranking, 1st place earns 5 points, 2nd 3 and 3rd 1, times the
-  ranking's weight out of 100: 5, 3 and 1 on all tiers, 2.5, 1.5 and 0.5 on reviewers,
-  and 1, 0.6 and 0.2 on pilots. Places below 3rd earn nothing.
-- **Enough models.** A ranking awards points only when 3 or more distinct models are
-  ranked on it. Below that it is shown without points, and the note says so.
-- **By model.** A model counts once per ranking, through its best-scoring crew, so opus
-  and opus@medium are one entry. Places are taken against the next distinct model.
-- **Ties.** Equal points go to the larger *weighted margin*: the sum, over the scoring
-  rankings, of the model's score minus the next distinct model's score, times the
-  ranking's weight out of 100 (0 in last place). Still equal, the model with more
-  settled units on those rankings wins. Still equal, there is no MVP.
+This is **phase 1**, an interim crown that scores implementers only. The reviewer and
+pilot boards are shown without points until reviewers can be read on settled windows and
+each role has a noise scale estimated from past weeks. Phase 2 will combine all three
+roles, and will be run alongside phase 1 before it replaces it.
 
-The note's MVP points table shows each model's place and points on each ranking, its
-weighted margin and its total.
+- **Pool crews by model.** A model's crews (opus, opus@medium, opus@high) are combined
+  into one entry: the units-weighted mean of their raw scorecard scores, with their tasks
+  summed. The best crew is never picked, because the best of several noisy rows is biased
+  upward and favours models with more crews.
+- **Shrink once, both ways.** The crown score is (n × raw + 30 × avg) / (n + 30), where n
+  is the model's pooled tasks and avg is the units-weighted mean raw score of every other
+  model in the field. A small sample is pulled toward the others whether it scored high
+  or low, so the crown doesn't turn into a volume ranking. The scorecard's own score,
+  which only pulls high rows down, is still shown beside it.
+- **A qualified board.** The field is the models with 10 or more pooled tasks. A crown
+  needs at least 3 of them. Otherwise there is no MVP that week, the note says so, and the
+  configured crew writes it.
+- **Highest crown score wins.** An exact tie gives co-MVPs; the alphabetically first
+  writes the note, and the note says so. There are no margin or volume tie-breaks. The
+  fallback crew is fixed in the configuration before the week starts.
+- **Sensitivity.** The note names the winner at shrinkage strengths 10, 30 and 60, so a
+  result that depends on the choice of 30 is visible.
 
-The note is written by the MVP model's best crew, named with its points in the byline.
-When no ranking scores, or a tie survives every tie-break, there is no MVP: the
-configured crew writes the note, and the note says so.
+The crown table lists each model's crews and their count, pooled tasks, raw score, crown
+score and each crew's scorecard score. Every table gives its exact UTC window.
+
+The note is written by the MVP model's crew, without its effort suffix.
 
 ## Limits
 
