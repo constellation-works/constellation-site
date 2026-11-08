@@ -285,3 +285,52 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
   .strip .tick, .strip .gap, .strip .dot, .strip .key span::before { forced-color-adjust: none; background: CanvasText; }
   .strip .dot, .strip .key .k-dot::before { background: Highlight; }
 }
+
+/* Agent scorecards share these tokens. A phone stacks each row so the page
+   itself does not scroll sideways; the wide table is the desktop layout. */
+.analytics { min-width: 0; }
+.analytics .as-of,
+.analytics .board-window,
+.analytics .support-note,
+.analytics .board-note { color: var(--muted); font-size: 15px; margin: 0 0 12px; max-width: 40em; }
+.analytics .score-key { max-width: 40em; margin: 0 0 8px; }
+.analytics .board { margin: 0 0 64px; scroll-margin-top: 96px; }
+.analytics .board h2 {
+  font-size: 28px; letter-spacing: -.02em; font-weight: 600; line-height: 1.2; margin: 0 0 12px;
+}
+.analytics .board h2 .board-label {
+  display: inline-block; margin-left: 10px; padding: 2px 8px;
+  font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--rule-strong); border-radius: 999px;
+  vertical-align: middle;
+}
+.analytics .board-nav { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0 0 48px; font-size: 15px; }
+.analytics .board-nav a { color: var(--muted); text-decoration: none; }
+.analytics .board-nav a:hover { color: var(--fg); }
+.analytics .rank.unranked { color: var(--muted); }
+.analytics td.num, .analytics th.num { text-align: right; }
+.analytics .unit { color: var(--muted); }
+.analytics .empty { color: var(--muted); }
+@media (max-width: 560px) {
+  .analytics .board { scroll-margin-top: 80px; }
+  .analytics .board h2 { font-size: 22px; }
+  .analytics .board h2 .board-label { margin: 6px 0 0; }
+  .analytics .table { overflow: visible; }
+  .analytics table { display: block; }
+  .analytics thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  .analytics tbody, .analytics tr { display: block; }
+  .analytics tr { padding: 12px 0 14px; border-bottom: 1px solid var(--rule); }
+  .analytics tbody tr:last-child { border-bottom: 0; }
+  .analytics th, .analytics td {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    width: auto; white-space: normal; text-align: right;
+    border-bottom: 0; padding: 2px 0;
+  }
+  .analytics td::before {
+    content: attr(data-label); color: var(--muted); flex: 0 0 4.5rem; text-align: left;
+  }
+  .analytics td .value { min-width: 0; overflow-wrap: anywhere; }
+}
