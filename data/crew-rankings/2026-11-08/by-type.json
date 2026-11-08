@@ -1,0 +1,4186 @@
+{
+ "by_type": true,
+ "cache_ttl_seconds": 0,
+ "cells": [
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 83.66,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 83.66,
+   "score": 83.66,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 83.66,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 83.66,
+   "score": 83.66,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 83.66,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 83.66,
+   "score": 83.66,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 83.66,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 83.66,
+   "score": 83.66,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 83.66,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 83.66,
+   "score": 83.66,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 83.66,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 83.66,
+   "score": 83.66,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 83.66,
+   "model": "gemini-4-argon-high",
+   "n": 4,
+   "raw": -36.89,
+   "score": 69.48,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "argon",
+   "crew_mean": 100,
+   "model": "gemini-4-argon-high",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 85.6,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 85.6,
+   "score": 85.6,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 85.6,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 85.6,
+   "score": 85.6,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 85.6,
+   "model": "grok-4.7",
+   "n": 2,
+   "raw": -32.37,
+   "score": 78.22,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 85.6,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 85.6,
+   "score": 85.6,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 85.6,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 85.6,
+   "score": 85.6,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 85.6,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 85.6,
+   "score": 85.6,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 85.6,
+   "model": "grok-4.7",
+   "n": 1,
+   "raw": -106.85,
+   "score": 79.39,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 98.05,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 98.05,
+   "score": 98.05,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 98.05,
+   "model": "grok-4.7",
+   "n": 1,
+   "raw": 23.61,
+   "score": 95.65,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 98.05,
+   "model": "grok-4.7",
+   "n": 14,
+   "raw": 92.91,
+   "score": 96.41,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 98.05,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 98.05,
+   "score": 98.05,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 98.05,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 98.05,
+   "score": 98.05,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 98.05,
+   "model": "grok-4.7",
+   "n": 2,
+   "raw": 123.61,
+   "score": 99.65,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 98.05,
+   "model": "grok-4.7",
+   "n": 34,
+   "raw": 100.25,
+   "score": 99.22,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "grok",
+   "crew_mean": 100,
+   "model": "grok-4.7",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100.35,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100.35,
+   "score": 100.35,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100.35,
+   "model": "claude-haiku-5-5",
+   "n": 1,
+   "raw": 104.66,
+   "score": 100.49,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100.35,
+   "model": "claude-haiku-5-5",
+   "n": 48,
+   "raw": 101.53,
+   "score": 101.07,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100.35,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100.35,
+   "score": 100.35,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100.35,
+   "model": "claude-haiku-5-5",
+   "n": 3,
+   "raw": 104.66,
+   "score": 100.74,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100.35,
+   "model": "claude-haiku-5-5",
+   "n": 21,
+   "raw": 88.71,
+   "score": 95.56,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100.35,
+   "model": "claude-haiku-5-5",
+   "n": 95,
+   "raw": 102.31,
+   "score": 101.84,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 93.91,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 93.91,
+   "score": 93.91,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 93.91,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 93.91,
+   "score": 93.91,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 93.91,
+   "model": "claude-haiku-5-5",
+   "n": 3,
+   "raw": 88.15,
+   "score": 93.39,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 93.91,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 93.91,
+   "score": 93.91,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 93.91,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 93.91,
+   "score": 93.91,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 93.91,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 93.91,
+   "score": 93.91,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 93.91,
+   "model": "claude-haiku-5-5",
+   "n": 6,
+   "raw": 67.28,
+   "score": 89.47,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "haiku",
+   "crew_mean": 100,
+   "model": "claude-haiku-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 98.8,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 98.8,
+   "score": 98.8,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 98.8,
+   "model": "gpt-6-luna",
+   "n": 1,
+   "raw": 104.66,
+   "score": 98.99,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 98.8,
+   "model": "gpt-6-luna",
+   "n": 49,
+   "raw": 96.47,
+   "score": 97.35,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 98.8,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 98.8,
+   "score": 98.8,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 98.8,
+   "model": "gpt-6-luna",
+   "n": 3,
+   "raw": 104.66,
+   "score": 99.34,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 98.8,
+   "model": "gpt-6-luna",
+   "n": 26,
+   "raw": 103.91,
+   "score": 101.17,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 98.8,
+   "model": "gpt-6-luna",
+   "n": 90,
+   "raw": 98.16,
+   "score": 98.32,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "luna",
+   "crew_mean": 100,
+   "model": "gpt-6-luna",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100.76,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100.76,
+   "score": 100.76,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100.76,
+   "model": "muse-spark-1.3-contributor",
+   "n": 1,
+   "raw": 104.66,
+   "score": 100.88,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100.76,
+   "model": "muse-spark-1.3-contributor",
+   "n": 36,
+   "raw": 101.87,
+   "score": 101.37,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100.76,
+   "model": "muse-spark-1.3-contributor",
+   "n": 1,
+   "raw": 104.66,
+   "score": 100.88,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100.76,
+   "model": "muse-spark-1.3-contributor",
+   "n": 2,
+   "raw": 104.66,
+   "score": 101.0,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100.76,
+   "model": "muse-spark-1.3-contributor",
+   "n": 18,
+   "raw": 102.2,
+   "score": 101.3,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100.76,
+   "model": "muse-spark-1.3-contributor",
+   "n": 92,
+   "raw": 100.2,
+   "score": 100.34,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-spark",
+   "crew_mean": 100,
+   "model": "muse-spark-1.3-contributor",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 99.47,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 99.47,
+   "score": 99.47,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 99.47,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 99.47,
+   "score": 99.47,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 99.47,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 99.47,
+   "score": 99.47,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 99.47,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 99.47,
+   "score": 99.47,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 99.47,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 99.47,
+   "score": 99.47,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 99.47,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 99.47,
+   "score": 99.47,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 99.47,
+   "model": "muse-wonder-1.0",
+   "n": 2,
+   "raw": 93.15,
+   "score": 99.08,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100.15,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100.15,
+   "score": 100.15,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100.15,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100.15,
+   "score": 100.15,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100.15,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100.15,
+   "score": 100.15,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100.15,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100.15,
+   "score": 100.15,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100.15,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100.15,
+   "score": 100.15,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100.15,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100.15,
+   "score": 100.15,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100.15,
+   "model": "muse-wonder-1.0",
+   "n": 1,
+   "raw": 104.55,
+   "score": 100.29,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 95.11,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 95.11,
+   "score": 95.11,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 95.11,
+   "model": "muse-wonder-1.0",
+   "n": 3,
+   "raw": 56.95,
+   "score": 91.65,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 95.11,
+   "model": "muse-wonder-1.0",
+   "n": 25,
+   "raw": 85.48,
+   "score": 90.74,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 95.11,
+   "model": "muse-wonder-1.0",
+   "n": 4,
+   "raw": 98.61,
+   "score": 95.53,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 95.11,
+   "model": "muse-wonder-1.0",
+   "n": 2,
+   "raw": 123.61,
+   "score": 96.9,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 95.11,
+   "model": "muse-wonder-1.0",
+   "n": 7,
+   "raw": 123.61,
+   "score": 100.51,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 95.11,
+   "model": "muse-wonder-1.0",
+   "n": 85,
+   "raw": 95.76,
+   "score": 95.59,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-wonder",
+   "crew_mean": 100,
+   "model": "muse-wonder-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 96.35,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 96.35,
+   "score": 96.35,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 96.35,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 96.35,
+   "score": 96.35,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 96.35,
+   "model": "muse-wonder-full-1.0",
+   "n": 1,
+   "raw": -57.37,
+   "score": 91.39,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 96.35,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 96.35,
+   "score": 96.35,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 96.35,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 96.35,
+   "score": 96.35,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 96.35,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 96.35,
+   "score": 96.35,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 96.35,
+   "model": "muse-wonder-full-1.0",
+   "n": 1,
+   "raw": 143.15,
+   "score": 97.86,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "muse-wonder-full",
+   "crew_mean": 100,
+   "model": "muse-wonder-full-1.0",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 81.52,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 81.52,
+   "score": 81.52,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 81.52,
+   "model": "claude-opus-5-5",
+   "n": 1,
+   "raw": 141.55,
+   "score": 83.46,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 81.52,
+   "model": "claude-opus-5-5",
+   "n": 6,
+   "raw": 15.54,
+   "score": 70.52,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 81.52,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 81.52,
+   "score": 81.52,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 81.52,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 81.52,
+   "score": 81.52,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 81.52,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 81.52,
+   "score": 81.52,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 81.52,
+   "model": "claude-opus-5-5",
+   "n": 10,
+   "raw": 61.9,
+   "score": 76.61,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.55,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.55,
+   "score": 100.55,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.55,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.55,
+   "score": 100.55,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.55,
+   "model": "claude-opus-5-5",
+   "n": 1,
+   "raw": 103.61,
+   "score": 100.65,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.55,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.55,
+   "score": 100.55,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.55,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.55,
+   "score": 100.55,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.55,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.55,
+   "score": 100.55,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.55,
+   "model": "claude-opus-5-5",
+   "n": 3,
+   "raw": 104.55,
+   "score": 100.91,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.9,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.9,
+   "score": 100.9,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.9,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.9,
+   "score": 100.9,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.9,
+   "model": "claude-opus-5-5",
+   "n": 4,
+   "raw": 108.98,
+   "score": 101.85,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.9,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.9,
+   "score": 100.9,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.9,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.9,
+   "score": 100.9,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.9,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100.9,
+   "score": 100.9,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 100.9,
+   "model": "claude-opus-5-5",
+   "n": 6,
+   "raw": 100.61,
+   "score": 100.86,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 113.08,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 113.08,
+   "score": 113.08,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 113.08,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 113.08,
+   "score": 113.08,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 113.08,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 113.08,
+   "score": 113.08,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 113.08,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 113.08,
+   "score": 113.08,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 113.08,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 113.08,
+   "score": 113.08,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 113.08,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 113.08,
+   "score": 113.08,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "opus",
+   "crew_mean": 113.08,
+   "model": "claude-opus-5-5",
+   "n": 5,
+   "raw": 191.56,
+   "score": 124.29,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 86.82,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 86.82,
+   "score": 86.82,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 86.82,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 86.82,
+   "score": 86.82,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 86.82,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 86.82,
+   "score": 86.82,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 86.82,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 86.82,
+   "score": 86.82,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 86.82,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 86.82,
+   "score": 86.82,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 86.82,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 86.82,
+   "score": 86.82,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "opus@high",
+   "crew_mean": 86.82,
+   "model": "claude-opus-5-5",
+   "n": 2,
+   "raw": -110.94,
+   "score": 74.46,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 118.66,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 118.66,
+   "score": 118.66,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 118.66,
+   "model": "claude-opus-5-5",
+   "n": 6,
+   "raw": 116.55,
+   "score": 118.31,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 118.66,
+   "model": "claude-opus-5-5",
+   "n": 28,
+   "raw": 130.13,
+   "score": 124.2,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 118.66,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 118.66,
+   "score": 118.66,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 118.66,
+   "model": "claude-opus-5-5",
+   "n": 1,
+   "raw": 141.55,
+   "score": 119.4,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 118.66,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 118.66,
+   "score": 118.66,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 118.66,
+   "model": "claude-opus-5-5",
+   "n": 55,
+   "raw": 124.96,
+   "score": 122.74,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "opus@medium",
+   "crew_mean": 100,
+   "model": "claude-opus-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 101.61,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 101.61,
+   "score": 101.61,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 101.61,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 101.61,
+   "score": 101.61,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 101.61,
+   "model": "gpt-6.1-sol",
+   "n": 1,
+   "raw": 142.63,
+   "score": 102.94,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 101.61,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 101.61,
+   "score": 101.61,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 101.61,
+   "model": "gpt-6.1-sol",
+   "n": 4,
+   "raw": 91.55,
+   "score": 100.43,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 101.61,
+   "model": "gpt-6.1-sol",
+   "n": 1,
+   "raw": 141.55,
+   "score": 102.9,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 101.61,
+   "model": "gpt-6.1-sol",
+   "n": 19,
+   "raw": 103.67,
+   "score": 102.41,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 100,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 100,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 100,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 100,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 100,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 100,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 100,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 107.8,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 107.8,
+   "score": 107.8,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 107.8,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 107.8,
+   "score": 107.8,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 107.8,
+   "model": "gpt-6.1-sol",
+   "n": 30,
+   "raw": 114.81,
+   "score": 111.31,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 107.8,
+   "model": "gpt-6.1-sol",
+   "n": 1,
+   "raw": 23.61,
+   "score": 105.08,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 107.8,
+   "model": "gpt-6.1-sol",
+   "n": 16,
+   "raw": 111.11,
+   "score": 108.95,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 107.8,
+   "model": "gpt-6.1-sol",
+   "n": 8,
+   "raw": 122.05,
+   "score": 110.8,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 107.8,
+   "model": "gpt-6.1-sol",
+   "n": 72,
+   "raw": 108.08,
+   "score": 108.0,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 98.84,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 98.84,
+   "score": 98.84,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 98.84,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 98.84,
+   "score": 98.84,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 98.84,
+   "model": "gpt-6.1-sol",
+   "n": 1,
+   "raw": 64.06,
+   "score": 97.72,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 98.84,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 98.84,
+   "score": 98.84,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 98.84,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 98.84,
+   "score": 98.84,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 98.84,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 98.84,
+   "score": 98.84,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "sol",
+   "crew_mean": 98.84,
+   "model": "gpt-6.1-sol",
+   "n": 0,
+   "raw": 98.84,
+   "score": 98.84,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 97.72,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 97.72,
+   "score": 97.72,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 97.72,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 97.72,
+   "score": 97.72,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 97.72,
+   "model": "claude-sonnet-5-5",
+   "n": 1,
+   "raw": 142.63,
+   "score": 99.17,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 97.72,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 97.72,
+   "score": 97.72,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 97.72,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 97.72,
+   "score": 97.72,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 97.72,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 97.72,
+   "score": 97.72,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 97.72,
+   "model": "claude-sonnet-5-5",
+   "n": 2,
+   "raw": 43.15,
+   "score": 94.31,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 103.98,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 103.98,
+   "score": 103.98,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 103.98,
+   "model": "claude-sonnet-5-5",
+   "n": 1,
+   "raw": 123.61,
+   "score": 104.61,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 103.98,
+   "model": "claude-sonnet-5-5",
+   "n": 23,
+   "raw": 99.2,
+   "score": 101.9,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 103.98,
+   "model": "claude-sonnet-5-5",
+   "n": 1,
+   "raw": 123.61,
+   "score": 104.61,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 103.98,
+   "model": "claude-sonnet-5-5",
+   "n": 2,
+   "raw": 123.61,
+   "score": 105.2,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 103.98,
+   "model": "claude-sonnet-5-5",
+   "n": 2,
+   "raw": 123.61,
+   "score": 105.2,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 103.98,
+   "model": "claude-sonnet-5-5",
+   "n": 35,
+   "raw": 107.76,
+   "score": 106.01,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "sonnet",
+   "crew_mean": 100,
+   "model": "claude-sonnet-5-5",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 76.5,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 76.5,
+   "score": 76.5,
+   "tier": "hard",
+   "type": "review"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 76.5,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 76.5,
+   "score": 76.5,
+   "tier": "hard",
+   "type": "security"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 76.5,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 76.5,
+   "score": 76.5,
+   "tier": "hard",
+   "type": "ui"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 76.5,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 76.5,
+   "score": 76.5,
+   "tier": "hard",
+   "type": "ci"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 76.5,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 76.5,
+   "score": 76.5,
+   "tier": "hard",
+   "type": "refactor"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 76.5,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 76.5,
+   "score": 76.5,
+   "tier": "hard",
+   "type": "docs"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 76.5,
+   "model": "gpt-6.1-terra",
+   "n": 3,
+   "raw": -156.85,
+   "score": 55.29,
+   "tier": "hard",
+   "type": "other"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100.09,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100.09,
+   "score": 100.09,
+   "tier": "low",
+   "type": "review"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100.09,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100.09,
+   "score": 100.09,
+   "tier": "low",
+   "type": "security"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100.09,
+   "model": "gpt-6.1-terra",
+   "n": 8,
+   "raw": 103.61,
+   "score": 100.83,
+   "tier": "low",
+   "type": "ui"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100.09,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100.09,
+   "score": 100.09,
+   "tier": "low",
+   "type": "ci"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100.09,
+   "model": "gpt-6.1-terra",
+   "n": 1,
+   "raw": 104.66,
+   "score": 100.24,
+   "tier": "low",
+   "type": "refactor"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100.09,
+   "model": "gpt-6.1-terra",
+   "n": 14,
+   "raw": 106.86,
+   "score": 102.24,
+   "tier": "low",
+   "type": "docs"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100.09,
+   "model": "gpt-6.1-terra",
+   "n": 46,
+   "raw": 98.03,
+   "score": 98.84,
+   "tier": "low",
+   "type": "other"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 101.26,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 101.26,
+   "score": 101.26,
+   "tier": "medium",
+   "type": "review"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 101.26,
+   "model": "gpt-6.1-terra",
+   "n": 1,
+   "raw": -176.39,
+   "score": 92.3,
+   "tier": "medium",
+   "type": "security"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 101.26,
+   "model": "gpt-6.1-terra",
+   "n": 4,
+   "raw": 108.98,
+   "score": 102.17,
+   "tier": "medium",
+   "type": "ui"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 101.26,
+   "model": "gpt-6.1-terra",
+   "n": 2,
+   "raw": 123.61,
+   "score": 102.66,
+   "tier": "medium",
+   "type": "ci"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 101.26,
+   "model": "gpt-6.1-terra",
+   "n": 2,
+   "raw": 123.61,
+   "score": 102.66,
+   "tier": "medium",
+   "type": "refactor"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 101.26,
+   "model": "gpt-6.1-terra",
+   "n": 1,
+   "raw": 123.61,
+   "score": 101.98,
+   "tier": "medium",
+   "type": "docs"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 101.26,
+   "model": "gpt-6.1-terra",
+   "n": 23,
+   "raw": 110.4,
+   "score": 105.22,
+   "tier": "medium",
+   "type": "other"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "review"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "security"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ui"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "ci"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "refactor"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "docs"
+  },
+  {
+   "crew": "terra",
+   "crew_mean": 100,
+   "model": "gpt-6.1-terra",
+   "n": 0,
+   "raw": 100,
+   "score": 100,
+   "tier": "xhard",
+   "type": "other"
+  }
+ ],
+ "computed_at": "2026-11-08T06:05:31.073Z",
+ "effort_breakdown": [
+  {
+   "crew": "argon",
+   "duration_ms": 5678663,
+   "input_tokens": 1988202,
+   "invocations": 4,
+   "model": "gemini-4-argon-high",
+   "output_tokens": 221860,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": null,
+   "tasks": 4
+  },
+  {
+   "crew": "astra",
+   "duration_ms": 53777,
+   "input_tokens": 94818,
+   "invocations": 5,
+   "model": "gpt-6-astra",
+   "output_tokens": 503,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "medium",
+   "tasks": 0
+  },
+  {
+   "crew": "fable",
+   "duration_ms": 36809,
+   "input_tokens": 170,
+   "invocations": 5,
+   "model": "claude-fable-5-1",
+   "output_tokens": 1144,
+   "provider_cost_count": 5,
+   "provider_cost_usd": 2.830311,
+   "reasoning_effort": "medium",
+   "tasks": 0
+  },
+  {
+   "crew": "grok",
+   "duration_ms": 159911161,
+   "input_tokens": 34423697,
+   "invocations": 113,
+   "model": "grok-4.7",
+   "output_tokens": 7931038,
+   "provider_cost_count": 113,
+   "provider_cost_usd": 597.8163260000002,
+   "reasoning_effort": "high",
+   "tasks": 106
+  },
+  {
+   "crew": "haiku",
+   "duration_ms": 90425913,
+   "input_tokens": 12994,
+   "invocations": 225,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 10375148,
+   "provider_cost_count": 225,
+   "provider_cost_usd": 58.011939394999985,
+   "reasoning_effort": "xhigh",
+   "tasks": 207
+  },
+  {
+   "crew": "haiku@high",
+   "duration_ms": 41416736,
+   "input_tokens": 9358,
+   "invocations": 501,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 8462620,
+   "provider_cost_count": 501,
+   "provider_cost_usd": 20.73529142,
+   "reasoning_effort": "high",
+   "tasks": 445
+  },
+  {
+   "crew": "luna",
+   "duration_ms": 128672576,
+   "input_tokens": 796192701,
+   "invocations": 218,
+   "model": "gpt-6-luna",
+   "output_tokens": 5615103,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "xhigh",
+   "tasks": 196
+  },
+  {
+   "crew": "luna@high",
+   "duration_ms": 38935596,
+   "input_tokens": 231071451,
+   "invocations": 419,
+   "model": "gpt-6-luna",
+   "output_tokens": 2549595,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 467
+  },
+  {
+   "crew": "muse-spark",
+   "duration_ms": 58147337,
+   "input_tokens": 0,
+   "invocations": 175,
+   "model": "muse-spark-1.3-contributor",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "xhigh",
+   "tasks": 162
+  },
+  {
+   "crew": "muse-spark@high",
+   "duration_ms": 25008457,
+   "input_tokens": 0,
+   "invocations": 274,
+   "model": "muse-spark-1.3-contributor",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 294
+  },
+  {
+   "crew": "muse-wonder",
+   "duration_ms": 107802869,
+   "input_tokens": 0,
+   "invocations": 318,
+   "model": "muse-wonder-1.0",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 309
+  },
+  {
+   "crew": "muse-wonder-full",
+   "duration_ms": 8204793,
+   "input_tokens": 0,
+   "invocations": 8,
+   "model": "muse-wonder-full-1.0",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 3
+  },
+  {
+   "crew": "opus",
+   "duration_ms": 3161957,
+   "input_tokens": 610,
+   "invocations": 6,
+   "model": "claude-opus-5-5",
+   "output_tokens": 298050,
+   "provider_cost_count": 6,
+   "provider_cost_usd": 23.0671154,
+   "reasoning_effort": "high",
+   "tasks": 5
+  },
+  {
+   "crew": "opus",
+   "duration_ms": 68760128,
+   "input_tokens": 7196,
+   "invocations": 70,
+   "model": "claude-opus-5-5",
+   "output_tokens": 3027139,
+   "provider_cost_count": 70,
+   "provider_cost_usd": 326.1468923999999,
+   "reasoning_effort": "medium",
+   "tasks": 60
+  },
+  {
+   "crew": "opus@high",
+   "duration_ms": 3890197,
+   "input_tokens": 182,
+   "invocations": 1,
+   "model": "claude-opus-5-5",
+   "output_tokens": 200620,
+   "provider_cost_count": 1,
+   "provider_cost_usd": 12.552109999999995,
+   "reasoning_effort": "high",
+   "tasks": 1
+  },
+  {
+   "crew": "opus@medium",
+   "duration_ms": 197713935,
+   "input_tokens": 10972,
+   "invocations": 121,
+   "model": "claude-opus-5-5",
+   "output_tokens": 4690704,
+   "provider_cost_count": 121,
+   "provider_cost_usd": 411.0927616000002,
+   "reasoning_effort": "medium",
+   "tasks": 115
+  },
+  {
+   "crew": "sol",
+   "duration_ms": 274956664,
+   "input_tokens": 2405575750,
+   "invocations": 402,
+   "model": "gpt-6.1-sol",
+   "output_tokens": 8681830,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 388
+  },
+  {
+   "crew": "sonnet",
+   "duration_ms": 57153209,
+   "input_tokens": 10744,
+   "invocations": 255,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 3054804,
+   "provider_cost_count": 255,
+   "provider_cost_usd": 157.2154539000001,
+   "reasoning_effort": "high",
+   "tasks": 247
+  },
+  {
+   "crew": "terra",
+   "duration_ms": 38863508,
+   "input_tokens": 392403405,
+   "invocations": 155,
+   "model": "gpt-6.1-terra",
+   "output_tokens": 750584,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 150
+  }
+ ],
+ "effort_population": "completed_workspace_invocations",
+ "execution": "managed",
+ "execution_split": [
+  {
+   "crew": "argon",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 4,
+   "model": "gemini-4-argon-high",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "grok",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 54,
+   "model": "grok-4.7",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "grok",
+   "interactive_landed": 1,
+   "interactive_regressed": 0,
+   "interactive_tasks": 1,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "haiku",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 177,
+   "model": "claude-haiku-5-5",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "haiku",
+   "interactive_landed": 1,
+   "interactive_regressed": 0,
+   "interactive_tasks": 1,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "luna",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 169,
+   "model": "gpt-6-luna",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "luna",
+   "interactive_landed": 1,
+   "interactive_regressed": 0,
+   "interactive_tasks": 1,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "muse-spark",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 1,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "muse-spark",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 150,
+   "model": "muse-spark-1.3-contributor",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "muse-wonder",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 129,
+   "model": "muse-wonder-1.0",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "muse-wonder-full",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 2,
+   "model": "muse-wonder-full-1.0",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "opus",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 36,
+   "model": "claude-opus-5-5",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "opus",
+   "interactive_landed": 25,
+   "interactive_regressed": 5,
+   "interactive_tasks": 25,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "opus@high",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 2,
+   "model": "claude-opus-5-5",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "opus@medium",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 90,
+   "model": "claude-opus-5-5",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "opus@medium",
+   "interactive_landed": 2,
+   "interactive_regressed": 0,
+   "interactive_tasks": 2,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "sol",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 153,
+   "model": "gpt-6.1-sol",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "sol",
+   "interactive_landed": 1,
+   "interactive_regressed": 1,
+   "interactive_tasks": 1,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "sonnet",
+   "interactive_landed": 0,
+   "interactive_regressed": 0,
+   "interactive_tasks": 0,
+   "managed_tasks": 67,
+   "model": "claude-sonnet-5-5",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "sonnet",
+   "interactive_landed": 1,
+   "interactive_regressed": 0,
+   "interactive_tasks": 1,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "terra",
+   "interactive_landed": 3,
+   "interactive_regressed": 2,
+   "interactive_tasks": 3,
+   "managed_tasks": 105,
+   "model": "gpt-6.1-terra",
+   "unclassified_tasks": 0
+  },
+  {
+   "crew": "terra",
+   "interactive_landed": 1,
+   "interactive_regressed": 0,
+   "interactive_tasks": 1,
+   "managed_tasks": 0,
+   "model": "model unknown",
+   "unclassified_tasks": 0
+  }
+ ],
+ "min_support": 10,
+ "requested_window": "7d",
+ "role": "implementers",
+ "since": "2026-11-01T06:05:42Z",
+ "status": "ok",
+ "tasks_scanned": 11933,
+ "terms": [
+  {
+   "definition": "Landed tasks whose final implementation run is the row's, one point each, whatever their complexity. Tasks tagged no-diff-expected when an attempt was admitted are not implementer work and are left out of every implementer count.",
+   "group": "credit",
+   "key": "weighted_landed",
+   "label": "Landed",
+   "weight": 1.0
+  },
+  {
+   "definition": "Reviewed tasks whose first review verdict on the row's candidate was accept.",
+   "group": "credit",
+   "key": "first_pass_accepts",
+   "label": "First-pass accepts",
+   "unit": "reviewed deliveries",
+   "weight": 1.0
+  },
+  {
+   "definition": "reject verdicts on the row's candidates.",
+   "group": "problem",
+   "key": "review_rejects",
+   "label": "Review rejects",
+   "unit": "reviewed deliveries",
+   "weight": -1.0
+  },
+  {
+   "definition": "accept_with_fixes verdicts on the row's candidates.",
+   "group": "problem",
+   "key": "reviewer_repairs",
+   "label": "Reviewer repairs",
+   "unit": "reviewed deliveries",
+   "weight": -0.5
+  },
+  {
+   "definition": "Repeat runs, [BLOCKED] or unmerged PRs, and operator requeues with cause crew, charged to the run that ended the attempt. Review verdicts are not counted again here.",
+   "group": "problem",
+   "key": "crew_rework",
+   "label": "Crew-caused rework",
+   "weight": -1.0
+  },
+  {
+   "definition": "regression_from links with escape no_test against the row's landed tasks, mostly delivery-review findings, each at its severity weight (critical 8, high 4, medium 2, low 1, nit 0.25), so a medium one costs as much as a review reject. Expected counts use the fleet's rate for the same tier and expected change size, never the row's own diff. A link whose defect site a pre-landing review finding on the row's candidate already cited or fixed is that review's reject or repair and is not counted again.",
+   "group": "problem",
+   "key": "escaped_regressions",
+   "label": "Escaped regressions",
+   "weight": -0.5
+  }
+ ],
+ "types": [
+  {
+   "name": "review",
+   "paths": [],
+   "tags": [
+    "no-diff-expected"
+   ]
+  },
+  {
+   "name": "security",
+   "paths": [],
+   "tags": [
+    "security"
+   ]
+  },
+  {
+   "name": "ui",
+   "paths": [
+    "crates/orbit-web/**"
+   ],
+   "tags": [
+    "ui",
+    "dashboard",
+    "web"
+   ]
+  },
+  {
+   "name": "ci",
+   "paths": [],
+   "tags": [
+    "ci",
+    "tests"
+   ]
+  },
+  {
+   "name": "refactor",
+   "paths": [],
+   "tags": [
+    "refactor",
+    "code-org",
+    "code-health"
+   ]
+  },
+  {
+   "name": "docs",
+   "paths": [],
+   "tags": [
+    "docs"
+   ]
+  }
+ ],
+ "unit": "implemented tasks",
+ "window": "7d",
+ "window_attempts": null
+}
