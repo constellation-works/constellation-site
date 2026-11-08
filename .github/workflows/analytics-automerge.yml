@@ -6,6 +6,12 @@ name: analytics-automerge
 # data/analytics/. Required checks on main still gate the merge: auto-merge waits
 # for them and never skips them. An Orbit pull request that has auto-merge armed
 # and no longer qualifies has it turned off. Other pull requests are not touched.
+#
+# A merge performed from an auto-merge armed with GITHUB_TOKEN starts no workflow
+# runs (GitHub suppresses every GITHUB_TOKEN-created event except
+# workflow_dispatch/repository_dispatch), so the push to main would never start
+# website.yml. After arming, this workflow therefore waits for the merge and then
+# starts website.yml explicitly with workflow_dispatch, which always creates a run.
 
 on:
   pull_request:
@@ -32,6 +38,9 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      # Lets the dispatch step start website.yml with workflow_dispatch, which
+      # is the one event GITHUB_TOKEN is allowed to trigger a run with.
+      actions: write
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
@@ -88,6 +97,62 @@ jobs:
           # after the files were read, so the guard always judges the commit merged.
           gh pr merge "$PR_NUMBER" --repo "$REPO" --auto --squash \
             --match-head-commit "$HEAD_SHA"
+
+      - name: Dispatch Website publish once merged
+        if: steps.guard.outputs.eligible == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The armed auto-merge above runs as the workflow's GITHUB_TOKEN, so
+          # its push to main starts no workflow runs and website.yml would never
+          # deploy the merged snapshot. workflow_dispatch is the exception: it
+          # always creates a run, even from GITHUB_TOKEN. Wait for the merge and
+          # then dispatch website.yml on main, which deploys whatever main
+          # points at. This step uses only the run's GITHUB_TOKEN: no secrets
+          # and no environment, so the Cloudflare deploy token stays in
+          # website.yml. A duplicate dispatch (two runs armed the same PR) is
+          # harmless: website.yml serializes publishes and redeploying one
+          # commit is a no-op.
+          deadline=$((SECONDS + 30*60))
+          while true; do
+            info="$(gh pr view "$PR_NUMBER" --repo "$REPO" \
+              --json state,autoMergeRequest \
+              --jq -r '"\(.state) \(.autoMergeRequest != null)"' \
+              || echo FETCH_FAILED)"
+            case "$info" in
+              MERGED*)
+                echo "PR #$PR_NUMBER merged; dispatching Website publish."
+                # Give the merge commit a moment to be readable from main: the
+                # dispatched run checks out main and deploys it.
+                sleep 15
+                gh workflow run website.yml --repo "$REPO" --ref main
+                exit 0
+                ;;
+              CLOSED*)
+                echo "PR #$PR_NUMBER closed without merging; nothing to deploy."
+                exit 0
+                ;;
+              "OPEN false")
+                echo "Auto-merge is no longer armed on #$PR_NUMBER; not dispatching."
+                exit 0
+                ;;
+              "OPEN true")
+                # Still armed and waiting for required checks; keep polling.
+                ;;
+              FETCH_FAILED)
+                # A transient API blip; retry on the next poll.
+                echo "::warning::Could not read PR #$PR_NUMBER state; retrying."
+                ;;
+              *)
+                echo "::warning::Unexpected PR state: $info; retrying."
+                ;;
+            esac
+            if (( SECONDS >= deadline )); then
+              echo "::warning::PR #$PR_NUMBER did not merge within 30 minutes; not dispatching website.yml."
+              exit 0
+            fi
+            sleep 60
+          done
 
       - name: Disable auto-merge if the pull request no longer qualifies
         # Runs only when the guard passed through and found a non-data path. Without
