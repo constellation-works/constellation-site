@@ -1,6 +1,6 @@
 {
   "implementers": {
-    "fleet_average": 107.16,
+    "fleet_average": 107.11,
     "min_support": 10,
     "provisional": false,
     "role": "implementers",
@@ -10,35 +10,35 @@
         "counts": {
           "crew_rework": 14,
           "escaped_regressions": 24.5,
-          "first_pass_accepts": 28,
+          "first_pass_accepts": 25,
           "review_rejects": 0,
           "reviewer_repairs": 2,
-          "weighted_landed": 577
+          "weighted_landed": 574
         },
         "crew": "haiku",
         "expected": {
-          "crew_rework": 28.61,
-          "escaped_regressions": 45.06,
-          "first_pass_accepts": 19.61,
-          "review_rejects": 2.29,
-          "reviewer_repairs": 6.06,
-          "weighted_landed": 566.7
+          "crew_rework": 28.95,
+          "escaped_regressions": 45.23,
+          "first_pass_accepts": 17.36,
+          "review_rejects": 2.14,
+          "reviewer_repairs": 5.64,
+          "weighted_landed": 564.38
         },
         "model": "claude-haiku-5-5",
         "per_100": {
-          "crew_rework": 2.4,
-          "escaped_regressions": 4.2,
-          "first_pass_accepts": 93.33,
+          "crew_rework": 2.41,
+          "escaped_regressions": 4.22,
+          "first_pass_accepts": 92.59,
           "review_rejects": 0,
-          "reviewer_repairs": 6.67,
+          "reviewer_repairs": 7.41,
           "weighted_landed": 98.8
         },
         "provisional_terms": [],
         "rank": 1,
-        "raw": 148.39,
-        "reviewed_units": 30,
+        "raw": 148.97,
+        "reviewed_units": 27,
         "runs_without_model": 0,
-        "score": 146.38,
+        "score": 146.91,
         "score_base": 100,
         "stats": [
           {
@@ -49,17 +49,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 594
+            "value": 591
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 528
+            "value": 521
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 66
+            "value": 70
           },
           {
             "key": "cost_missing_run_attempts",
@@ -69,25 +69,25 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 572.88
+            "value": 565.79
           }
         ],
         "term_units": {
-          "first_pass_accepts": 30,
-          "review_rejects": 30,
-          "reviewer_repairs": 30
+          "first_pass_accepts": 27,
+          "review_rejects": 27,
+          "reviewer_repairs": 27
         },
         "unit": "implemented tasks",
-        "units": 584,
+        "units": 581,
         "unjudged": false,
         "usage": {
-          "duration_ms": 104346070,
+          "duration_ms": 107677339,
           "efforts": "xhigh",
-          "input_tokens": 14200,
-          "invocations": 220,
-          "output_tokens": 11787789,
-          "provider_cost_count": 220,
-          "provider_cost_usd": 67.63927403
+          "input_tokens": 14742,
+          "invocations": 227,
+          "output_tokens": 12298775,
+          "provider_cost_count": 227,
+          "provider_cost_usd": 70.96198829999999
         }
       },
       {
@@ -98,32 +98,32 @@
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 102
+          "weighted_landed": 104
         },
         "crew": "opus@medium",
         "expected": {
-          "crew_rework": 12.06,
-          "escaped_regressions": 95.84,
+          "crew_rework": 12.03,
+          "escaped_regressions": 98.3,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 96.48
+          "weighted_landed": 98.49
         },
         "model": "claude-opus-5-5",
         "per_100": {
-          "crew_rework": 2.91,
-          "escaped_regressions": 27.43,
+          "crew_rework": 2.86,
+          "escaped_regressions": 26.9,
           "first_pass_accepts": null,
           "review_rejects": null,
           "reviewer_repairs": null,
-          "weighted_landed": 99.03
+          "weighted_landed": 99.05
         },
         "provisional_terms": [],
         "rank": 2,
-        "raw": 146.96,
+        "raw": 147.21,
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 137.98,
+        "score": 138.3,
         "score_base": 100,
         "stats": [
           {
@@ -134,17 +134,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 107
+            "value": 109
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 89
+            "value": 90
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 18
+            "value": 19
           },
           {
             "key": "cost_missing_run_attempts",
@@ -163,52 +163,52 @@
           "reviewer_repairs": 0
         },
         "unit": "implemented tasks",
-        "units": 103,
+        "units": 105,
         "unjudged": false,
         "usage": {
-          "duration_ms": 220224670,
+          "duration_ms": 222451551,
           "efforts": "medium",
-          "input_tokens": 14082,
-          "invocations": 154,
-          "output_tokens": 5544535,
-          "provider_cost_count": 154,
-          "provider_cost_usd": 485.388264
+          "input_tokens": 14410,
+          "invocations": 160,
+          "output_tokens": 5635622,
+          "provider_cost_count": 160,
+          "provider_cost_usd": 495.13886340000005
         }
       },
       {
         "below_support": false,
         "counts": {
           "crew_rework": 114,
-          "escaped_regressions": 170.25,
-          "first_pass_accepts": 49,
+          "escaped_regressions": 168.25,
+          "first_pass_accepts": 45,
           "review_rejects": 3,
           "reviewer_repairs": 10,
-          "weighted_landed": 832
+          "weighted_landed": 818
         },
         "crew": "sol",
         "expected": {
-          "crew_rework": 83.31,
-          "escaped_regressions": 395.2,
-          "first_pass_accepts": 39.38,
-          "review_rejects": 7.05,
-          "reviewer_repairs": 14.18,
-          "weighted_landed": 831.83
+          "crew_rework": 83.81,
+          "escaped_regressions": 396.03,
+          "first_pass_accepts": 35.63,
+          "review_rejects": 6.87,
+          "reviewer_repairs": 13.72,
+          "weighted_landed": 822.62
         },
         "model": "gpt-6.1-sol",
         "per_100": {
-          "crew_rework": 12.98,
-          "escaped_regressions": 19.39,
-          "first_pass_accepts": 75.38,
-          "review_rejects": 4.62,
-          "reviewer_repairs": 15.38,
-          "weighted_landed": 94.76
+          "crew_rework": 13.19,
+          "escaped_regressions": 19.47,
+          "first_pass_accepts": 75,
+          "review_rejects": 5,
+          "reviewer_repairs": 16.67,
+          "weighted_landed": 94.68
         },
         "provisional_terms": [],
         "rank": 3,
-        "raw": 133.58,
-        "reviewed_units": 65,
+        "raw": 134.33,
+        "reviewed_units": 60,
         "runs_without_model": 0,
-        "score": 132.7,
+        "score": 133.42,
         "score_base": 100,
         "stats": [
           {
@@ -219,12 +219,12 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 935
+            "value": 921
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 779
+            "value": 765
           },
           {
             "key": "cost_unpriced_attempts",
@@ -239,23 +239,23 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 1260.61
+            "value": 1207.29
           }
         ],
         "term_units": {
-          "first_pass_accepts": 65,
-          "review_rejects": 65,
-          "reviewer_repairs": 65
+          "first_pass_accepts": 60,
+          "review_rejects": 60,
+          "reviewer_repairs": 60
         },
         "unit": "implemented tasks",
-        "units": 878,
+        "units": 864,
         "unjudged": false,
         "usage": {
-          "duration_ms": 302649710,
+          "duration_ms": 306468139,
           "efforts": "high",
-          "input_tokens": 2739964727,
-          "invocations": 422,
-          "output_tokens": 9771519,
+          "input_tokens": 2777782298,
+          "invocations": 432,
+          "output_tokens": 9907429,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -263,37 +263,37 @@
       {
         "below_support": false,
         "counts": {
-          "crew_rework": 29,
+          "crew_rework": 33,
           "escaped_regressions": 60,
           "first_pass_accepts": 35,
           "review_rejects": 3,
           "reviewer_repairs": 4,
-          "weighted_landed": 683
+          "weighted_landed": 685
         },
         "crew": "luna",
         "expected": {
-          "crew_rework": 32.6,
-          "escaped_regressions": 43.01,
-          "first_pass_accepts": 27.44,
-          "review_rejects": 3.2,
-          "reviewer_repairs": 8.48,
-          "weighted_landed": 673.15
+          "crew_rework": 33.13,
+          "escaped_regressions": 43.4,
+          "first_pass_accepts": 26.98,
+          "review_rejects": 3.31,
+          "reviewer_repairs": 8.77,
+          "weighted_landed": 674.68
         },
         "model": "gpt-6-luna",
         "per_100": {
-          "crew_rework": 4.18,
-          "escaped_regressions": 8.66,
+          "crew_rework": 4.76,
+          "escaped_regressions": 8.65,
           "first_pass_accepts": 83.33,
           "review_rejects": 7.14,
           "reviewer_repairs": 9.52,
-          "weighted_landed": 98.56
+          "weighted_landed": 98.7
         },
         "provisional_terms": [],
         "rank": 4,
-        "raw": 124.52,
+        "raw": 125.82,
         "reviewed_units": 42,
         "runs_without_model": 0,
-        "score": 123.8,
+        "score": 125.04,
         "score_base": 100,
         "stats": [
           {
@@ -304,17 +304,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 707
+            "value": 711
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 628
+            "value": 629
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 79
+            "value": 82
           },
           {
             "key": "cost_missing_run_attempts",
@@ -324,7 +324,7 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 648.77
+            "value": 635.71
           }
         ],
         "term_units": {
@@ -333,14 +333,14 @@
           "reviewer_repairs": 42
         },
         "unit": "implemented tasks",
-        "units": 693,
+        "units": 694,
         "unjudged": false,
         "usage": {
-          "duration_ms": 125212438,
+          "duration_ms": 129919199,
           "efforts": "xhigh",
-          "input_tokens": 821506069,
-          "invocations": 183,
-          "output_tokens": 5810842,
+          "input_tokens": 841393371,
+          "invocations": 191,
+          "output_tokens": 5957160,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -350,35 +350,35 @@
         "counts": {
           "crew_rework": 12,
           "escaped_regressions": 73,
-          "first_pass_accepts": 24,
+          "first_pass_accepts": 21,
           "review_rejects": 1,
           "reviewer_repairs": 7,
-          "weighted_landed": 200
+          "weighted_landed": 192
         },
         "crew": "sonnet",
         "expected": {
-          "crew_rework": 18.38,
-          "escaped_regressions": 65.31,
-          "first_pass_accepts": 21.33,
-          "review_rejects": 2.73,
-          "reviewer_repairs": 6.42,
-          "weighted_landed": 192.78
+          "crew_rework": 18.17,
+          "escaped_regressions": 63.9,
+          "first_pass_accepts": 19.14,
+          "review_rejects": 2.6,
+          "reviewer_repairs": 6.13,
+          "weighted_landed": 186.19
         },
         "model": "claude-sonnet-5-5",
         "per_100": {
-          "crew_rework": 5.91,
-          "escaped_regressions": 35.96,
-          "first_pass_accepts": 75,
-          "review_rejects": 3.13,
-          "reviewer_repairs": 21.88,
-          "weighted_landed": 98.52
+          "crew_rework": 6.15,
+          "escaped_regressions": 37.44,
+          "first_pass_accepts": 72.41,
+          "review_rejects": 3.45,
+          "reviewer_repairs": 24.14,
+          "weighted_landed": 98.46
         },
         "provisional_terms": [],
         "rank": 5,
-        "raw": 117.66,
-        "reviewed_units": 32,
+        "raw": 114.25,
+        "reviewed_units": 29,
         "runs_without_model": 0,
-        "score": 116.31,
+        "score": 113.3,
         "score_base": 100,
         "stats": [
           {
@@ -389,12 +389,12 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 212
+            "value": 204
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 185
+            "value": 177
           },
           {
             "key": "cost_unpriced_attempts",
@@ -409,61 +409,61 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 781.06
+            "value": 748.77
           }
         ],
         "term_units": {
-          "first_pass_accepts": 32,
-          "review_rejects": 32,
-          "reviewer_repairs": 32
+          "first_pass_accepts": 29,
+          "review_rejects": 29,
+          "reviewer_repairs": 29
         },
         "unit": "implemented tasks",
-        "units": 203,
+        "units": 195,
         "unjudged": false,
         "usage": {
-          "duration_ms": 84074575,
+          "duration_ms": 84611274,
           "efforts": "high",
-          "input_tokens": 14226,
-          "invocations": 295,
-          "output_tokens": 4238549,
-          "provider_cost_count": 295,
-          "provider_cost_usd": 207.72614220000008
+          "input_tokens": 14466,
+          "invocations": 301,
+          "output_tokens": 4296574,
+          "provider_cost_count": 301,
+          "provider_cost_usd": 211.41231380000008
         }
       },
       {
         "below_support": false,
         "counts": {
-          "crew_rework": 18,
-          "escaped_regressions": 398.75,
-          "first_pass_accepts": 6,
-          "review_rejects": 2,
-          "reviewer_repairs": 3,
-          "weighted_landed": 393
+          "crew_rework": 13,
+          "escaped_regressions": 95.5,
+          "first_pass_accepts": 5,
+          "review_rejects": 0,
+          "reviewer_repairs": 2,
+          "weighted_landed": 227
         },
-        "crew": "opus",
+        "crew": "grok",
         "expected": {
-          "crew_rework": 45.2,
-          "escaped_regressions": 331.18,
-          "first_pass_accepts": 5.21,
-          "review_rejects": 2.39,
-          "reviewer_repairs": 3.6,
-          "weighted_landed": 378.18
+          "crew_rework": 22.2,
+          "escaped_regressions": 74.0,
+          "first_pass_accepts": 4.63,
+          "review_rejects": 0.63,
+          "reviewer_repairs": 1.48,
+          "weighted_landed": 223.33
         },
-        "model": "claude-opus-5-5",
+        "model": "grok-4.7",
         "per_100": {
-          "crew_rework": 4.47,
-          "escaped_regressions": 98.95,
-          "first_pass_accepts": 46.15,
-          "review_rejects": 15.38,
-          "reviewer_repairs": 23.08,
-          "weighted_landed": 97.52
+          "crew_rework": 5.56,
+          "escaped_regressions": 40.81,
+          "first_pass_accepts": 71.43,
+          "review_rejects": 0,
+          "reviewer_repairs": 28.57,
+          "weighted_landed": 97.01
         },
         "provisional_terms": [],
         "rank": 6,
-        "raw": 113.44,
-        "reviewed_units": 13,
+        "raw": 111.55,
+        "reviewed_units": 7,
         "runs_without_model": 0,
-        "score": 113.0,
+        "score": 111.04,
         "score_base": 100,
         "stats": [
           {
@@ -474,17 +474,102 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 421
+            "value": 241
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 377
+            "value": 218
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 44
+            "value": 23
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 2031.12
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 7,
+          "review_rejects": 7,
+          "reviewer_repairs": 7
+        },
+        "unit": "implemented tasks",
+        "units": 234,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 243304386,
+          "efforts": "high",
+          "input_tokens": 53234570,
+          "invocations": 167,
+          "output_tokens": 12093645,
+          "provider_cost_count": 167,
+          "provider_cost_usd": 930.937906
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 18,
+          "escaped_regressions": 402.75,
+          "first_pass_accepts": 5,
+          "review_rejects": 2,
+          "reviewer_repairs": 3,
+          "weighted_landed": 393
+        },
+        "crew": "opus",
+        "expected": {
+          "crew_rework": 44.35,
+          "escaped_regressions": 329.1,
+          "first_pass_accepts": 4.7,
+          "review_rejects": 2.24,
+          "reviewer_repairs": 3.38,
+          "weighted_landed": 377.89
+        },
+        "model": "claude-opus-5-5",
+        "per_100": {
+          "crew_rework": 4.48,
+          "escaped_regressions": 100.19,
+          "first_pass_accepts": 41.67,
+          "review_rejects": 16.67,
+          "reviewer_repairs": 25,
+          "weighted_landed": 97.76
+        },
+        "provisional_terms": [],
+        "rank": 7,
+        "raw": 107.25,
+        "reviewed_units": 12,
+        "runs_without_model": 0,
+        "score": 107.24,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 420
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 375
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 45
           },
           {
             "key": "cost_missing_run_attempts",
@@ -498,142 +583,57 @@
           }
         ],
         "term_units": {
-          "first_pass_accepts": 13,
-          "review_rejects": 13,
-          "reviewer_repairs": 13
+          "first_pass_accepts": 12,
+          "review_rejects": 12,
+          "reviewer_repairs": 12
         },
         "unit": "implemented tasks",
-        "units": 403,
+        "units": 402,
         "unjudged": false,
         "usage": {
-          "duration_ms": 86556339,
+          "duration_ms": 89558750,
           "efforts": "medium, high",
-          "input_tokens": 9990,
-          "invocations": 80,
-          "output_tokens": 4018240,
-          "provider_cost_count": 80,
-          "provider_cost_usd": 415.7142005999999
+          "input_tokens": 10300,
+          "invocations": 81,
+          "output_tokens": 4097480,
+          "provider_cost_count": 81,
+          "provider_cost_usd": 425.4754701999999
         }
       },
       {
         "below_support": false,
         "counts": {
-          "crew_rework": 13,
-          "escaped_regressions": 93.5,
-          "first_pass_accepts": 5,
-          "review_rejects": 0,
-          "reviewer_repairs": 2,
-          "weighted_landed": 217
-        },
-        "crew": "grok",
-        "expected": {
-          "crew_rework": 20.96,
-          "escaped_regressions": 69.74,
-          "first_pass_accepts": 4.67,
-          "review_rejects": 0.6,
-          "reviewer_repairs": 1.4,
-          "weighted_landed": 216.36
-        },
-        "model": "grok-4.7",
-        "per_100": {
-          "crew_rework": 5.7,
-          "escaped_regressions": 41.01,
-          "first_pass_accepts": 71.43,
-          "review_rejects": 0,
-          "reviewer_repairs": 28.57,
-          "weighted_landed": 95.18
-        },
-        "provisional_terms": [],
-        "rank": 7,
-        "raw": 107.59,
-        "reviewed_units": 7,
-        "runs_without_model": 0,
-        "score": 107.54,
-        "score_base": 100,
-        "stats": [
-          {
-            "key": "cost_per_weighted_landed",
-            "label": "Cost per landed task (USD)",
-            "value": null
-          },
-          {
-            "key": "cost_coverage_attempts",
-            "label": "Cost coverage denominator (counted attempts)",
-            "value": 233
-          },
-          {
-            "key": "cost_measured_attempts",
-            "label": "Cost measured attempts",
-            "value": 213
-          },
-          {
-            "key": "cost_unpriced_attempts",
-            "label": "Cost unpriced attempts",
-            "value": 20
-          },
-          {
-            "key": "cost_missing_run_attempts",
-            "label": "Cost missing-run attempts",
-            "value": 0
-          },
-          {
-            "key": "median_run_seconds",
-            "label": "Median completed run (seconds)",
-            "value": 2075.95
-          }
-        ],
-        "term_units": {
-          "first_pass_accepts": 7,
-          "review_rejects": 7,
-          "reviewer_repairs": 7
-        },
-        "unit": "implemented tasks",
-        "units": 228,
-        "unjudged": false,
-        "usage": {
-          "duration_ms": 228329257,
-          "efforts": "high",
-          "input_tokens": 49904125,
-          "invocations": 157,
-          "output_tokens": 11375308,
-          "provider_cost_count": 157,
-          "provider_cost_usd": 867.0869100000002
-        }
-      },
-      {
-        "below_support": false,
-        "counts": {
-          "crew_rework": 8,
-          "escaped_regressions": 206.5,
+          "crew_rework": 10,
+          "escaped_regressions": 215.75,
           "first_pass_accepts": 16,
           "review_rejects": 0,
           "reviewer_repairs": 11,
-          "weighted_landed": 311
+          "weighted_landed": 315
         },
         "crew": "muse-wonder",
         "expected": {
-          "crew_rework": 28.66,
-          "escaped_regressions": 70.94,
-          "first_pass_accepts": 16.69,
-          "review_rejects": 2.15,
-          "reviewer_repairs": 5.02,
-          "weighted_landed": 299.07
+          "crew_rework": 29.89,
+          "escaped_regressions": 72.69,
+          "first_pass_accepts": 16.54,
+          "review_rejects": 2.27,
+          "reviewer_repairs": 5.29,
+          "weighted_landed": 303.65
         },
         "model": "muse-wonder-1.0",
         "per_100": {
-          "crew_rework": 2.54,
-          "escaped_regressions": 65.56,
+          "crew_rework": 3.14,
+          "escaped_regressions": 67.85,
           "first_pass_accepts": 64,
           "review_rejects": 0,
           "reviewer_repairs": 44,
-          "weighted_landed": 98.73
+          "weighted_landed": 99.06
         },
         "provisional_terms": [],
-        "rank": 9,
-        "raw": 82.71,
+        "rank": 10,
+        "raw": 82.83,
         "reviewed_units": 25,
         "runs_without_model": 0,
-        "score": 82.71,
+        "score": 82.83,
         "score_base": 100,
         "stats": [
           {
@@ -644,7 +644,7 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 324
+            "value": 328
           },
           {
             "key": "cost_measured_attempts",
@@ -654,7 +654,7 @@
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 323
+            "value": 327
           },
           {
             "key": "cost_missing_run_attempts",
@@ -673,13 +673,13 @@
           "reviewer_repairs": 25
         },
         "unit": "implemented tasks",
-        "units": 315,
+        "units": 318,
         "unjudged": false,
         "usage": {
-          "duration_ms": 133365787,
+          "duration_ms": 135139576,
           "efforts": "high",
           "input_tokens": 0,
-          "invocations": 349,
+          "invocations": 358,
           "output_tokens": 0,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
@@ -693,32 +693,32 @@
           "first_pass_accepts": 16,
           "review_rejects": 2,
           "reviewer_repairs": 13,
-          "weighted_landed": 389
+          "weighted_landed": 393
         },
         "crew": "muse-spark",
         "expected": {
-          "crew_rework": 19.7,
-          "escaped_regressions": 30.04,
-          "first_pass_accepts": 21.61,
-          "review_rejects": 2.55,
-          "reviewer_repairs": 6.66,
-          "weighted_landed": 379.15
+          "crew_rework": 20.27,
+          "escaped_regressions": 30.84,
+          "first_pass_accepts": 21.27,
+          "review_rejects": 2.64,
+          "reviewer_repairs": 6.9,
+          "weighted_landed": 384.47
         },
         "model": "muse-spark-1.3-contributor",
         "per_100": {
-          "crew_rework": 1.53,
-          "escaped_regressions": 12.47,
+          "crew_rework": 1.52,
+          "escaped_regressions": 12.31,
           "first_pass_accepts": 48.48,
           "review_rejects": 6.06,
           "reviewer_repairs": 39.39,
-          "weighted_landed": 99.49
+          "weighted_landed": 99.24
         },
         "provisional_terms": [],
         "rank": 11,
-        "raw": 78.68,
+        "raw": 80.24,
         "reviewed_units": 33,
         "runs_without_model": 0,
-        "score": 78.68,
+        "score": 80.24,
         "score_base": 100,
         "stats": [
           {
@@ -729,7 +729,7 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 395
+            "value": 400
           },
           {
             "key": "cost_measured_attempts",
@@ -739,7 +739,7 @@
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 391
+            "value": 396
           },
           {
             "key": "cost_missing_run_attempts",
@@ -749,7 +749,7 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 394.7
+            "value": 394.64
           }
         ],
         "term_units": {
@@ -758,13 +758,13 @@
           "reviewer_repairs": 33
         },
         "unit": "implemented tasks",
-        "units": 391,
+        "units": 396,
         "unjudged": false,
         "usage": {
-          "duration_ms": 65294748,
+          "duration_ms": 67480425,
           "efforts": "xhigh",
           "input_tokens": 0,
-          "invocations": 161,
+          "invocations": 166,
           "output_tokens": 0,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
@@ -773,37 +773,37 @@
       {
         "below_support": false,
         "counts": {
-          "crew_rework": 8,
+          "crew_rework": 5,
           "escaped_regressions": 16,
-          "first_pass_accepts": 5,
+          "first_pass_accepts": 3,
           "review_rejects": 0,
           "reviewer_repairs": 3,
-          "weighted_landed": 90
+          "weighted_landed": 83
         },
         "crew": "gemini-flash",
         "expected": {
-          "crew_rework": 4.2,
-          "escaped_regressions": 4.24,
-          "first_pass_accepts": 5.87,
-          "review_rejects": 0.68,
-          "reviewer_repairs": 1.82,
-          "weighted_landed": 92.41
+          "crew_rework": 3.89,
+          "escaped_regressions": 3.82,
+          "first_pass_accepts": 4.49,
+          "review_rejects": 0.55,
+          "reviewer_repairs": 1.46,
+          "weighted_landed": 84.68
         },
         "model": "gemini-3.8-flash-high",
         "per_100": {
-          "crew_rework": 8.42,
-          "escaped_regressions": 16.84,
-          "first_pass_accepts": 55.56,
+          "crew_rework": 5.75,
+          "escaped_regressions": 18.39,
+          "first_pass_accepts": 42.86,
           "review_rejects": 0,
-          "reviewer_repairs": 33.33,
-          "weighted_landed": 94.74
+          "reviewer_repairs": 42.86,
+          "weighted_landed": 95.4
         },
         "provisional_terms": [],
-        "rank": 12,
-        "raw": 78.56,
-        "reviewed_units": 9,
+        "rank": 13,
+        "raw": 65.34,
+        "reviewed_units": 7,
         "runs_without_model": 0,
-        "score": 78.56,
+        "score": 65.34,
         "score_base": 100,
         "stats": [
           {
@@ -814,17 +814,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 96
+            "value": 88
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 3
+            "value": 2
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 93
+            "value": 86
           },
           {
             "key": "cost_missing_run_attempts",
@@ -834,16 +834,16 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 1083.33
+            "value": 955.84
           }
         ],
         "term_units": {
-          "first_pass_accepts": 9,
-          "review_rejects": 9,
-          "reviewer_repairs": 9
+          "first_pass_accepts": 7,
+          "review_rejects": 7,
+          "reviewer_repairs": 7
         },
         "unit": "implemented tasks",
-        "units": 95,
+        "units": 87,
         "unjudged": false,
         "usage": {
           "duration_ms": 0,
@@ -867,12 +867,12 @@
         },
         "crew": "muse-wonder-full",
         "expected": {
-          "crew_rework": 4.54,
-          "escaped_regressions": 28.9,
-          "first_pass_accepts": 3.61,
-          "review_rejects": 1.66,
-          "reviewer_repairs": 2.48,
-          "weighted_landed": 36.55
+          "crew_rework": 4.45,
+          "escaped_regressions": 28.89,
+          "first_pass_accepts": 3.53,
+          "review_rejects": 1.68,
+          "reviewer_repairs": 2.52,
+          "weighted_landed": 36.6
         },
         "model": "muse-wonder-full-1.0",
         "per_100": {
@@ -885,10 +885,10 @@
         },
         "provisional_terms": [],
         "rank": 17,
-        "raw": 14.15,
+        "raw": 15.2,
         "reviewed_units": 9,
         "runs_without_model": 0,
-        "score": 14.15,
+        "score": 15.2,
         "score_base": 100,
         "stats": [
           {
@@ -944,36 +944,36 @@
         "below_support": false,
         "counts": {
           "crew_rework": 24,
-          "escaped_regressions": 29.25,
+          "escaped_regressions": 30.25,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 2,
-          "weighted_landed": 176
+          "weighted_landed": 189
         },
         "crew": "terra",
         "expected": {
-          "crew_rework": 13.6,
-          "escaped_regressions": 40.03,
-          "first_pass_accepts": 1.33,
-          "review_rejects": 0.17,
-          "reviewer_repairs": 0.4,
-          "weighted_landed": 176.26
+          "crew_rework": 14.61,
+          "escaped_regressions": 42.67,
+          "first_pass_accepts": 1.32,
+          "review_rejects": 0.18,
+          "reviewer_repairs": 0.42,
+          "weighted_landed": 186.56
         },
         "model": "gpt-6.1-terra",
         "per_100": {
-          "crew_rework": 13.04,
-          "escaped_regressions": 15.9,
+          "crew_rework": 12.37,
+          "escaped_regressions": 15.59,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 100,
-          "weighted_landed": 95.65
+          "weighted_landed": 97.42
         },
         "provisional_terms": [],
         "rank": 18,
-        "raw": -0.98,
+        "raw": 3.12,
         "reviewed_units": 2,
         "runs_without_model": 0,
-        "score": -0.98,
+        "score": 3.12,
         "score_base": 100,
         "stats": [
           {
@@ -984,17 +984,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 198
+            "value": 210
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 160
+            "value": 169
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 38
+            "value": 41
           },
           {
             "key": "cost_missing_run_attempts",
@@ -1004,7 +1004,7 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 462.88
+            "value": 453.11
           }
         ],
         "term_units": {
@@ -1013,14 +1013,14 @@
           "reviewer_repairs": 2
         },
         "unit": "implemented tasks",
-        "units": 184,
+        "units": 194,
         "unjudged": false,
         "usage": {
-          "duration_ms": 56219228,
+          "duration_ms": 59768842,
           "efforts": "high",
-          "input_tokens": 571783823,
-          "invocations": 189,
-          "output_tokens": 1045558,
+          "input_tokens": 601787394,
+          "invocations": 200,
+          "output_tokens": 1102712,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -1037,12 +1037,12 @@
         },
         "crew": "system",
         "expected": {
-          "crew_rework": 0.36,
-          "escaped_regressions": 1.0,
-          "first_pass_accepts": 0.67,
+          "crew_rework": 0.37,
+          "escaped_regressions": 1.02,
+          "first_pass_accepts": 0.66,
           "review_rejects": 0.09,
-          "reviewer_repairs": 0.2,
-          "weighted_landed": 4.79
+          "reviewer_repairs": 0.21,
+          "weighted_landed": 4.81
         },
         "model": "claude-haiku-5-5",
         "per_100": {
@@ -1055,10 +1055,10 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 153.27,
+        "raw": 154.97,
         "reviewed_units": 1,
         "runs_without_model": 0,
-        "score": 113.75,
+        "score": 113.95,
         "score_base": 100,
         "stats": [
           {
@@ -1113,6 +1113,91 @@
       {
         "below_support": true,
         "counts": {
+          "crew_rework": 0,
+          "escaped_regressions": 0,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 2
+        },
+        "crew": "sol@xhigh",
+        "expected": {
+          "crew_rework": 0.23,
+          "escaped_regressions": 1.01,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 1.88
+        },
+        "model": "gpt-6.1-sol",
+        "per_100": {
+          "crew_rework": 0,
+          "escaped_regressions": 0,
+          "first_pass_accepts": null,
+          "review_rejects": null,
+          "reviewer_repairs": null,
+          "weighted_landed": 100
+        },
+        "provisional_terms": [],
+        "rank": null,
+        "raw": 142.86,
+        "reviewed_units": 0,
+        "runs_without_model": 0,
+        "score": 109.34,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 3
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 0
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 3
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 1667.63
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0
+        },
+        "unit": "implemented tasks",
+        "units": 2,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 0,
+          "efforts": "",
+          "input_tokens": 0,
+          "invocations": 0,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": true,
+        "counts": {
           "crew_rework": 3,
           "escaped_regressions": 5,
           "first_pass_accepts": 1,
@@ -1123,11 +1208,11 @@
         "crew": "argon",
         "expected": {
           "crew_rework": 0.72,
-          "escaped_regressions": 2.84,
-          "first_pass_accepts": 0.4,
-          "review_rejects": 0.18,
+          "escaped_regressions": 2.87,
+          "first_pass_accepts": 0.39,
+          "review_rejects": 0.19,
           "reviewer_repairs": 0.28,
-          "weighted_landed": 6.61
+          "weighted_landed": 6.63
         },
         "model": "gemini-4-argon-high",
         "per_100": {
@@ -1140,10 +1225,10 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 106.78,
+        "raw": 108.11,
         "reviewed_units": 1,
         "runs_without_model": 0,
-        "score": 106.78,
+        "score": 107.3,
         "score_base": 100,
         "stats": [
           {
@@ -1207,10 +1292,10 @@
         },
         "crew": "astra",
         "expected": {
-          "crew_rework": 0.35,
-          "escaped_regressions": 2.39,
-          "first_pass_accepts": 0.4,
-          "review_rejects": 0.18,
+          "crew_rework": 0.34,
+          "escaped_regressions": 2.38,
+          "first_pass_accepts": 0.39,
+          "review_rejects": 0.19,
           "reviewer_repairs": 0.28,
           "weighted_landed": 2.81
         },
@@ -1225,10 +1310,10 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 66.53,
+        "raw": 67.55,
         "reviewed_units": 1,
         "runs_without_model": 0,
-        "score": 66.53,
+        "score": 67.55,
         "score_base": 100,
         "stats": [
           {
@@ -1283,37 +1368,37 @@
       {
         "below_support": true,
         "counts": {
-          "crew_rework": 0,
-          "escaped_regressions": 2,
+          "crew_rework": 3,
+          "escaped_regressions": 4,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 1
+          "weighted_landed": 7
         },
         "crew": "sol@high",
         "expected": {
-          "crew_rework": 0.18,
-          "escaped_regressions": 0.66,
+          "crew_rework": 0.66,
+          "escaped_regressions": 2.37,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 1.9
+          "weighted_landed": 6.68
         },
         "model": "gpt-6.1-sol",
         "per_100": {
-          "crew_rework": 0,
-          "escaped_regressions": 100,
+          "crew_rework": 42.86,
+          "escaped_regressions": 57.14,
           "first_pass_accepts": null,
           "review_rejects": null,
           "reviewer_repairs": null,
-          "weighted_landed": 50
+          "weighted_landed": 100
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 30.81,
+        "raw": 59.51,
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 30.81,
+        "score": 59.51,
         "score_base": 100,
         "stats": [
           {
@@ -1324,17 +1409,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 2
+            "value": 9
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 1
+            "value": 6
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 1
+            "value": 3
           },
           {
             "key": "cost_missing_run_attempts",
@@ -1344,7 +1429,7 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 741.19
+            "value": 657.6
           }
         ],
         "term_units": {
@@ -1353,14 +1438,14 @@
           "reviewer_repairs": 0
         },
         "unit": "implemented tasks",
-        "units": 2,
+        "units": 7,
         "unjudged": false,
         "usage": {
-          "duration_ms": 926624,
+          "duration_ms": 5951725,
           "efforts": "high",
-          "input_tokens": 5282215,
-          "invocations": 1,
-          "output_tokens": 30249,
+          "input_tokens": 45232937,
+          "invocations": 7,
+          "output_tokens": 187293,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -1377,8 +1462,8 @@
         },
         "crew": "opus@high",
         "expected": {
-          "crew_rework": 0.2,
-          "escaped_regressions": 7.76,
+          "crew_rework": 0.19,
+          "escaped_regressions": 7.93,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
@@ -1395,10 +1480,10 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": -64.15,
+        "raw": -60.01,
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": -64.15,
+        "score": -60.01,
         "score_base": 100,
         "stats": [
           {
@@ -1536,9 +1621,9 @@
         }
       }
     ],
-    "score_key": "Score: per 100 implemented tasks, credit for landed, first-pass accepts; debits for review rejects, reviewer repairs, crew-caused rework, escaped regressions. The fleet average is 107.2.",
+    "score_key": "Score: per 100 implemented tasks, credit for landed, first-pass accepts; debits for review rejects, reviewer repairs, crew-caused rework, escaped regressions. The fleet average is 107.1.",
     "settled": false,
-    "tasks_scanned": 11994,
+    "tasks_scanned": 12079,
     "terms": [
       {
         "group": "credit",
@@ -1580,8 +1665,8 @@
     "unit": "implemented tasks",
     "window": {
       "key": "30d",
-      "since": "2026-10-09T09:11:14Z",
-      "until": "2026-11-08T09:11:14Z"
+      "since": "2026-10-09T17:21:47Z",
+      "until": "2026-11-08T17:21:47Z"
     }
   },
   "implementers_by_tier": {
@@ -1589,12 +1674,12 @@
       {
         "below_support": true,
         "crew": "gemini-flash",
-        "crew_mean": 83.94,
+        "crew_mean": 74.49,
         "model": "gemini-3.8-flash-high",
         "n": 1,
         "rank": null,
-        "raw": 9.55,
-        "score": 81.54,
+        "raw": 9.56,
+        "score": 72.39,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -1603,11 +1688,11 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 87.4,
+        "crew_mean": 87.41,
         "model": "grok-4.7",
         "n": 1,
         "rank": null,
-        "raw": -290.45,
+        "raw": -290.44,
         "score": 75.22,
         "tier": "low",
         "type": "ci",
@@ -1617,12 +1702,12 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 144.4,
+        "crew_mean": 144.78,
         "model": "claude-haiku-5-5",
         "n": 1,
         "rank": null,
-        "raw": 109.55,
-        "score": 143.28,
+        "raw": 109.56,
+        "score": 143.64,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -1631,12 +1716,12 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 128.34,
+        "crew_mean": 129.56,
         "model": "gpt-6-luna",
         "n": 9,
         "rank": null,
-        "raw": 81.77,
-        "score": 117.59,
+        "raw": 81.78,
+        "score": 118.53,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -1645,12 +1730,12 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 86.85,
+        "crew_mean": 88.22,
         "model": "muse-spark-1.3-contributor",
         "n": 2,
         "rank": null,
-        "raw": 12.08,
-        "score": 82.18,
+        "raw": 13.8,
+        "score": 83.57,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -1659,12 +1744,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 107.56,
+        "crew_mean": 108.18,
         "model": "gpt-6.1-sol",
         "n": 2,
         "rank": null,
-        "raw": 59.55,
-        "score": 104.56,
+        "raw": 59.56,
+        "score": 105.15,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -1673,12 +1758,12 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 144.4,
+        "crew_mean": 144.78,
         "model": "claude-haiku-5-5",
         "n": 73,
         "rank": 1,
-        "raw": 103.87,
-        "score": 115.68,
+        "raw": 104.13,
+        "score": 115.97,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -1687,40 +1772,40 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 128.34,
+        "crew_mean": 129.56,
         "model": "gpt-6-luna",
-        "n": 96,
+        "n": 97,
         "rank": 2,
-        "raw": 221.54,
-        "score": 199.35,
+        "raw": 220.85,
+        "score": 199.28,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
-        "units": 96
+        "units": 97
       },
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 103.62,
+        "crew_mean": 103.96,
         "model": "gpt-6.1-terra",
-        "n": 14,
+        "n": 16,
         "rank": 3,
-        "raw": 108.46,
-        "score": 105.16,
+        "raw": 108.83,
+        "score": 105.65,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
-        "units": 14
+        "units": 16
       },
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 86.85,
+        "crew_mean": 88.22,
         "model": "muse-spark-1.3-contributor",
         "n": 40,
         "rank": 4,
-        "raw": 106.85,
-        "score": 98.28,
+        "raw": 107.11,
+        "score": 99.02,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -1729,12 +1814,12 @@
       {
         "below_support": true,
         "crew": "gemini-flash",
-        "crew_mean": 83.94,
+        "crew_mean": 74.49,
         "model": "gemini-3.8-flash-high",
         "n": 8,
         "rank": null,
-        "raw": 109.35,
-        "score": 89.29,
+        "raw": 109.61,
+        "score": 81.88,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -1747,8 +1832,8 @@
         "model": "gpt-6.1-luna",
         "n": 1,
         "rank": null,
-        "raw": -190.65,
-        "score": 81.56,
+        "raw": -190.39,
+        "score": 81.57,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -1757,12 +1842,12 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 101.36,
+        "crew_mean": 101.37,
         "model": "muse-wonder-1.0",
         "n": 3,
         "rank": null,
-        "raw": 109.35,
-        "score": 102.09,
+        "raw": 109.61,
+        "score": 102.11,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -1771,12 +1856,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 107.56,
+        "crew_mean": 108.18,
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": 109.35,
-        "score": 107.62,
+        "raw": 109.61,
+        "score": 108.23,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -1785,40 +1870,40 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 144.4,
+        "crew_mean": 144.78,
         "model": "claude-haiku-5-5",
-        "n": 298,
+        "n": 295,
         "rank": 1,
-        "raw": 131.46,
-        "score": 132.65,
+        "raw": 131.63,
+        "score": 132.84,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 298
+        "units": 295
       },
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 128.34,
+        "crew_mean": 129.56,
         "model": "gpt-6-luna",
-        "n": 365,
+        "n": 367,
         "rank": 2,
-        "raw": 107.86,
-        "score": 109.41,
+        "raw": 108.96,
+        "score": 110.52,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 365
+        "units": 367
       },
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 107.56,
+        "crew_mean": 108.18,
         "model": "gpt-6.1-sol",
         "n": 10,
         "rank": 3,
-        "raw": 107.02,
-        "score": 107.43,
+        "raw": 108.62,
+        "score": 108.29,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -1827,54 +1912,54 @@
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 103.62,
+        "crew_mean": 103.96,
         "model": "gpt-6.1-terra",
-        "n": 47,
+        "n": 51,
         "rank": 4,
-        "raw": 103.03,
-        "score": 103.26,
+        "raw": 103.45,
+        "score": 103.64,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 47
+        "units": 51
       },
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 86.85,
+        "crew_mean": 88.22,
         "model": "muse-spark-1.3-contributor",
-        "n": 205,
+        "n": 210,
         "rank": 5,
-        "raw": 82.59,
-        "score": 83.14,
+        "raw": 83.86,
+        "score": 84.4,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 205
+        "units": 210
       },
       {
         "below_support": false,
         "crew": "gemini-flash",
-        "crew_mean": 83.94,
+        "crew_mean": 74.49,
         "model": "gemini-3.8-flash-high",
-        "n": 52,
+        "n": 44,
         "rank": 6,
-        "raw": 55.81,
-        "score": 66.1,
+        "raw": 35.9,
+        "score": 51.54,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 52
+        "units": 44
       },
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 101.36,
+        "crew_mean": 101.37,
         "model": "muse-wonder-1.0",
         "n": 2,
         "rank": null,
-        "raw": 109.41,
-        "score": 101.87,
+        "raw": 109.34,
+        "score": 101.86,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -1883,12 +1968,12 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 102.2,
+        "crew_mean": 102.21,
         "model": "claude-opus-5-5",
         "n": 3,
         "rank": null,
-        "raw": 109.41,
-        "score": 102.86,
+        "raw": 109.34,
+        "score": 102.85,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -1897,12 +1982,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 97.02,
+        "crew_mean": 97.42,
         "model": "claude-sonnet-5-5",
         "n": 5,
         "rank": null,
-        "raw": 72.02,
-        "score": 93.45,
+        "raw": 73.62,
+        "score": 94.02,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -1911,12 +1996,12 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 144.4,
+        "crew_mean": 144.78,
         "model": "claude-haiku-5-5",
         "n": 21,
         "rank": 1,
         "raw": 91.6,
-        "score": 122.66,
+        "score": 122.88,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -1925,12 +2010,12 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 128.34,
+        "crew_mean": 129.56,
         "model": "gpt-6-luna",
         "n": 10,
         "rank": 2,
         "raw": 145.88,
-        "score": 132.73,
+        "score": 133.64,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -1939,12 +2024,12 @@
       {
         "below_support": true,
         "crew": "gemini-flash",
-        "crew_mean": 83.94,
+        "crew_mean": 74.49,
         "model": "gemini-3.8-flash-high",
         "n": 3,
         "rank": null,
         "raw": 105.88,
-        "score": 85.93,
+        "score": 77.34,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -1953,12 +2038,12 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 86.85,
+        "crew_mean": 88.22,
         "model": "muse-spark-1.3-contributor",
         "n": 5,
         "rank": null,
         "raw": 105.88,
-        "score": 89.57,
+        "score": 90.74,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -1967,7 +2052,7 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 102.2,
+        "crew_mean": 102.21,
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
@@ -1981,12 +2066,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 107.56,
+        "crew_mean": 108.18,
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
         "raw": 105.88,
-        "score": 107.51,
+        "score": 108.11,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -1995,12 +2080,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 97.02,
+        "crew_mean": 97.42,
         "model": "claude-sonnet-5-5",
         "n": 1,
         "rank": null,
         "raw": 105.88,
-        "score": 97.3,
+        "score": 97.69,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -2009,12 +2094,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 103.62,
+        "crew_mean": 103.96,
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
         "raw": 105.88,
-        "score": 103.69,
+        "score": 104.02,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -2023,12 +2108,12 @@
       {
         "below_support": true,
         "crew": "gemini-flash",
-        "crew_mean": 83.94,
+        "crew_mean": 74.49,
         "model": "gemini-3.8-flash-high",
         "n": 1,
         "rank": null,
-        "raw": 109.55,
-        "score": 84.76,
+        "raw": 109.56,
+        "score": 75.62,
         "tier": "low",
         "type": "security",
         "unit": "tasks",
@@ -2037,12 +2122,12 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 144.4,
+        "crew_mean": 144.78,
         "model": "claude-haiku-5-5",
         "n": 2,
         "rank": null,
-        "raw": 109.55,
-        "score": 142.22,
+        "raw": 109.56,
+        "score": 142.58,
         "tier": "low",
         "type": "security",
         "unit": "tasks",
@@ -2051,12 +2136,12 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 128.34,
+        "crew_mean": 129.56,
         "model": "gpt-6-luna",
         "n": 2,
         "rank": null,
-        "raw": 109.55,
-        "score": 127.17,
+        "raw": 109.56,
+        "score": 128.31,
         "tier": "low",
         "type": "security",
         "unit": "tasks",
@@ -2065,12 +2150,12 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 86.85,
+        "crew_mean": 88.22,
         "model": "muse-spark-1.3-contributor",
         "n": 1,
         "rank": null,
-        "raw": 109.55,
-        "score": 87.58,
+        "raw": 109.56,
+        "score": 88.91,
         "tier": "low",
         "type": "security",
         "unit": "tasks",
@@ -2083,7 +2168,7 @@
         "model": "claude-haiku-5-5",
         "n": 2,
         "rank": null,
-        "raw": 59.55,
+        "raw": 59.56,
         "score": 95.1,
         "tier": "low",
         "type": "security",
@@ -2093,12 +2178,12 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 144.4,
+        "crew_mean": 144.78,
         "model": "claude-haiku-5-5",
         "n": 130,
         "rank": 1,
-        "raw": 167.5,
-        "score": 163.17,
+        "raw": 167.53,
+        "score": 163.26,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -2107,26 +2192,26 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 128.34,
+        "crew_mean": 129.56,
         "model": "gpt-6-luna",
-        "n": 170,
+        "n": 168,
         "rank": 2,
-        "raw": 164.14,
-        "score": 158.77,
+        "raw": 164.11,
+        "score": 158.87,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
-        "units": 170
+        "units": 168
       },
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 86.85,
+        "crew_mean": 88.22,
         "model": "muse-spark-1.3-contributor",
         "n": 87,
         "rank": 3,
-        "raw": 40.06,
-        "score": 52.06,
+        "raw": 40.1,
+        "score": 52.43,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -2135,12 +2220,12 @@
       {
         "below_support": false,
         "crew": "gemini-flash",
-        "crew_mean": 83.94,
+        "crew_mean": 74.49,
         "model": "gemini-3.8-flash-high",
         "n": 30,
         "rank": 4,
-        "raw": 99.81,
-        "score": 91.87,
+        "raw": 99.84,
+        "score": 87.16,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -2149,12 +2234,12 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 102.2,
+        "crew_mean": 102.21,
         "model": "claude-opus-5-5",
         "n": 5,
         "rank": null,
-        "raw": 107.31,
-        "score": 102.93,
+        "raw": 107.34,
+        "score": 102.94,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -2163,12 +2248,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 107.56,
+        "crew_mean": 108.18,
         "model": "gpt-6.1-sol",
         "n": 3,
         "rank": null,
-        "raw": 40.64,
-        "score": 101.48,
+        "raw": 40.67,
+        "score": 102.05,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -2177,12 +2262,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 97.02,
+        "crew_mean": 97.42,
         "model": "claude-sonnet-5-5",
         "n": 3,
         "rank": null,
-        "raw": 107.31,
-        "score": 97.95,
+        "raw": 107.34,
+        "score": 98.32,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -2191,12 +2276,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 103.62,
+        "crew_mean": 103.96,
         "model": "gpt-6.1-terra",
         "n": 9,
         "rank": null,
-        "raw": 107.31,
-        "score": 104.47,
+        "raw": 107.34,
+        "score": 104.74,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -2205,12 +2290,12 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 131.28,
+        "crew_mean": 131.83,
         "model": "gpt-6.1-sol",
         "n": 26,
         "rank": 1,
-        "raw": 143.35,
-        "score": 136.89,
+        "raw": 143.5,
+        "score": 137.25,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -2219,12 +2304,12 @@
       {
         "below_support": false,
         "crew": "grok",
-        "crew_mean": 111.15,
+        "crew_mean": 114.48,
         "model": "grok-4.7",
         "n": 17,
         "rank": 2,
-        "raw": 91.43,
-        "score": 104.02,
+        "raw": 91.58,
+        "score": 106.19,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -2233,26 +2318,26 @@
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.32,
+        "crew_mean": 87.56,
         "model": "muse-wonder-1.0",
-        "n": 12,
+        "n": 13,
         "rank": 3,
-        "raw": 120,
-        "score": 96.66,
+        "raw": 111.49,
+        "score": 94.8,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
-        "units": 12
+        "units": 13
       },
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 142.44,
+        "crew_mean": 143.59,
         "model": "claude-haiku-5-5",
         "n": 1,
         "rank": null,
-        "raw": 120,
-        "score": 141.72,
+        "raw": 120.15,
+        "score": 142.84,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -2261,12 +2346,12 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 62.59,
+        "crew_mean": 63.68,
         "model": "muse-spark-1.3-contributor",
         "n": 3,
         "rank": null,
-        "raw": 120,
-        "score": 67.81,
+        "raw": 120.15,
+        "score": 68.81,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -2275,12 +2360,12 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 97.07,
+        "crew_mean": 97.13,
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
-        "raw": 20.0,
-        "score": 94.58,
+        "raw": 20.15,
+        "score": 94.64,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -2289,12 +2374,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 119.35,
+        "crew_mean": 116.38,
         "model": "claude-sonnet-5-5",
         "n": 5,
         "rank": null,
-        "raw": 181.43,
-        "score": 128.21,
+        "raw": 181.58,
+        "score": 125.69,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -2303,12 +2388,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 21.05,
+        "crew_mean": 25.09,
         "model": "gpt-6.1-terra",
         "n": 5,
         "rank": null,
-        "raw": 100,
-        "score": 32.33,
+        "raw": 100.15,
+        "score": 35.81,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -2317,12 +2402,12 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 142.44,
+        "crew_mean": 143.59,
         "model": "claude-haiku-5-5",
         "n": 13,
         "rank": 1,
         "raw": 204.26,
-        "score": 161.13,
+        "score": 161.93,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -2331,12 +2416,12 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 131.28,
+        "crew_mean": 131.83,
         "model": "gpt-6.1-sol",
         "n": 15,
         "rank": 2,
         "raw": 97.78,
-        "score": 120.11,
+        "score": 120.48,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -2345,12 +2430,12 @@
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.32,
+        "crew_mean": 87.56,
         "model": "muse-wonder-1.0",
         "n": 13,
         "rank": 3,
         "raw": 104.26,
-        "score": 92.44,
+        "score": 92.61,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -2359,12 +2444,12 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 111.15,
+        "crew_mean": 114.48,
         "model": "grok-4.7",
         "n": 4,
         "rank": null,
         "raw": 111.95,
-        "score": 111.24,
+        "score": 114.18,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -2373,12 +2458,12 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 61.27,
+        "crew_mean": 62.26,
         "model": "gpt-6-luna",
         "n": 7,
         "rank": null,
         "raw": 111.95,
-        "score": 70.86,
+        "score": 71.66,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -2387,12 +2472,12 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 62.59,
+        "crew_mean": 63.68,
         "model": "muse-spark-1.3-contributor",
         "n": 5,
         "rank": null,
         "raw": 111.95,
-        "score": 69.64,
+        "score": 70.57,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -2401,12 +2486,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 119.35,
+        "crew_mean": 116.38,
         "model": "claude-sonnet-5-5",
         "n": 5,
         "rank": null,
         "raw": 211.95,
-        "score": 132.57,
+        "score": 130.03,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -2415,12 +2500,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 21.05,
+        "crew_mean": 25.09,
         "model": "gpt-6.1-terra",
         "n": 3,
         "rank": null,
         "raw": 28.62,
-        "score": 21.74,
+        "score": 25.41,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -2429,12 +2514,12 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 142.44,
+        "crew_mean": 143.59,
         "model": "claude-haiku-5-5",
         "n": 24,
         "rank": 1,
-        "raw": 107.95,
-        "score": 127.11,
+        "raw": 108.31,
+        "score": 127.91,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -2443,68 +2528,68 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 131.28,
+        "crew_mean": 131.83,
         "model": "gpt-6.1-sol",
-        "n": 433,
+        "n": 420,
         "rank": 2,
-        "raw": 134.84,
-        "score": 134.61,
+        "raw": 136.27,
+        "score": 135.97,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 433
+        "units": 420
       },
       {
         "below_support": false,
         "crew": "sonnet",
-        "crew_mean": 119.35,
+        "crew_mean": 116.38,
         "model": "claude-sonnet-5-5",
-        "n": 104,
+        "n": 97,
         "rank": 3,
-        "raw": 114.78,
-        "score": 115.8,
+        "raw": 109.2,
+        "score": 110.89,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 104
+        "units": 97
       },
       {
         "below_support": false,
         "crew": "grok",
-        "crew_mean": 111.15,
+        "crew_mean": 114.48,
         "model": "grok-4.7",
-        "n": 118,
+        "n": 123,
         "rank": 4,
-        "raw": 96.1,
-        "score": 99.15,
+        "raw": 101.46,
+        "score": 104.02,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 118
+        "units": 123
       },
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.32,
+        "crew_mean": 87.56,
         "model": "muse-wonder-1.0",
-        "n": 174,
+        "n": 176,
         "rank": 5,
-        "raw": 80.23,
-        "score": 81.28,
+        "raw": 80.57,
+        "score": 81.59,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 174
+        "units": 176
       },
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 62.59,
+        "crew_mean": 63.68,
         "model": "muse-spark-1.3-contributor",
         "n": 26,
         "rank": 6,
-        "raw": 33.33,
-        "score": 49.0,
+        "raw": 35.79,
+        "score": 50.73,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -2513,12 +2598,12 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 61.27,
+        "crew_mean": 62.26,
         "model": "gpt-6-luna",
         "n": 18,
         "rank": 7,
-        "raw": 16.45,
-        "score": 44.46,
+        "raw": 18.91,
+        "score": 46.0,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -2527,26 +2612,26 @@
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 21.05,
+        "crew_mean": 25.09,
         "model": "gpt-6.1-terra",
-        "n": 71,
+        "n": 73,
         "rank": 8,
-        "raw": -2.02,
-        "score": 4.84,
+        "raw": 4.68,
+        "score": 10.62,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 71
+        "units": 73
       },
       {
         "below_support": true,
         "crew": "argon",
-        "crew_mean": 84.29,
+        "crew_mean": 84.3,
         "model": "gemini-4-argon-high",
         "n": 4,
         "rank": null,
-        "raw": -33.72,
-        "score": 70.41,
+        "raw": -33.36,
+        "score": 70.46,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -2555,12 +2640,12 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 97.07,
+        "crew_mean": 97.13,
         "model": "claude-opus-5-5",
         "n": 9,
         "rank": null,
-        "raw": 101.0,
-        "score": 97.98,
+        "raw": 101.37,
+        "score": 98.11,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -2569,26 +2654,26 @@
       {
         "below_support": true,
         "crew": "sol@high",
-        "crew_mean": 95.56,
+        "crew_mean": 91.99,
         "model": "gpt-6.1-sol",
-        "n": 2,
+        "n": 7,
         "rank": null,
-        "raw": 28.78,
-        "score": 91.39,
+        "raw": 57.71,
+        "score": 85.5,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 2
+        "units": 7
       },
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 131.28,
+        "crew_mean": 131.83,
         "model": "gpt-6.1-sol",
         "n": 46,
         "rank": 1,
         "raw": 130.13,
-        "score": 130.58,
+        "score": 130.8,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -2597,12 +2682,12 @@
       {
         "below_support": false,
         "crew": "grok",
-        "crew_mean": 111.15,
+        "crew_mean": 114.48,
         "model": "grok-4.7",
         "n": 10,
         "rank": 2,
         "raw": 109.47,
-        "score": 110.73,
+        "score": 113.23,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -2611,12 +2696,12 @@
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.32,
+        "crew_mean": 87.56,
         "model": "muse-wonder-1.0",
         "n": 11,
         "rank": 3,
         "raw": 109.47,
-        "score": 93.27,
+        "score": 93.44,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -2625,12 +2710,12 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 142.44,
+        "crew_mean": 143.59,
         "model": "claude-haiku-5-5",
         "n": 4,
         "rank": null,
         "raw": 109.47,
-        "score": 138.56,
+        "score": 139.58,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -2639,12 +2724,12 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 61.27,
+        "crew_mean": 62.26,
         "model": "gpt-6-luna",
         "n": 1,
         "rank": null,
         "raw": 109.47,
-        "score": 62.83,
+        "score": 63.78,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -2653,12 +2738,12 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 97.07,
+        "crew_mean": 97.13,
         "model": "claude-opus-5-5",
         "n": 2,
         "rank": null,
         "raw": 109.47,
-        "score": 97.84,
+        "score": 97.9,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -2667,12 +2752,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 119.35,
+        "crew_mean": 116.38,
         "model": "claude-sonnet-5-5",
         "n": 8,
         "rank": null,
         "raw": 109.47,
-        "score": 117.27,
+        "score": 114.92,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -2681,12 +2766,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 21.05,
+        "crew_mean": 25.09,
         "model": "gpt-6.1-terra",
         "n": 3,
         "rank": null,
         "raw": 109.47,
-        "score": 29.09,
+        "score": 32.76,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -2695,26 +2780,26 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 111.15,
+        "crew_mean": 114.48,
         "model": "grok-4.7",
-        "n": 1,
+        "n": 2,
         "rank": null,
-        "raw": 128.96,
-        "score": 111.72,
+        "raw": 129.07,
+        "score": 115.39,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
-        "units": 1
+        "units": 2
       },
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 87.32,
+        "crew_mean": 87.56,
         "model": "muse-wonder-1.0",
         "n": 5,
         "rank": null,
-        "raw": -11.04,
-        "score": 73.27,
+        "raw": -10.93,
+        "score": 73.49,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -2723,12 +2808,12 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 97.07,
+        "crew_mean": 97.13,
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
-        "raw": -171.04,
-        "score": 88.42,
+        "raw": -170.93,
+        "score": 88.48,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -2737,12 +2822,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 131.28,
+        "crew_mean": 131.83,
         "model": "gpt-6.1-sol",
         "n": 7,
         "rank": null,
-        "raw": 78.96,
-        "score": 121.38,
+        "raw": 79.07,
+        "score": 121.85,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -2751,12 +2836,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 119.35,
+        "crew_mean": 116.38,
         "model": "claude-sonnet-5-5",
         "n": 1,
         "rank": null,
-        "raw": 128.96,
-        "score": 119.66,
+        "raw": 129.07,
+        "score": 116.79,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -2765,12 +2850,12 @@
       {
         "below_support": true,
         "crew": "system",
-        "crew_mean": 107.36,
+        "crew_mean": 107.52,
         "model": "claude-haiku-5-5",
         "n": 3,
         "rank": null,
-        "raw": 180.97,
-        "score": 114.05,
+        "raw": 182.71,
+        "score": 114.35,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -2779,12 +2864,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 21.05,
+        "crew_mean": 25.09,
         "model": "gpt-6.1-terra",
         "n": 5,
         "rank": null,
-        "raw": 48.96,
-        "score": 25.04,
+        "raw": 49.07,
+        "score": 28.52,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -2793,12 +2878,12 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 142.44,
+        "crew_mean": 143.59,
         "model": "claude-haiku-5-5",
         "n": 17,
         "rank": 1,
-        "raw": 157.92,
-        "score": 148.04,
+        "raw": 157.61,
+        "score": 148.66,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -2807,40 +2892,40 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 131.28,
+        "crew_mean": 131.83,
         "model": "gpt-6.1-sol",
-        "n": 181,
+        "n": 180,
         "rank": 2,
-        "raw": 124.98,
-        "score": 125.88,
+        "raw": 124.52,
+        "score": 125.56,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
-        "units": 181
+        "units": 180
       },
       {
         "below_support": false,
         "crew": "sonnet",
-        "crew_mean": 119.35,
+        "crew_mean": 116.38,
         "model": "claude-sonnet-5-5",
-        "n": 62,
+        "n": 61,
         "rank": 3,
-        "raw": 120.5,
-        "score": 120.12,
+        "raw": 119.74,
+        "score": 118.63,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
-        "units": 62
+        "units": 61
       },
       {
         "below_support": false,
         "crew": "grok",
-        "crew_mean": 111.15,
+        "crew_mean": 114.48,
         "model": "grok-4.7",
         "n": 71,
         "rank": 4,
-        "raw": 154.52,
-        "score": 141.63,
+        "raw": 155.62,
+        "score": 143.4,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -2849,12 +2934,12 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 97.07,
+        "crew_mean": 97.13,
         "model": "claude-opus-5-5",
         "n": 25,
         "rank": 5,
-        "raw": 108.23,
-        "score": 102.14,
+        "raw": 107.92,
+        "score": 102.03,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -2863,12 +2948,12 @@
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.32,
+        "crew_mean": 87.56,
         "model": "muse-wonder-1.0",
         "n": 92,
         "rank": 6,
-        "raw": 83.63,
-        "score": 84.54,
+        "raw": 83.32,
+        "score": 84.36,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -2877,12 +2962,12 @@
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 62.59,
+        "crew_mean": 63.68,
         "model": "muse-spark-1.3-contributor",
         "n": 17,
         "rank": 7,
-        "raw": 7.92,
-        "score": 42.82,
+        "raw": 7.61,
+        "score": 43.4,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -2891,12 +2976,12 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 61.27,
+        "crew_mean": 62.26,
         "model": "gpt-6-luna",
         "n": 14,
         "rank": 8,
-        "raw": 73.52,
-        "score": 65.17,
+        "raw": 73.21,
+        "score": 65.74,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -2905,16 +2990,16 @@
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 21.05,
+        "crew_mean": 25.09,
         "model": "gpt-6.1-terra",
-        "n": 22,
+        "n": 23,
         "rank": 9,
-        "raw": 100.14,
-        "score": 54.51,
+        "raw": 105.66,
+        "score": 60.06,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
-        "units": 22
+        "units": 23
       },
       {
         "below_support": true,
@@ -2923,8 +3008,8 @@
         "model": "muse-wonder-full-1.0",
         "n": 1,
         "rank": null,
-        "raw": 34.23,
-        "score": 95.66,
+        "raw": 33.92,
+        "score": 95.65,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -2932,41 +3017,41 @@
       },
       {
         "below_support": false,
-        "crew": "opus",
-        "crew_mean": 120.48,
-        "model": "claude-opus-5-5",
-        "n": 18,
-        "rank": 1,
-        "raw": 144.86,
-        "score": 129.62,
-        "tier": "hard",
-        "type": "ci",
-        "unit": "tasks",
-        "units": 18
-      },
-      {
-        "below_support": false,
         "crew": "sol",
-        "crew_mean": 116.38,
+        "crew_mean": 117.26,
         "model": "gpt-6.1-sol",
         "n": 14,
-        "rank": 2,
+        "rank": 1,
         "raw": 81.76,
-        "score": 105.37,
+        "score": 105.97,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
         "units": 14
       },
       {
+        "below_support": false,
+        "crew": "opus",
+        "crew_mean": 115.05,
+        "model": "claude-opus-5-5",
+        "n": 18,
+        "rank": 2,
+        "raw": 144.86,
+        "score": 126.23,
+        "tier": "hard",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 18
+      },
+      {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 99.03,
+        "crew_mean": 98.99,
         "model": "muse-wonder-1.0",
         "n": 1,
         "rank": null,
         "raw": 53.19,
-        "score": 97.55,
+        "score": 97.51,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -2975,12 +3060,12 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 51.64,
+        "crew_mean": 52.23,
         "model": "muse-wonder-full-1.0",
         "n": 2,
         "rank": null,
         "raw": 153.19,
-        "score": 57.99,
+        "score": 58.54,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -2989,12 +3074,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 79.42,
+        "crew_mean": 79.37,
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
         "raw": 53.19,
-        "score": 78.58,
+        "score": 78.52,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -3003,12 +3088,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 116.38,
+        "crew_mean": 117.26,
         "model": "gpt-6.1-sol",
         "n": 3,
         "rank": null,
-        "raw": -52.62,
-        "score": 101.02,
+        "raw": -51.56,
+        "score": 101.91,
         "tier": "hard",
         "type": "docs",
         "unit": "tasks",
@@ -3017,40 +3102,26 @@
       {
         "below_support": false,
         "crew": "opus@medium",
-        "crew_mean": 129.72,
+        "crew_mean": 129.8,
         "model": "claude-opus-5-5",
-        "n": 63,
+        "n": 64,
         "rank": 1,
-        "raw": 126.4,
-        "score": 127.47,
+        "raw": 125.99,
+        "score": 127.21,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
-        "units": 63
-      },
-      {
-        "below_support": false,
-        "crew": "opus",
-        "crew_mean": 120.48,
-        "model": "claude-opus-5-5",
-        "n": 176,
-        "rank": 2,
-        "raw": 114.7,
-        "score": 115.54,
-        "tier": "hard",
-        "type": "other",
-        "unit": "tasks",
-        "units": 176
+        "units": 64
       },
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 116.38,
+        "crew_mean": 117.26,
         "model": "gpt-6.1-sol",
         "n": 101,
-        "rank": 3,
-        "raw": 130.93,
-        "score": 127.6,
+        "rank": 2,
+        "raw": 131.99,
+        "score": 128.62,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3058,13 +3129,27 @@
       },
       {
         "below_support": false,
+        "crew": "opus",
+        "crew_mean": 115.05,
+        "model": "claude-opus-5-5",
+        "n": 175,
+        "rank": 3,
+        "raw": 107.2,
+        "score": 108.35,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 175
+      },
+      {
+        "below_support": false,
         "crew": "muse-wonder-full",
-        "crew_mean": 51.64,
+        "crew_mean": 52.23,
         "model": "muse-wonder-full-1.0",
         "n": 17,
         "rank": 4,
-        "raw": 116.75,
-        "score": 75.19,
+        "raw": 117.82,
+        "score": 75.95,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3073,12 +3158,12 @@
       {
         "below_support": true,
         "crew": "argon",
-        "crew_mean": 107.34,
+        "crew_mean": 107.43,
         "model": "gemini-4-argon-high",
         "n": 3,
         "rank": null,
-        "raw": 155.97,
-        "score": 111.76,
+        "raw": 157.03,
+        "score": 111.94,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3087,12 +3172,12 @@
       {
         "below_support": true,
         "crew": "astra",
-        "crew_mean": 96.73,
+        "crew_mean": 96.83,
         "model": "gpt-6-astra",
         "n": 2,
         "rank": null,
-        "raw": 72.63,
-        "score": 95.23,
+        "raw": 73.7,
+        "score": 95.38,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3101,12 +3186,12 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 80.16,
+        "crew_mean": 80.1,
         "model": "grok-4.7",
         "n": 2,
         "rank": null,
-        "raw": -30.14,
-        "score": 73.27,
+        "raw": -30.85,
+        "score": 73.16,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3115,12 +3200,12 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 98.58,
+        "crew_mean": 98.57,
         "model": "gpt-6-luna",
         "n": 1,
         "rank": null,
-        "raw": 44.86,
-        "score": 96.85,
+        "raw": 44.15,
+        "score": 96.81,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3129,12 +3214,26 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 99.03,
+        "crew_mean": 98.99,
         "model": "muse-wonder-1.0",
         "n": 2,
         "rank": null,
-        "raw": 94.86,
-        "score": 98.77,
+        "raw": 94.15,
+        "score": 98.69,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "sol@xhigh",
+        "crew_mean": 103.47,
+        "model": "gpt-6.1-sol",
+        "n": 2,
+        "rank": null,
+        "raw": 144.15,
+        "score": 106.02,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3143,12 +3242,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 84.39,
+        "crew_mean": 84.3,
         "model": "claude-sonnet-5-5",
         "n": 4,
         "rank": null,
-        "raw": 66.73,
-        "score": 82.31,
+        "raw": 66.03,
+        "score": 82.15,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3157,12 +3256,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 79.42,
+        "crew_mean": 79.37,
         "model": "gpt-6.1-terra",
         "n": 3,
         "rank": null,
-        "raw": -155.14,
-        "score": 58.1,
+        "raw": -155.85,
+        "score": 57.99,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -3171,12 +3270,12 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 120.48,
+        "crew_mean": 115.05,
         "model": "claude-opus-5-5",
         "n": 14,
         "rank": 1,
-        "raw": 155.97,
-        "score": 131.78,
+        "raw": 155.58,
+        "score": 127.95,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -3185,12 +3284,12 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 51.64,
+        "crew_mean": 52.23,
         "model": "muse-wonder-full-1.0",
         "n": 1,
         "rank": null,
-        "raw": 155.97,
-        "score": 55.01,
+        "raw": 155.58,
+        "score": 55.56,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -3199,12 +3298,12 @@
       {
         "below_support": true,
         "crew": "opus@medium",
-        "crew_mean": 129.72,
+        "crew_mean": 129.8,
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
-        "raw": 155.97,
-        "score": 130.57,
+        "raw": 155.58,
+        "score": 130.63,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -3213,12 +3312,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 116.38,
+        "crew_mean": 117.26,
         "model": "gpt-6.1-sol",
         "n": 8,
         "rank": null,
-        "raw": 59.88,
-        "score": 104.49,
+        "raw": 60.94,
+        "score": 105.4,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -3227,12 +3326,12 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 120.48,
+        "crew_mean": 115.05,
         "model": "claude-opus-5-5",
         "n": 11,
         "rank": 1,
-        "raw": -7.17,
-        "score": 86.24,
+        "raw": -6.11,
+        "score": 82.55,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -3241,12 +3340,12 @@
       {
         "below_support": true,
         "crew": "astra",
-        "crew_mean": 96.73,
+        "crew_mean": 96.83,
         "model": "gpt-6-astra",
         "n": 1,
         "rank": null,
-        "raw": 55.97,
-        "score": 95.42,
+        "raw": 55.58,
+        "score": 95.5,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -3255,12 +3354,12 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 51.64,
+        "crew_mean": 52.23,
         "model": "muse-wonder-full-1.0",
         "n": 2,
         "rank": null,
-        "raw": -202.62,
-        "score": 35.75,
+        "raw": -201.56,
+        "score": 36.37,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -3269,11 +3368,11 @@
       {
         "below_support": true,
         "crew": "opus@medium",
-        "crew_mean": 129.72,
+        "crew_mean": 129.8,
         "model": "claude-opus-5-5",
         "n": 6,
         "rank": null,
-        "raw": 130.97,
+        "raw": 130.58,
         "score": 129.93,
         "tier": "hard",
         "type": "security",
@@ -3283,12 +3382,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 116.38,
+        "crew_mean": 117.26,
         "model": "gpt-6.1-sol",
         "n": 3,
         "rank": null,
-        "raw": 89.31,
-        "score": 113.92,
+        "raw": 88.91,
+        "score": 114.68,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -3297,12 +3396,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 84.39,
+        "crew_mean": 84.3,
         "model": "claude-sonnet-5-5",
         "n": 1,
         "rank": null,
-        "raw": 155.97,
-        "score": 86.7,
+        "raw": 155.58,
+        "score": 86.6,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -3311,40 +3410,26 @@
       {
         "below_support": false,
         "crew": "opus@medium",
-        "crew_mean": 129.72,
+        "crew_mean": 129.8,
         "model": "claude-opus-5-5",
-        "n": 33,
+        "n": 34,
         "rank": 1,
-        "raw": 162.78,
-        "score": 147.04,
+        "raw": 163.23,
+        "score": 147.56,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
-        "units": 33
-      },
-      {
-        "below_support": false,
-        "crew": "opus",
-        "crew_mean": 120.48,
-        "model": "claude-opus-5-5",
-        "n": 118,
-        "rank": 2,
-        "raw": 211.66,
-        "score": 193.17,
-        "tier": "hard",
-        "type": "ui",
-        "unit": "tasks",
-        "units": 118
+        "units": 34
       },
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 116.38,
+        "crew_mean": 117.26,
         "model": "gpt-6.1-sol",
         "n": 18,
-        "rank": 3,
+        "rank": 2,
         "raw": 82.8,
-        "score": 103.79,
+        "score": 104.34,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -3352,13 +3437,27 @@
       },
       {
         "below_support": false,
+        "crew": "opus",
+        "crew_mean": 115.05,
+        "model": "claude-opus-5-5",
+        "n": 118,
+        "rank": 3,
+        "raw": 211.66,
+        "score": 192.07,
+        "tier": "hard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 118
+      },
+      {
+        "below_support": false,
         "crew": "muse-wonder-full",
-        "crew_mean": 51.64,
+        "crew_mean": 52.23,
         "model": "muse-wonder-full-1.0",
         "n": 16,
         "rank": 4,
         "raw": -62.27,
-        "score": 12.02,
+        "score": 12.4,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -3367,12 +3466,12 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 80.16,
+        "crew_mean": 80.1,
         "model": "grok-4.7",
         "n": 4,
         "rank": null,
         "raw": 2.93,
-        "score": 71.08,
+        "score": 71.02,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -3381,12 +3480,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 84.39,
+        "crew_mean": 84.3,
         "model": "claude-sonnet-5-5",
         "n": 4,
         "rank": null,
         "raw": -22.07,
-        "score": 71.87,
+        "score": 71.79,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -3395,12 +3494,12 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 79.42,
+        "crew_mean": 79.37,
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
         "raw": 177.93,
-        "score": 82.6,
+        "score": 82.55,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -3409,12 +3508,12 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 95.06,
+        "crew_mean": 94.52,
         "model": "claude-opus-5-5",
         "n": 12,
         "rank": 1,
-        "raw": 113.86,
-        "score": 100.44,
+        "raw": 109.38,
+        "score": 98.76,
         "tier": "xhard",
         "type": "other",
         "unit": "tasks",
@@ -3423,12 +3522,12 @@
       {
         "below_support": true,
         "crew": "opus@high",
-        "crew_mean": 90.78,
+        "crew_mean": 91.02,
         "model": "claude-opus-5-5",
         "n": 2,
         "rank": null,
-        "raw": -47.6,
-        "score": 82.13,
+        "raw": -43.75,
+        "score": 82.59,
         "tier": "xhard",
         "type": "other",
         "unit": "tasks",
@@ -3437,12 +3536,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 115.34,
+        "crew_mean": 115.89,
         "model": "gpt-6.1-sol",
         "n": 4,
         "rank": null,
-        "raw": 227.4,
-        "score": 128.53,
+        "raw": 231.25,
+        "score": 129.46,
         "tier": "xhard",
         "type": "other",
         "unit": "tasks",
@@ -3451,12 +3550,12 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 95.06,
+        "crew_mean": 94.52,
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
-        "raw": 27.4,
-        "score": 92.88,
+        "raw": 31.25,
+        "score": 92.47,
         "tier": "xhard",
         "type": "security",
         "unit": "tasks",
@@ -3465,12 +3564,12 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 95.06,
+        "crew_mean": 94.52,
         "model": "claude-opus-5-5",
         "n": 6,
         "rank": null,
-        "raw": 44.07,
-        "score": 86.57,
+        "raw": 47.92,
+        "score": 86.75,
         "tier": "xhard",
         "type": "ui",
         "unit": "tasks",
@@ -3479,12 +3578,12 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 115.34,
+        "crew_mean": 115.89,
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": 127.4,
-        "score": 115.73,
+        "raw": 131.25,
+        "score": 116.39,
         "tier": "xhard",
         "type": "ui",
         "unit": "tasks",
@@ -3498,13 +3597,13 @@
     "unit": "tasks",
     "window": {
       "key": "30d",
-      "since": "2026-10-09T09:11:25Z",
-      "until": "2026-11-08T09:11:25Z"
+      "since": "2026-10-09T17:21:57Z",
+      "until": "2026-11-08T17:21:57Z"
     }
   },
   "min_support_default": 10,
   "pilots": {
-    "fleet_average": 42.0,
+    "fleet_average": 42.12,
     "min_support": 10,
     "provisional": false,
     "role": "pilots",
@@ -3518,7 +3617,7 @@
           "f1_lift": 160.69,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 1,
-          "tier_calibration": 367
+          "tier_calibration": 366
         },
         "crew": "haiku",
         "model": "claude-haiku-5-5",
@@ -3529,13 +3628,13 @@
           "f1_lift": 20.79,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0.11,
-          "tier_calibration": 78.25
+          "tier_calibration": 78.04
         },
         "provisional_terms": [],
         "rank": 1,
-        "raw": 48.18,
+        "raw": 48.12,
         "runs_without_model": 0,
-        "score": 47.94,
+        "score": 47.9,
         "stats": [
           {
             "key": "recall_percent",
@@ -3635,65 +3734,65 @@
       {
         "below_support": false,
         "counts": {
-          "confirmed_warnings": 14,
+          "confirmed_warnings": 16,
           "costly_misses": 0,
-          "dismissed_warnings": 3,
-          "f1_lift": 73.86,
+          "dismissed_warnings": 5,
+          "f1_lift": 76.35,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0,
-          "tier_calibration": 191
+          "tier_calibration": 198
         },
         "crew": "haiku@high",
         "model": "claude-haiku-5-5",
         "per_100": {
-          "confirmed_warnings": 3.03,
+          "confirmed_warnings": 3.33,
           "costly_misses": 0,
-          "dismissed_warnings": 0.65,
-          "f1_lift": 18.51,
+          "dismissed_warnings": 1.04,
+          "f1_lift": 18.4,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0,
-          "tier_calibration": 77.02
+          "tier_calibration": 76.74
         },
         "provisional_terms": [],
         "rank": 2,
-        "raw": 46.21,
+        "raw": 46.54,
         "runs_without_model": 0,
-        "score": 45.91,
+        "score": 46.24,
         "stats": [
           {
             "key": "recall_percent",
             "label": "Recall (%)",
-            "value": 71.4
+            "value": 70.89
           },
           {
             "key": "precision_percent",
             "label": "Precision (%)",
-            "value": 84.26
+            "value": 84.15
           },
           {
             "key": "f1_percent",
             "label": "F1 (%)",
-            "value": 77.3
+            "value": 76.96
           },
           {
             "key": "filer_f1_percent",
             "label": "Filer's F1 (%)",
-            "value": 63.72
+            "value": 63.5
           },
           {
             "key": "missed_files",
             "label": "Landed files no pilot selector covered",
-            "value": 441
+            "value": 464
           },
           {
             "key": "unused_selectors",
             "label": "Pilot selectors that covered no landed file",
-            "value": 202
+            "value": 209
           },
           {
             "key": "selectors_per_task",
             "label": "Selectors per task",
-            "value": 3.22
+            "value": 3.18
           },
           {
             "key": "within_one_tier_percent",
@@ -3703,27 +3802,27 @@
           {
             "key": "cost_per_assessment",
             "label": "Cost per assessment (USD)",
-            "value": 0.04110745550125314
+            "value": 0.040528841626506024
           },
           {
             "key": "median_run_seconds",
             "label": "Median pilot run (seconds)",
-            "value": 100.83
+            "value": 100.34
           },
           {
             "key": "warning_precision_percent",
             "label": "Warning precision (%)",
-            "value": 82.35
+            "value": 76.19
           },
           {
             "key": "holds_per_100_assessments",
             "label": "Holds per 100 assessments",
-            "value": 6.81
+            "value": 7.13
           },
           {
             "key": "settled_assessments",
             "label": "Settled assessments",
-            "value": 462
+            "value": 480
           },
           {
             "key": "excluded_assessments",
@@ -3737,22 +3836,22 @@
           }
         ],
         "term_units": {
-          "confirmed_warnings": 462,
-          "dismissed_warnings": 462,
-          "missed_scope_blocks": 462,
-          "tier_calibration": 248
+          "confirmed_warnings": 480,
+          "dismissed_warnings": 480,
+          "missed_scope_blocks": 480,
+          "tier_calibration": 258
         },
         "unit": "assessed tasks",
-        "units": 399,
+        "units": 415,
         "unjudged": false,
         "usage": {
-          "duration_ms": 46963035,
+          "duration_ms": 48320186,
           "efforts": "high",
-          "input_tokens": 10464,
-          "invocations": 565,
-          "output_tokens": 9689223,
-          "provider_cost_count": 565,
-          "provider_cost_usd": 22.71936211000001
+          "input_tokens": 10816,
+          "invocations": 588,
+          "output_tokens": 9989855,
+          "provider_cost_count": 588,
+          "provider_cost_usd": 23.291435090000004
         }
       },
       {
@@ -3764,7 +3863,7 @@
           "f1_lift": 175.52,
           "lock_wait_hours": 1.49,
           "missed_scope_blocks": 1,
-          "tier_calibration": 419
+          "tier_calibration": 418
         },
         "crew": "luna",
         "model": "gpt-6-luna",
@@ -3775,13 +3874,13 @@
           "f1_lift": 18.34,
           "lock_wait_hours": 0.16,
           "missed_scope_blocks": 0.1,
-          "tier_calibration": 74.56
+          "tier_calibration": 74.38
         },
         "provisional_terms": [],
         "rank": 3,
-        "raw": 44.67,
+        "raw": 44.63,
         "runs_without_model": 0,
-        "score": 44.59,
+        "score": 44.55,
         "stats": [
           {
             "key": "recall_percent",
@@ -3883,63 +3982,63 @@
         "counts": {
           "confirmed_warnings": 7,
           "costly_misses": 1,
-          "dismissed_warnings": 3,
-          "f1_lift": 69.54,
+          "dismissed_warnings": 4,
+          "f1_lift": 73.3,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 1,
-          "tier_calibration": 192
+          "tier_calibration": 200
         },
         "crew": "luna@high",
         "model": "gpt-6-luna",
         "per_100": {
-          "confirmed_warnings": 1.37,
-          "costly_misses": 0.24,
-          "dismissed_warnings": 0.59,
-          "f1_lift": 16.68,
+          "confirmed_warnings": 1.32,
+          "costly_misses": 0.23,
+          "dismissed_warnings": 0.75,
+          "f1_lift": 17.05,
           "lock_wait_hours": 0,
-          "missed_scope_blocks": 0.2,
-          "tier_calibration": 69.82
+          "missed_scope_blocks": 0.19,
+          "tier_calibration": 70.67
         },
         "provisional_terms": [],
         "rank": 4,
-        "raw": 36.83,
+        "raw": 37.12,
         "runs_without_model": 0,
-        "score": 36.83,
+        "score": 37.12,
         "stats": [
           {
             "key": "recall_percent",
             "label": "Recall (%)",
-            "value": 71.89
+            "value": 71.3
           },
           {
             "key": "precision_percent",
             "label": "Precision (%)",
-            "value": 84.69
+            "value": 84.91
           },
           {
             "key": "f1_percent",
             "label": "F1 (%)",
-            "value": 77.77
+            "value": 77.51
           },
           {
             "key": "filer_f1_percent",
             "label": "Filer's F1 (%)",
-            "value": 66.24
+            "value": 65.64
           },
           {
             "key": "missed_files",
             "label": "Landed files no pilot selector covered",
-            "value": 436
+            "value": 461
           },
           {
             "key": "unused_selectors",
             "label": "Pilot selectors that covered no landed file",
-            "value": 196
+            "value": 198
           },
           {
             "key": "selectors_per_task",
             "label": "Selectors per task",
-            "value": 3.07
+            "value": 3.05
           },
           {
             "key": "within_one_tier_percent",
@@ -3949,32 +4048,32 @@
           {
             "key": "cost_per_assessment",
             "label": "Cost per assessment (USD)",
-            "value": 0.011749017074340527
+            "value": 0.01179670172093023
           },
           {
             "key": "median_run_seconds",
             "label": "Median pilot run (seconds)",
-            "value": 79.38
+            "value": 80.39
           },
           {
             "key": "warning_precision_percent",
             "label": "Warning precision (%)",
-            "value": 70
+            "value": 63.64
           },
           {
             "key": "holds_per_100_assessments",
             "label": "Holds per 100 assessments",
-            "value": 4.82
+            "value": 5.04
           },
           {
             "key": "settled_assessments",
             "label": "Settled assessments",
-            "value": 511
+            "value": 531
           },
           {
             "key": "excluded_assessments",
             "label": "Excluded or pending assessments",
-            "value": 111
+            "value": 104
           },
           {
             "key": "missed_scope_block_count",
@@ -3983,20 +4082,20 @@
           }
         ],
         "term_units": {
-          "confirmed_warnings": 511,
-          "dismissed_warnings": 511,
-          "missed_scope_blocks": 511,
-          "tier_calibration": 275
+          "confirmed_warnings": 531,
+          "dismissed_warnings": 531,
+          "missed_scope_blocks": 531,
+          "tier_calibration": 283
         },
         "unit": "assessed tasks",
-        "units": 417,
+        "units": 430,
         "unjudged": false,
         "usage": {
-          "duration_ms": 44965661,
+          "duration_ms": 46282522,
           "efforts": "high",
-          "input_tokens": 285035620,
-          "invocations": 523,
-          "output_tokens": 3167926,
+          "input_tokens": 291743034,
+          "invocations": 536,
+          "output_tokens": 3232280,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -4006,63 +4105,63 @@
         "counts": {
           "confirmed_warnings": 0,
           "costly_misses": 0,
-          "dismissed_warnings": 1,
-          "f1_lift": 32.41,
+          "dismissed_warnings": 3,
+          "f1_lift": 34.57,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0,
-          "tier_calibration": 120
+          "tier_calibration": 123
         },
         "crew": "muse-spark@high",
         "model": "muse-spark-1.3-contributor",
         "per_100": {
           "confirmed_warnings": 0,
           "costly_misses": 0,
-          "dismissed_warnings": 0.38,
-          "f1_lift": 13.68,
+          "dismissed_warnings": 1.04,
+          "f1_lift": 13.5,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0,
-          "tier_calibration": 86.33
+          "tier_calibration": 83.67
         },
         "provisional_terms": [],
         "rank": 5,
-        "raw": 34.88,
+        "raw": 33.38,
         "runs_without_model": 0,
-        "score": 34.88,
+        "score": 33.38,
         "stats": [
           {
             "key": "recall_percent",
             "label": "Recall (%)",
-            "value": 71.85
+            "value": 71.18
           },
           {
             "key": "precision_percent",
             "label": "Precision (%)",
-            "value": 82.35
+            "value": 82.64
           },
           {
             "key": "f1_percent",
             "label": "F1 (%)",
-            "value": 76.74
+            "value": 76.48
           },
           {
             "key": "filer_f1_percent",
             "label": "Filer's F1 (%)",
-            "value": 68.67
+            "value": 68.33
           },
           {
             "key": "missed_files",
             "label": "Landed files no pilot selector covered",
-            "value": 250
+            "value": 277
           },
           {
             "key": "unused_selectors",
             "label": "Pilot selectors that covered no landed file",
-            "value": 135
+            "value": 142
           },
           {
             "key": "selectors_per_task",
             "label": "Selectors per task",
-            "value": 3.23
+            "value": 3.2
           },
           {
             "key": "within_one_tier_percent",
@@ -4077,7 +4176,7 @@
           {
             "key": "median_run_seconds",
             "label": "Median pilot run (seconds)",
-            "value": 100.25
+            "value": 96.95
           },
           {
             "key": "warning_precision_percent",
@@ -4087,17 +4186,17 @@
           {
             "key": "holds_per_100_assessments",
             "label": "Holds per 100 assessments",
-            "value": 1.68
+            "value": 1.92
           },
           {
             "key": "settled_assessments",
             "label": "Settled assessments",
-            "value": 264
+            "value": 288
           },
           {
             "key": "excluded_assessments",
             "label": "Excluded or pending assessments",
-            "value": 34
+            "value": 24
           },
           {
             "key": "missed_scope_block_count",
@@ -4106,19 +4205,19 @@
           }
         ],
         "term_units": {
-          "confirmed_warnings": 264,
-          "dismissed_warnings": 264,
-          "missed_scope_blocks": 264,
-          "tier_calibration": 139
+          "confirmed_warnings": 288,
+          "dismissed_warnings": 288,
+          "missed_scope_blocks": 288,
+          "tier_calibration": 147
         },
         "unit": "assessed tasks",
-        "units": 237,
+        "units": 256,
         "unjudged": false,
         "usage": {
-          "duration_ms": 26208218,
+          "duration_ms": 27219350,
           "efforts": "high",
           "input_tokens": 0,
-          "invocations": 287,
+          "invocations": 300,
           "output_tokens": 0,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
@@ -4253,9 +4352,9 @@
         }
       }
     ],
-    "score_key": "Score: per 100 assessed tasks, credit for f1 lift, tier calibration, confirmed warnings; debits for dismissed warnings, missed scope blocks, costly misses, lock-wait hours. The fleet average is 42.0.",
+    "score_key": "Score: per 100 assessed tasks, credit for f1 lift, tier calibration, confirmed warnings; debits for dismissed warnings, missed scope blocks, costly misses, lock-wait hours. The fleet average is 42.1.",
     "settled": false,
-    "tasks_scanned": 11994,
+    "tasks_scanned": 12079,
     "terms": [
       {
         "group": "credit",
@@ -4303,16 +4402,16 @@
     "unit": "assessed tasks",
     "window": {
       "key": "30d",
-      "since": "2026-10-09T09:11:48Z",
-      "until": "2026-11-08T09:11:48Z"
+      "since": "2026-10-09T17:22:19Z",
+      "until": "2026-11-08T17:22:19Z"
     }
   },
   "reviewers": {
     "provisional": {
-      "fleet_average": 135.78,
+      "fleet_average": 135.25,
       "min_support": 10,
       "provisional": true,
-      "provisional_units": 1387,
+      "provisional_units": 1388,
       "role": "reviewers",
       "rows": [
         {
@@ -4320,7 +4419,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 70.5,
+            "findings_held": 46.5,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -4331,17 +4430,17 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 391.67,
+            "findings_held": 290.63,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
             "rejected_findings": 0
           },
-          "provisional": 18,
+          "provisional": 16,
           "rank": 1,
-          "raw": 391.67,
+          "raw": 290.63,
           "runs_without_model": 0,
-          "score": 231.74,
+          "score": 189.29,
           "stats": [
             {
               "key": "gate_reviews",
@@ -4351,7 +4450,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 18
+              "value": 16
             },
             {
               "key": "accept_rate",
@@ -4376,7 +4475,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 18
+              "value": 16
             },
             {
               "key": "outcome_false_alarm",
@@ -4400,7 +4499,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 18,
+          "units": 16,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -4417,7 +4516,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 272.5,
+            "findings_held": 277.75,
             "fixes_held": 29,
             "incomplete_reviews": 10,
             "missed_regressions": 0,
@@ -4428,17 +4527,17 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 168.21,
-            "fixes_held": 17.9,
-            "incomplete_reviews": 6.17,
+            "findings_held": 168.33,
+            "fixes_held": 17.58,
+            "incomplete_reviews": 6.06,
             "missed_regressions": 0,
-            "rejected_findings": 5.56
+            "rejected_findings": 5.45
           },
-          "provisional": 162,
+          "provisional": 165,
           "rank": 2,
-          "raw": 177.47,
+          "raw": 177.42,
           "runs_without_model": 0,
-          "score": 170.95,
+          "score": 170.94,
           "stats": [
             {
               "key": "gate_reviews",
@@ -4448,7 +4547,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 81
+              "value": 84
             },
             {
               "key": "accept_rate",
@@ -4458,7 +4557,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 79.72
+              "value": 79.64
             },
             {
               "key": "accepts_often",
@@ -4473,7 +4572,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 110
+              "value": 112
             },
             {
               "key": "outcome_false_alarm",
@@ -4488,7 +4587,7 @@
             {
               "key": "outcome_unresolved",
               "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
-              "value": 20
+              "value": 21
             },
             {
               "key": "median_review_minutes",
@@ -4497,7 +4596,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 162,
+          "units": 165,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -4514,7 +4613,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 983.25,
+            "findings_held": 991.5,
             "fixes_held": 24,
             "incomplete_reviews": 19,
             "missed_regressions": 0,
@@ -4525,17 +4624,17 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 163.88,
-            "fixes_held": 4,
-            "incomplete_reviews": 3.17,
+            "findings_held": 164.7,
+            "fixes_held": 3.99,
+            "incomplete_reviews": 3.16,
             "missed_regressions": 0,
             "rejected_findings": 1.83
           },
-          "provisional": 600,
-          "rank": 4,
-          "raw": 164.46,
+          "provisional": 602,
+          "rank": 3,
+          "raw": 165.28,
           "runs_without_model": 0,
-          "score": 163.09,
+          "score": 163.86,
           "stats": [
             {
               "key": "gate_reviews",
@@ -4545,7 +4644,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 463
+              "value": 465
             },
             {
               "key": "accept_rate",
@@ -4570,7 +4669,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 486
+              "value": 489
             },
             {
               "key": "outcome_false_alarm",
@@ -4585,7 +4684,7 @@
             {
               "key": "outcome_unresolved",
               "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
-              "value": 49
+              "value": 48
             },
             {
               "key": "median_review_minutes",
@@ -4594,7 +4693,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 600,
+          "units": 602,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -4611,7 +4710,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 55,
+            "findings_held": 58,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -4622,17 +4721,17 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 152.78,
+            "findings_held": 156.76,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
             "rejected_findings": 0
           },
-          "provisional": 36,
+          "provisional": 37,
           "rank": 5,
-          "raw": 152.78,
+          "raw": 156.76,
           "runs_without_model": 0,
-          "score": 145.05,
+          "score": 147.13,
           "stats": [
             {
               "key": "gate_reviews",
@@ -4642,7 +4741,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 36
+              "value": 37
             },
             {
               "key": "accept_rate",
@@ -4667,7 +4766,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 36
+              "value": 37
             },
             {
               "key": "outcome_false_alarm",
@@ -4691,7 +4790,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 36,
+          "units": 37,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -4708,104 +4807,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 48,
-            "fixes_held": 0,
-            "incomplete_reviews": 0,
-            "missed_regressions": 0,
-            "rejected_findings": 0
-          },
-          "crew": "opus@medium",
-          "model": "claude-opus-5-5",
-          "per_100": {
-            "failed_fixes": 0,
-            "false_rejects": 0,
-            "findings_held": 141.18,
-            "fixes_held": 0,
-            "incomplete_reviews": 0,
-            "missed_regressions": 0,
-            "rejected_findings": 0
-          },
-          "provisional": 34,
-          "rank": 6,
-          "raw": 141.18,
-          "runs_without_model": 0,
-          "score": 138.65,
-          "stats": [
-            {
-              "key": "gate_reviews",
-              "label": "Review gate settlements",
-              "value": 0
-            },
-            {
-              "key": "review_jobs",
-              "label": "Review job runs that filed findings",
-              "value": 34
-            },
-            {
-              "key": "accept_rate",
-              "label": "Accept rate (%)",
-              "value": null
-            },
-            {
-              "key": "peer_accept_rate",
-              "label": "Peers' accept rate on the same tiers (%)",
-              "value": null
-            },
-            {
-              "key": "accepts_often",
-              "label": "Accepts often",
-              "value": false
-            },
-            {
-              "key": "outcome_held_up",
-              "label": "Accepted and held up",
-              "value": 0
-            },
-            {
-              "key": "outcome_caught",
-              "label": "Caught a real problem",
-              "value": 34
-            },
-            {
-              "key": "outcome_false_alarm",
-              "label": "False alarm",
-              "value": 0
-            },
-            {
-              "key": "outcome_missed",
-              "label": "Missed a regression",
-              "value": 0
-            },
-            {
-              "key": "outcome_unresolved",
-              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
-              "value": 0
-            },
-            {
-              "key": "median_review_minutes",
-              "label": "Median review minutes",
-              "value": null
-            }
-          ],
-          "unit": "settled reviews",
-          "units": 34,
-          "unjudged": false,
-          "usage": {
-            "duration_ms": 0,
-            "efforts": "",
-            "input_tokens": 0,
-            "invocations": 0,
-            "output_tokens": 0,
-            "provider_cost_count": 0,
-            "provider_cost_usd": 0.0
-          }
-        },
-        {
-          "below_support": false,
-          "counts": {
-            "failed_fixes": 0,
-            "false_rejects": 0,
-            "findings_held": 108.75,
+            "findings_held": 114.25,
             "fixes_held": 1,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -4816,17 +4818,17 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 135.94,
-            "fixes_held": 1.25,
+            "findings_held": 139.33,
+            "fixes_held": 1.22,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
             "rejected_findings": 0
           },
-          "provisional": 80,
-          "rank": 7,
-          "raw": 137.19,
+          "provisional": 82,
+          "rank": 6,
+          "raw": 140.55,
           "runs_without_model": 0,
-          "score": 136.8,
+          "score": 139.13,
           "stats": [
             {
               "key": "gate_reviews",
@@ -4836,7 +4838,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 78
+              "value": 80
             },
             {
               "key": "accept_rate",
@@ -4846,7 +4848,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 73.46
+              "value": 73.43
             },
             {
               "key": "accepts_often",
@@ -4861,7 +4863,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 79
+              "value": 81
             },
             {
               "key": "outcome_false_alarm",
@@ -4885,7 +4887,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 80,
+          "units": 82,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -4902,7 +4904,104 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 126,
+            "findings_held": 49.5,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "opus@medium",
+          "model": "claude-opus-5-5",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 133.78,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 37,
+          "rank": 7,
+          "raw": 133.78,
+          "runs_without_model": 0,
+          "score": 133.78,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 0
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 37
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": null
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": null
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 0
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 37
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 0
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": null
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 37,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 128,
             "fixes_held": 1,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -4913,17 +5012,17 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 116.67,
-            "fixes_held": 0.93,
+            "findings_held": 117.43,
+            "fixes_held": 0.92,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
             "rejected_findings": 0
           },
-          "provisional": 108,
+          "provisional": 109,
           "rank": 8,
-          "raw": 117.59,
+          "raw": 118.35,
           "runs_without_model": 0,
-          "score": 117.59,
+          "score": 118.35,
           "stats": [
             {
               "key": "gate_reviews",
@@ -4933,7 +5032,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 104
+              "value": 105
             },
             {
               "key": "accept_rate",
@@ -4943,7 +5042,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 82.1
+              "value": 82.01
             },
             {
               "key": "accepts_often",
@@ -4958,7 +5057,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 104
+              "value": 105
             },
             {
               "key": "outcome_false_alarm",
@@ -4982,7 +5081,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 108,
+          "units": 109,
           "unjudged": false,
           "usage": {
             "duration_ms": 159420,
@@ -5040,7 +5139,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 78.74
+              "value": 78.64
             },
             {
               "key": "accepts_often",
@@ -5096,33 +5195,33 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 89.5,
+            "findings_held": 90.5,
             "fixes_held": 12,
-            "incomplete_reviews": 14,
+            "incomplete_reviews": 13,
             "missed_regressions": 0,
-            "rejected_findings": 18
+            "rejected_findings": 17
           },
           "crew": "sonnet",
           "model": "claude-sonnet-5-5",
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 50.56,
-            "fixes_held": 6.78,
-            "incomplete_reviews": 7.91,
+            "findings_held": 53.24,
+            "fixes_held": 7.06,
+            "incomplete_reviews": 7.65,
             "missed_regressions": 0,
-            "rejected_findings": 10.17
+            "rejected_findings": 10
           },
-          "provisional": 177,
+          "provisional": 170,
           "rank": 10,
-          "raw": 43.22,
+          "raw": 46.47,
           "runs_without_model": 0,
-          "score": 43.22,
+          "score": 46.47,
           "stats": [
             {
               "key": "gate_reviews",
               "label": "Review gate settlements",
-              "value": 100
+              "value": 93
             },
             {
               "key": "review_jobs",
@@ -5132,12 +5231,12 @@
             {
               "key": "accept_rate",
               "label": "Accept rate (%)",
-              "value": 86
+              "value": 86.02
             },
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 79.72
+              "value": 79.61
             },
             {
               "key": "accepts_often",
@@ -5147,7 +5246,7 @@
             {
               "key": "outcome_held_up",
               "label": "Accepted and held up",
-              "value": 74
+              "value": 68
             },
             {
               "key": "outcome_caught",
@@ -5167,16 +5266,16 @@
             {
               "key": "outcome_unresolved",
               "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
-              "value": 15
+              "value": 14
             },
             {
               "key": "median_review_minutes",
               "label": "Median review minutes",
-              "value": 10.37
+              "value": 10.65
             }
           ],
           "unit": "settled reviews",
-          "units": 177,
+          "units": 170,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -5234,7 +5333,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 75.43
+              "value": 75.3
             },
             {
               "key": "accepts_often",
@@ -5383,9 +5482,9 @@
           }
         }
       ],
-      "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 135.8.",
+      "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 135.2.",
       "settled": false,
-      "tasks_scanned": 11994,
+      "tasks_scanned": 12079,
       "terms": [
         {
           "group": "credit",
@@ -5433,12 +5532,12 @@
       "unit": "settled reviews",
       "window": {
         "key": "30d",
-        "since": "2026-10-09T09:11:36Z",
-        "until": "2026-11-08T09:11:36Z"
+        "since": "2026-10-09T17:22:08Z",
+        "until": "2026-11-08T17:22:08Z"
       }
     },
     "settled": {
-      "fleet_average": 61.99,
+      "fleet_average": 70.16,
       "min_support": 10,
       "provisional": false,
       "provisional_units": 0,
@@ -5470,7 +5569,7 @@
           "rank": 1,
           "raw": 72.9,
           "runs_without_model": 0,
-          "score": 71.56,
+          "score": 72.56,
           "stats": [
             {
               "key": "gate_reviews",
@@ -5490,7 +5589,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 94.38
+              "value": 93.91
             },
             {
               "key": "accepts_often",
@@ -5546,48 +5645,48 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 50,
+            "findings_held": 53,
             "fixes_held": 23,
-            "incomplete_reviews": 9,
+            "incomplete_reviews": 10,
             "missed_regressions": 4,
-            "rejected_findings": 15
+            "rejected_findings": 16
           },
           "crew": "sonnet",
           "model": "claude-sonnet-5-5",
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 33.11,
-            "fixes_held": 15.23,
-            "incomplete_reviews": 5.96,
-            "missed_regressions": 2.65,
-            "rejected_findings": 9.93
+            "findings_held": 32.92,
+            "fixes_held": 14.29,
+            "incomplete_reviews": 6.21,
+            "missed_regressions": 2.48,
+            "rejected_findings": 9.94
           },
           "provisional": 0,
           "rank": 2,
-          "raw": 30.13,
+          "raw": 29.19,
           "runs_without_model": 0,
-          "score": 30.13,
+          "score": 29.19,
           "stats": [
             {
               "key": "gate_reviews",
               "label": "Review gate settlements",
-              "value": 149
+              "value": 156
             },
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 2
+              "value": 5
             },
             {
               "key": "accept_rate",
               "label": "Accept rate (%)",
-              "value": 93.96
+              "value": 93.59
             },
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 77.86
+              "value": 78.04
             },
             {
               "key": "accepts_often",
@@ -5597,12 +5696,12 @@
             {
               "key": "outcome_held_up",
               "label": "Accepted and held up",
-              "value": 116
+              "value": 122
             },
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 25
+              "value": 28
             },
             {
               "key": "outcome_false_alarm",
@@ -5617,16 +5716,16 @@
             {
               "key": "outcome_unresolved",
               "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
-              "value": 9
+              "value": 10
             },
             {
               "key": "median_review_minutes",
               "label": "Median review minutes",
-              "value": 12.35
+              "value": 11.88
             }
           ],
           "unit": "settled reviews",
-          "units": 151,
+          "units": 161,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -5643,7 +5742,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 24,
+            "findings_held": 48,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -5654,7 +5753,7 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 2400,
+            "findings_held": 1600,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -5662,9 +5761,106 @@
           },
           "provisional": 0,
           "rank": null,
-          "raw": 2400,
+          "raw": 1600,
           "runs_without_model": 0,
-          "score": 137.41,
+          "score": 209.23,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 0
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 3
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": null
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": null
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 0
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 3
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 0
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": null
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 3,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": true,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 5,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "sol",
+          "model": "gpt-6.1-sol",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 500,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 0,
+          "rank": null,
+          "raw": 500,
+          "runs_without_model": 0,
+          "score": 84.02,
           "stats": [
             {
               "key": "gate_reviews",
@@ -5736,9 +5932,9 @@
           }
         }
       ],
-      "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 62.0.",
+      "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 70.2.",
       "settled": true,
-      "tasks_scanned": 11994,
+      "tasks_scanned": 12079,
       "terms": [
         {
           "group": "credit",
@@ -5786,8 +5982,8 @@
       "unit": "settled reviews",
       "window": {
         "key": "30d",
-        "since": "2026-09-09T09:11:48Z",
-        "until": "2026-10-09T09:11:48Z"
+        "since": "2026-09-09T17:22:19Z",
+        "until": "2026-10-09T17:22:19Z"
       }
     }
   },
