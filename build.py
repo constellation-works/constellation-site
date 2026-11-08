@@ -942,15 +942,60 @@ def _plain(value):
     return f"{value:.4g}"
 
 
+def _money_text(amount):
+    """Fixed 2-decimal dollars, expanding precision when a non-zero amount
+    would otherwise collapse to zero (mirrors the _plain signed-zero guard)."""
+    if amount == 0:
+        amount = 0
+    text = f"{amount:,.2f}"
+    if amount != 0 and float(text.replace(",", "")) == 0:
+        for decimals in (4, 6, 8, 10):
+            candidate = f"{amount:,.{decimals}f}".rstrip("0").rstrip(".")
+            if candidate not in ("0", "-0", "", "-") and float(candidate.replace(",", "")) != 0:
+                return candidate
+        return f"{amount:.4g}"
+    return text
+
+
+def _money_line_text(amount):
+    """Fixed 4-decimal dollars-per-line, expanding precision on collapse."""
+    if amount == 0:
+        amount = 0
+    text = f"{amount:,.4f}"
+    if amount != 0 and float(text.replace(",", "")) == 0:
+        for decimals in (6, 8, 10):
+            candidate = f"{amount:,.{decimals}f}".rstrip("0").rstrip(".")
+            if candidate not in ("0", "-0", "", "-") and float(candidate.replace(",", "")) != 0:
+                return candidate
+        return f"{amount:.4g}"
+    return text
+
+
+def _points_text(points):
+    """Fixed 1-decimal points, expanding precision on collapse."""
+    if points == 0:
+        points = 0
+    text = f"{points:.1f}"
+    if points != 0 and float(text) == 0:
+        for decimals in (2, 3, 4, 6, 8, 10):
+            candidate = f"{points:.{decimals}f}".rstrip("0").rstrip(".")
+            if candidate not in ("0", "-0", "", "-") and float(candidate) != 0:
+                return candidate
+        return f"{points:.4g}"
+    return text
+
+
 def experiment_value(value, unit):
     if not as_number(value) or not math.isfinite(value):
         return "Unavailable"
+    if value == 0:
+        value = 0
     if unit == "%":
-        return f"{value:.1%}"
+        return f"{_points_text(value * 100)}%"
     if unit == "USD":
-        return f"${value:,.2f}"
+        return f"${_money_text(value)}"
     if unit == "USD/line":
-        return f"${value:,.4f} / line"
+        return f"${_money_line_text(value)} / line"
     if unit == "tokens":
         return f"{_compact(value)} tokens"
     if unit == "bytes":
@@ -1013,11 +1058,11 @@ def experiment_difference(value, metric):
     sign = "+" if value > 0 else "-" if value < 0 else ""
     a = abs(value)
     if category == "rate":
-        return f"{sign}{a * 100:.1f} points"
+        return f"{sign}{_points_text(a * 100)} points"
     if category == "money":
-        return f"{sign}${a:,.2f}"
+        return f"{sign}${_money_text(a)}"
     if category == "money_line":
-        return f"{sign}${a:,.4f} / line"
+        return f"{sign}${_money_line_text(a)} / line"
     if category == "tokens":
         return f"{sign}{_compact(a)} tokens"
     if category == "bytes":
