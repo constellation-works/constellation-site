@@ -133,16 +133,44 @@ h1 {
 }
 h1 .second { color: var(--muted); }
 .lede { font-size: clamp(17px, 1.6vw, 20px); line-height: 1.55; color: var(--lede); margin: 0 0 30px; max-width: 32ch; }
-/* Install bar: the same anatomy as orbit-cli.com's — `$` prompt, the command, a
-   quiet Copy control — on this site's tokens. Copy is delivered `hidden` and
-   unhidden by the inline script; the label swap reserves its width so the row
-   never reflows on feedback. */
+/* Install picker: a two-option segmented control (native radios, so arrow keys
+   and tab order work without script) above one command box per option. Only the
+   selected panel shows; without JavaScript the npm panel is visible because its
+   radio ships checked. Each box keeps the same anatomy as orbit-cli.com's —
+   `$` prompt, the command, a quiet Copy control — on this site's tokens. Each
+   Copy is delivered `hidden` and unhidden by the inline script; the label swap
+   reserves its width so the row never reflows on feedback. */
+.install-group { margin: 0 0 22px; min-width: 0; max-width: 100%; }
+.install-tabs {
+  display: inline-flex; gap: 2px; margin: 0 0 10px; padding: 3px;
+  border: 1px solid var(--card-rule); border-radius: 999px; background: var(--card);
+}
+.install-tabs input {
+  position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0;
+}
+.install-tabs label {
+  display: inline-flex; align-items: center; min-height: 32px; padding: 5px 16px;
+  border-radius: 999px; cursor: pointer;
+  font-family: var(--mono); font-size: 13px; letter-spacing: .02em; color: var(--muted);
+}
+.install-tabs input:checked + label { background: var(--fg); color: var(--btn-fg); }
+.install-tabs input:not(:checked) + label:hover { color: var(--fg); }
+.install-tabs input:focus-visible + label { outline: 2px solid var(--link); outline-offset: 2px; }
 .install {
-  display: inline-flex; align-items: center; gap: 12px; margin: 0 0 22px;
+  display: inline-flex; align-items: center; gap: 12px; margin: 0;
   padding: 11px 12px 11px 16px; border-radius: 8px;
   background: var(--card); border: 1px solid var(--card-rule);
   font-family: var(--mono); font-size: 14px; color: var(--fg);
 }
+/* Panel switching is pure CSS, so it works without JavaScript: the radios live
+   inside the tabs box, and :has() on the group flips the panels. */
+.install.install-panel-brew { display: none; }
+.install-group:has(#install-brew:checked) .install-panel-brew { display: inline-flex; }
+.install-group:has(#install-brew:checked) .install-panel-npm { display: none; }
+.platform { margin: 10px 0 0; font-size: 13.5px; color: var(--muted); }
+.platform a { color: var(--link); text-decoration: none; }
+.platform a:hover { color: var(--link-hover); text-decoration: underline; }
+.platform a:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 .install .prompt { color: var(--num); }
 .install code { font-family: inherit; }
 .install .copy {
@@ -264,6 +292,8 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
   nav .nav-orbit, nav .nav-projects { display: none; }
   .theme { width: 44px; height: 44px; margin-left: 0; }
   .install { display: flex; width: 100%; font-size: 13px; padding: 10px 8px 10px 14px; }
+  .install.install-panel-brew { display: none; }
+  .install-group:has(#install-brew:checked) .install-panel-brew { display: flex; }
   .install code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .install .copy { min-height: 30px; }
   .cta { flex-direction: column; }
@@ -326,13 +356,30 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
         the tools taking shape beside it — code graphs, idea lineage, reproducible
         research.
       </p>
-      <div class="install">
-        <span class="prompt" aria-hidden="true">$</span>
-        <code>brew install constellation-works/tap/orbit</code>
-        <button class="copy" type="button" data-copy="brew install constellation-works/tap/orbit" hidden>
-          <span class="copy-label">Copy</span><span class="sr-only"> the install command</span>
-        </button>
-        <span class="copy-status sr-only" role="status"></span>
+      <div class="install-group">
+        <div class="install-tabs" role="radiogroup" aria-label="Install method">
+          <input type="radio" name="install-method" id="install-npm" checked>
+          <label for="install-npm">npm</label>
+          <input type="radio" name="install-method" id="install-brew">
+          <label for="install-brew">Homebrew</label>
+        </div>
+        <div class="install install-panel-npm">
+          <span class="prompt" aria-hidden="true">$</span>
+          <code>npm install -g @orbit-tools/cli</code>
+          <button class="copy" type="button" data-copy="npm install -g @orbit-tools/cli" hidden>
+            <span class="copy-label">Copy</span><span class="sr-only"> the npm install command</span>
+          </button>
+          <span class="copy-status sr-only" role="status"></span>
+        </div>
+        <div class="install install-panel-brew">
+          <span class="prompt" aria-hidden="true">$</span>
+          <code>brew install constellation-works/tap/orbit</code>
+          <button class="copy" type="button" data-copy="brew install constellation-works/tap/orbit" hidden>
+            <span class="copy-label">Copy</span><span class="sr-only"> the Homebrew install command</span>
+          </button>
+          <span class="copy-status sr-only" role="status"></span>
+        </div>
+        <p class="platform">macOS and Linux · <a href="https://orbit-cli.com/getting-started/install/#prerequisites">Windows via WSL2</a></p>
       </div>
       <div class="cta">
         <a class="btn primary" href="https://orbit-cli.com">Explore Orbit
@@ -451,9 +498,10 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 </footer>
 
 <script>
-// The only script on the page: the theme toggle and the install-bar Copy control.
-// Both controls ship `hidden` and are unhidden here, so without JavaScript the
-// page stays light and shows the command with no dead button.
+// The only script on the page: the theme toggle and the install Copy controls
+// (one per install option). The controls ship `hidden` and are unhidden here,
+// so without JavaScript the page stays light and shows the default npm command
+// with no dead button. Panel switching needs no script: native radios plus CSS.
 (function () {
   var root = document.documentElement;
   var KEY = 'theme';
