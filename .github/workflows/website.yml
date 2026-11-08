@@ -10,7 +10,6 @@ on:
       - "analytics_page.py"
       - "data/analytics/**"
       - "wrangler.toml"
-      - "data/analytics/*/scorecards.json"
       - ".github/workflows/website.yml"
   pull_request:
     paths:
@@ -20,7 +19,6 @@ on:
       - "analytics_page.py"
       - "data/analytics/**"
       - "wrangler.toml"
-      - "data/analytics/*/scorecards.json"
       - ".github/workflows/website.yml"
   workflow_dispatch:
 
