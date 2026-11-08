@@ -628,17 +628,23 @@ def render_table(board):
                 f'<span class="unit">{e(unit)}</span></span></td>'
                 f"</tr>"
             )
-        body = f'''<div class="table">
+        def render_rows(part, overflow):
+            caption = (
+                f'<caption class="sr-only">Additional entries for {e(board["title"])}</caption>'
+                if overflow else f'<caption class="sr-only">{e(board["title"])}</caption>'
+            )
+            return f'''<div class="table">
 <table>
-<caption class="sr-only">{e(board["title"])}</caption>
+{caption}
 <thead><tr>
 <th class="rank">Rank</th><th>Crew</th><th>Model</th><th class="num">Score</th><th class="num">Units</th>
 </tr></thead>
 <tbody>
-{"".join(rows)}
+{"".join(part)}
 </tbody>
 </table>
 </div>'''
+        body = analytics_page.with_row_disclosure(rows, render_rows, "entries")
     return (
         f"{body}\n"
         f'<p class="support-note">Rows under {board["min_support"]} {e(unit)} stay unranked.</p>'
@@ -910,12 +916,19 @@ def experiment_metric_table(metric, arms):
         ) + "</tr>")
     columns = ["Arm", "Mean"] + ([] if metric.get("kind") == "rate" else ["Median"]) + ["Support"]
     qualifier = " (exploratory, not a decision metric)" if metric.get("exploratory") else ""
-    return (
-        f'<h4>{label}{qualifier}</h4><div class="table"><table>'
-        f'<caption class="sr-only">{label}: per-arm outcomes and supplied intervals</caption>'
-        '<thead><tr>' + "".join(f'<th scope="col">{col}</th>' for col in columns)
-        + '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>'
-    )
+    headers = "".join(f'<th scope="col">{col}</th>' for col in columns)
+
+    def render_rows(part, overflow):
+        caption = (
+            f'<caption class="sr-only">Additional arms for {label}</caption>'
+            if overflow else f'<caption class="sr-only">{label}: per-arm outcomes and supplied intervals</caption>'
+        )
+        return (
+            f'<div class="table"><table>{caption}<thead><tr>{headers}</tr></thead>'
+            f'<tbody>{"".join(part)}</tbody></table></div>'
+        )
+
+    return f'<h4>{label}{qualifier}</h4>' + analytics_page.with_row_disclosure(rows, render_rows, "arms")
 
 
 def render_experiments_page(data, snapshot_date):

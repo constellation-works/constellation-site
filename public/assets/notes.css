@@ -312,6 +312,15 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .analytics td.num, .analytics th.num { text-align: right; }
 .analytics .unit { color: var(--muted); }
 .analytics .empty { color: var(--muted); }
+.analytics section[id] { scroll-margin-top: 96px; }
+.analytics-table-more { margin: 14px 0 2em; }
+.analytics-table-more summary {
+  color: var(--link); cursor: pointer; width: fit-content; max-width: 100%;
+  text-decoration: underline; text-underline-offset: .18em;
+}
+.analytics-table-more summary:focus-visible {
+  outline: 2px solid var(--link); outline-offset: 4px; border-radius: 2px;
+}
 .experiments .question { max-width: 42em; }
 .experiments .experiment { overflow-wrap: anywhere; }
 .experiments h3 { margin: 26px 0 10px; font-size: 18px; font-weight: 500; }
@@ -326,10 +335,11 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .experiments summary { cursor: pointer; color: var(--link); }
 .experiments summary:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
 @media (max-width: 560px) {
+  .analytics section[id] { scroll-margin-top: 80px; }
   .analytics .board { scroll-margin-top: 80px; }
   .analytics .board h2 { font-size: 22px; }
   .analytics .board h2 .board-label { margin: 6px 0 0; }
-  .analytics .table { overflow: visible; }
+  .analytics .table { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
   .analytics table { display: block; }
   .analytics thead {
     position: absolute; width: 1px; height: 1px; overflow: hidden;

@@ -447,7 +447,7 @@ class MetricsPageTest(unittest.TestCase):
         def walk(node):
             classes = node.attrs.get("class", "").split()
             skip_text = (
-                node.tag in {"script", "style", "svg", "footer", "time"}
+                node.tag in {"script", "style", "svg", "footer", "time", "summary"}
                 or "data-format" in node.attrs
                 or "data-axis" in node.attrs
                 or "label" in classes
