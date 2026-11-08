@@ -84,8 +84,13 @@ arm outcomes and intervals, differences versus control, guardrail estimates,
 sample-ratio headline, lagging counts, verdict, and warning kinds without
 their messages. Salts, overlays, assignment digests and run digests are not
 copied. Free text (hypothesis, name, verdict reasons and labels) is copied
-only after task ids, run ids, absolute paths, host names and workspace ids
-(``ws_…``) are replaced with ``[redacted]``.
+only after task ids, run ids, file paths, host names and workspace ids
+(``ws_…``) are replaced with ``[redacted]``. File paths are matched by
+shape, not by a list of root names: any Unix absolute path, Windows drive
+or UNC path, home-relative path, and repository-relative path whose final
+component names a file (or which descends at least two directories) is
+redacted. Public API source labels (``GET /api/…``) are not file paths and
+are preserved.
 
 ``meta.json`` records ``schema_version``, ``generated_at``, ``orbit_version``,
 the workspace name, each board's UTC window, and ``dropped``.
@@ -217,8 +222,21 @@ SAFE_ID = re.compile(r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")
 TIMESTAMP = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z$")
 TASK_ID = re.compile(r"ORB-[0-9]+")
 RUN_ID = re.compile(r"jrun-[0-9A-Za-z-]+")
-ABS_PATH = re.compile(r"/(?:home|Users|tmp|var|opt|etc|usr|private)/[^\s\"']*")
-HOME_PATH = re.compile(r"(?:^|\s)~/[^\s\"']*")
+_PATH_SEGMENT = r"[A-Za-z0-9._~%+@\-]+"
+_API_ROUTE = r"api/(?:diagnostics|metrics|tasks)(?:/|\?|#|$)"
+ABS_PATH = re.compile(
+    r"(?<![\w./\\\-])/(?!" + _API_ROUTE + r")" + _PATH_SEGMENT + r"(?:/" + _PATH_SEGMENT + r")+/?"
+    r"|(?<![\w./\\\-])/(?!" + _API_ROUTE + r")" + _PATH_SEGMENT + r"\.[A-Za-z][A-Za-z0-9]{0,9}\b"
+)
+WINDOWS_PATH = re.compile(r"(?:(?<![A-Za-z0-9_])[A-Za-z]:[\\/][^\s\"'<>]*|\\\\[^\s\"'<>]+)")
+RELATIVE_PATH = re.compile(
+    r"(?<![\w./\\\-])(?!\d{4}[\\/]\d{1,2}[\\/]\d{1,2}(?:\b|$))"
+    r"(?:\.{1,2}[\\/])?(?:"
+    r"(?:" + _PATH_SEGMENT + r"[\\/])+[A-Za-z0-9._~%+\-]*\.[A-Za-z][A-Za-z0-9]{0,9}(?![A-Za-z0-9])"
+    r"|(?:" + _PATH_SEGMENT + r"[\\/]){2,}" + _PATH_SEGMENT + r"/?"
+    r")"
+)
+HOME_PATH = re.compile(r"(?<!\S)~[A-Za-z0-9._\-]*/[^\s\"']*")
 WORKSPACE_ID = re.compile(r"\bws_[A-Za-z0-9_-]+\b")
 
 
@@ -281,7 +299,7 @@ def host_names():
 
 
 def forbidden_patterns(hosts):
-    patterns = [TASK_ID, RUN_ID, ABS_PATH, HOME_PATH, WORKSPACE_ID]
+    patterns = [TASK_ID, RUN_ID, WINDOWS_PATH, HOME_PATH, RELATIVE_PATH, ABS_PATH, RELATIVE_PATH, WORKSPACE_ID]
     for host in hosts:
         if len(host) >= 3:
             patterns.append(re.compile(re.escape(host)))
@@ -1900,6 +1918,17 @@ def self_test():
     assert experiment["metrics"][0]["arms"][0]["mean_interval"] == [0.2, 0.8]
     assert experiment["verdict"]["state"] == "inconclusive"
     assert redactions[0] >= 1
+    for leaked in (
+        "/srv/acme/customer.txt", "/root/acme/customer.txt", "/mnt/acme/customer.txt",
+        "/data/acme/customer.txt", "/home/private/customer.txt",
+        r"C:\acme\customer.txt", "C:/acme/customer.txt", r"\\server\share\customer.txt",
+        "crates/core/customer.rs", "scripts/analytics_snapshot.py", "./src/lib.rs",
+    ):
+        cleaned = sanitize(f"check {leaked} end", patterns, redactions)
+        assert leaked not in cleaned and "[redacted]" in cleaned, (leaked, cleaned)
+    assert sanitize("delivered on 3/4 runs", patterns, redactions) == "delivered on 3/4 runs"
+    api_source = "GET /api/diagnostics/implement_one?since=30d&outcome=succeeded"
+    assert sanitize(api_source, patterns, redactions) == api_source
 
     omitted = empty_dropped()
     assert project_experiment({"id": "exp-run", "status": "running"}, {"experiment": {"status": "running"}}, omitted, patterns, [0]) is None
@@ -2006,6 +2035,14 @@ def self_test():
     assert docs["meta"]["reviewer_settled"] is False
     assert docs["scorecards"]["reviewers"]["provisional"]["provisional"] is True
     guard(docs, hosts)
+    tampered = json.loads(dump(docs))
+    tampered["experiments"]["experiments"][0]["hypothesis"] = "Investigate /srv/acme/customer.txt"
+    try:
+        guard(tampered, hosts)
+    except SystemExit:
+        pass
+    else:
+        raise SystemExit("guard accepted an unlisted absolute path")
     out = pathlib.Path(".orbit/tmp/analytics-self-test")
     replay_out = pathlib.Path(".orbit/tmp/analytics-self-test-replay")
     write_snapshot(out, docs)
