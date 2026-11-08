@@ -89,6 +89,9 @@ scale lets a lead on one table be compared with a lead on another.
 The rule rewards a clear lead, not a high score. A crew that tops a crowded table by a
 point won't be MVP over one that tops another table by thirty.
 
+The note is written by that week's MVP crew, named with its score in the byline. When
+the sample is too thin to pick one, the configured crew writes it and the note says so.
+
 ## Limits
 
 - **One week.** Most rows are under 100 tasks, so the intervals are wide and the order can

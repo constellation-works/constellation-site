@@ -8,14 +8,16 @@ writes, into the note's directory:
 - by-tier.csv: one row per crew, model and tier with 10 or more tasks;
 - reviewers.csv, pilots.csv: the ranked reviewer and pilot crews;
 - tables.md: the Markdown tables the note embeds, each with a one-line score key;
-- facts.json: the window, the tiers shown, and the MVP of the week, for the prose.
+- facts.json: the window, the tiers shown, the MVP of the week and the crew that
+  writes the note (the MVP's crew, or --fallback-crew), for the prose.
 
 tables.md and facts.json are working files: delete them before the note ships.
 
 Usage, on the Orbit owner host:
 
     python3 scripts/crew_rankings.py notes/crew-rankings-<date> [--window 7d]
-        [--workspace orbit] [--from <dir>]
+        [--workspace orbit] [--from <dir>] [--fallback-crew opus] [--crews a,b,...]
+    python3 scripts/crew_rankings.py --writer-only [same options]   # writer JSON only
 
 --from reads saved `--json` output instead of calling orbit: per-task.json,
 by-type.json and rows.json (implementers, with --per-task, --by-type and
@@ -104,7 +106,26 @@ def term_key(card, unit, centre):
             f"debits for {', '.join(debit)}. {centre}")
 
 
+def pick_writer(leads, fallback, crews):
+    """The crew that writes the note: the MVP's crew, without an @effort suffix.
+
+    Falls back to `fallback` when no table has two ranked rows, or when the
+    MVP's crew isn't one of `crews` (the crews configured in the workspace;
+    None skips that check).
+    """
+    mvp = leads[0] if leads else None
+    crew = mvp["crew"].split("@", 1)[0] if mvp else None
+    ok = mvp is not None and (crews is None or crew in crews)
+    return {
+        "crew": crew if ok else fallback, "source": "mvp" if ok else "fallback",
+        "mvp_crew_row": mvp and mvp["crew"], "table": mvp and mvp["table"],
+        "score": mvp and mvp["score"], "units": mvp and mvp["units"],
+    }
+
+
 def write_csv(path, rows):
+    if path is None:
+        return
     if not rows:
         path.unlink(missing_ok=True)
         return
@@ -116,11 +137,20 @@ def write_csv(path, rows):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("out")
+    ap.add_argument("out", nargs="?")
     ap.add_argument("--window", default="7d")
     ap.add_argument("--workspace", default="orbit")
     ap.add_argument("--from", dest="source")
+    ap.add_argument("--fallback-crew", default="opus",
+                    help="crew that writes the note when no MVP qualifies (default opus)")
+    ap.add_argument("--crews", help="comma list of crews configured in the workspace; "
+                    "an MVP crew outside it hands the note to --fallback-crew")
+    ap.add_argument("--writer-only", action="store_true",
+                    help="print only the writer JSON on stdout and write no files")
     a = ap.parse_args()
+    if not a.out and not a.writer_only:
+        ap.error("out is required unless --writer-only is given")
+    crews = {c.strip() for c in a.crews.split(",") if c.strip()} if a.crews else None
 
     if a.source:
         src = pathlib.Path(a.source)
@@ -134,8 +164,10 @@ def main():
         reviewers = scorecard(a.window, a.workspace, "reviewers")
         pilots = scorecard(a.window, a.workspace, "pilots")
 
-    out = pathlib.Path(a.out)
-    out.mkdir(parents=True, exist_ok=True)
+    out = None if a.writer_only else pathlib.Path(a.out)
+    if out:
+        out.mkdir(parents=True, exist_ok=True)
+    path = lambda name: out / name if out else None
     effort = efforts(rows, reviewers, pilots)
     eff = lambda crew: effort.get(crew, "unknown")
 
@@ -145,7 +177,7 @@ def main():
         "tasks": r["units"], "score": round(r["score"], 1),
         "landed_pct": round(r["counts"]["weighted_landed"] / r["units"] * 100, 1),
     } for i, r in enumerate((r for r in ranked(rows) if r["units"] >= MIN_TASKS), 1)]
-    write_csv(out / "all-tiers.csv", all_rows)
+    write_csv(path("all-tiers.csv"), all_rows)
 
     # By tier: raw rates from --per-task, tier scores from --by-type.
     score = {(c["tier"], c["crew"], c["model"]): c["crew_mean"] for c in by_type["cells"]}
@@ -180,7 +212,7 @@ def main():
             "prelanding_first_pass_accept_pct": round(g["first_pass"] / n * 100, 1),
         })
     tier_rows.sort(key=lambda r: (TIERS.index(r["tier"]), -r["score"]))
-    write_csv(out / "by-tier.csv", tier_rows)
+    write_csv(path("by-tier.csv"), tier_rows)
     per_tier = {t: [r for r in tier_rows if r["tier"] == t] for t in TIERS}
     shown = [t for t in TIERS if len(per_tier[t]) >= MIN_CREWS]
 
@@ -194,8 +226,8 @@ def main():
         } for i, r in enumerate(ranked(card), 1)]
 
     rev_rows, pil_rows = role_rows(reviewers), role_rows(pilots)
-    write_csv(out / "reviewers.csv", rev_rows)
-    write_csv(out / "pilots.csv", pil_rows)
+    write_csv(path("reviewers.csv"), rev_rows)
+    write_csv(path("pilots.csv"), pil_rows)
 
     # MVP: the largest lead over its own table's #2, scaled by the table's centre.
     tables = [("all tiers", all_rows, "tasks", 100.0)]
@@ -215,6 +247,10 @@ def main():
             "lead_scaled": round((top["score"] - second["score"]) / scale, 3),
         })
     leads.sort(key=lambda x: -x["lead_scaled"])
+    writer = pick_writer(leads, a.fallback_crew, crews)
+    if a.writer_only:
+        print(json.dumps(writer))
+        return
 
     # tables.md
     md = ["### All tiers", "",
@@ -265,6 +301,7 @@ def main():
                    **{t: len(per_tier[t]) for t in shown}},
         "models": sorted({(r["crew"], r["model"]) for r in all_rows + tier_rows + rev_rows + pil_rows}),
         "mvp": leads[0] if leads else None,
+        "writer": writer,
         "leads": leads,
     }
     (out / "facts.json").write_text(json.dumps(facts, indent=2) + "\n")
