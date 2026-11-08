@@ -86,11 +86,13 @@ their messages. Salts, overlays, assignment digests and run digests are not
 copied. Free text (hypothesis, name, verdict reasons and labels) is copied
 only after task ids, run ids, file paths, host names and workspace ids
 (``ws_…``) are replaced with ``[redacted]``. File paths are matched by
-shape, not by a list of root names: any Unix absolute path, Windows drive
-or UNC path, home-relative path, and repository-relative path whose final
+shape, not by a list of root names: any Unix absolute path (including a
+single segment such as ``/workspace``), any ``file:`` URI, Windows drive or
+UNC path, home-relative path, and repository-relative path whose final
 component names a file (or which descends at least two directories) is
-redacted. Public API source labels (``GET /api/…``) are not file paths and
-are preserved.
+redacted. A relative path with no extension that descends fewer than two
+directories (``src/Makefile``) is left as it is by design. Public API source
+labels (``GET /api/…``) are not file paths and are preserved.
 
 ``meta.json`` records ``schema_version``, ``generated_at``, ``orbit_version``,
 the workspace name, each board's UTC window, and ``dropped``.
@@ -224,10 +226,11 @@ TASK_ID = re.compile(r"ORB-[0-9]+")
 RUN_ID = re.compile(r"jrun-[0-9A-Za-z-]+")
 _PATH_SEGMENT = r"[A-Za-z0-9._~%+@\-]+"
 _API_ROUTE = r"api/(?:diagnostics|metrics|tasks)(?:/|\?|#|$)"
+# A slash right after "<" is an HTML closing tag (</span>), not a path.
 ABS_PATH = re.compile(
-    r"(?<![\w./\\\-])/(?!" + _API_ROUTE + r")" + _PATH_SEGMENT + r"(?:/" + _PATH_SEGMENT + r")+/?"
-    r"|(?<![\w./\\\-])/(?!" + _API_ROUTE + r")" + _PATH_SEGMENT + r"\.[A-Za-z][A-Za-z0-9]{0,9}\b"
+    r"(?<![\w./\\\-<])/(?!" + _API_ROUTE + r")" + _PATH_SEGMENT + r"(?:/" + _PATH_SEGMENT + r")*/?"
 )
+FILE_URI = re.compile(r"\bfile:/+[^\s\"'<>]*", re.IGNORECASE)
 WINDOWS_PATH = re.compile(r"(?:(?<![A-Za-z0-9_])[A-Za-z]:[\\/][^\s\"'<>]*|\\\\[^\s\"'<>]+)")
 RELATIVE_PATH = re.compile(
     r"(?<![\w./\\\-])(?!\d{4}[\\/]\d{1,2}[\\/]\d{1,2}(?:\b|$))"
@@ -299,7 +302,7 @@ def host_names():
 
 
 def forbidden_patterns(hosts):
-    patterns = [TASK_ID, RUN_ID, WINDOWS_PATH, HOME_PATH, RELATIVE_PATH, ABS_PATH, RELATIVE_PATH, WORKSPACE_ID]
+    patterns = [TASK_ID, RUN_ID, FILE_URI, WINDOWS_PATH, HOME_PATH, RELATIVE_PATH, ABS_PATH, RELATIVE_PATH, WORKSPACE_ID]
     for host in hosts:
         if len(host) >= 3:
             patterns.append(re.compile(re.escape(host)))

@@ -28,7 +28,14 @@ PATH_SAMPLES = [
     "./src/lib.rs",
     "../outside/secret.txt",
     "~/private/customer.txt",
+    "/workspace",
+    "/srv",
+    "/Makefile",
+    "file:///etc/passwd",
+    "file:///home/daniel/secret/x.txt",
+    "FILE:///Users/dan/x",
 ]
+RELATIVE_LEFT = ["src/Makefile"]
 API_SOURCES = [
     "GET /api/diagnostics/implement_one?since=30d&outcome=succeeded",
     "GET /api/diagnostics/completions?since=30d",
@@ -93,8 +100,17 @@ class PathRedactionTest(unittest.TestCase):
         patterns = snapshot.forbidden_patterns(HOSTS)
         for source in API_SOURCES:
             self.assertEqual(snapshot.sanitize(source, patterns, [0]), source)
-        self.assertEqual(snapshot.sanitize("delivered on 3/4 runs (haiku/luna)", patterns, [0]),
-                         "delivered on 3/4 runs (haiku/luna)")
+        for prose in ["delivered on 3/4 runs (haiku/luna)", "and/or", "crew / model", "haiku / claude-opus-5-5",
+                      "<b>ok</b> <span>done</span>"]:
+            with self.subTest(prose=prose):
+                self.assertEqual(snapshot.sanitize(prose, patterns, [0]), prose)
+
+    def test_sanitize_leaves_relative_paths_without_extension(self):
+        patterns = snapshot.forbidden_patterns(HOSTS)
+        for relative in RELATIVE_LEFT:
+            with self.subTest(relative=relative):
+                self.assertEqual(snapshot.sanitize(f"check {relative} end", patterns, [0]),
+                                 f"check {relative} end")
 
     def test_projection_redacts_free_text_and_preserves_aggregates(self):
         for leaked in PATH_SAMPLES:
