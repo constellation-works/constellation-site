@@ -117,7 +117,7 @@ jobs:
           while true; do
             info="$(gh pr view "$PR_NUMBER" --repo "$REPO" \
               --json state,autoMergeRequest \
-              --jq -r '"\(.state) \(.autoMergeRequest != null)"' \
+              --jq '"\(.state) \(.autoMergeRequest != null)"' \
               || echo FETCH_FAILED)"
             case "$info" in
               MERGED*)

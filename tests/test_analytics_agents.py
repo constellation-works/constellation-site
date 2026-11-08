@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import tempfile
 import unittest
@@ -257,6 +258,34 @@ class AgentsPageTest(unittest.TestCase):
         self.assertIsNotNone(dispatch, "automerge workflow has no guarded dispatch step")
         step = dispatch.group(1)
         self.assertIn("--json state,autoMergeRequest", step)
+        # `gh pr view --jq` takes a single expression, so `--jq -r '<prog>'`
+        # passes `-r` as the expression and `<prog>` as a second positional,
+        # which gh rejects (`accepts at most 1 arg(s), received 2`) before
+        # any API call; the poll then loops on FETCH_FAILED until the
+        # deadline instead of dispatching. Parse the poll's argv so a
+        # substring check alone cannot pass that bug.
+        self.assertNotRegex(step, r"--jq\s+-r\b")
+        poll = re.search(
+            r"gh pr view\s+(.*?)\|\|\s*echo FETCH_FAILED", step, re.DOTALL
+        )
+        self.assertIsNotNone(poll, "dispatch step has no parseable gh pr view poll")
+        argv = shlex.split(poll.group(1).replace("\\\n", " "))
+        self.assertIn("--jq", argv)
+        self.assertNotIn("-r", argv)
+        self.assertEqual(argv.count("--jq"), 1)
+        jq_index = argv.index("--jq")
+        self.assertEqual(
+            len(argv),
+            jq_index + 2,
+            "gh pr view takes one --jq expression and no extra positional",
+        )
+        program = argv[jq_index + 1]
+        self.assertIn("\\(.state)", program)
+        self.assertIn("\\(.autoMergeRequest != null)", program)
+        self.assertEqual(
+            argv[:jq_index],
+            ["$PR_NUMBER", "--repo", "$REPO", "--json", "state,autoMergeRequest"],
+        )
         self.assertIn("MERGED", step)
         self.assertRegex(step, r"gh workflow run website\.yml --repo .+ --ref main")
         self.assertLess(
