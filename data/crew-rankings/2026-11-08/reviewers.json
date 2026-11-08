@@ -1,0 +1,1982 @@
+{
+ "cache_ttl_seconds": 0,
+ "computed_at": "2026-11-08T06:05:54.280Z",
+ "effort_breakdown": [
+  {
+   "crew": null,
+   "duration_ms": 660813222,
+   "input_tokens": 78056,
+   "invocations": 2291,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 88670124,
+   "provider_cost_count": 2291,
+   "provider_cost_usd": 369.1012425599996,
+   "reasoning_effort": "unknown",
+   "tasks": 2025
+  },
+  {
+   "crew": null,
+   "duration_ms": 927147534,
+   "input_tokens": 86270,
+   "invocations": 529,
+   "model": "claude-opus-5-5",
+   "output_tokens": 31394115,
+   "provider_cost_count": 528,
+   "provider_cost_usd": 3093.7294852049995,
+   "reasoning_effort": "unknown",
+   "tasks": 501
+  },
+  {
+   "crew": null,
+   "duration_ms": 265792027,
+   "input_tokens": 19798,
+   "invocations": 391,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 6175218,
+   "provider_cost_count": 391,
+   "provider_cost_usd": 352.6901439,
+   "reasoning_effort": "unknown",
+   "tasks": 357
+  },
+  {
+   "crew": null,
+   "duration_ms": 133961809,
+   "input_tokens": 53250687,
+   "invocations": 109,
+   "model": "gemini-3.8-flash-high",
+   "output_tokens": 8338843,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 105
+  },
+  {
+   "crew": null,
+   "duration_ms": 3868049,
+   "input_tokens": 1665471,
+   "invocations": 3,
+   "model": "gemini-4-argon-high",
+   "output_tokens": 286539,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 2
+  },
+  {
+   "crew": null,
+   "duration_ms": 611690,
+   "input_tokens": 1349581,
+   "invocations": 2,
+   "model": "gpt-6-astra",
+   "output_tokens": 11222,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 2
+  },
+  {
+   "crew": null,
+   "duration_ms": 665701669,
+   "input_tokens": 3979413650,
+   "invocations": 2001,
+   "model": "gpt-6-luna",
+   "output_tokens": 42608675,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 1794
+  },
+  {
+   "crew": null,
+   "duration_ms": 1497617014,
+   "input_tokens": 9342239675,
+   "invocations": 1750,
+   "model": "gpt-6.1-sol",
+   "output_tokens": 37708695,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 1598
+  },
+  {
+   "crew": null,
+   "duration_ms": 26378261,
+   "input_tokens": 272819650,
+   "invocations": 91,
+   "model": "gpt-6.1-terra",
+   "output_tokens": 536838,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 91
+  },
+  {
+   "crew": null,
+   "duration_ms": 423275934,
+   "input_tokens": 91155826,
+   "invocations": 324,
+   "model": "grok-4.7",
+   "output_tokens": 19831285,
+   "provider_cost_count": 323,
+   "provider_cost_usd": 1248.3853969600011,
+   "reasoning_effort": "unknown",
+   "tasks": 300
+  },
+  {
+   "crew": null,
+   "duration_ms": 121236751,
+   "input_tokens": 0,
+   "invocations": 319,
+   "model": "muse-spark-1.3-contributor",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 289
+  },
+  {
+   "crew": null,
+   "duration_ms": 133087694,
+   "input_tokens": 0,
+   "invocations": 438,
+   "model": "muse-wonder-1.0",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 427
+  },
+  {
+   "crew": null,
+   "duration_ms": 78301856,
+   "input_tokens": 0,
+   "invocations": 46,
+   "model": "muse-wonder-full-1.0",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "unknown",
+   "tasks": 44
+  },
+  {
+   "crew": "argon",
+   "duration_ms": 5678663,
+   "input_tokens": 1988202,
+   "invocations": 4,
+   "model": "gemini-4-argon-high",
+   "output_tokens": 221860,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": null,
+   "tasks": 4
+  },
+  {
+   "crew": "astra",
+   "duration_ms": 53777,
+   "input_tokens": 94818,
+   "invocations": 5,
+   "model": "gpt-6-astra",
+   "output_tokens": 503,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "medium",
+   "tasks": 0
+  },
+  {
+   "crew": "fable",
+   "duration_ms": 36809,
+   "input_tokens": 170,
+   "invocations": 5,
+   "model": "claude-fable-5-1",
+   "output_tokens": 1144,
+   "provider_cost_count": 5,
+   "provider_cost_usd": 2.830311,
+   "reasoning_effort": "medium",
+   "tasks": 0
+  },
+  {
+   "crew": "grok",
+   "duration_ms": 232626331,
+   "input_tokens": 51336693,
+   "invocations": 162,
+   "model": "grok-4.7",
+   "output_tokens": 11492775,
+   "provider_cost_count": 162,
+   "provider_cost_usd": 891.5564360000002,
+   "reasoning_effort": "high",
+   "tasks": 155
+  },
+  {
+   "crew": "haiku",
+   "duration_ms": 123710650,
+   "input_tokens": 16900,
+   "invocations": 319,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 14536540,
+   "provider_cost_count": 319,
+   "provider_cost_usd": 77.45066899999996,
+   "reasoning_effort": "xhigh",
+   "tasks": 285
+  },
+  {
+   "crew": "haiku@high",
+   "duration_ms": 49176051,
+   "input_tokens": 11162,
+   "invocations": 587,
+   "model": "claude-haiku-5-5",
+   "output_tokens": 10178323,
+   "provider_cost_count": 587,
+   "provider_cost_usd": 24.335338055000005,
+   "reasoning_effort": "high",
+   "tasks": 518
+  },
+  {
+   "crew": "luna",
+   "duration_ms": 151901235,
+   "input_tokens": 1005803677,
+   "invocations": 290,
+   "model": "gpt-6-luna",
+   "output_tokens": 7495154,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "xhigh",
+   "tasks": 257
+  },
+  {
+   "crew": "luna@high",
+   "duration_ms": 44900816,
+   "input_tokens": 287907283,
+   "invocations": 528,
+   "model": "gpt-6-luna",
+   "output_tokens": 3179476,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 582
+  },
+  {
+   "crew": "muse-spark",
+   "duration_ms": 75018788,
+   "input_tokens": 0,
+   "invocations": 212,
+   "model": "muse-spark-1.3-contributor",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "xhigh",
+   "tasks": 197
+  },
+  {
+   "crew": "muse-spark@high",
+   "duration_ms": 25008457,
+   "input_tokens": 0,
+   "invocations": 274,
+   "model": "muse-spark-1.3-contributor",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 294
+  },
+  {
+   "crew": "muse-wonder",
+   "duration_ms": 131503886,
+   "input_tokens": 0,
+   "invocations": 367,
+   "model": "muse-wonder-1.0",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 358
+  },
+  {
+   "crew": "muse-wonder-full",
+   "duration_ms": 16706586,
+   "input_tokens": 0,
+   "invocations": 17,
+   "model": "muse-wonder-full-1.0",
+   "output_tokens": 0,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 11
+  },
+  {
+   "crew": "opus",
+   "duration_ms": 16603800,
+   "input_tokens": 2616,
+   "invocations": 19,
+   "model": "claude-opus-5-5",
+   "output_tokens": 1014706,
+   "provider_cost_count": 19,
+   "provider_cost_usd": 88.606105,
+   "reasoning_effort": "high",
+   "tasks": 16
+  },
+  {
+   "crew": "opus",
+   "duration_ms": 68760128,
+   "input_tokens": 7196,
+   "invocations": 70,
+   "model": "claude-opus-5-5",
+   "output_tokens": 3027139,
+   "provider_cost_count": 70,
+   "provider_cost_usd": 326.1468923999999,
+   "reasoning_effort": "medium",
+   "tasks": 60
+  },
+  {
+   "crew": "opus@high",
+   "duration_ms": 3890197,
+   "input_tokens": 182,
+   "invocations": 1,
+   "model": "claude-opus-5-5",
+   "output_tokens": 200620,
+   "provider_cost_count": 1,
+   "provider_cost_usd": 12.552109999999995,
+   "reasoning_effort": "high",
+   "tasks": 1
+  },
+  {
+   "crew": "opus@medium",
+   "duration_ms": 217226229,
+   "input_tokens": 13868,
+   "invocations": 164,
+   "model": "claude-opus-5-5",
+   "output_tokens": 5500891,
+   "provider_cost_count": 164,
+   "provider_cost_usd": 489.23499599999997,
+   "reasoning_effort": "medium",
+   "tasks": 158
+  },
+  {
+   "crew": "sol",
+   "duration_ms": 310536260,
+   "input_tokens": 2791889346,
+   "invocations": 485,
+   "model": "gpt-6.1-sol",
+   "output_tokens": 9971768,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 461
+  },
+  {
+   "crew": "sonnet",
+   "duration_ms": 83440459,
+   "input_tokens": 14096,
+   "invocations": 298,
+   "model": "claude-sonnet-5-5",
+   "output_tokens": 4204190,
+   "provider_cost_count": 298,
+   "provider_cost_usd": 206.14864450000007,
+   "reasoning_effort": "high",
+   "tasks": 290
+  },
+  {
+   "crew": "terra",
+   "duration_ms": 52838500,
+   "input_tokens": 532532453,
+   "invocations": 187,
+   "model": "gpt-6.1-terra",
+   "output_tokens": 981006,
+   "provider_cost_count": 0,
+   "provider_cost_usd": 0.0,
+   "reasoning_effort": "high",
+   "tasks": 182
+  }
+ ],
+ "effort_population": "completed_workspace_invocations",
+ "execution": "managed",
+ "fleet_average": 135.48,
+ "min_support": 10,
+ "provisional": 1379,
+ "requested_window": "30d",
+ "role": "reviewers",
+ "rows": [
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 68.5,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "opus",
+   "effort_breakdown": [
+    {
+     "crew": "opus",
+     "model": "claude-opus-5-5",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "claude-opus-5-5",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 380.56,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 18,
+   "rank": 1,
+   "raw": 380.56,
+   "runs_without_model": 0,
+   "score": 227.38,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 18
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 18
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 0
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 18,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 272.25,
+    "fixes_held": 29,
+    "incomplete_reviews": 10,
+    "missed_regressions": 0,
+    "rejected_findings": 9
+   },
+   "crew": "haiku",
+   "effort_breakdown": [
+    {
+     "crew": "haiku",
+     "model": "claude-haiku-5-5",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "claude-haiku-5-5",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 169.1,
+    "fixes_held": 18.01,
+    "incomplete_reviews": 6.21,
+    "missed_regressions": 0,
+    "rejected_findings": 5.59
+   },
+   "provisional": 161,
+   "rank": 2,
+   "raw": 178.42,
+   "runs_without_model": 0,
+   "score": 171.67,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 81
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 80
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": 75.31
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": 79.72
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 32
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 109
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 20
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": 7.3
+    }
+   ],
+   "units": 161,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 982.25,
+    "fixes_held": 24,
+    "incomplete_reviews": 19,
+    "missed_regressions": 0,
+    "rejected_findings": 11
+   },
+   "crew": "sol",
+   "effort_breakdown": [
+    {
+     "crew": "sol",
+     "model": "gpt-6.1-sol",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "gpt-6.1-sol",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 164.26,
+    "fixes_held": 4.01,
+    "incomplete_reviews": 3.18,
+    "missed_regressions": 0,
+    "rejected_findings": 1.84
+   },
+   "provisional": 598,
+   "rank": 3,
+   "raw": 164.84,
+   "runs_without_model": 0,
+   "score": 163.44,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 137
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 461
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": 64.96
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": 84.51
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 65
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 485
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 48
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": 4.1
+    }
+   ],
+   "units": 598,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 54,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "sol",
+   "effort_breakdown": [
+    {
+     "crew": "sol",
+     "model": "model unknown",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "model unknown",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 192.86,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 28,
+   "rank": 4,
+   "raw": 192.86,
+   "runs_without_model": 28,
+   "score": 163.18,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 28
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 28
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 0
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 28,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 45.75,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "opus@medium",
+   "effort_breakdown": [
+    {
+     "crew": "opus@medium",
+     "model": "claude-opus-5-5",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "claude-opus-5-5",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 142.97,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 32,
+   "rank": 5,
+   "raw": 142.97,
+   "runs_without_model": 0,
+   "score": 139.34,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 32
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 32
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 0
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 32,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 107.75,
+    "fixes_held": 1,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "grok",
+   "effort_breakdown": [
+    {
+     "crew": "grok",
+     "model": "grok-4.7",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "grok-4.7",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 134.69,
+    "fixes_held": 1.25,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 80,
+   "rank": 6,
+   "raw": 135.94,
+   "runs_without_model": 0,
+   "score": 135.81,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 2
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 78
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": 100
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": 73.46
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": true
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 1
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 78
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 1
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": 10.95
+    }
+   ],
+   "units": 80,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 47,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "terra",
+   "effort_breakdown": [
+    {
+     "crew": "terra",
+     "model": "gpt-6.1-terra",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "gpt-6.1-terra",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 134.29,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 35,
+   "rank": 7,
+   "raw": 134.29,
+   "runs_without_model": 0,
+   "score": 134.29,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 35
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 35
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 0
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 35,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 125.75,
+    "fixes_held": 1,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "muse-wonder",
+   "effort_breakdown": [
+    {
+     "crew": "muse-wonder",
+     "duration_ms": 159420,
+     "input_tokens": 0,
+     "invocations": 1,
+     "model": "muse-wonder-1.0",
+     "output_tokens": 0,
+     "provider_cost_count": 0,
+     "provider_cost_usd": 0.0,
+     "reasoning_effort": "high",
+     "tasks": 1
+    }
+   ],
+   "model": "muse-wonder-1.0",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 117.52,
+    "fixes_held": 0.93,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 107,
+   "rank": 8,
+   "raw": 118.46,
+   "runs_without_model": 0,
+   "score": 118.46,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 4
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 103
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": 100
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": 82.1
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": true
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 3
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 103
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 1
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": 1.89
+    }
+   ],
+   "units": 107,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 24,
+    "fixes_held": 11,
+    "incomplete_reviews": 5,
+    "missed_regressions": 0,
+    "rejected_findings": 1
+   },
+   "crew": "luna",
+   "effort_breakdown": [
+    {
+     "crew": "luna",
+     "model": "gpt-6-luna",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "gpt-6-luna",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 39.34,
+    "fixes_held": 18.03,
+    "incomplete_reviews": 8.2,
+    "missed_regressions": 0,
+    "rejected_findings": 1.64
+   },
+   "provisional": 61,
+   "rank": 9,
+   "raw": 51.64,
+   "runs_without_model": 0,
+   "score": 51.64,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 57
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 4
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": 87.72
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": 78.74
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 39
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 15
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 7
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": 6.17
+    }
+   ],
+   "units": 61,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 89.25,
+    "fixes_held": 12,
+    "incomplete_reviews": 14,
+    "missed_regressions": 0,
+    "rejected_findings": 18
+   },
+   "crew": "sonnet",
+   "effort_breakdown": [
+    {
+     "crew": "sonnet",
+     "model": "claude-sonnet-5-5",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "claude-sonnet-5-5",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 50.71,
+    "fixes_held": 6.82,
+    "incomplete_reviews": 7.95,
+    "missed_regressions": 0,
+    "rejected_findings": 10.23
+   },
+   "provisional": 176,
+   "rank": 10,
+   "raw": 43.32,
+   "runs_without_model": 0,
+   "score": 43.32,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 100
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 76
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": 86
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": 79.72
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 74
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 87
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 15
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": 10.37
+    }
+   ],
+   "units": 176,
+   "unjudged": false
+  },
+  {
+   "below_support": false,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 15.25,
+    "fixes_held": 6,
+    "incomplete_reviews": 5,
+    "missed_regressions": 4,
+    "rejected_findings": 0
+   },
+   "crew": "muse-spark",
+   "effort_breakdown": [
+    {
+     "crew": "muse-spark",
+     "model": "muse-spark-1.3-contributor",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "muse-spark-1.3-contributor",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 20.61,
+    "fixes_held": 8.11,
+    "incomplete_reviews": 6.76,
+    "missed_regressions": 5.41,
+    "rejected_findings": 0
+   },
+   "provisional": 74,
+   "rank": 11,
+   "raw": 14.53,
+   "runs_without_model": 0,
+   "score": 14.53,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 74
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 0
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": 93.24
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": 75.43
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": true
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 61
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 6
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 2
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 5
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": 5.27
+    }
+   ],
+   "units": 74,
+   "unjudged": false
+  },
+  {
+   "below_support": true,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 15,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "haiku",
+   "effort_breakdown": [
+    {
+     "crew": "haiku",
+     "model": "model unknown",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "model unknown",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 375,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 4,
+   "rank": null,
+   "raw": 375,
+   "runs_without_model": 4,
+   "score": 163.66,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 4
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 4
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 0
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 4,
+   "unjudged": false
+  },
+  {
+   "below_support": true,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 5,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "opus",
+   "effort_breakdown": [
+    {
+     "crew": "opus",
+     "model": "model unknown",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "model unknown",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 500,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 1,
+   "rank": null,
+   "raw": 500,
+   "runs_without_model": 1,
+   "score": 147.24,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 1
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 1
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 0
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 1,
+   "unjudged": false
+  },
+  {
+   "below_support": true,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 5,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "sonnet",
+   "effort_breakdown": [
+    {
+     "crew": "sonnet",
+     "model": "model unknown",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "model unknown",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 500,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 1,
+   "rank": null,
+   "raw": 500,
+   "runs_without_model": 1,
+   "score": 147.24,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 1
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 1
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 0
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 1,
+   "unjudged": false
+  },
+  {
+   "below_support": true,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 1,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "luna",
+   "effort_breakdown": [
+    {
+     "crew": "luna",
+     "model": "model unknown",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "model unknown",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 50,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 2,
+   "rank": null,
+   "raw": 50,
+   "runs_without_model": 2,
+   "score": 50,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 2
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 1
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 1
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 2,
+   "unjudged": false
+  },
+  {
+   "below_support": true,
+   "counts": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 0,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "crew": "gemini-flash",
+   "effort_breakdown": [
+    {
+     "crew": "gemini-flash",
+     "model": "gemini-3.8-flash-high",
+     "reasoning_effort": "unknown",
+     "source": "no_dispatch_evidence"
+    }
+   ],
+   "model": "gemini-3.8-flash-high",
+   "per_100": {
+    "failed_fixes": 0,
+    "false_rejects": 0,
+    "findings_held": 0,
+    "fixes_held": 0,
+    "incomplete_reviews": 0,
+    "missed_regressions": 0,
+    "rejected_findings": 0
+   },
+   "provisional": 1,
+   "rank": null,
+   "raw": 0,
+   "runs_without_model": 0,
+   "score": 0,
+   "stats": [
+    {
+     "key": "gate_reviews",
+     "label": "Review gate settlements",
+     "value": 0
+    },
+    {
+     "key": "review_jobs",
+     "label": "Review job runs that filed findings",
+     "value": 1
+    },
+    {
+     "key": "accept_rate",
+     "label": "Accept rate (%)",
+     "value": null
+    },
+    {
+     "key": "peer_accept_rate",
+     "label": "Peers' accept rate on the same tiers (%)",
+     "value": null
+    },
+    {
+     "key": "accepts_often",
+     "label": "Accepts often",
+     "value": false
+    },
+    {
+     "key": "outcome_held_up",
+     "label": "Accepted and held up",
+     "value": 0
+    },
+    {
+     "key": "outcome_caught",
+     "label": "Caught a real problem",
+     "value": 0
+    },
+    {
+     "key": "outcome_false_alarm",
+     "label": "False alarm",
+     "value": 0
+    },
+    {
+     "key": "outcome_missed",
+     "label": "Missed a regression",
+     "value": 0
+    },
+    {
+     "key": "outcome_unresolved",
+     "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+     "value": 1
+    },
+    {
+     "key": "median_review_minutes",
+     "label": "Median review minutes",
+     "value": null
+    }
+   ],
+   "units": 1,
+   "unjudged": false
+  }
+ ],
+ "since": "2026-10-09T06:06:04Z",
+ "status": "ok",
+ "tasks_scanned": 11933,
+ "terms": [
+  {
+   "definition": "Findings repaired by the reviewer whose fixes passed owner revalidation, open findings on a reject whose next implementation run changed a path the finding cites, and findings a review job filed that finding verification CONFIRMED or, with no verification verdict, whose task landed; each weighted by severity: critical 8, high 4, medium 2, low 1, nit 0.25. A CONFIRMED finding scores at the severity verification rated; an unverified landed finding at the highest severity rated on its own regression_from links, else low; a review gate finding at the reviewer's own. A filed finding whose task is still open is not judged yet.",
+   "group": "credit",
+   "key": "findings_held",
+   "label": "Findings that held",
+   "weight": 1.0
+  },
+  {
+   "definition": "accept_with_fixes verdicts whose fixes passed owner revalidation and whose task has no regression with escape review_missed.",
+   "group": "credit",
+   "key": "fixes_held",
+   "label": "Fixes that held",
+   "weight": 1.0
+  },
+  {
+   "definition": "Findings closed by an authorized decision (Disposed), and findings a review job filed as tasks that finding verification REJECTED. A filed finding whose task was rejected or archived without landing and without a verification verdict costs nothing: task records carry no typed reason that tells a wrong finding from a duplicate, won't-fix or superseded one, so every such drop is neutral.",
+   "group": "problem",
+   "key": "rejected_findings",
+   "label": "Rejected findings",
+   "weight": -1.0
+  },
+  {
+   "definition": "reject verdicts where the next implementation run changed none of the open findings' cited paths and the next review accepted. A false reject counts here instead of against the implementer.",
+   "group": "problem",
+   "key": "false_rejects",
+   "label": "False rejects",
+   "weight": -2.0
+  },
+  {
+   "definition": "Reviewer fixes that failed owner revalidation and were escalated.",
+   "group": "problem",
+   "key": "failed_fixes",
+   "label": "Failed fixes",
+   "weight": -1.0
+  },
+  {
+   "definition": "Regressions with escape review_missed against tasks the row's review accepted, whenever filed, each weighted by the link's severity: critical 8, high 4, medium 2, low 1, nit 0.25, so one costs -16 to -0.5.",
+   "group": "problem",
+   "key": "missed_regressions",
+   "label": "Missed regressions",
+   "weight": -2.0
+  },
+  {
+   "definition": "incomplete verdicts whose block the run failure classification does not name as infrastructure.",
+   "group": "problem",
+   "key": "incomplete_reviews",
+   "label": "Incomplete reviews",
+   "weight": -0.5
+  }
+ ],
+ "unit": "settled reviews",
+ "window": "30d",
+ "window_attempts": null
+}

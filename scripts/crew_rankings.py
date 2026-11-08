@@ -8,10 +8,15 @@ writes, into the note's directory:
 - by-tier.csv: one row per crew, model and tier with 10 or more tasks;
 - reviewers.csv, pilots.csv: the ranked reviewer and pilot crews;
 - crown.csv: one row per implementer model, its crews pooled, with its crown score;
-- tables.md: the note's generated body (the MVP section and every board, each
+- tables.md: the note's generated body (the Implementer MVP section and every board, each
   with its exact UTC window and a one-line score key);
-- facts.json: the windows, the tiers shown, the crown table, the MVP of the
-  week and the crew that writes the note (the MVP's crew, or --fallback-crew).
+- facts.json: the windows, the tiers shown, the Implementer MVP crown table
+  and the crew that writes the note (the Implementer MVP's crew, or
+  --fallback-crew).
+
+With --archive DIR it also freezes this run's inputs there (the scorecard
+payloads, the per-task export cut to the fields this script reads, and
+facts.json), so `--from DIR` reproduces the note exactly.
 
 tables.md and facts.json are working files: delete them before the note ships.
 
@@ -20,7 +25,10 @@ Usage, on the Orbit owner host:
     python3 scripts/crew_rankings.py notes/crew-rankings-<date> [--window 7d]
         [--workspace orbit] [--reviewer-window 30d] [--from <dir>]
         [--fallback-crew opus] [--crews a,b,...]
-    python3 scripts/crew_rankings.py --writer-only [same options]   # writer JSON only
+    python3 scripts/crew_rankings.py --writer-only [same options]
+        # prints only the writer JSON: the Implementer MVP's crew, or the fallback
+    python3 scripts/crew_rankings.py <out> --archive data/crew-rankings/<date>
+        # also freezes this run's inputs; rerun later with --from that directory
 
 --from reads saved `--json` output instead of calling orbit: per-task.json,
 by-type.json and rows.json (implementers, with --per-task, --by-type and
@@ -35,16 +43,19 @@ The method is on the standing page notes/crew-rankings-method. In short:
   that tier (opus and opus@medium count once).
 - Reviewers and pilots rank the scorecard's ranked rows (at or above its
   minimum support). Their scores centre on the fleet average, not 100.
-- The MVP is a model, by the phase 1 crown (Daniel, 2026-11-08; reasoning in
-  constellation docs/discussion/synthesis.md). Implementers only, on the
-  all-tiers window. Each model's crews are pooled: the units-weighted mean of
-  their raw scores, units summed, never the best crew. The crown score shrinks
-  that both ways, (n * raw + K * avg_loo) / (n + K) with K = 30, where avg_loo
-  is the units-weighted mean raw of every other model in the field. The field
-  is the models with 10 or more pooled units, and a crown needs 3 of them.
-  Highest crown wins; an exact tie gives co-MVPs, and the alphabetically first
-  writes. No margin or volume tie-breaks. Reviewer and pilot boards are shown
-  without points until settled windows and noise scales exist (ORB-23066).
+- The award is the Implementer MVP, a model, by the phase 1 crown (Daniel,
+  2026-11-08; constellation docs/discussion/synthesis.md v2). Implementers
+  only, on the all-tiers window. Each model's crews are pooled before scoring,
+  never the best crew: its raw score is recomputed from the crews' summed
+  counts, expectations and term units where the payload has them, otherwise
+  the units-weighted mean of the crews' raw scores (an approximation for terms
+  with their own denominator). The crown score shrinks that once, (n * raw +
+  K * avg_loo) / (n + K) with K = 30, where avg_loo is the units-weighted mean
+  pooled raw of every other model in the field. The field is the models with
+  10 or more pooled units, and a crown needs 3 of them. Highest crown wins; an
+  exact tie gives co-Implementer MVPs, and the alphabetically first writes.
+  No margin or volume tie-breaks. Reviewer and pilot boards are shown without
+  points until settled windows and noise scales exist (ORB-23066).
 - Reviewers are read on --reviewer-window (30d), not --window.
 
 Rows with no recorded model are dropped everywhere.
@@ -146,32 +157,84 @@ def base_crew(crew):
     return crew.split("@", 1)[0]
 
 
+def row_raw(rows, terms):
+    """Raw score of pooled rows from their summed counts, expectations and units.
+
+    Each term's denominator is its term_units when present, else the row's
+    units (agent-scorecards §5.2). A term with no units is unmeasured and adds
+    nothing. Returns None when the payload lacks what this needs.
+    """
+    try:
+        base = {r["score_base"] for r in rows}
+        if len(base) != 1:
+            return None
+        raw = base.pop()
+        for t in terms:
+            key, w = t["key"], t["weight"]
+            actual = sum(r["counts"][key] for r in rows)
+            expected = sum(r["expected"][key] for r in rows)
+            units = sum((r.get("term_units") or {}).get(key, r["units"]) for r in rows)
+            if units:
+                raw += w * (actual - expected) * 100 / units
+        return raw
+    except (KeyError, TypeError):
+        return None
+
+
+def rounding(row, terms):
+    """How far a recomputed raw can drift from the reported one by rounding alone.
+
+    The payload rounds counts and expectations to 2 decimals (±0.005 each) and
+    raw to 2 decimals, and each term divides by its own units.
+    """
+    drift = 0.005
+    for t in terms:
+        units = (row.get("term_units") or {}).get(t["key"], row["units"])
+        if units:
+            drift += abs(t["weight"]) * 2 * 0.005 * 100 / units
+    return drift
+
+
 def pool_models(card):
-    """Pool the implementer scorecard's crews by model.
+    """Pool the implementer scorecard's crews by model, before any shrinkage.
 
     Every judged row with a known model counts, below support or not: pooling
     is how a model's small crews are read, and taking the best crew is not
-    allowed. raw is the units-weighted mean of the crews' raw scores; units are
-    summed. Crews are listed largest first, with their own scorecard score.
+    allowed. The pooled raw score is recomputed from the crews' summed counts,
+    expectations and term units, which is exact, when the payload has them and
+    each crew's own raw recomputes to its reported raw. Otherwise it is the
+    units-weighted mean of the crews' raw scores, which approximates the pooled
+    observations and isn't exact for terms with their own denominator (the
+    review terms, per reviewed delivery). `method` says which was used.
     """
-    models = {}
+    models, by_model = {}, collections.defaultdict(list)
     for r in card["rows"]:
         if r.get("unjudged") or r["model"] == UNKNOWN_MODEL or not r["units"]:
             continue
-        m = models.setdefault(r["model"], {"model": r["model"], "units": 0, "_sum": 0.0, "crews": []})
-        m["units"] += r["units"]
-        m["_sum"] += r["units"] * r["raw"]
-        m["crews"].append({"crew": r["crew"], "units": r["units"], "raw": round(r["raw"], 2),
-                           "score": round(r["score"], 1)})
-    for m in models.values():
-        m["raw"] = m.pop("_sum") / m["units"]
-        m["crews"].sort(key=lambda c: -c["units"])
-        m["k"] = len(m["crews"])
+        by_model[r["model"]].append(r)
+    terms = card["terms"]
+    for name, rs in by_model.items():
+        units = sum(r["units"] for r in rs)
+        mean = sum(r["units"] * r["raw"] for r in rs) / units
+        exact = row_raw(rs, terms)
+        consistent = exact is not None and all(
+            (rr := row_raw([r], terms)) is not None and abs(rr - r["raw"]) <= rounding(r, terms)
+            for r in rs)
+        crews = sorted(({"crew": r["crew"], "units": r["units"], "raw": round(r["raw"], 2),
+                         "score": round(r["score"], 1)} for r in rs), key=lambda c: -c["units"])
+        models[name] = {"model": name, "units": units, "crews": crews, "k": len(crews),
+                        "raw": exact if consistent else mean,
+                        "raw_mean_of_crews": mean,
+                        "method": "pooled counts" if consistent else "mean of crew raws"}
     return models
 
 
 def crown_scores(models, k):
-    """Two-sided shrinkage of each field model toward the others' pooled mean."""
+    """Shrink each field model once toward the other models' pooled mean.
+
+    avg_loo is the units-weighted mean pooled raw of every other model in the
+    field, so none of the model's own crews are in its target.
+    """
     field = {name: m for name, m in models.items() if m["units"] >= MIN_TASKS}
     out = {}
     for name, m in field.items():
@@ -204,9 +267,9 @@ def crown(models):
 
 
 def pick_writer(models, c, fallback, crews):
-    """The crew that writes the note: the MVP model's crew, without @effort.
+    """The crew that writes the note: the Implementer MVP's crew, without @effort.
 
-    With co-MVPs, the alphabetically first model writes. A model's crew is its
+    With co-Implementer MVPs, the alphabetically first model writes. A model's crew is its
     largest base crew by units. Falls back to `fallback` when no crown is
     awarded or the crew isn't one of `crews` (None skips that check).
     """
@@ -220,12 +283,12 @@ def pick_writer(models, c, fallback, crews):
     ok = mvp is not None and (crews is None or crew in crews)
     s = c["scores"].get(mvp) if mvp else None
     return {
-        "crew": crew if ok else fallback, "source": "mvp" if ok else "fallback",
-        "model": mvp, "co_mvps": c["winners"] if len(c["winners"]) > 1 else [],
+        "crew": crew if ok else fallback, "source": "implementer_mvp" if ok else "fallback",
+        "model": mvp, "co_implementer_mvps": c["winners"] if len(c["winners"]) > 1 else [],
         "crown": round(s["crown"], 2) if s else None,
         "raw": round(models[mvp]["raw"], 2) if mvp else None,
         "units": models[mvp]["units"] if mvp else None,
-        "mvp_crew": crew,
+        "implementer_mvp_crew": crew,
     }
 
 
@@ -250,9 +313,10 @@ def main():
                     help="window for the reviewer scorecard (default 30d)")
     ap.add_argument("--from", dest="source")
     ap.add_argument("--fallback-crew", default="opus",
-                    help="crew that writes the note when no MVP qualifies (default opus)")
+                    help="crew that writes the note when no Implementer MVP is crowned (default opus)")
     ap.add_argument("--crews", help="comma list of crews configured in the workspace; "
-                    "an MVP crew outside it hands the note to --fallback-crew")
+                    "an Implementer MVP crew outside it hands the note to --fallback-crew")
+    ap.add_argument("--archive", help="freeze this run's inputs and facts.json in this directory")
     ap.add_argument("--writer-only", action="store_true",
                     help="print only the writer JSON on stdout and write no files")
     a = ap.parse_args()
@@ -337,14 +401,15 @@ def main():
     write_csv(path("reviewers.csv"), rev_rows)
     write_csv(path("pilots.csv"), pil_rows)
 
-    # MVP: the phase 1 crown, implementers only, crews pooled by model.
+    # Implementer MVP: the phase 1 crown, implementers only, crews pooled by model.
     models = pool_models(rows)
     c = crown(models)
     writer = pick_writer(models, c, a.fallback_crew, crews)
     crown_rows = [{
         "place": i, "model": name, "crews": " ".join(f"{cr['crew']}:{cr['units']}" for cr in models[name]["crews"]),
         "k": models[name]["k"], "pooled_units": models[name]["units"],
-        "raw": round(models[name]["raw"], 2), "avg_loo": round(c["scores"][name]["avg_loo"], 2),
+        "raw": round(models[name]["raw"], 2), "raw_method": models[name]["method"],
+        "raw_mean_of_crews": round(models[name]["raw_mean_of_crews"], 2), "avg_loo": round(c["scores"][name]["avg_loo"], 2),
         "crown": round(c["scores"][name]["crown"], 2),
         "scorecard_scores": " ".join(f"{cr['crew']}:{cr['score']}" for cr in models[name]["crews"]),
     } for i, name in enumerate(c["order"], 1)]
@@ -355,41 +420,55 @@ def main():
 
     # tables.md: the note's generated body.
     winners = c["winners"]
-    md = ["### MVP of the week", "",
-          "This is the phase 1 interim crown: implementers only, on the all-tiers window. "
-          "Reviewer and pilot boards are shown below without points, "
+    md = ["### Implementer MVP of the week", "",
+          "This is the phase 1 interim, implementer-only crown, so it is the Implementer MVP, "
+          "not an all-round MVP. Reviewer and pilot boards are shown below without points, "
           f"{SCORE_NOTE}.", ""]
     if not c["qualified"]:
         md += [f"No crown this week: fewer than {MIN_MODELS} models had {MIN_TASKS} or more "
-               f"pooled tasks, so there is no MVP, and the configured crew ({a.fallback_crew}) "
-               "writes the note.", ""]
+               f"pooled tasks, so there is no Implementer MVP, and the configured crew "
+               f"({a.fallback_crew}) writes the note.", ""]
     else:
         lead = " and ".join(winners)
         if len(winners) > 1:
-            md += [f"Co-MVPs: {lead}, tied exactly on crown score "
+            md += [f"Co-Implementer MVPs: {lead}, tied exactly on crown score "
                    f"{c['scores'][winners[0]]['crown']:.2f}. {winners[0]} writes the note, "
                    "as the alphabetically first.", ""]
         else:
             w = winners[0]
-            md += [f"MVP: {w}, crown score {c['scores'][w]['crown']:.2f} on "
+            md += [f"Implementer MVP: {w}, crown score {c['scores'][w]['crown']:.2f} on "
                    f"{models[w]['units']} pooled tasks (raw {models[w]['raw']:.2f}).", ""]
         if writer["source"] == "fallback":
-            md += [f"The MVP's crew ({writer['mvp_crew']}) isn't configured here, so the "
-                   f"configured crew ({a.fallback_crew}) writes the note.", ""]
+            md += [f"The Implementer MVP's crew ({writer['implementer_mvp_crew']}) isn't "
+                   f"configured here, so the configured crew ({a.fallback_crew}) writes the note.", ""]
+    methods = {models[r["model"]]["method"] for r in crown_rows}
+    pooled_line = ("Each model's raw score is recomputed from its crews' summed counts, "
+                   "expectations and term units, so it is the score of the pooled tasks. (The "
+                   "units-weighted mean of the crews' raw scores would only approximate it, and "
+                   "not exactly for terms with their own denominator, such as the review terms "
+                   "per reviewed delivery.)"
+                   if methods == {"pooled counts"} else
+                   "Each model's raw score is pooled from its crews: recomputed from their summed "
+                   "counts where the payload allows, otherwise the units-weighted mean of the crews' "
+                   "raw scores. That mean approximates scoring the pooled tasks and isn't exact for "
+                   "terms with their own denominator, such as the review terms per reviewed delivery. "
+                   "The Raw column says which.")
     md += [window_line(rows), "",
-           "Crown score: each model's crews pooled (units-weighted mean of their raw scores), "
-           f"then shrunk both ways, (n × raw + {CROWN_K} × avg) / (n + {CROWN_K}), where avg is "
-           "the units-weighted mean raw of the other models in the field. The field is the "
-           f"models with {MIN_TASKS} or more pooled tasks. The scorecard score is each crew's "
-           "own, shrunk only from above; it isn't used for the crown.", "",
+           "Crown score: a model's crews are pooled before scoring, never its best crew taken. "
+           + pooled_line + f" That raw score is shrunk once, (n × raw + {CROWN_K} × avg) / "
+           f"(n + {CROWN_K}), where n is the pooled tasks and avg is the units-weighted mean raw "
+           "of every other model in the field. The field is the models with "
+           f"{MIN_TASKS} or more pooled tasks. The scorecard score is each crew's own and isn't "
+           "used for the crown.", "",
            "| Place | Model | Crews (k) | Pooled tasks | Raw | Crown score | Scorecard score |",
            "|--:|---|---|--:|--:|--:|---|"]
     for r in crown_rows:
         m = models[r["model"]]
         crews_s = ", ".join(f"{cr['crew']} ({cr['units']})" for cr in m["crews"])
         sc = ", ".join(f"{cr['crew']} {cr['score']:.1f}" for cr in m["crews"])
+        raw_s = f"{m['raw']:.2f}" + ("" if m["method"] == "pooled counts" else " (mean)")
         md.append(f"| {ordinal(r['place'])} | {r['model']} | {crews_s} (k={m['k']}) | "
-                  f"{m['units']} | {m['raw']:.2f} | {r['crown']:.2f} | {sc} |")
+                  f"{m['units']} | {raw_s} | {r['crown']:.2f} | {sc} |")
     out_of_field = sorted(n for n in models if n not in c["scores"])
     if out_of_field:
         md += ["", "Outside the field (under "
@@ -398,10 +477,12 @@ def main():
     if c["qualified"]:
         sens = "; ".join(f"K = {k}: {' and '.join(v)}" for k, v in c["k_sensitivity"].items())
         stable = len({tuple(v) for v in c["k_sensitivity"].values()}) == 1
-        md += ["", f"K sensitivity, the winner at each shrinkage strength: {sens}. "
+        md += ["", "Volume check, the winner at each shrinkage strength K (a larger K favours "
+               f"models with more tasks): {sens}. "
                + ("The winner doesn't depend on K." if stable else "The winner depends on K.")]
-    md += ["", "MVP means the strongest observed implementer contribution under the fleet's "
-           "actual assignments this week, not a verdict on a model's general capability.", ""]
+    md += ["", "Implementer MVP means the strongest observed implementer contribution under "
+           "the fleet's actual assignments this week, not a verdict on a model's general "
+           "capability.", ""]
 
     md += ["### All tiers", "", window_line(rows), "",
           term_key(rows, "tasks", "The expectations use the fleet's rates for each crew's own tier mix, "
@@ -414,7 +495,7 @@ def main():
     for tier in shown:
         md += [f"### {tier.capitalize()} tier", "", window_line(per_task), "",
                "Score: the dashboard tier score, against the fleet's rates on this tier; "
-               "100 is the fleet average. Shown for the record; tier tables don't count toward the MVP.", "",
+               "100 is the fleet average. Shown for the record; tier tables don't count toward the Implementer MVP.", "",
                "| Rank | Crew · effort | Score | Tasks | Landed | Reworked (95%) |",
                "|--:|---|--:|--:|--:|--:|"]
         for i, r in enumerate(per_tier[tier], 1):
@@ -430,7 +511,7 @@ def main():
             ("Reviewers", reviewers, "settled reviews", rev_rows, prov_note),
             ("Pilots", pilots, "assessed tasks", pil_rows, "")):
         md += [f"### {title}", "", window_line(card), "",
-               f"Shown without MVP points: {SCORE_NOTE}.", "",
+               f"Shown without points toward the Implementer MVP: {SCORE_NOTE}.", "",
                term_key(card, unit, f"The fleet average is {card['fleet_average']:.1f}, not 100.{extra}"), "",
                f"| Rank | Crew · effort | Score | {unit.split()[-1].capitalize()} |",
                "|--:|---|--:|--:|"]
@@ -452,7 +533,7 @@ def main():
                     for name, card in (("implementers", rows), ("tiers", per_task),
                                        ("reviewers", reviewers), ("pilots", pilots))},
         "fallback_crew": a.fallback_crew,
-        "crown": {"phase": 1, "k": c["k"], "field": c["field"], "qualified": c["qualified"],
+        "implementer_mvp": {"phase": 1, "k": c["k"], "field": c["field"], "qualified": c["qualified"],
                   "winners": c["winners"],
                   "k_sensitivity": {str(k): v for k, v in c["k_sensitivity"].items()},
                   "table": crown_rows},
@@ -464,6 +545,18 @@ def main():
         "writer": writer,
     }
     (out / "facts.json").write_text(json.dumps(facts, indent=2) + "\n")
+
+    if a.archive:
+        arch = pathlib.Path(a.archive)
+        arch.mkdir(parents=True, exist_ok=True)
+        # The per-task export is cut to the fields this script reads: task ids,
+        # tags and context paths aren't needed to reproduce the note.
+        slim = {k: v for k, v in per_task.items() if k != "tasks"}
+        slim["tasks"] = [{k: t[k] for k in ("crew", "model", "tier", "counts")} for t in per_task["tasks"]]
+        for name, payload in (("per-task.json", slim), ("by-type.json", by_type), ("rows.json", rows),
+                              ("reviewers.json", reviewers), ("pilots.json", pilots),
+                              ("facts.json", facts)):
+            (arch / name).write_text(json.dumps(payload, indent=1, sort_keys=True) + "\n")
 
 
 if __name__ == "__main__":
