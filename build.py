@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Build the Notes section into public/notes/.
+"""Build the Notes section and the agent scorecards page.
 
 Each note is a directory under notes/ holding index.md (front matter plus Markdown)
 and any files the note links to (data, images). Output is a page per note, a
 /notes/ index and an Atom feed. public/notes/ is generated: do not edit or commit it.
+
+/analytics/agents/ is rendered from the newest data/analytics/<YYYY-MM-DD>/scorecards.json.
+public/analytics/ is generated too: do not edit or commit it.
 
 Front matter is `key: value` lines between `---` fences:
 
@@ -28,6 +31,7 @@ import argparse
 import datetime
 import hashlib
 import html
+import json
 import pathlib
 import re
 import shutil
@@ -145,7 +149,14 @@ FOOTER = f"""<footer>
 <script src="{asset('theme.js')}"></script>"""
 
 
-def page(title, description, url, body, image=None, draft=False, kind="website"):
+def header_html(current="notes"):
+    """Notes keeps the committed current-page marker; other generated pages do not claim it."""
+    if current == "notes":
+        return HEADER
+    return HEADER.replace(' aria-current="page"', "", 1)
+
+
+def page(title, description, url, body, image=None, draft=False, kind="website", current="notes"):
     e = html.escape
     img = image or f"{SITE}/brand/png/cw-lockup-light-1520.png"
     robots = '<meta name="robots" content="noindex">\n' if draft else ""
@@ -173,7 +184,7 @@ def page(title, description, url, body, image=None, draft=False, kind="website")
 <script src="{asset('theme-init.js')}"></script>
 </head>
 <body>
-{HEADER}
+{header_html(current)}
 <main class="wrap">
 {body}
 </main>
@@ -310,6 +321,377 @@ def build_feed(notes):
     )
 
 
+DATE_DIR = re.compile(r"\d{4}-\d{2}-\d{2}")
+# Same attribution gaps analytics_snapshot.py drops before a row is public.
+GAP_CREWS = {"crew unknown", "crew unavailable", "unknown"}
+GAP_MODELS = {"model unknown"}
+TIER_ORDER = ("low", "medium", "hard", "xhard")
+TIER_LABELS = {"low": "Low", "medium": "Medium", "hard": "Hard", "xhard": "Extra hard"}
+# The dashboard's tier control: one score per crew and model, not per task type.
+TIER_SCORE_KEY = (
+    "Score: tier crew score per 100 tasks, support summed across task types, "
+    "against the fleet's rates on this tier; 100 is the fleet average."
+)
+
+
+def latest_analytics_dir(root=None):
+    """Newest data/analytics/<YYYY-MM-DD>/ that the site can render."""
+    base = (pathlib.Path(root) if root is not None else ROOT) / "data" / "analytics"
+    if not base.is_dir():
+        return None
+    dated = [path for path in base.iterdir() if path.is_dir() and DATE_DIR.fullmatch(path.name)]
+    if not dated:
+        return None
+    newest = max(dated, key=lambda path: path.name)
+    if not (newest / "scorecards.json").is_file():
+        sys.exit(f"{newest}: newest analytics snapshot has no scorecards.json")
+    return newest
+
+
+def load_scorecards(directory):
+    path = pathlib.Path(directory) / "scorecards.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        sys.exit(f"{path}: invalid JSON ({exc})")
+    if not isinstance(data, dict):
+        sys.exit(f"{path}: expected an object")
+    return data
+
+
+def gap_identity(crew, model):
+    return crew in GAP_CREWS or model in GAP_MODELS
+
+
+def as_number(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def fmt_num(value):
+    if not as_number(value):
+        return None
+    if float(value).is_integer():
+        return str(int(value))
+    return f"{value:.1f}"
+
+
+def fmt_count(value):
+    text = fmt_num(value)
+    if text is None:
+        return None
+    if text.isdigit():
+        return f"{int(text):,}"
+    return text
+
+
+def require_text(board, key, name):
+    value = board.get(key)
+    if not isinstance(value, str) or not value.strip():
+        sys.exit(f"scorecards.json: {name} is missing {key}")
+    return " ".join(value.split())
+
+
+def board_min_support(board, name):
+    value = board.get("min_support")
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        sys.exit(f"scorecards.json: {name} is missing min_support")
+    return value
+
+
+def board_window(board, name):
+    window = board.get("window")
+    if not isinstance(window, dict):
+        sys.exit(f"scorecards.json: {name} is missing its UTC window")
+    since, until, key = window.get("since"), window.get("until"), window.get("key")
+    if not isinstance(since, str) or not since or not isinstance(until, str) or not until:
+        sys.exit(f"scorecards.json: {name} is missing its UTC window")
+    if key != "30d":
+        sys.exit(f"scorecards.json: {name} must be a 30d window, got {key!r}")
+    return since, until
+
+
+def display_rows(board, name):
+    """Rows safe to publish: gaps removed, and thin rows left unranked."""
+    unit = require_text(board, "unit", name)
+    min_support = board_min_support(board, name)
+    rows_in = board.get("rows")
+    if not isinstance(rows_in, list):
+        sys.exit(f"scorecards.json: {name} rows are missing")
+    rows = []
+    for row in rows_in:
+        if not isinstance(row, dict):
+            continue
+        crew, model = row.get("crew"), row.get("model")
+        if not isinstance(crew, str) or not isinstance(model, str) or gap_identity(crew, model):
+            continue
+        units = row.get("units")
+        if not as_number(units):
+            continue
+        below = bool(row.get("below_support")) or bool(row.get("unjudged")) or units < min_support
+        rank = row.get("rank")
+        if below or isinstance(rank, bool) or not isinstance(rank, int):
+            rank = None
+        rows.append({
+            "crew": crew,
+            "model": model,
+            "units": units,
+            "rank": rank,
+            "score": row.get("score") if as_number(row.get("score")) else None,
+        })
+    ranked = sorted((row for row in rows if row["rank"] is not None), key=lambda row: row["rank"])
+    rest = sorted(
+        (row for row in rows if row["rank"] is None),
+        key=lambda row: (
+            -(row["score"] if row["score"] is not None else float("-inf")),
+            -row["units"],
+            row["crew"],
+            row["model"],
+        ),
+    )
+    return {
+        "unit": unit,
+        "min_support": min_support,
+        "rows": ranked + rest,
+        "window": board_window(board, name),
+        "score_key": require_text(board, "score_key", name),
+    }
+
+
+def role_board(board, name, title, element_id, label=None, note=None, nav=None):
+    shown = display_rows(board, name)
+    shown.update({
+        "id": element_id,
+        "title": title,
+        "label": label,
+        "note": note,
+        "nav": nav or title,
+    })
+    return shown
+
+
+def provisional_note(board):
+    count = board.get("provisional_units")
+    if not as_number(count) or count <= 0:
+        return None
+    return f"{fmt_count(count)} reviews in this window are still provisional."
+
+
+def tier_rows(block):
+    """One board per complexity tier, ranked as the dashboard's tier control ranks.
+
+    Support is the sum of that crew's task-type cells. The score is the tier
+    crew score (``crew_mean``), and a row under ``min_support`` stays unranked.
+    """
+    name = "implementers by tier"
+    unit = require_text(block, "unit", name)
+    min_support = board_min_support(block, name)
+    window = board_window(block, name)
+    cells = block.get("cells")
+    if not isinstance(cells, list):
+        sys.exit("scorecards.json: implementers by tier cells are missing")
+    grouped = {tier: {} for tier in TIER_ORDER}
+    for cell in cells:
+        if not isinstance(cell, dict):
+            continue
+        tier = cell.get("tier")
+        if tier not in grouped:
+            continue
+        crew, model = cell.get("crew"), cell.get("model")
+        if not isinstance(crew, str) or not isinstance(model, str) or gap_identity(crew, model):
+            continue
+        count = cell.get("n")
+        if not as_number(count) or count <= 0:
+            continue
+        slot = grouped[tier].setdefault(
+            (crew, model), {"crew": crew, "model": model, "units": 0.0, "score": None}
+        )
+        slot["units"] += count
+        if slot["score"] is None and as_number(cell.get("crew_mean")):
+            slot["score"] = cell["crew_mean"]
+    boards = []
+    for tier in TIER_ORDER:
+        prepared = []
+        for slot in grouped[tier].values():
+            if slot["score"] is None:
+                continue
+            prepared.append({
+                "crew": slot["crew"],
+                "model": slot["model"],
+                "units": slot["units"],
+                "score": slot["score"],
+                "rank": None,
+                "below": slot["units"] < min_support,
+            })
+        ranked = sorted(
+            (row for row in prepared if not row["below"]),
+            key=lambda row: (-row["score"], -row["units"], row["crew"], row["model"]),
+        )
+        for index, row in enumerate(ranked, 1):
+            row["rank"] = index
+        rest = sorted(
+            (row for row in prepared if row["below"]),
+            key=lambda row: (-row["score"], -row["units"], row["crew"], row["model"]),
+        )
+        rows = ranked + rest
+        if not rows:
+            continue
+        label = TIER_LABELS[tier]
+        boards.append({
+            "id": f"implementers-{tier}",
+            "title": f"Implementers, {label.lower()} tier",
+            "nav": f"{label} tier",
+            "label": None,
+            "note": None,
+            "unit": unit,
+            "min_support": min_support,
+            "rows": rows,
+            "window": window,
+            "score_key": TIER_SCORE_KEY,
+        })
+    return boards
+
+
+def agents_boards(scorecards):
+    if not isinstance(scorecards, dict):
+        sys.exit("scorecards.json: expected an object")
+    implementers = scorecards.get("implementers")
+    pilots = scorecards.get("pilots")
+    reviewers = scorecards.get("reviewers")
+    if not isinstance(implementers, dict) or not isinstance(pilots, dict) or not isinstance(reviewers, dict):
+        sys.exit("scorecards.json: implementers, reviewers and pilots are required")
+    provisional = reviewers.get("provisional")
+    if not isinstance(provisional, dict):
+        sys.exit("scorecards.json: reviewers.provisional is required")
+    settled = reviewers.get("settled")
+    if settled is not None and not isinstance(settled, dict):
+        sys.exit("scorecards.json: reviewers.settled is not a board")
+    by_tier = scorecards.get("implementers_by_tier")
+    if not isinstance(by_tier, dict):
+        sys.exit("scorecards.json: implementers_by_tier is required")
+    boards = [role_board(implementers, "implementers", "Implementers", "implementers", nav="Implementers")]
+    boards.extend(tier_rows(by_tier))
+    boards.append(role_board(
+        provisional, "reviewers provisional", "Reviewers", "reviewers",
+        label="Provisional", note=provisional_note(provisional), nav="Reviewers",
+    ))
+    if isinstance(settled, dict):
+        boards.append(role_board(
+            settled, "reviewers settled", "Reviewers", "reviewers-settled",
+            label="Settled", nav="Reviewers, settled",
+        ))
+    boards.append(role_board(pilots, "pilots", "Pilots", "pilots", nav="Pilots"))
+    return boards
+
+
+def render_window(since, until):
+    e = html.escape
+    return (
+        f'<p class="board-window">Window <time datetime="{e(since)}">{e(since)}</time>'
+        f' to <time datetime="{e(until)}">{e(until)}</time> UTC.</p>'
+    )
+
+
+def render_table(board):
+    e = html.escape
+    unit = board["unit"]
+    if not board["rows"]:
+        body = '<p class="empty">No rows in this window.</p>'
+    else:
+        rows = []
+        for row in board["rows"]:
+            if row["rank"] is None:
+                rank_html = '<td data-label="Rank" class="rank unranked"><span class="value">unranked</span></td>'
+                rank_attr = "unranked"
+            else:
+                rank_html = f'<td data-label="Rank" class="rank"><span class="value">{row["rank"]}</span></td>'
+                rank_attr = str(row["rank"])
+            score = fmt_num(row["score"])
+            score_text = e(score) if score is not None else "unjudged"
+            units = e(fmt_num(row["units"]))
+            rows.append(
+                f'<tr data-rank="{rank_attr}">'
+                f"{rank_html}"
+                f'<td data-label="Crew"><span class="value">{e(row["crew"])}</span></td>'
+                f'<td data-label="Model"><span class="value">{e(row["model"])}</span></td>'
+                f'<td data-label="Score" class="num"><span class="value"><span class="num">{score_text}</span> '
+                f'<span class="unit">per 100 {e(unit)}</span></span></td>'
+                f'<td data-label="Units" class="num"><span class="value"><span class="num">{units}</span> '
+                f'<span class="unit">{e(unit)}</span></span></td>'
+                f"</tr>"
+            )
+        body = f'''<div class="table">
+<table>
+<caption class="sr-only">{e(board["title"])}</caption>
+<thead><tr>
+<th class="rank">Rank</th><th>Crew</th><th>Model</th><th class="num">Score</th><th class="num">Units</th>
+</tr></thead>
+<tbody>
+{"".join(rows)}
+</tbody>
+</table>
+</div>'''
+    return (
+        f"{body}\n"
+        f'<p class="support-note">Rows under {board["min_support"]} {e(unit)} stay unranked.</p>'
+    )
+
+
+def render_board(board):
+    e = html.escape
+    label = f' <span class="board-label">{e(board["label"])}</span>' if board.get("label") else ""
+    note = f'<p class="board-note">{e(board["note"])}</p>\n' if board.get("note") else ""
+    since, until = board["window"]
+    return f'''<section class="board" id="{e(board["id"])}">
+<h2>{e(board["title"])}{label}</h2>
+{render_window(since, until)}
+<p class="score-key">{e(board["score_key"])}</p>
+{note}{render_table(board)}
+</section>'''
+
+
+def render_agents_body(scorecards, snapshot_date):
+    if not isinstance(snapshot_date, str) or not DATE_DIR.fullmatch(snapshot_date):
+        sys.exit(f"analytics snapshot date must be YYYY-MM-DD, got {snapshot_date!r}")
+    boards = agents_boards(scorecards)
+    e = html.escape
+    nav = "\n".join(f'<a href="#{e(board["id"])}">{e(board["nav"])}</a>' for board in boards)
+    sections = "\n".join(render_board(board) for board in boards)
+    return f'''<article class="analytics">
+<h1>Agent scorecards</h1>
+<p class="summary">Implementer, reviewer and pilot crews over the last 30 days, taken from the daily public snapshot. How a score is built is <a href="/notes/crew-rankings-method/">how the crew rankings work</a>.</p>
+<p class="as-of">Snapshot {e(snapshot_date)}.</p>
+<nav class="board-nav" aria-label="Scorecards">
+{nav}
+</nav>
+{sections}
+</article>'''
+
+
+def render_agents_page(scorecards, snapshot_date):
+    return page(
+        "Agent scorecards — Constellation Works",
+        "Implementer, reviewer and pilot scorecards over the last 30 days.",
+        f"{SITE}/analytics/agents/",
+        render_agents_body(scorecards, snapshot_date),
+        current="analytics",
+    )
+
+
+def build_agents():
+    directory = latest_analytics_dir()
+    if directory is None:
+        sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/ snapshot to render")
+    scorecards = load_scorecards(directory)
+    dest = ROOT / "public" / "analytics" / "agents"
+    if dest.exists():
+        shutil.rmtree(dest)
+    dest.mkdir(parents=True)
+    (dest / "index.html").write_text(
+        render_agents_page(scorecards, directory.name), encoding="utf-8"
+    )
+    print(f"built agent scorecards -> {dest} from {directory.name}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--drafts", action="store_true", help="include drafts, marked and noindex")
@@ -329,6 +711,7 @@ def main():
     build_feed(shown)
     skipped = len(notes) - len(shown)
     print(f"built {len(shown)} note(s) -> {OUT}" + (f"; skipped {skipped} draft(s)" if skipped else ""))
+    build_agents()
 
 
 if __name__ == "__main__":
