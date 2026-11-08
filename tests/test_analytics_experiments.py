@@ -236,15 +236,69 @@ class ExperimentsPageTest(unittest.TestCase):
         self.assertEqual(build.experiment_difference(0, repairs), "0 repairs/task")
         self.assertEqual(build.experiment_difference(0.0, lead), "0 hours/line")
 
+    def test_small_money_and_rate_differences_never_render_signed_zero(self):
+        import re
+
+        cost_line = {"metric": "cost_per_line", "better": "lower"}
+        cost = {"metric": "cost_usd", "unit": "usd", "better": "lower"}
+        rate = {"metric": "delivery_done_rate", "unit": "rate", "better": "higher"}
+        # Committed-snapshot magnitudes must keep a non-zero signed value.
+        self.assertEqual(
+            build.experiment_difference(-4.8562815235275235e-05, cost_line),
+            "-$0.000049 / line")
+        self.assertEqual(
+            build.experiment_difference(-4.5187989930226855e-05, cost_line),
+            "-$0.000045 / line")
+        self.assertEqual(build.experiment_difference(0.0004, cost), "+$0.0004")
+        self.assertEqual(build.experiment_difference(-0.0004, cost), "-$0.0004")
+        self.assertEqual(build.experiment_difference(0.00004, rate), "+0.004 points")
+        self.assertEqual(build.experiment_difference(-0.00004, rate), "-0.004 points")
+        self.assertEqual(
+            build.experiment_difference_interval(
+                [-4.8562815235275235e-05, 0.0063], cost_line),
+            "-$0.000049 / line to +$0.0063 / line")
+        self.assertEqual(
+            build.experiment_difference_interval([-0.0004, 0.0004], cost),
+            "-$0.0004 to +$0.0004")
+        signed_zero = re.compile(r"[+-]0(?![\d.])")
+        money_zero = re.compile(r"[+-]\$0\.0+(?![\d])")
+        points_zero = re.compile(r"[+-]0\.0+ points")
+        for text in (
+            build.experiment_difference(-4.8562815235275235e-05, cost_line),
+            build.experiment_difference(4.8562815235275235e-05, cost_line),
+            build.experiment_difference(0.0004, cost),
+            build.experiment_difference(-0.0004, cost),
+            build.experiment_difference(0.00004, rate),
+            build.experiment_difference(-0.00004, rate),
+            build.experiment_difference_interval(
+                [-4.8562815235275235e-05, 0.0063], cost_line),
+            build.experiment_difference_interval([-0.0004, 0.0004], cost),
+            build.experiment_difference_interval([-0.00004, 0.00004], rate),
+            build.experiment_difference(5e-06, cost),
+            build.experiment_difference(-5e-06, cost_line),
+            build.experiment_difference(5e-06, rate),
+        ):
+            self.assertIsNone(signed_zero.search(text), text)
+            self.assertIsNone(money_zero.search(text), text)
+            self.assertIsNone(points_zero.search(text), text)
+        # True zeros stay unsigned.
+        self.assertEqual(build.experiment_difference(0, cost), "$0.00")
+        self.assertEqual(build.experiment_difference(0, cost_line), "$0.0000 / line")
+        self.assertEqual(build.experiment_difference(0, rate), "0.0 points")
+
     def test_committed_snapshot_has_no_signed_zero_diffs(self):
         import re
 
         directory = build.latest_analytics_dir()
         data = json.loads((directory / "experiments.json").read_text())
         doc = build.render_experiments_page(data, directory.name)
-        signed_zero = re.compile(r"[+-]0(?![\d.])")
         chart = doc.partition('<div class="diff-chart">')[2]
-        self.assertIsNone(signed_zero.search(chart))
+        for pattern in (
+            re.compile(r"[+-]0(?![\d.])"),
+            re.compile(r"[+-]\$0\.0+(?![\d])"),
+            re.compile(r"[+-]0\.0+ points"),
+        ):
+            self.assertIsNone(pattern.search(chart), pattern.pattern)
 
     def test_difference_without_arm_entry_is_not_measured(self):
         data = fixture()
