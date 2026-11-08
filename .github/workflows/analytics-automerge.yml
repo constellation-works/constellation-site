@@ -1,0 +1,102 @@
+name: Analytics auto-merge
+
+# Enables squash auto-merge on a pull request to main only when its author is the
+# Orbit automation identity and every changed path is under data/analytics/. Other
+# pull requests are left untouched.
+#
+# Required checks gate the merge only through branch protection on main, which must
+# require the Website workflow's "Build notes" check. This workflow does not check
+# them itself.
+#
+# An Orbit pull request that already has auto-merge armed and fails the guard (for
+# example after a later push adds a non-data path) has auto-merge turned off, so a
+# later push cannot merge paths outside data/analytics/.
+#
+# The job uses only the GitHub API through the gh CLI, with GITHUB_TOKEN. It does not
+# check out the branch, so no pull-request code runs, and it uses no third-party
+# actions that would need pinning. It has no environment, so no Cloudflare secret is
+# in scope.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions: {}
+
+# One run per pull request at a time. Runs queue rather than cancel, so the last run
+# reads the file list only after every earlier run has finished.
+concurrency:
+  group: analytics-automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  data-only-automerge:
+    name: Data-only auto-merge
+    if: >-
+      github.event.pull_request.user.login == 'orbit-agent-01' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Check every changed path is under data/analytics/
+        id: guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Every changed file is checked by its current name and, when it was renamed,
+          # by its previous name too, so a rename out of the directory is caught. The raw
+          # paginated response is kept and judged by jq, so no name is re-encoded in
+          # transit. Paging yields one JSON array per page; slurping and adding gives one list.
+          files="$RUNNER_TEMP/pr-files.json"
+          gh api --paginate "repos/${REPO}/pulls/${PR_NUMBER}/files" > "$files"
+
+          guard='
+            (add // []) as $files
+            | ($files | length) > 0
+              and all($files[];
+                (.filename | startswith("data/analytics/"))
+                and ((.previous_filename // "data/analytics/") | startswith("data/analytics/")))'
+          if jq -s -e "$guard" "$files" > /dev/null; then
+            echo "eligible=true" >> "$GITHUB_OUTPUT"
+            echo "Every changed path is under data/analytics/."
+          else
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            echo "Not data-only. Files outside data/analytics/ (by current or previous name):"
+            jq -s -c '(add // [])[]
+              | select(([.filename, (.previous_filename // "data/analytics/")] | all(startswith("data/analytics/"))) | not)
+              | {filename: .filename, previous_filename: .previous_filename}' "$files"
+          fi
+
+      - name: Enable squash auto-merge
+        if: steps.guard.outputs.eligible == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          armed="$(gh pr view "$PR_NUMBER" --repo "$REPO" --json autoMergeRequest --jq '.autoMergeRequest != null')"
+          if [[ "$armed" == "true" ]]; then
+            echo "Auto-merge is already enabled on #${PR_NUMBER}."
+            exit 0
+          fi
+          # Squash merge still waits for the required status checks on main.
+          gh pr merge "$PR_NUMBER" --repo "$REPO" --auto --squash
+
+      - name: Turn off auto-merge if the pull request is no longer data-only
+        if: steps.guard.outputs.eligible != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          armed="$(gh pr view "$PR_NUMBER" --repo "$REPO" --json autoMergeRequest --jq '.autoMergeRequest != null')"
+          if [[ "$armed" == "true" ]]; then
+            gh pr merge "$PR_NUMBER" --repo "$REPO" --disable-auto
+            echo "Auto-merge was armed on #${PR_NUMBER} and has been turned off."
+          else
+            echo "Auto-merge is not armed on #${PR_NUMBER}; nothing to do."
+          fi
