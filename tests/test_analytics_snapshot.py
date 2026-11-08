@@ -93,6 +93,13 @@ def concluded_experiment(text):
 
 
 class PathRedactionTest(unittest.TestCase):
+    def test_closing_tag_path_exception_and_bare_path(self):
+        patterns = snapshot.forbidden_patterns(HOSTS)
+        text = "see </workspace>, </home> and </srv> alongside /workspace"
+        self.assertEqual(snapshot.sanitize(text, patterns, [0]),
+                         "see </workspace>, </home> and </srv> alongside [redacted]")
+        snapshot.guard(minimal_docs("see </workspace>, </home> and </srv>"), HOSTS)
+
     def test_sanitize_redacts_paths_outside_old_root_list(self):
         patterns = snapshot.forbidden_patterns(HOSTS)
         for leaked in PATH_SAMPLES:

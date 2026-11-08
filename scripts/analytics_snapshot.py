@@ -86,11 +86,14 @@ their messages. Salts, overlays, assignment digests and run digests are not
 copied. Free text (hypothesis, name, verdict reasons and labels) is copied
 only after task ids, run ids, file paths, host names and workspace ids
 (``ws_…``) are replaced with ``[redacted]``. File paths are matched by
-shape, not by a list of root names: any Unix absolute path (including a
+shape, not by a list of root names: Unix absolute paths (including a bare
 single segment such as ``/workspace``), any ``file:`` URI, Windows drive or
 UNC path, home-relative path, and repository-relative path whose final
 component names a file (or which descends at least two directories) is
-redacted. A relative path with no extension that descends fewer than two
+redacted. A single-segment path in closing-tag form such as ``</workspace>``
+is preserved when its name matches the closing-tag syntax, because it is
+indistinguishable from a tag; do not rely on redaction for such text.
+A relative path with no extension that descends fewer than two
 directories (``src/Makefile``) is left as it is by design. Public API source
 labels (``GET /api/…``) are not file paths and are preserved.
 
@@ -226,7 +229,8 @@ TASK_ID = re.compile(r"ORB-[0-9]+")
 RUN_ID = re.compile(r"jrun-[0-9A-Za-z-]+")
 _PATH_SEGMENT = r"[A-Za-z0-9._~%+@\-]+"
 _API_ROUTE = r"api/(?:diagnostics|metrics|tasks)(?:/|\?|#|$)"
-# Preserve closing tags, but do not exempt multi-segment paths after "<".
+# Preserve closing-tag syntax, including single-segment paths like
+# "</workspace>"; multi-segment paths after "<" are not exempt.
 ABS_PATH = re.compile(
     r"(?<![\w./\\\-])/(?!(?<=</)[A-Za-z][A-Za-z0-9._:-]*\s*>)(?!"
     + _API_ROUTE + r")" + _PATH_SEGMENT + r"(?:/" + _PATH_SEGMENT + r")*/?"
