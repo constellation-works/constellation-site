@@ -32,9 +32,10 @@ The method is on the standing page notes/crew-rankings-method. In short:
   that tier (opus and opus@medium count once).
 - Reviewers and pilots rank the scorecard's ranked rows (at or above its
   minimum support). Their scores centre on the fleet average, not 100.
-- The MVP is the crew, across all shown tables, with the largest lead over its
-  table's #2, in units of the table's scale: 100 for implementer tables, the
-  fleet average for reviewers and pilots.
+- The MVP is a model, scored on the shown tier tables only: 5, 3 and 1 points
+  for 1st, 2nd and 3rd, each model counted once per tier through its best
+  crew. Ties go to the larger summed margin over the next distinct model, then
+  more tasks, then --fallback-crew. Its best crew writes the note.
 
 Rows with no recorded model are dropped everywhere.
 """
@@ -107,20 +108,80 @@ def term_key(card, unit, centre):
             f"debits for {', '.join(debit)}. {centre}")
 
 
-def pick_writer(leads, fallback, crews):
-    """The crew that writes the note: the MVP's crew, without an @effort suffix.
+PLACE_POINTS = {1: 5, 2: 3, 3: 1}
+ORDINAL = {1: "1st", 2: "2nd", 3: "3rd"}
 
-    Falls back to `fallback` when no table has two ranked rows, or when the
-    MVP's crew isn't one of `crews` (the crews configured in the workspace;
-    None skips that check).
+
+def ordinal(n):
+    return ORDINAL.get(n, f"{n}th")
+
+
+def mvp_points(per_tier, shown):
+    """Score models on the shown tier tables: 5/3/1 points for 1st/2nd/3rd.
+
+    A model counts once per tier, through its best-scoring crew, and is placed
+    against the next distinct model. Its margin is the sum, over the tiers, of
+    its score minus the next distinct model's score (0 in last place). Units
+    are all its crews' tasks on those tiers. Returns the models ranked by
+    points, then margin, then units.
     """
-    mvp = leads[0] if leads else None
-    crew = mvp["crew"].split("@", 1)[0] if mvp else None
-    ok = mvp is not None and (crews is None or crew in crews)
+    models = {}
+    for tier in shown:
+        best = {}
+        for r in sorted(per_tier[tier], key=lambda r: -r["score"]):
+            best.setdefault(r["model"], r)
+        order = list(best.values())
+        for i, r in enumerate(order, 1):
+            m = models.setdefault(r["model"], {"model": r["model"], "points": 0, "margin": 0.0,
+                                                "units": 0, "places": {}})
+            below = order[i]["score"] if i < len(order) else r["score"]
+            m["points"] += PLACE_POINTS.get(i, 0)
+            m["margin"] += r["score"] - below
+            m["places"][tier] = {"place": i, "points": PLACE_POINTS.get(i, 0), "crew": r["crew"],
+                                 "score": r["score"], "margin": round(r["score"] - below, 1)}
+        for r in per_tier[tier]:
+            models[r["model"]]["units"] += r["tasks"]
+    for m in models.values():
+        m["margin"] = round(m["margin"], 1)
+        # The model's best crew: its best placement, then its higher score there.
+        m["best_crew"] = min(m["places"].values(), key=lambda p: (p["place"], -p["score"]))["crew"]
+    return sorted(models.values(), key=lambda m: (-m["points"], -m["margin"], -m["units"]))
+
+
+def pick_mvp(ranking):
+    """The top model and the tie-break that settled it (None if no tier counted)."""
+    if not ranking:
+        return None
+    top = ranking[0]
+    tied = ranking[1:2] and ranking[1]
+    if not tied or tied["points"] != top["points"]:
+        rule = "points"
+    elif tied["margin"] != top["margin"]:
+        rule = "margin"
+    elif tied["units"] != top["units"]:
+        rule = "units"
+    else:
+        rule = "fallback"
+    return {"model": top["model"], "best_crew": top["best_crew"], "points": top["points"],
+            "margin": top["margin"], "units": top["units"], "tie_break": rule,
+            "tiers": {t: p for t, p in top["places"].items()}}
+
+
+def pick_writer(mvp, fallback, crews):
+    """The crew that writes the note: the MVP model's best crew, without @effort.
+
+    Falls back to `fallback` when no tier table counts, when a tie survives
+    points, margin and units, or when the crew isn't one of `crews` (the
+    crews configured in the workspace; None skips that check).
+    """
+    crew = mvp["best_crew"].split("@", 1)[0] if mvp else None
+    ok = (mvp is not None and mvp["tie_break"] != "fallback"
+          and (crews is None or crew in crews))
     return {
         "crew": crew if ok else fallback, "source": "mvp" if ok else "fallback",
-        "mvp_crew_row": mvp and mvp["crew"], "table": mvp and mvp["table"],
-        "score": mvp and mvp["score"], "units": mvp and mvp["units"],
+        "mvp_crew_row": mvp and mvp["best_crew"], "model": mvp and mvp["model"],
+        "points": mvp and mvp["points"], "margin": mvp and mvp["margin"],
+        "units": mvp and mvp["units"], "tie_break": mvp and mvp["tie_break"],
     }
 
 
@@ -230,25 +291,10 @@ def main():
     write_csv(path("reviewers.csv"), rev_rows)
     write_csv(path("pilots.csv"), pil_rows)
 
-    # MVP: the largest lead over its own table's #2, scaled by the table's centre.
-    tables = [("all tiers", all_rows, "tasks", 100.0)]
-    tables += [(f"{t} tier", per_tier[t], "tasks", 100.0) for t in shown]
-    tables += [("reviewers", rev_rows, "units", reviewers["fleet_average"]),
-               ("pilots", pil_rows, "units", pilots["fleet_average"])]
-    leads = []
-    for name, trows, unit, scale in tables:
-        if len(trows) < 2:
-            continue
-        top, second = trows[0], trows[1]
-        leads.append({
-            "table": name, "crew": top["crew"], "model": top["model"], "effort": top["effort"],
-            "score": top["score"], "units": top[unit],
-            "runner_up": second["crew"], "runner_up_score": second["score"],
-            "lead_points": round(top["score"] - second["score"], 1), "scale": scale,
-            "lead_scaled": round((top["score"] - second["score"]) / scale, 3),
-        })
-    leads.sort(key=lambda x: -x["lead_scaled"])
-    writer = pick_writer(leads, a.fallback_crew, crews)
+    # MVP: points for placing on the shown tier tables, by model.
+    ranking = mvp_points(per_tier, shown)
+    mvp = pick_mvp(ranking)
+    writer = pick_writer(mvp, a.fallback_crew, crews)
     if a.writer_only:
         print(json.dumps(writer))
         return
@@ -286,6 +332,22 @@ def main():
                "|--:|---|--:|--:|"]
         md += [f"| {r['rank']} | {r['crew']} · {r['effort']} | {r['score']:.1f} | {r['units']} |" for r in trows]
         md.append("")
+    md += ["### MVP points", ""]
+    if ranking:
+        md += ["Points: 5, 3 and 1 for 1st, 2nd and 3rd on each tier table above, by model "
+               "through its best crew; ties go to the larger margin over the next model, "
+               "then more tasks.", "",
+               "| Model | " + " | ".join(f"{t.capitalize()}" for t in shown) + " | Margin | Points |",
+               "|---|" + "--:|" * len(shown) + "--:|--:|"]
+        for m in ranking:
+            cells = [f"{ordinal(m['places'][t]['place'])} · {m['places'][t]['points']}"
+                     if t in m["places"] else "–" for t in shown]
+            md.append(f"| {m['model']} ({m['best_crew']}) | " + " | ".join(cells)
+                      + f" | {m['margin']:+.1f} | {m['points']} |")
+    else:
+        md.append(f"No tier had crews on {MIN_MODELS} or more models this week, so there is "
+                  f"no MVP, and the configured crew ({a.fallback_crew}) writes the note.")
+    md.append("")
     (out / "tables.md").write_text("\n".join(md))
 
     facts = {
@@ -301,9 +363,9 @@ def main():
         "ranked": {"all_tiers": len(all_rows), "reviewers": len(rev_rows), "pilots": len(pil_rows),
                    **{t: len(per_tier[t]) for t in shown}},
         "models": sorted({(r["crew"], r["model"]) for r in all_rows + tier_rows + rev_rows + pil_rows}),
-        "mvp": leads[0] if leads else None,
+        "mvp": mvp,
         "writer": writer,
-        "leads": leads,
+        "mvp_points": ranking,
     }
     (out / "facts.json").write_text(json.dumps(facts, indent=2) + "\n")
 
