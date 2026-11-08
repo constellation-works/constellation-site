@@ -251,7 +251,31 @@ class MetricsPageTest(unittest.TestCase):
         caveat_text = all_text(caveats[0])
         self.assertIn("Duration uses succeeded runs.", caveat_text)
         self.assertIn("Tokens and turns use done tasks.", caveat_text)
-        self.assertIn("Other boards have no outcome filter.", caveat_text)
+        # Completions/cost omit a run-outcome query parameter, but their
+        # displayed cohorts are still restricted to done tasks; the caveat
+        # must not imply they cover all task outcomes.
+        self.assertIn(
+            "Completions and cost take no run-outcome query filter, but "
+            "completions count tasks moved to done and cost covers spend "
+            "for tasks that reached done.",
+            caveat_text,
+        )
+        self.assertIn("Other boards take no run-outcome query filter.", caveat_text)
+        self.assertNotIn("Other boards have no outcome filter.", caveat_text)
+
+        # The caveat's done-task cohorts match each board's own intro.
+        for section_id, phrase in (
+            ("completed", "moved to done"),
+            ("cost", "for tasks that reached done"),
+        ):
+            with self.subTest(section=section_id):
+                sections = elements(
+                    self.tree,
+                    lambda node: node.tag == "section"
+                    and node.attrs.get("id") == section_id,
+                )
+                self.assertEqual(len(sections), 1)
+                self.assertIn(phrase, all_text(sections[0]))
 
         expected = (
             "30-day Orbit metrics: duration for succeeded runs; tokens and turns for done tasks; "
