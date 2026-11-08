@@ -233,6 +233,7 @@ figcaption strong { color: var(--fg); }
 .notes h2 a:hover { color: var(--link); }
 .notes li p { margin: 0; color: var(--muted); }
 .notes li .status { color: var(--proposed); margin-top: 4px; }
+.analytics-index .notes li > div { grid-column: 2; }
 
 /* ---------- footer (as index.html) ---------- */
 footer { border-top: 1px solid var(--rule); }
@@ -346,4 +347,8 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
     content: attr(data-label); color: var(--muted); flex: 0 0 4.5rem; text-align: left;
   }
   .analytics td .value { min-width: 0; overflow-wrap: anywhere; }
+}
+
+@media (max-width: 400px) {
+  .brand b { display: none; }
 }

@@ -103,6 +103,7 @@ HEADER = """<header>
     </a>
     <nav>
       <a href="/notes/">Notes</a>
+      <a href="/analytics/" aria-current="page">Analytics</a>
       <a class="nav-orbit" href="https://orbit-cli.com">Orbit</a>
       <a href="https://github.com/constellation-works">GitHub</a>
       <button class="theme" type="button" aria-label="Switch to light theme" hidden>

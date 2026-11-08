@@ -132,6 +132,7 @@ HEADER = """<header>
     </a>
     <nav>
       <a href="/notes/" aria-current="page">Notes</a>
+      <a href="/analytics/">Analytics</a>
       <a class="nav-orbit" href="https://orbit-cli.com">Orbit</a>
       <a href="https://github.com/constellation-works">GitHub</a>
       <button class="theme" type="button" aria-label="Switch to light theme" hidden>
@@ -155,10 +156,13 @@ FOOTER = f"""<footer>
 
 
 def header_html(current="notes"):
-    """Notes keeps the committed current-page marker; other generated pages do not claim it."""
+    """Mark the active section in the shared navigation."""
     if current == "notes":
         return HEADER
-    return HEADER.replace(' aria-current="page"', "", 1)
+    header = HEADER.replace(' aria-current="page"', "", 1)
+    if current == "analytics":
+        header = header.replace('href="/analytics/"', 'href="/analytics/" aria-current="page"', 1)
+    return header
 
 
 def page(title, description, url, body, image=None, draft=False, kind="website", current="notes"):
@@ -1010,6 +1014,59 @@ def build_experiments():
     print(f"built experiments -> {dest} from {directory.name}")
 
 
+def render_analytics_index(directory):
+    """Publish only validated window dates, never arbitrary snapshot metadata."""
+    try:
+        meta = json.loads((directory / "meta.json").read_text(encoding="utf-8"))
+        window = meta["windows"]["reliability"]
+        since, until = (window[key] for key in ("since", "until"))
+        if window["label"] != "30d" or any(
+            not isinstance(value, str) or not UTC_STAMP.fullmatch(value)
+            for value in (since, until)
+        ):
+            raise ValueError("invalid window")
+        start, end = (datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+                      for value in (since, until))
+        if end - start != datetime.timedelta(days=30):
+            raise ValueError("invalid window duration")
+        if not DATE_DIR.fullmatch(directory.name):
+            raise ValueError("invalid snapshot date")
+        datetime.date.fromisoformat(directory.name)
+    except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+        sys.exit("build.py: newest snapshot must contain a valid 30-day reliability window in meta.json")
+
+    cards = (
+        ("agents", "Agents", "Crew rankings for implementers, reviewers and pilots."),
+        ("metrics", "Metrics", "Task outcomes, duration, cost and other delivery measures."),
+        ("reliability", "Reliability", "Run outcomes and failure rates across the fleet."),
+        ("experiments", "Experiments", "Results and observations from concluded experiments."),
+    )
+    items = "\n".join(
+        f'<li><div><h2><a href="/analytics/{slug}/">{title}</a></h2>'
+        f'<p>{description}</p></div></li>'
+        for slug, title, description in cards
+    )
+    body = f'''<article class="index analytics-index">
+<h1>Analytics</h1>
+<p class="summary">Public snapshots of how Orbit crews and workflows perform.</p>
+<p>Snapshot <time datetime="{directory.name}">{directory.name}</time>. Reference 30-day UTC window: <time datetime="{since}">{start.date().isoformat()}</time> to <time datetime="{until}">{end.date().isoformat()}</time>. Individual boards may use different windows; experiments use cumulative observation periods.</p>
+<p>Read <a href="/notes/crew-rankings-method/">how the crew rankings work</a>.</p>
+<ul class="notes">{items}</ul>
+</article>'''
+    return page("Analytics | Constellation Works", "Public analytics for Orbit crews and workflows.",
+                f"{SITE}/analytics/", body, current="analytics")
+
+
+def build_analytics_index():
+    directory = latest_analytics_dir()
+    if directory is None:
+        sys.exit("build.py: no analytics snapshot to render")
+    dest = ROOT / "public" / "analytics"
+    dest.mkdir(parents=True, exist_ok=True)
+    (dest / "index.html").write_text(render_analytics_index(directory), encoding="utf-8")
+    print(f"built analytics index -> {dest} from {directory.name}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--drafts", action="store_true", help="include drafts, marked and noindex")
@@ -1029,6 +1086,7 @@ def main():
     build_feed(shown)
     skipped = len(notes) - len(shown)
     print(f"built {len(shown)} note(s) -> {OUT}" + (f"; skipped {skipped} draft(s)" if skipped else ""))
+    build_analytics_index()
     build_agents()
     analytics_page.build(ROOT)
     build_reliability()
