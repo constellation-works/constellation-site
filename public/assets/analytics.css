@@ -185,8 +185,10 @@
   align-items: center;
   min-width: 0;
 }
-.hbar-label { font-size: 14px; overflow-wrap: anywhere; }
+.hbar-label { font-size: 14px; overflow-wrap: anywhere; min-width: 0; }
 .hbar-plot { width: 100%; height: 14px; display: block; }
+.hbar-value { font-size: 14px; overflow-wrap: anywhere; min-width: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.hbar-value .unit { color: var(--muted); }
 .outcomes { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
 .outcome { min-width: 0; }
 .outcome-label {

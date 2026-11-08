@@ -168,10 +168,11 @@ def header_html(current="notes"):
     return header
 
 
-def page(title, description, url, body, image=None, draft=False, kind="website", current="notes"):
+def page(title, description, url, body, image=None, draft=False, kind="website", current="notes", extra_css=()):
     e = html.escape
     img = image or f"{SITE}/brand/png/cw-lockup-light-1520.png"
     robots = '<meta name="robots" content="noindex">\n' if draft else ""
+    extra_links = "".join(f'<link rel="stylesheet" href="{asset(name)}">\n' for name in extra_css)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -193,7 +194,7 @@ def page(title, description, url, body, image=None, draft=False, kind="website",
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="{asset('notes.css')}">
-<script src="{asset('theme-init.js')}"></script>
+{extra_links}<script src="{asset('theme-init.js')}"></script>
 </head>
 <body>
 {header_html(current)}
@@ -750,8 +751,10 @@ UTC_STAMP = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?Z")
 def reliability_aggregates(data):
     """Project only known numeric fields and validated timestamps, never labels.
 
-    In particular, source, by_job, activities, observed_states and arbitrary
+    In particular, source, activities, observed_states and arbitrary
     future diagnostic fields have no route into the public HTML.
+    Per-job breakdowns use reliability_by_job, which validates job ids and
+    recomputes rates from counts.
     """
     if not isinstance(data, dict) or type(data.get("schema_version")) is not int or data["schema_version"] != 1:
         sys.exit("reliability.json: expected schema_version 1")
@@ -797,6 +800,152 @@ def reliability_table(rows, denominator, caption):
     )
 
 
+# Job ids are snapshot-controlled vocabulary. Only SAFE_JOB_ID values reach the
+# page; anything else is dropped before rendering, the same allowlist rule the
+# snapshot applies when it sums by_job across workspaces.
+SAFE_JOB_ID = re.compile(r"^[A-Za-z0-9_@.+-]{1,80}$")
+BY_JOB_PLOT_W = 280
+JOB_LABELS = {
+    "task_pr_pipeline": "PR delivery",
+    "task_pilot_pipeline": "Pilot delivery",
+    "ci_failure_sweep_pipeline": "CI failure sweep",
+    "task_auto_pipeline": "Auto delivery",
+    "task_landing_pipeline": "Landing",
+    "agent_explore_pipeline": "Agent explore",
+    "task_gate_pipeline": "Task gate",
+    "escalation_triage_pipeline": "Escalation triage",
+    "workspace_auto_pipeline": "Workspace auto",
+    "ux_rules_pipeline": "UX rules",
+    "image_input_probe_pipeline": "Image input probe",
+    "task_local_pipeline": "Local delivery",
+    "worktree_gc_pipeline": "Worktree GC",
+    "blocked_task_recovery_pipeline": "Blocked task recovery",
+    "finding_verification_pipeline": "Finding verification",
+    "crew_performance_refresh_pipeline": "Crew performance refresh",
+    "dependabot_alert_sweep_pipeline": "Dependabot sweep",
+    "baseline_hold_refresh_pipeline": "Baseline hold refresh",
+    "resident_cycle_pipeline": "Resident cycle",
+    "store_gc_pipeline": "Store GC",
+    "agent_invoke_pipeline": "Agent invoke",
+    "workspace_pull_pipeline": "Workspace pull",
+    "review_evidence_fulfilment_pipeline": "Review evidence",
+    "task_publication_pipeline": "Task publication",
+    "evolution_pass_pipeline": "Evolution pass",
+    "orb20863_visual_eval": "Visual eval",
+}
+
+
+def job_label(job_id):
+    """Human-readable name for a job id, falling back to the raw id."""
+    return JOB_LABELS.get(job_id, job_id)
+
+
+def reliability_by_job(data):
+    """Validated per-job aggregates for the public page.
+
+    Drops rows whose job id fails SAFE_JOB_ID or whose counts are not exact
+    non-negative integers, recomputes each failure rate from counts (never the
+    snapshot's supplied rate), and sorts by failures then total, as the
+    snapshot orders them.
+    """
+    rows = data.get("by_job") if isinstance(data, dict) else None
+    if not isinstance(rows, list):
+        return []
+    jobs = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        job = row.get("job_id")
+        if not isinstance(job, str) or not SAFE_JOB_ID.fullmatch(job):
+            continue
+        counts = row.get("counts")
+        if not isinstance(counts, dict):
+            continue
+        valid = {}
+        ok = True
+        for key in ("succeeded", "failed", "total"):
+            value = counts.get(key)
+            if type(value) is not int or value < 0:
+                ok = False
+                break
+            valid[key] = value
+        if not ok:
+            continue
+        denominator = valid["succeeded"] + valid["failed"]
+        rate = valid["failed"] / denominator if denominator else None
+        jobs.append({
+            "job_id": job,
+            "label": JOB_LABELS.get(job, job),
+            "succeeded": valid["succeeded"],
+            "failed": valid["failed"],
+            "total": valid["total"],
+            "denominator": denominator,
+            "rate": rate,
+        })
+    jobs.sort(key=lambda job: (-job["failed"], -job["total"], job["job_id"]))
+    return jobs
+
+
+def reliability_by_job_section(jobs, window):
+    """Failure rate by job, in the dashboard's bar style with a disclosure."""
+    title = "Failure rate by job"
+    if not jobs:
+        return (
+            f'<section class="board" id="by-job"><h2>{title}</h2>{window}'
+            '<p class="score-key">Each bar is a job\u2019s share of settled deliveries '
+            "that failed. The percentage and counts name the rate, not colour alone.</p>"
+            '<p class="board-note">30-day window; all workspaces combined. '
+            "No job breakdown in this window.</p>"
+            '<p class="empty">No job breakdown in this window.</p></section>'
+        )
+    bars = []
+    for job in jobs:
+        label = html.escape(job["label"])
+        if job["rate"] is None:
+            rate_text = "Unavailable"
+            width = 0.0
+            aria = f'{job["label"]}: unavailable, no settled runs'
+        else:
+            rate_text = f'{job["rate"]:.2%}'
+            width = max(0.0, min(float(BY_JOB_PLOT_W), BY_JOB_PLOT_W * job["rate"]))
+            aria = f'{job["label"]}: {rate_text} failure rate'
+        counts_text = (
+            f'{job["failed"]:,} failed of {job["denominator"]:,} settled '
+            f'({job["total"]:,} total)'
+        )
+        rect = (
+            f'<rect class="bar s-hard" x="0" y="2" width="{width:.2f}" height="10"></rect>'
+            if width > 0 else ""
+        )
+        bars.append(
+            '<div class="hbar">'
+            f'<span class="hbar-label">{label}</span>'
+            f'<svg class="hbar-plot" viewBox="0 0 {BY_JOB_PLOT_W} 14" '
+            f'data-plot-w="{BY_JOB_PLOT_W}" data-ymax="1" role="img" '
+            f'aria-label="{html.escape(aria)}">{rect}</svg>'
+            f'<span class="hbar-value"><span class="num">{html.escape(rate_text)}</span> '
+            f'<span class="unit">{html.escape(counts_text)}</span></span>'
+            "</div>"
+        )
+
+    def render_hbars(part, overflow):
+        caption = (
+            '<p class="sr-only">Additional jobs</p>' if overflow else ""
+        )
+        return f'{caption}<div class="hbars" data-ymax="1">{"".join(part)}</div>'
+
+    body = analytics_page.with_row_disclosure(bars, render_hbars, "jobs")
+    return (
+        f'<section class="board" id="by-job"><h2>{title}</h2>{window}'
+        '<p class="score-key">Each bar is a job\u2019s share of settled deliveries '
+        "that failed. The percentage and counts name the rate, not colour alone.</p>"
+        '<p class="board-note">30-day window; all workspaces combined. '
+        "Denominator per job: successes plus direct failures; "
+        "cascaded echoes are excluded, as in Success and failure above.</p>"
+        f"{body}</section>"
+    )
+
+
 def render_reliability_page(data, snapshot_date, picker=None, banner="", archive_month=None, url=None, root=None):
     if picker is None:
         picker = analytics_page.picker_html(_analytics_base(root), "reliability", "reliability.json", archive_month)
@@ -827,6 +976,8 @@ def render_reliability_page(data, snapshot_date, picker=None, banner="", archive
             f'<p class="board-note">Denominator: {denominator:,} runs.</p>'
             + reliability_table(rows, denominator, title) + '</section>'
         )
+    jobs = reliability_by_job(data)
+    sections.insert(1, reliability_by_job_section(jobs, window))
     empty = '<p class="empty">No recorded runs in this window. Rates are unavailable.</p>' if not counts["total"] else ""
     body = f'''<article class="analytics">
 <h1>Reliability</h1>
@@ -834,7 +985,7 @@ def render_reliability_page(data, snapshot_date, picker=None, banner="", archive
 <p class="summary">Success, failure and other outcomes across the fleet over 30 days, from the daily public snapshot.</p>
 <p class="as-of">Snapshot {snapshot_date}. {counts["total"]:,} recorded runs; {settled:,} settled outcomes.</p>
 <nav class="board-nav" aria-label="Reliability">
-<a href="#settled">Success and failure</a><a href="#failures">Failure categories</a><a href="#other-outcomes">Other outcomes</a>
+<a href="#settled">Success and failure</a><a href="#by-job">Failure rate by job</a><a href="#failures">Failure categories</a><a href="#other-outcomes">Other outcomes</a>
 </nav>
 {empty}{"".join(sections)}
 <p class="board-note">Counts reflect the snapshot at collection time; in-flight and held outcomes can change in later snapshots. Rates describe observed outcomes, not a causal comparison of crews.</p>
@@ -843,6 +994,7 @@ def render_reliability_page(data, snapshot_date, picker=None, banner="", archive
         "Reliability — Constellation Works",
         "Aggregate Orbit success and failure counts and rates over 30 days.",
         url or f"{SITE}/analytics/reliability/", body, current="analytics",
+        extra_css=("analytics.css",),
     )
 
 
