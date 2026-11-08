@@ -229,6 +229,10 @@ def direct_text(node):
     return node.text
 
 
+def all_text(node):
+    return node.text + "".join(all_text(child) for child in node.children)
+
+
 class MetricsPageTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -383,6 +387,40 @@ class MetricsPageTest(unittest.TestCase):
         self.assertIn(self.metrics["durations"]["window"]["since"], text)
         self.assertIn('href="https://constellation-works.com/analytics/metrics/"', text)
         self.assertEqual(self.day, "2026-11-08")
+
+    def test_every_table_cell_names_its_column_for_the_stacked_phone_layout(self):
+        # At <=560px the header row is hidden and each row stacks, so a cell without
+        # data-label would show a bare figure.
+        tables = elements(self.tree, lambda node: node.tag == "table")
+        self.assertGreaterEqual(len(tables), 10)
+        for table in tables:
+            head = elements(table, lambda node: node.tag == "th" and node.attrs.get("scope") == "col")
+            headers = [all_text(cell).strip() for cell in head]
+            for row in elements(table, lambda node: node.tag == "tr"):
+                cells = [child for child in row.children if child.tag in {"td", "th"}]
+                if any(cell.attrs.get("scope") == "col" for cell in cells):
+                    continue
+                self.assertEqual(len(cells), len(headers))
+                for cell, header in zip(cells, headers):
+                    self.assertEqual(cell.attrs.get("data-label"), header)
+
+    def test_stylesheet_wraps_long_table_labels_on_a_phone(self):
+        # The "other" crew row lists every pooled crew name in its row header. In the
+        # stacked layout that header must wrap inside the column (it overflowed to 590px
+        # at 375px when it did not), and the figures beside it must wrap too.
+        css = (ROOT / "public" / "assets" / "analytics.css").read_text(encoding="utf-8")
+        phone = [
+            block
+            for block in re.findall(r"@media \(max-width: 560px\) \{(.*?)\n\}", css, re.S)
+            if "table" in block or " th" in block or " td" in block
+        ]
+        self.assertTrue(phone, "analytics.css needs a <=560px table rule")
+        rules = "\n".join(phone)
+        wrap = re.search(r"\.analytics th,\s*\.analytics td \{[^}]*overflow-wrap: anywhere", rules)
+        self.assertIsNotNone(wrap, "table cells must use overflow-wrap: anywhere on a phone")
+        row_header = re.search(r'\.analytics tbody th\[scope="row"\] \{[^}]*display: block', rules)
+        self.assertIsNotNone(row_header, "row headers must stop being a nowrap flex row on a phone")
+        self.assertIn("min-width: 0", rules)
 
     def _parent(self, target):
         found = []
