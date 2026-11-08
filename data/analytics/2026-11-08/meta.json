@@ -1,7 +1,7 @@
 {
   "dropped": {
     "experiments": 0,
-    "experiments_omitted": 1,
+    "experiments_omitted": 2,
     "implementers": 10,
     "implementers_by_tier": 59,
     "metrics_diff": 0,
@@ -13,7 +13,7 @@
     "reviewers_provisional": 3,
     "reviewers_settled": 3
   },
-  "free_text_redactions": 1,
+  "free_text_redactions": 0,
   "generated_at": "2026-11-08T17:21:36Z",
   "orbit_version": "0.47.0",
   "reviewer_settled": true,
@@ -21,7 +21,6 @@
   "windows": {
     "experiments": [
       "2026-11-08T17:22:48.120146513+00:00",
-      "2026-11-08T17:22:41.557238456+00:00",
       "2026-11-08T17:22:36.887564675+00:00",
       "2026-11-08T17:22:46.600110789+00:00"
     ],

@@ -75,10 +75,11 @@ bucket, by job id and by activity role, and the count of unreadable
 workspaces. Workspace ids, workspace names and error text are not copied.
 
 Experiments (``experiments.json``): ``orbit experiment list --json`` and, for
-each experiment whose ``status`` is ``concluded``, ``orbit experiment readout
---json <id>``. Running, paused, draft and abandoned experiments are counted
-in ``dropped.experiments_omitted`` and left out. Copied: identity (id, name,
-hypothesis, primary metric, concluded arm, mode, sample bounds, times),
+each experiment whose ``status`` is ``concluded`` and whose id is not in
+``EXPERIMENT_OMITS``, ``orbit experiment readout --json <id>``. Running, paused,
+draft and abandoned experiments, and the experiments in ``EXPERIMENT_OMITS``,
+are counted in ``dropped.experiments_omitted`` and left out. Copied: identity
+(id, name, hypothesis, primary metric, concluded arm, mode, sample bounds, times),
 arms (weight, n, segments, crew mix, usage), enrollment counts, per-metric
 arm outcomes and intervals, differences versus control, guardrail estimates,
 sample-ratio headline, lagging counts, verdict, and warning kinds without
@@ -219,6 +220,13 @@ FAILURE_RATE_LABEL = (
     "settled deliveries (success + one count per failed delivery; "
     "wrapper echoes rolled into the leaf)"
 )
+# Experiments kept off the public page on purpose, each with a one-line public
+# reason. An omitted experiment is counted in dropped.experiments_omitted, is
+# never projected and has its readout skipped. Changing this list changes the
+# public snapshot only when the snapshot is regenerated or replayed.
+EXPERIMENT_OMITS = {
+    "exp-2b6d910d": "void: treatment not reliably applied and the explorer was removed mid-run",
+}
 
 SAFE_KEY = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 SAFE_TOKEN = re.compile(r"^[A-Za-z0-9_@.+-]{1,80}$")
@@ -1373,10 +1381,20 @@ def project_metric(metric):
     }
 
 
+def experiment_omitted(definition):
+    ident = definition.get("id") if isinstance(definition, dict) else None
+    return isinstance(ident, str) and ident in EXPERIMENT_OMITS
+
+
 def project_experiment(definition, readout, dropped, patterns, redactions):
-    if not isinstance(definition, dict) or not isinstance(readout, dict):
+    if not isinstance(definition, dict):
         return None
-    if definition.get("status") != "concluded" or readout.get("experiment", {}).get("status") not in (None, "concluded"):
+    if experiment_omitted(definition) or definition.get("status") != "concluded":
+        dropped["experiments_omitted"] += 1
+        return None
+    if not isinstance(readout, dict):
+        return None
+    if readout.get("experiment", {}).get("status") not in (None, "concluded"):
         dropped["experiments_omitted"] += 1
         return None
     ident = definition.get("id")
@@ -1528,6 +1546,16 @@ def project_experiment(definition, readout, dropped, patterns, redactions):
     }
 
 
+def project_experiments(pairs, dropped, patterns, redactions):
+    projected = []
+    for definition, readout in pairs:
+        item = project_experiment(definition, readout, dropped, patterns, redactions)
+        if item is not None:
+            projected.append(item)
+    projected.sort(key=lambda item: (item.get("name") or "", item["id"]))
+    return projected
+
+
 def empty_dropped():
     return {
         "experiments": 0,
@@ -1650,7 +1678,7 @@ def collect(workspace, dashboard, generated_at, version):
     for experiment in experiments:
         if not isinstance(experiment, dict):
             continue
-        if experiment.get("status") != "concluded":
+        if experiment.get("status") != "concluded" or experiment_omitted(experiment):
             readouts.append((experiment, None))
             continue
         ident_exp = experiment.get("id")
@@ -1698,16 +1726,7 @@ def project_all(cards, until_supported, durations, completions, defects, tokens,
     }
     reliability_doc = project_reliability(reliability, dropped)
     reliability_doc["schema_version"] = SCHEMA_VERSION
-    projected_experiments = []
-    for definition, readout in experiments:
-        if readout is None:
-            if isinstance(definition, dict) and definition.get("status") != "concluded":
-                dropped["experiments_omitted"] += 1
-            continue
-        projected = project_experiment(definition, readout, dropped, patterns, redactions)
-        if projected is not None:
-            projected_experiments.append(projected)
-    projected_experiments.sort(key=lambda item: (item.get("name") or "", item["id"]))
+    projected_experiments = project_experiments(experiments, dropped, patterns, redactions)
     experiments_doc = {
         "experiments": projected_experiments,
         "schema_version": SCHEMA_VERSION,
@@ -1742,6 +1761,8 @@ def guard(docs, hosts=None):
     for experiment in docs["experiments"]["experiments"]:
         if experiment.get("status") != "concluded":
             raise SystemExit("experiments file contains an experiment that is not concluded")
+        if experiment_omitted(experiment):
+            raise SystemExit("experiments file contains an experiment listed in EXPERIMENT_OMITS")
 
 
 def write_snapshot(out, docs):
