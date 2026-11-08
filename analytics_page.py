@@ -1365,7 +1365,8 @@ def render_body(metrics):
         f"<p class=\"summary\">Duration, completions, defects, tokens, cost, diff size, friction and turns. "
         f"Duration outcome {outcome}. Window {key}.</p>"
         + window_line(window, "durations.window")
-        + "<p class=\"detail\">Each section prints the UTC window of its own snapshot field. "
+        + "<p class=\"detail\">Each thirty-day section prints the UTC window of its snapshot field; "
+        "the outcome-by-complexity board is an all-time mix with no thirty-day window. "
         "Days are UTC. The page is rendered from the committed snapshot and does not call Orbit.</p>"
     )
     caveats = (

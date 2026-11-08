@@ -250,10 +250,65 @@ class MetricsPageTest(unittest.TestCase):
         self.assertEqual(analytics_page.format_ms(3660000), "1h 01m")
         self.assertIn(">18.9m<", self.html)
 
-    def test_page_shows_the_utc_window_from_metrics_json(self):
+    def test_windowed_sections_show_utc_bounds_and_outcomes_show_scope(self):
+        windowed_sections = {
+            "duration": "durations",
+            "completed": "completions",
+            "defects": "defects",
+            "tokens": "tokens",
+            "cost": "friction",
+            "diff": "diff",
+            "friction": "friction",
+            "turns": "turns",
+        }
+        for section_id, metrics_path in windowed_sections.items():
+            with self.subTest(section=section_id):
+                section_nodes = elements(
+                    self.tree,
+                    lambda node: node.tag == "section" and node.attrs.get("id") == section_id,
+                )
+                self.assertEqual(len(section_nodes), 1)
+                section_node = section_nodes[0]
+                window = lookup(self.metrics, f"{metrics_path}.window")
+                for bound in ("since", "until"):
+                    timestamps = elements(
+                        section_node,
+                        lambda node: node.tag == "time"
+                        and node.attrs.get("data-field") == f"{metrics_path}.window.{bound}",
+                    )
+                    self.assertEqual(len(timestamps), 1)
+                    self.assertEqual(timestamps[0].attrs["datetime"], window[bound])
+
+        outcome_sections = elements(
+            self.tree,
+            lambda node: node.tag == "section" and node.attrs.get("id") == "outcomes",
+        )
+        self.assertEqual(len(outcome_sections), 1)
+        outcome_section = outcome_sections[0]
+        scope_lines = elements(
+            outcome_section,
+            lambda node: node.tag == "p" and "window" in node.attrs.get("class", "").split(),
+        )
+        self.assertEqual(len(scope_lines), 1)
+        scope_values = elements(
+            scope_lines[0],
+            lambda node: node.tag == "span"
+            and node.attrs.get("data-field") == "completion_by_complexity.scope",
+        )
+        mix = self.metrics["completion_by_complexity"]
+        self.assertEqual(
+            [node.text for node in scope_values],
+            [analytics_page.format_scope(mix.get("scope"))],
+        )
+        self.assertTrue(scope_lines[0].text.strip().startswith("Scope"))
+        outcome_bounds = elements(
+            outcome_section,
+            lambda node: node.tag == "time"
+            and node.attrs.get("data-field", "").endswith((".since", ".until")),
+        )
+        self.assertEqual(outcome_bounds, [])
+
         window = self.metrics["durations"]["window"]
-        self.assertIn(window["since"], self.html)
-        self.assertIn(window["until"], self.html)
         self.assertIn("9 Oct 2026, 00:00 UTC", self.html)
         self.assertIn(f">{window['key']}<", self.html)
         self.assertEqual(self.metrics["outcome"], "succeeded")
