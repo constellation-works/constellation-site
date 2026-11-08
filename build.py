@@ -905,8 +905,9 @@ def experiment_metric_table(metric, arms):
             for heading, value in cells
         ) + "</tr>")
     columns = ["Arm", "Mean"] + ([] if metric.get("kind") == "rate" else ["Median"]) + ["Support"]
+    qualifier = " (exploratory, not a decision metric)" if metric.get("exploratory") else ""
     return (
-        f'<h4>{label}</h4><div class="table"><table>'
+        f'<h4>{label}{qualifier}</h4><div class="table"><table>'
         f'<caption class="sr-only">{label}: per-arm outcomes and supplied intervals</caption>'
         '<thead><tr>' + "".join(f'<th scope="col">{col}</th>' for col in columns)
         + '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>'

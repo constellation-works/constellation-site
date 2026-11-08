@@ -77,6 +77,19 @@ class ExperimentsPageTest(unittest.TestCase):
         self.assertIn("Unavailable", doc)
         self.assertNotIn("0.0%", doc.split('data-label="Arm"><span class="value">treatment</span>')[-1])
 
+    def test_exploratory_label_in_primary_and_secondary_outcomes(self):
+        data = fixture()
+        primary, secondary = data["experiments"][0]["metrics"]
+        secondary["exploratory"] = True
+        doc = build.render_experiments_page(data, "2026-11-08")
+        self.assertIn("<h4>Delivery done rate (exploratory, not a decision metric)</h4>", doc)
+        self.assertIn("<h4>Cost</h4>", doc)
+        self.assertNotIn("Cost (exploratory", doc)
+
+        primary["exploratory"] = True
+        doc = build.render_experiments_page(data, "2026-11-08")
+        self.assertIn("<h4>Cost (exploratory, not a decision metric)</h4>", doc)
+
     def test_only_concluded_lifecycle_even_if_verdict_claims_winner(self):
         data = fixture()
         for status in ("running", "paused", "draft", "abandoned", None, "Concluded"):
@@ -176,6 +189,14 @@ class ExperimentsPageTest(unittest.TestCase):
             for arm in experiment["arms"]:
                 self.assertIn(arm["name"], doc)
             self.assertNotIn(experiment["id"], doc)
+        explore_first = next(x for x in concluded if x["name"] == "hard-tier-explore-first")
+        self.assertEqual(explore_first["primary_metric"], "implement_duration")
+        section = doc.split("<h2>" + build.html.escape(explore_first["name"]), 1)[1].split("</section>", 1)[0]
+        self.assertIn("<h3>Primary outcome</h3><h4>Implementation duration (exploratory, not a decision metric)</h4>", section)
+        for metric in explore_first["metrics"]:
+            label = build.EXPERIMENT_METRICS[metric["metric"]][0]
+            suffix = " (exploratory, not a decision metric)" if metric.get("exploratory") else ""
+            self.assertIn(f"<h4>{label}{suffix}</h4>", section)
         for text in ("ORB-", "jrun-", "/home/", "dk-server", "dropped"):
             self.assertNotIn(text, doc)
 
