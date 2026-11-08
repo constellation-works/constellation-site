@@ -716,7 +716,7 @@ def build_agents(root=None):
         render_agents_page(scorecards, directory.name, root=base_root), encoding="utf-8"
     )
     print(f"built agent scorecards -> {dest} from {directory.name}")
-    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "scorecards.json"):
+    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "scorecards.json", "agents"):
         month_dest = dest / entry["month"]
         month_dest.mkdir(parents=True)
         (month_dest / "index.html").write_text(
@@ -866,7 +866,7 @@ def build_reliability(root=None):
     dest.mkdir(parents=True)
     (dest / "index.html").write_text(rendered, encoding="utf-8")
     print(f"built reliability -> {dest} from {directory.name}")
-    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "reliability.json"):
+    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "reliability.json", "reliability"):
         month_dest = dest / entry["month"]
         month_dest.mkdir(parents=True)
         (month_dest / "index.html").write_text(
@@ -1300,7 +1300,7 @@ def build_experiments(root=None):
     dest.mkdir(parents=True)
     (dest / "index.html").write_text(rendered, encoding="utf-8")
     print(f"built experiments -> {dest} from {directory.name}")
-    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "experiments.json"):
+    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "experiments.json", "experiments"):
         month_dest = dest / entry["month"]
         month_dest.mkdir(parents=True)
         (month_dest / "index.html").write_text(
