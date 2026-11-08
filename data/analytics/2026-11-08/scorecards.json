@@ -1,0 +1,5803 @@
+{
+  "implementers": {
+    "fleet_average": 107.16,
+    "min_support": 10,
+    "provisional": false,
+    "role": "implementers",
+    "rows": [
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 14,
+          "escaped_regressions": 24.5,
+          "first_pass_accepts": 28,
+          "review_rejects": 0,
+          "reviewer_repairs": 2,
+          "weighted_landed": 577
+        },
+        "crew": "haiku",
+        "expected": {
+          "crew_rework": 28.61,
+          "escaped_regressions": 45.06,
+          "first_pass_accepts": 19.61,
+          "review_rejects": 2.29,
+          "reviewer_repairs": 6.06,
+          "weighted_landed": 566.7
+        },
+        "model": "claude-haiku-5-5",
+        "per_100": {
+          "crew_rework": 2.4,
+          "escaped_regressions": 4.2,
+          "first_pass_accepts": 93.33,
+          "review_rejects": 0,
+          "reviewer_repairs": 6.67,
+          "weighted_landed": 98.8
+        },
+        "provisional_terms": [],
+        "rank": 1,
+        "raw": 148.39,
+        "reviewed_units": 30,
+        "runs_without_model": 0,
+        "score": 146.38,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 594
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 528
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 66
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 572.88
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 30,
+          "review_rejects": 30,
+          "reviewer_repairs": 30
+        },
+        "unit": "implemented tasks",
+        "units": 584,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 104346070,
+          "efforts": "xhigh",
+          "input_tokens": 14200,
+          "invocations": 220,
+          "output_tokens": 11787789,
+          "provider_cost_count": 220,
+          "provider_cost_usd": 67.63927403
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 3,
+          "escaped_regressions": 28.25,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 102
+        },
+        "crew": "opus@medium",
+        "expected": {
+          "crew_rework": 12.06,
+          "escaped_regressions": 95.84,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 96.48
+        },
+        "model": "claude-opus-5-5",
+        "per_100": {
+          "crew_rework": 2.91,
+          "escaped_regressions": 27.43,
+          "first_pass_accepts": null,
+          "review_rejects": null,
+          "reviewer_repairs": null,
+          "weighted_landed": 99.03
+        },
+        "provisional_terms": [],
+        "rank": 2,
+        "raw": 146.96,
+        "reviewed_units": 0,
+        "runs_without_model": 0,
+        "score": 137.98,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 107
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 89
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 18
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 1708.18
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0
+        },
+        "unit": "implemented tasks",
+        "units": 103,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 220224670,
+          "efforts": "medium",
+          "input_tokens": 14082,
+          "invocations": 154,
+          "output_tokens": 5544535,
+          "provider_cost_count": 154,
+          "provider_cost_usd": 485.388264
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 114,
+          "escaped_regressions": 170.25,
+          "first_pass_accepts": 49,
+          "review_rejects": 3,
+          "reviewer_repairs": 10,
+          "weighted_landed": 832
+        },
+        "crew": "sol",
+        "expected": {
+          "crew_rework": 83.31,
+          "escaped_regressions": 395.2,
+          "first_pass_accepts": 39.38,
+          "review_rejects": 7.05,
+          "reviewer_repairs": 14.18,
+          "weighted_landed": 831.83
+        },
+        "model": "gpt-6.1-sol",
+        "per_100": {
+          "crew_rework": 12.98,
+          "escaped_regressions": 19.39,
+          "first_pass_accepts": 75.38,
+          "review_rejects": 4.62,
+          "reviewer_repairs": 15.38,
+          "weighted_landed": 94.76
+        },
+        "provisional_terms": [],
+        "rank": 3,
+        "raw": 133.58,
+        "reviewed_units": 65,
+        "runs_without_model": 0,
+        "score": 132.7,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 935
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 779
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 156
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 1260.61
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 65,
+          "review_rejects": 65,
+          "reviewer_repairs": 65
+        },
+        "unit": "implemented tasks",
+        "units": 878,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 302649710,
+          "efforts": "high",
+          "input_tokens": 2739964727,
+          "invocations": 422,
+          "output_tokens": 9771519,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 29,
+          "escaped_regressions": 60,
+          "first_pass_accepts": 35,
+          "review_rejects": 3,
+          "reviewer_repairs": 4,
+          "weighted_landed": 683
+        },
+        "crew": "luna",
+        "expected": {
+          "crew_rework": 32.6,
+          "escaped_regressions": 43.01,
+          "first_pass_accepts": 27.44,
+          "review_rejects": 3.2,
+          "reviewer_repairs": 8.48,
+          "weighted_landed": 673.15
+        },
+        "model": "gpt-6-luna",
+        "per_100": {
+          "crew_rework": 4.18,
+          "escaped_regressions": 8.66,
+          "first_pass_accepts": 83.33,
+          "review_rejects": 7.14,
+          "reviewer_repairs": 9.52,
+          "weighted_landed": 98.56
+        },
+        "provisional_terms": [],
+        "rank": 4,
+        "raw": 124.52,
+        "reviewed_units": 42,
+        "runs_without_model": 0,
+        "score": 123.8,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 707
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 628
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 79
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 648.77
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 42,
+          "review_rejects": 42,
+          "reviewer_repairs": 42
+        },
+        "unit": "implemented tasks",
+        "units": 693,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 125212438,
+          "efforts": "xhigh",
+          "input_tokens": 821506069,
+          "invocations": 183,
+          "output_tokens": 5810842,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 12,
+          "escaped_regressions": 73,
+          "first_pass_accepts": 24,
+          "review_rejects": 1,
+          "reviewer_repairs": 7,
+          "weighted_landed": 200
+        },
+        "crew": "sonnet",
+        "expected": {
+          "crew_rework": 18.38,
+          "escaped_regressions": 65.31,
+          "first_pass_accepts": 21.33,
+          "review_rejects": 2.73,
+          "reviewer_repairs": 6.42,
+          "weighted_landed": 192.78
+        },
+        "model": "claude-sonnet-5-5",
+        "per_100": {
+          "crew_rework": 5.91,
+          "escaped_regressions": 35.96,
+          "first_pass_accepts": 75,
+          "review_rejects": 3.13,
+          "reviewer_repairs": 21.88,
+          "weighted_landed": 98.52
+        },
+        "provisional_terms": [],
+        "rank": 5,
+        "raw": 117.66,
+        "reviewed_units": 32,
+        "runs_without_model": 0,
+        "score": 116.31,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 212
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 185
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 27
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 781.06
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 32,
+          "review_rejects": 32,
+          "reviewer_repairs": 32
+        },
+        "unit": "implemented tasks",
+        "units": 203,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 84074575,
+          "efforts": "high",
+          "input_tokens": 14226,
+          "invocations": 295,
+          "output_tokens": 4238549,
+          "provider_cost_count": 295,
+          "provider_cost_usd": 207.72614220000008
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 18,
+          "escaped_regressions": 398.75,
+          "first_pass_accepts": 6,
+          "review_rejects": 2,
+          "reviewer_repairs": 3,
+          "weighted_landed": 393
+        },
+        "crew": "opus",
+        "expected": {
+          "crew_rework": 45.2,
+          "escaped_regressions": 331.18,
+          "first_pass_accepts": 5.21,
+          "review_rejects": 2.39,
+          "reviewer_repairs": 3.6,
+          "weighted_landed": 378.18
+        },
+        "model": "claude-opus-5-5",
+        "per_100": {
+          "crew_rework": 4.47,
+          "escaped_regressions": 98.95,
+          "first_pass_accepts": 46.15,
+          "review_rejects": 15.38,
+          "reviewer_repairs": 23.08,
+          "weighted_landed": 97.52
+        },
+        "provisional_terms": [],
+        "rank": 6,
+        "raw": 113.44,
+        "reviewed_units": 13,
+        "runs_without_model": 0,
+        "score": 113.0,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 421
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 377
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 44
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 2414.74
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 13,
+          "review_rejects": 13,
+          "reviewer_repairs": 13
+        },
+        "unit": "implemented tasks",
+        "units": 403,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 86556339,
+          "efforts": "medium, high",
+          "input_tokens": 9990,
+          "invocations": 80,
+          "output_tokens": 4018240,
+          "provider_cost_count": 80,
+          "provider_cost_usd": 415.7142005999999
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 13,
+          "escaped_regressions": 93.5,
+          "first_pass_accepts": 5,
+          "review_rejects": 0,
+          "reviewer_repairs": 2,
+          "weighted_landed": 217
+        },
+        "crew": "grok",
+        "expected": {
+          "crew_rework": 20.96,
+          "escaped_regressions": 69.74,
+          "first_pass_accepts": 4.67,
+          "review_rejects": 0.6,
+          "reviewer_repairs": 1.4,
+          "weighted_landed": 216.36
+        },
+        "model": "grok-4.7",
+        "per_100": {
+          "crew_rework": 5.7,
+          "escaped_regressions": 41.01,
+          "first_pass_accepts": 71.43,
+          "review_rejects": 0,
+          "reviewer_repairs": 28.57,
+          "weighted_landed": 95.18
+        },
+        "provisional_terms": [],
+        "rank": 7,
+        "raw": 107.59,
+        "reviewed_units": 7,
+        "runs_without_model": 0,
+        "score": 107.54,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 233
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 213
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 20
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 2075.95
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 7,
+          "review_rejects": 7,
+          "reviewer_repairs": 7
+        },
+        "unit": "implemented tasks",
+        "units": 228,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 228329257,
+          "efforts": "high",
+          "input_tokens": 49904125,
+          "invocations": 157,
+          "output_tokens": 11375308,
+          "provider_cost_count": 157,
+          "provider_cost_usd": 867.0869100000002
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 8,
+          "escaped_regressions": 206.5,
+          "first_pass_accepts": 16,
+          "review_rejects": 0,
+          "reviewer_repairs": 11,
+          "weighted_landed": 311
+        },
+        "crew": "muse-wonder",
+        "expected": {
+          "crew_rework": 28.66,
+          "escaped_regressions": 70.94,
+          "first_pass_accepts": 16.69,
+          "review_rejects": 2.15,
+          "reviewer_repairs": 5.02,
+          "weighted_landed": 299.07
+        },
+        "model": "muse-wonder-1.0",
+        "per_100": {
+          "crew_rework": 2.54,
+          "escaped_regressions": 65.56,
+          "first_pass_accepts": 64,
+          "review_rejects": 0,
+          "reviewer_repairs": 44,
+          "weighted_landed": 98.73
+        },
+        "provisional_terms": [],
+        "rank": 9,
+        "raw": 82.71,
+        "reviewed_units": 25,
+        "runs_without_model": 0,
+        "score": 82.71,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 324
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 1
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 323
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 597.51
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 25,
+          "review_rejects": 25,
+          "reviewer_repairs": 25
+        },
+        "unit": "implemented tasks",
+        "units": 315,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 133365787,
+          "efforts": "high",
+          "input_tokens": 0,
+          "invocations": 349,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 6,
+          "escaped_regressions": 48.75,
+          "first_pass_accepts": 16,
+          "review_rejects": 2,
+          "reviewer_repairs": 13,
+          "weighted_landed": 389
+        },
+        "crew": "muse-spark",
+        "expected": {
+          "crew_rework": 19.7,
+          "escaped_regressions": 30.04,
+          "first_pass_accepts": 21.61,
+          "review_rejects": 2.55,
+          "reviewer_repairs": 6.66,
+          "weighted_landed": 379.15
+        },
+        "model": "muse-spark-1.3-contributor",
+        "per_100": {
+          "crew_rework": 1.53,
+          "escaped_regressions": 12.47,
+          "first_pass_accepts": 48.48,
+          "review_rejects": 6.06,
+          "reviewer_repairs": 39.39,
+          "weighted_landed": 99.49
+        },
+        "provisional_terms": [],
+        "rank": 11,
+        "raw": 78.68,
+        "reviewed_units": 33,
+        "runs_without_model": 0,
+        "score": 78.68,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 395
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 4
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 391
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 394.7
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 33,
+          "review_rejects": 33,
+          "reviewer_repairs": 33
+        },
+        "unit": "implemented tasks",
+        "units": 391,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 65294748,
+          "efforts": "xhigh",
+          "input_tokens": 0,
+          "invocations": 161,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 8,
+          "escaped_regressions": 16,
+          "first_pass_accepts": 5,
+          "review_rejects": 0,
+          "reviewer_repairs": 3,
+          "weighted_landed": 90
+        },
+        "crew": "gemini-flash",
+        "expected": {
+          "crew_rework": 4.2,
+          "escaped_regressions": 4.24,
+          "first_pass_accepts": 5.87,
+          "review_rejects": 0.68,
+          "reviewer_repairs": 1.82,
+          "weighted_landed": 92.41
+        },
+        "model": "gemini-3.8-flash-high",
+        "per_100": {
+          "crew_rework": 8.42,
+          "escaped_regressions": 16.84,
+          "first_pass_accepts": 55.56,
+          "review_rejects": 0,
+          "reviewer_repairs": 33.33,
+          "weighted_landed": 94.74
+        },
+        "provisional_terms": [],
+        "rank": 12,
+        "raw": 78.56,
+        "reviewed_units": 9,
+        "runs_without_model": 0,
+        "score": 78.56,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 96
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 3
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 93
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 1083.33
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 9,
+          "review_rejects": 9,
+          "reviewer_repairs": 9
+        },
+        "unit": "implemented tasks",
+        "units": 95,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 0,
+          "efforts": "",
+          "input_tokens": 0,
+          "invocations": 0,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 0,
+          "escaped_regressions": 108,
+          "first_pass_accepts": 3,
+          "review_rejects": 0,
+          "reviewer_repairs": 5,
+          "weighted_landed": 39
+        },
+        "crew": "muse-wonder-full",
+        "expected": {
+          "crew_rework": 4.54,
+          "escaped_regressions": 28.9,
+          "first_pass_accepts": 3.61,
+          "review_rejects": 1.66,
+          "reviewer_repairs": 2.48,
+          "weighted_landed": 36.55
+        },
+        "model": "muse-wonder-full-1.0",
+        "per_100": {
+          "crew_rework": 0,
+          "escaped_regressions": 276.92,
+          "first_pass_accepts": 33.33,
+          "review_rejects": 0,
+          "reviewer_repairs": 55.56,
+          "weighted_landed": 100
+        },
+        "provisional_terms": [],
+        "rank": 17,
+        "raw": 14.15,
+        "reviewed_units": 9,
+        "runs_without_model": 0,
+        "score": 14.15,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 39
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 0
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 39
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 2199.64
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 9,
+          "review_rejects": 9,
+          "reviewer_repairs": 9
+        },
+        "unit": "implemented tasks",
+        "units": 39,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 8079452,
+          "efforts": "high",
+          "input_tokens": 0,
+          "invocations": 2,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 24,
+          "escaped_regressions": 29.25,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 2,
+          "weighted_landed": 176
+        },
+        "crew": "terra",
+        "expected": {
+          "crew_rework": 13.6,
+          "escaped_regressions": 40.03,
+          "first_pass_accepts": 1.33,
+          "review_rejects": 0.17,
+          "reviewer_repairs": 0.4,
+          "weighted_landed": 176.26
+        },
+        "model": "gpt-6.1-terra",
+        "per_100": {
+          "crew_rework": 13.04,
+          "escaped_regressions": 15.9,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 100,
+          "weighted_landed": 95.65
+        },
+        "provisional_terms": [],
+        "rank": 18,
+        "raw": -0.98,
+        "reviewed_units": 2,
+        "runs_without_model": 0,
+        "score": -0.98,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 198
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 160
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 38
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 462.88
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 2,
+          "review_rejects": 2,
+          "reviewer_repairs": 2
+        },
+        "unit": "implemented tasks",
+        "units": 184,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 56219228,
+          "efforts": "high",
+          "input_tokens": 571783823,
+          "invocations": 189,
+          "output_tokens": 1045558,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": true,
+        "counts": {
+          "crew_rework": 0,
+          "escaped_regressions": 0,
+          "first_pass_accepts": 1,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 4
+        },
+        "crew": "system",
+        "expected": {
+          "crew_rework": 0.36,
+          "escaped_regressions": 1.0,
+          "first_pass_accepts": 0.67,
+          "review_rejects": 0.09,
+          "reviewer_repairs": 0.2,
+          "weighted_landed": 4.79
+        },
+        "model": "claude-haiku-5-5",
+        "per_100": {
+          "crew_rework": 0,
+          "escaped_regressions": 0,
+          "first_pass_accepts": 100,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 80
+        },
+        "provisional_terms": [],
+        "rank": null,
+        "raw": 153.27,
+        "reviewed_units": 1,
+        "runs_without_model": 0,
+        "score": 113.75,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": 0.72462889
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 5
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 5
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 0
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 3127.08
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 1,
+          "review_rejects": 1,
+          "reviewer_repairs": 1
+        },
+        "unit": "implemented tasks",
+        "units": 5,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 0,
+          "efforts": "",
+          "input_tokens": 0,
+          "invocations": 0,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": true,
+        "counts": {
+          "crew_rework": 3,
+          "escaped_regressions": 5,
+          "first_pass_accepts": 1,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 4
+        },
+        "crew": "argon",
+        "expected": {
+          "crew_rework": 0.72,
+          "escaped_regressions": 2.84,
+          "first_pass_accepts": 0.4,
+          "review_rejects": 0.18,
+          "reviewer_repairs": 0.28,
+          "weighted_landed": 6.61
+        },
+        "model": "gemini-4-argon-high",
+        "per_100": {
+          "crew_rework": 42.86,
+          "escaped_regressions": 71.43,
+          "first_pass_accepts": 100,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 57.14
+        },
+        "provisional_terms": [],
+        "rank": null,
+        "raw": 106.78,
+        "reviewed_units": 1,
+        "runs_without_model": 0,
+        "score": 106.78,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 7
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 0
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 7
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 1401.31
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 1,
+          "review_rejects": 1,
+          "reviewer_repairs": 1
+        },
+        "unit": "implemented tasks",
+        "units": 7,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 5678663,
+          "efforts": "",
+          "input_tokens": 1988202,
+          "invocations": 4,
+          "output_tokens": 221860,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": true,
+        "counts": {
+          "crew_rework": 0,
+          "escaped_regressions": 0,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 1,
+          "weighted_landed": 2
+        },
+        "crew": "astra",
+        "expected": {
+          "crew_rework": 0.35,
+          "escaped_regressions": 2.39,
+          "first_pass_accepts": 0.4,
+          "review_rejects": 0.18,
+          "reviewer_repairs": 0.28,
+          "weighted_landed": 2.81
+        },
+        "model": "gpt-6-astra",
+        "per_100": {
+          "crew_rework": 0,
+          "escaped_regressions": 0,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 100,
+          "weighted_landed": 66.67
+        },
+        "provisional_terms": [],
+        "rank": null,
+        "raw": 66.53,
+        "reviewed_units": 1,
+        "runs_without_model": 0,
+        "score": 66.53,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 3
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 1
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 2
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 1655.45
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 1,
+          "review_rejects": 1,
+          "reviewer_repairs": 1
+        },
+        "unit": "implemented tasks",
+        "units": 3,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 0,
+          "efforts": "",
+          "input_tokens": 0,
+          "invocations": 0,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": true,
+        "counts": {
+          "crew_rework": 0,
+          "escaped_regressions": 2,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 1
+        },
+        "crew": "sol@high",
+        "expected": {
+          "crew_rework": 0.18,
+          "escaped_regressions": 0.66,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 1.9
+        },
+        "model": "gpt-6.1-sol",
+        "per_100": {
+          "crew_rework": 0,
+          "escaped_regressions": 100,
+          "first_pass_accepts": null,
+          "review_rejects": null,
+          "reviewer_repairs": null,
+          "weighted_landed": 50
+        },
+        "provisional_terms": [],
+        "rank": null,
+        "raw": 30.81,
+        "reviewed_units": 0,
+        "runs_without_model": 0,
+        "score": 30.81,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 2
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 1
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 1
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 741.19
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0
+        },
+        "unit": "implemented tasks",
+        "units": 2,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 926624,
+          "efforts": "high",
+          "input_tokens": 5282215,
+          "invocations": 1,
+          "output_tokens": 30249,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": true,
+        "counts": {
+          "crew_rework": 0,
+          "escaped_regressions": 15,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 2
+        },
+        "crew": "opus@high",
+        "expected": {
+          "crew_rework": 0.2,
+          "escaped_regressions": 7.76,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 1.86
+        },
+        "model": "claude-opus-5-5",
+        "per_100": {
+          "crew_rework": 0,
+          "escaped_regressions": 750,
+          "first_pass_accepts": null,
+          "review_rejects": null,
+          "reviewer_repairs": null,
+          "weighted_landed": 100
+        },
+        "provisional_terms": [],
+        "rank": null,
+        "raw": -64.15,
+        "reviewed_units": 0,
+        "runs_without_model": 0,
+        "score": -64.15,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 2
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 1
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 1
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 3180.99
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0
+        },
+        "unit": "implemented tasks",
+        "units": 2,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 3890197,
+          "efforts": "high",
+          "input_tokens": 182,
+          "invocations": 1,
+          "output_tokens": 200620,
+          "provider_cost_count": 1,
+          "provider_cost_usd": 12.552109999999995
+        }
+      },
+      {
+        "below_support": true,
+        "counts": {
+          "crew_rework": 2,
+          "escaped_regressions": 0,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 0
+        },
+        "crew": "luna",
+        "expected": {
+          "crew_rework": 0.04,
+          "escaped_regressions": 0.01,
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0,
+          "weighted_landed": 0.97
+        },
+        "model": "gpt-6.1-luna",
+        "per_100": {
+          "crew_rework": 200,
+          "escaped_regressions": 0,
+          "first_pass_accepts": null,
+          "review_rejects": null,
+          "reviewer_repairs": null,
+          "weighted_landed": 0
+        },
+        "provisional_terms": [],
+        "rank": null,
+        "raw": -192.48,
+        "reviewed_units": 0,
+        "runs_without_model": 0,
+        "score": -192.48,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 1
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 1
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 0
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 120.76
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 0,
+          "review_rejects": 0,
+          "reviewer_repairs": 0
+        },
+        "unit": "implemented tasks",
+        "units": 1,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 0,
+          "efforts": "",
+          "input_tokens": 0,
+          "invocations": 0,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      }
+    ],
+    "score_key": "Score: per 100 implemented tasks, credit for landed, first-pass accepts; debits for review rejects, reviewer repairs, crew-caused rework, escaped regressions. The fleet average is 107.2.",
+    "settled": false,
+    "tasks_scanned": 11994,
+    "terms": [
+      {
+        "group": "credit",
+        "key": "weighted_landed",
+        "label": "Landed",
+        "weight": 1.0
+      },
+      {
+        "group": "credit",
+        "key": "first_pass_accepts",
+        "label": "First-pass accepts",
+        "weight": 1.0
+      },
+      {
+        "group": "problem",
+        "key": "review_rejects",
+        "label": "Review rejects",
+        "weight": -1.0
+      },
+      {
+        "group": "problem",
+        "key": "reviewer_repairs",
+        "label": "Reviewer repairs",
+        "weight": -0.5
+      },
+      {
+        "group": "problem",
+        "key": "crew_rework",
+        "label": "Crew-caused rework",
+        "weight": -1.0
+      },
+      {
+        "group": "problem",
+        "key": "escaped_regressions",
+        "label": "Escaped regressions",
+        "weight": -0.5
+      }
+    ],
+    "unit": "implemented tasks",
+    "window": {
+      "key": "30d",
+      "since": "2026-10-09T09:11:14Z",
+      "until": "2026-11-08T09:11:14Z"
+    }
+  },
+  "implementers_by_tier": {
+    "cells": [
+      {
+        "below_support": true,
+        "crew": "gemini-flash",
+        "crew_mean": 83.94,
+        "model": "gemini-3.8-flash-high",
+        "n": 1,
+        "rank": null,
+        "raw": 9.55,
+        "score": 81.54,
+        "tier": "low",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "grok",
+        "crew_mean": 87.4,
+        "model": "grok-4.7",
+        "n": 1,
+        "rank": null,
+        "raw": -290.45,
+        "score": 75.22,
+        "tier": "low",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "haiku",
+        "crew_mean": 144.4,
+        "model": "claude-haiku-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 109.55,
+        "score": 143.28,
+        "tier": "low",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "luna",
+        "crew_mean": 128.34,
+        "model": "gpt-6-luna",
+        "n": 9,
+        "rank": null,
+        "raw": 81.77,
+        "score": 117.59,
+        "tier": "low",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 9
+      },
+      {
+        "below_support": true,
+        "crew": "muse-spark",
+        "crew_mean": 86.85,
+        "model": "muse-spark-1.3-contributor",
+        "n": 2,
+        "rank": null,
+        "raw": 12.08,
+        "score": 82.18,
+        "tier": "low",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 107.56,
+        "model": "gpt-6.1-sol",
+        "n": 2,
+        "rank": null,
+        "raw": 59.55,
+        "score": 104.56,
+        "tier": "low",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": false,
+        "crew": "haiku",
+        "crew_mean": 144.4,
+        "model": "claude-haiku-5-5",
+        "n": 73,
+        "rank": 1,
+        "raw": 103.87,
+        "score": 115.68,
+        "tier": "low",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 73
+      },
+      {
+        "below_support": false,
+        "crew": "luna",
+        "crew_mean": 128.34,
+        "model": "gpt-6-luna",
+        "n": 96,
+        "rank": 2,
+        "raw": 221.54,
+        "score": 199.35,
+        "tier": "low",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 96
+      },
+      {
+        "below_support": false,
+        "crew": "terra",
+        "crew_mean": 103.62,
+        "model": "gpt-6.1-terra",
+        "n": 14,
+        "rank": 3,
+        "raw": 108.46,
+        "score": 105.16,
+        "tier": "low",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 14
+      },
+      {
+        "below_support": false,
+        "crew": "muse-spark",
+        "crew_mean": 86.85,
+        "model": "muse-spark-1.3-contributor",
+        "n": 40,
+        "rank": 4,
+        "raw": 106.85,
+        "score": 98.28,
+        "tier": "low",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 40
+      },
+      {
+        "below_support": true,
+        "crew": "gemini-flash",
+        "crew_mean": 83.94,
+        "model": "gemini-3.8-flash-high",
+        "n": 8,
+        "rank": null,
+        "raw": 109.35,
+        "score": 89.29,
+        "tier": "low",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 8
+      },
+      {
+        "below_support": true,
+        "crew": "luna",
+        "crew_mean": 90.63,
+        "model": "gpt-6.1-luna",
+        "n": 1,
+        "rank": null,
+        "raw": -190.65,
+        "score": 81.56,
+        "tier": "low",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder",
+        "crew_mean": 101.36,
+        "model": "muse-wonder-1.0",
+        "n": 3,
+        "rank": null,
+        "raw": 109.35,
+        "score": 102.09,
+        "tier": "low",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 107.56,
+        "model": "gpt-6.1-sol",
+        "n": 1,
+        "rank": null,
+        "raw": 109.35,
+        "score": 107.62,
+        "tier": "low",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": false,
+        "crew": "haiku",
+        "crew_mean": 144.4,
+        "model": "claude-haiku-5-5",
+        "n": 298,
+        "rank": 1,
+        "raw": 131.46,
+        "score": 132.65,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 298
+      },
+      {
+        "below_support": false,
+        "crew": "luna",
+        "crew_mean": 128.34,
+        "model": "gpt-6-luna",
+        "n": 365,
+        "rank": 2,
+        "raw": 107.86,
+        "score": 109.41,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 365
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 107.56,
+        "model": "gpt-6.1-sol",
+        "n": 10,
+        "rank": 3,
+        "raw": 107.02,
+        "score": 107.43,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 10
+      },
+      {
+        "below_support": false,
+        "crew": "terra",
+        "crew_mean": 103.62,
+        "model": "gpt-6.1-terra",
+        "n": 47,
+        "rank": 4,
+        "raw": 103.03,
+        "score": 103.26,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 47
+      },
+      {
+        "below_support": false,
+        "crew": "muse-spark",
+        "crew_mean": 86.85,
+        "model": "muse-spark-1.3-contributor",
+        "n": 205,
+        "rank": 5,
+        "raw": 82.59,
+        "score": 83.14,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 205
+      },
+      {
+        "below_support": false,
+        "crew": "gemini-flash",
+        "crew_mean": 83.94,
+        "model": "gemini-3.8-flash-high",
+        "n": 52,
+        "rank": 6,
+        "raw": 55.81,
+        "score": 66.1,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 52
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder",
+        "crew_mean": 101.36,
+        "model": "muse-wonder-1.0",
+        "n": 2,
+        "rank": null,
+        "raw": 109.41,
+        "score": 101.87,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 102.2,
+        "model": "claude-opus-5-5",
+        "n": 3,
+        "rank": null,
+        "raw": 109.41,
+        "score": 102.86,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 97.02,
+        "model": "claude-sonnet-5-5",
+        "n": 5,
+        "rank": null,
+        "raw": 72.02,
+        "score": 93.45,
+        "tier": "low",
+        "type": "other",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": false,
+        "crew": "haiku",
+        "crew_mean": 144.4,
+        "model": "claude-haiku-5-5",
+        "n": 21,
+        "rank": 1,
+        "raw": 91.6,
+        "score": 122.66,
+        "tier": "low",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 21
+      },
+      {
+        "below_support": false,
+        "crew": "luna",
+        "crew_mean": 128.34,
+        "model": "gpt-6-luna",
+        "n": 10,
+        "rank": 2,
+        "raw": 145.88,
+        "score": 132.73,
+        "tier": "low",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 10
+      },
+      {
+        "below_support": true,
+        "crew": "gemini-flash",
+        "crew_mean": 83.94,
+        "model": "gemini-3.8-flash-high",
+        "n": 3,
+        "rank": null,
+        "raw": 105.88,
+        "score": 85.93,
+        "tier": "low",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "muse-spark",
+        "crew_mean": 86.85,
+        "model": "muse-spark-1.3-contributor",
+        "n": 5,
+        "rank": null,
+        "raw": 105.88,
+        "score": 89.57,
+        "tier": "low",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 102.2,
+        "model": "claude-opus-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 105.88,
+        "score": 102.32,
+        "tier": "low",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 107.56,
+        "model": "gpt-6.1-sol",
+        "n": 1,
+        "rank": null,
+        "raw": 105.88,
+        "score": 107.51,
+        "tier": "low",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 97.02,
+        "model": "claude-sonnet-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 105.88,
+        "score": 97.3,
+        "tier": "low",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 103.62,
+        "model": "gpt-6.1-terra",
+        "n": 1,
+        "rank": null,
+        "raw": 105.88,
+        "score": 103.69,
+        "tier": "low",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "gemini-flash",
+        "crew_mean": 83.94,
+        "model": "gemini-3.8-flash-high",
+        "n": 1,
+        "rank": null,
+        "raw": 109.55,
+        "score": 84.76,
+        "tier": "low",
+        "type": "security",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "haiku",
+        "crew_mean": 144.4,
+        "model": "claude-haiku-5-5",
+        "n": 2,
+        "rank": null,
+        "raw": 109.55,
+        "score": 142.22,
+        "tier": "low",
+        "type": "security",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "luna",
+        "crew_mean": 128.34,
+        "model": "gpt-6-luna",
+        "n": 2,
+        "rank": null,
+        "raw": 109.55,
+        "score": 127.17,
+        "tier": "low",
+        "type": "security",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "muse-spark",
+        "crew_mean": 86.85,
+        "model": "muse-spark-1.3-contributor",
+        "n": 1,
+        "rank": null,
+        "raw": 109.55,
+        "score": 87.58,
+        "tier": "low",
+        "type": "security",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "system",
+        "crew_mean": 97.47,
+        "model": "claude-haiku-5-5",
+        "n": 2,
+        "rank": null,
+        "raw": 59.55,
+        "score": 95.1,
+        "tier": "low",
+        "type": "security",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": false,
+        "crew": "haiku",
+        "crew_mean": 144.4,
+        "model": "claude-haiku-5-5",
+        "n": 130,
+        "rank": 1,
+        "raw": 167.5,
+        "score": 163.17,
+        "tier": "low",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 130
+      },
+      {
+        "below_support": false,
+        "crew": "luna",
+        "crew_mean": 128.34,
+        "model": "gpt-6-luna",
+        "n": 170,
+        "rank": 2,
+        "raw": 164.14,
+        "score": 158.77,
+        "tier": "low",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 170
+      },
+      {
+        "below_support": false,
+        "crew": "muse-spark",
+        "crew_mean": 86.85,
+        "model": "muse-spark-1.3-contributor",
+        "n": 87,
+        "rank": 3,
+        "raw": 40.06,
+        "score": 52.06,
+        "tier": "low",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 87
+      },
+      {
+        "below_support": false,
+        "crew": "gemini-flash",
+        "crew_mean": 83.94,
+        "model": "gemini-3.8-flash-high",
+        "n": 30,
+        "rank": 4,
+        "raw": 99.81,
+        "score": 91.87,
+        "tier": "low",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 30
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 102.2,
+        "model": "claude-opus-5-5",
+        "n": 5,
+        "rank": null,
+        "raw": 107.31,
+        "score": 102.93,
+        "tier": "low",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 107.56,
+        "model": "gpt-6.1-sol",
+        "n": 3,
+        "rank": null,
+        "raw": 40.64,
+        "score": 101.48,
+        "tier": "low",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 97.02,
+        "model": "claude-sonnet-5-5",
+        "n": 3,
+        "rank": null,
+        "raw": 107.31,
+        "score": 97.95,
+        "tier": "low",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 103.62,
+        "model": "gpt-6.1-terra",
+        "n": 9,
+        "rank": null,
+        "raw": 107.31,
+        "score": 104.47,
+        "tier": "low",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 9
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 131.28,
+        "model": "gpt-6.1-sol",
+        "n": 26,
+        "rank": 1,
+        "raw": 143.35,
+        "score": 136.89,
+        "tier": "medium",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 26
+      },
+      {
+        "below_support": false,
+        "crew": "grok",
+        "crew_mean": 111.15,
+        "model": "grok-4.7",
+        "n": 17,
+        "rank": 2,
+        "raw": 91.43,
+        "score": 104.02,
+        "tier": "medium",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 17
+      },
+      {
+        "below_support": false,
+        "crew": "muse-wonder",
+        "crew_mean": 87.32,
+        "model": "muse-wonder-1.0",
+        "n": 12,
+        "rank": 3,
+        "raw": 120,
+        "score": 96.66,
+        "tier": "medium",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 12
+      },
+      {
+        "below_support": true,
+        "crew": "haiku",
+        "crew_mean": 142.44,
+        "model": "claude-haiku-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 120,
+        "score": 141.72,
+        "tier": "medium",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "muse-spark",
+        "crew_mean": 62.59,
+        "model": "muse-spark-1.3-contributor",
+        "n": 3,
+        "rank": null,
+        "raw": 120,
+        "score": 67.81,
+        "tier": "medium",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 97.07,
+        "model": "claude-opus-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 20.0,
+        "score": 94.58,
+        "tier": "medium",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 119.35,
+        "model": "claude-sonnet-5-5",
+        "n": 5,
+        "rank": null,
+        "raw": 181.43,
+        "score": 128.21,
+        "tier": "medium",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 21.05,
+        "model": "gpt-6.1-terra",
+        "n": 5,
+        "rank": null,
+        "raw": 100,
+        "score": 32.33,
+        "tier": "medium",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": false,
+        "crew": "haiku",
+        "crew_mean": 142.44,
+        "model": "claude-haiku-5-5",
+        "n": 13,
+        "rank": 1,
+        "raw": 204.26,
+        "score": 161.13,
+        "tier": "medium",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 13
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 131.28,
+        "model": "gpt-6.1-sol",
+        "n": 15,
+        "rank": 2,
+        "raw": 97.78,
+        "score": 120.11,
+        "tier": "medium",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 15
+      },
+      {
+        "below_support": false,
+        "crew": "muse-wonder",
+        "crew_mean": 87.32,
+        "model": "muse-wonder-1.0",
+        "n": 13,
+        "rank": 3,
+        "raw": 104.26,
+        "score": 92.44,
+        "tier": "medium",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 13
+      },
+      {
+        "below_support": true,
+        "crew": "grok",
+        "crew_mean": 111.15,
+        "model": "grok-4.7",
+        "n": 4,
+        "rank": null,
+        "raw": 111.95,
+        "score": 111.24,
+        "tier": "medium",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 4
+      },
+      {
+        "below_support": true,
+        "crew": "luna",
+        "crew_mean": 61.27,
+        "model": "gpt-6-luna",
+        "n": 7,
+        "rank": null,
+        "raw": 111.95,
+        "score": 70.86,
+        "tier": "medium",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 7
+      },
+      {
+        "below_support": true,
+        "crew": "muse-spark",
+        "crew_mean": 62.59,
+        "model": "muse-spark-1.3-contributor",
+        "n": 5,
+        "rank": null,
+        "raw": 111.95,
+        "score": 69.64,
+        "tier": "medium",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 119.35,
+        "model": "claude-sonnet-5-5",
+        "n": 5,
+        "rank": null,
+        "raw": 211.95,
+        "score": 132.57,
+        "tier": "medium",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 21.05,
+        "model": "gpt-6.1-terra",
+        "n": 3,
+        "rank": null,
+        "raw": 28.62,
+        "score": 21.74,
+        "tier": "medium",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": false,
+        "crew": "haiku",
+        "crew_mean": 142.44,
+        "model": "claude-haiku-5-5",
+        "n": 24,
+        "rank": 1,
+        "raw": 107.95,
+        "score": 127.11,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 24
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 131.28,
+        "model": "gpt-6.1-sol",
+        "n": 433,
+        "rank": 2,
+        "raw": 134.84,
+        "score": 134.61,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 433
+      },
+      {
+        "below_support": false,
+        "crew": "sonnet",
+        "crew_mean": 119.35,
+        "model": "claude-sonnet-5-5",
+        "n": 104,
+        "rank": 3,
+        "raw": 114.78,
+        "score": 115.8,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 104
+      },
+      {
+        "below_support": false,
+        "crew": "grok",
+        "crew_mean": 111.15,
+        "model": "grok-4.7",
+        "n": 118,
+        "rank": 4,
+        "raw": 96.1,
+        "score": 99.15,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 118
+      },
+      {
+        "below_support": false,
+        "crew": "muse-wonder",
+        "crew_mean": 87.32,
+        "model": "muse-wonder-1.0",
+        "n": 174,
+        "rank": 5,
+        "raw": 80.23,
+        "score": 81.28,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 174
+      },
+      {
+        "below_support": false,
+        "crew": "muse-spark",
+        "crew_mean": 62.59,
+        "model": "muse-spark-1.3-contributor",
+        "n": 26,
+        "rank": 6,
+        "raw": 33.33,
+        "score": 49.0,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 26
+      },
+      {
+        "below_support": false,
+        "crew": "luna",
+        "crew_mean": 61.27,
+        "model": "gpt-6-luna",
+        "n": 18,
+        "rank": 7,
+        "raw": 16.45,
+        "score": 44.46,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 18
+      },
+      {
+        "below_support": false,
+        "crew": "terra",
+        "crew_mean": 21.05,
+        "model": "gpt-6.1-terra",
+        "n": 71,
+        "rank": 8,
+        "raw": -2.02,
+        "score": 4.84,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 71
+      },
+      {
+        "below_support": true,
+        "crew": "argon",
+        "crew_mean": 84.29,
+        "model": "gemini-4-argon-high",
+        "n": 4,
+        "rank": null,
+        "raw": -33.72,
+        "score": 70.41,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 4
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 97.07,
+        "model": "claude-opus-5-5",
+        "n": 9,
+        "rank": null,
+        "raw": 101.0,
+        "score": 97.98,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 9
+      },
+      {
+        "below_support": true,
+        "crew": "sol@high",
+        "crew_mean": 95.56,
+        "model": "gpt-6.1-sol",
+        "n": 2,
+        "rank": null,
+        "raw": 28.78,
+        "score": 91.39,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 131.28,
+        "model": "gpt-6.1-sol",
+        "n": 46,
+        "rank": 1,
+        "raw": 130.13,
+        "score": 130.58,
+        "tier": "medium",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 46
+      },
+      {
+        "below_support": false,
+        "crew": "grok",
+        "crew_mean": 111.15,
+        "model": "grok-4.7",
+        "n": 10,
+        "rank": 2,
+        "raw": 109.47,
+        "score": 110.73,
+        "tier": "medium",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 10
+      },
+      {
+        "below_support": false,
+        "crew": "muse-wonder",
+        "crew_mean": 87.32,
+        "model": "muse-wonder-1.0",
+        "n": 11,
+        "rank": 3,
+        "raw": 109.47,
+        "score": 93.27,
+        "tier": "medium",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 11
+      },
+      {
+        "below_support": true,
+        "crew": "haiku",
+        "crew_mean": 142.44,
+        "model": "claude-haiku-5-5",
+        "n": 4,
+        "rank": null,
+        "raw": 109.47,
+        "score": 138.56,
+        "tier": "medium",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 4
+      },
+      {
+        "below_support": true,
+        "crew": "luna",
+        "crew_mean": 61.27,
+        "model": "gpt-6-luna",
+        "n": 1,
+        "rank": null,
+        "raw": 109.47,
+        "score": 62.83,
+        "tier": "medium",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 97.07,
+        "model": "claude-opus-5-5",
+        "n": 2,
+        "rank": null,
+        "raw": 109.47,
+        "score": 97.84,
+        "tier": "medium",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 119.35,
+        "model": "claude-sonnet-5-5",
+        "n": 8,
+        "rank": null,
+        "raw": 109.47,
+        "score": 117.27,
+        "tier": "medium",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 8
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 21.05,
+        "model": "gpt-6.1-terra",
+        "n": 3,
+        "rank": null,
+        "raw": 109.47,
+        "score": 29.09,
+        "tier": "medium",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "grok",
+        "crew_mean": 111.15,
+        "model": "grok-4.7",
+        "n": 1,
+        "rank": null,
+        "raw": 128.96,
+        "score": 111.72,
+        "tier": "medium",
+        "type": "security",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder",
+        "crew_mean": 87.32,
+        "model": "muse-wonder-1.0",
+        "n": 5,
+        "rank": null,
+        "raw": -11.04,
+        "score": 73.27,
+        "tier": "medium",
+        "type": "security",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 97.07,
+        "model": "claude-opus-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": -171.04,
+        "score": 88.42,
+        "tier": "medium",
+        "type": "security",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 131.28,
+        "model": "gpt-6.1-sol",
+        "n": 7,
+        "rank": null,
+        "raw": 78.96,
+        "score": 121.38,
+        "tier": "medium",
+        "type": "security",
+        "unit": "tasks",
+        "units": 7
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 119.35,
+        "model": "claude-sonnet-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 128.96,
+        "score": 119.66,
+        "tier": "medium",
+        "type": "security",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "system",
+        "crew_mean": 107.36,
+        "model": "claude-haiku-5-5",
+        "n": 3,
+        "rank": null,
+        "raw": 180.97,
+        "score": 114.05,
+        "tier": "medium",
+        "type": "security",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 21.05,
+        "model": "gpt-6.1-terra",
+        "n": 5,
+        "rank": null,
+        "raw": 48.96,
+        "score": 25.04,
+        "tier": "medium",
+        "type": "security",
+        "unit": "tasks",
+        "units": 5
+      },
+      {
+        "below_support": false,
+        "crew": "haiku",
+        "crew_mean": 142.44,
+        "model": "claude-haiku-5-5",
+        "n": 17,
+        "rank": 1,
+        "raw": 157.92,
+        "score": 148.04,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 17
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 131.28,
+        "model": "gpt-6.1-sol",
+        "n": 181,
+        "rank": 2,
+        "raw": 124.98,
+        "score": 125.88,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 181
+      },
+      {
+        "below_support": false,
+        "crew": "sonnet",
+        "crew_mean": 119.35,
+        "model": "claude-sonnet-5-5",
+        "n": 62,
+        "rank": 3,
+        "raw": 120.5,
+        "score": 120.12,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 62
+      },
+      {
+        "below_support": false,
+        "crew": "grok",
+        "crew_mean": 111.15,
+        "model": "grok-4.7",
+        "n": 71,
+        "rank": 4,
+        "raw": 154.52,
+        "score": 141.63,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 71
+      },
+      {
+        "below_support": false,
+        "crew": "opus",
+        "crew_mean": 97.07,
+        "model": "claude-opus-5-5",
+        "n": 25,
+        "rank": 5,
+        "raw": 108.23,
+        "score": 102.14,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 25
+      },
+      {
+        "below_support": false,
+        "crew": "muse-wonder",
+        "crew_mean": 87.32,
+        "model": "muse-wonder-1.0",
+        "n": 92,
+        "rank": 6,
+        "raw": 83.63,
+        "score": 84.54,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 92
+      },
+      {
+        "below_support": false,
+        "crew": "muse-spark",
+        "crew_mean": 62.59,
+        "model": "muse-spark-1.3-contributor",
+        "n": 17,
+        "rank": 7,
+        "raw": 7.92,
+        "score": 42.82,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 17
+      },
+      {
+        "below_support": false,
+        "crew": "luna",
+        "crew_mean": 61.27,
+        "model": "gpt-6-luna",
+        "n": 14,
+        "rank": 8,
+        "raw": 73.52,
+        "score": 65.17,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 14
+      },
+      {
+        "below_support": false,
+        "crew": "terra",
+        "crew_mean": 21.05,
+        "model": "gpt-6.1-terra",
+        "n": 22,
+        "rank": 9,
+        "raw": 100.14,
+        "score": 54.51,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 22
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder-full",
+        "crew_mean": 97.71,
+        "model": "muse-wonder-full-1.0",
+        "n": 1,
+        "rank": null,
+        "raw": 34.23,
+        "score": 95.66,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": false,
+        "crew": "opus",
+        "crew_mean": 120.48,
+        "model": "claude-opus-5-5",
+        "n": 18,
+        "rank": 1,
+        "raw": 144.86,
+        "score": 129.62,
+        "tier": "hard",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 18
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 116.38,
+        "model": "gpt-6.1-sol",
+        "n": 14,
+        "rank": 2,
+        "raw": 81.76,
+        "score": 105.37,
+        "tier": "hard",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 14
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder",
+        "crew_mean": 99.03,
+        "model": "muse-wonder-1.0",
+        "n": 1,
+        "rank": null,
+        "raw": 53.19,
+        "score": 97.55,
+        "tier": "hard",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder-full",
+        "crew_mean": 51.64,
+        "model": "muse-wonder-full-1.0",
+        "n": 2,
+        "rank": null,
+        "raw": 153.19,
+        "score": 57.99,
+        "tier": "hard",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 79.42,
+        "model": "gpt-6.1-terra",
+        "n": 1,
+        "rank": null,
+        "raw": 53.19,
+        "score": 78.58,
+        "tier": "hard",
+        "type": "ci",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 116.38,
+        "model": "gpt-6.1-sol",
+        "n": 3,
+        "rank": null,
+        "raw": -52.62,
+        "score": 101.02,
+        "tier": "hard",
+        "type": "docs",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": false,
+        "crew": "opus@medium",
+        "crew_mean": 129.72,
+        "model": "claude-opus-5-5",
+        "n": 63,
+        "rank": 1,
+        "raw": 126.4,
+        "score": 127.47,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 63
+      },
+      {
+        "below_support": false,
+        "crew": "opus",
+        "crew_mean": 120.48,
+        "model": "claude-opus-5-5",
+        "n": 176,
+        "rank": 2,
+        "raw": 114.7,
+        "score": 115.54,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 176
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 116.38,
+        "model": "gpt-6.1-sol",
+        "n": 101,
+        "rank": 3,
+        "raw": 130.93,
+        "score": 127.6,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 101
+      },
+      {
+        "below_support": false,
+        "crew": "muse-wonder-full",
+        "crew_mean": 51.64,
+        "model": "muse-wonder-full-1.0",
+        "n": 17,
+        "rank": 4,
+        "raw": 116.75,
+        "score": 75.19,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 17
+      },
+      {
+        "below_support": true,
+        "crew": "argon",
+        "crew_mean": 107.34,
+        "model": "gemini-4-argon-high",
+        "n": 3,
+        "rank": null,
+        "raw": 155.97,
+        "score": 111.76,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "astra",
+        "crew_mean": 96.73,
+        "model": "gpt-6-astra",
+        "n": 2,
+        "rank": null,
+        "raw": 72.63,
+        "score": 95.23,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "grok",
+        "crew_mean": 80.16,
+        "model": "grok-4.7",
+        "n": 2,
+        "rank": null,
+        "raw": -30.14,
+        "score": 73.27,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "luna",
+        "crew_mean": 98.58,
+        "model": "gpt-6-luna",
+        "n": 1,
+        "rank": null,
+        "raw": 44.86,
+        "score": 96.85,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder",
+        "crew_mean": 99.03,
+        "model": "muse-wonder-1.0",
+        "n": 2,
+        "rank": null,
+        "raw": 94.86,
+        "score": 98.77,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 84.39,
+        "model": "claude-sonnet-5-5",
+        "n": 4,
+        "rank": null,
+        "raw": 66.73,
+        "score": 82.31,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 4
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 79.42,
+        "model": "gpt-6.1-terra",
+        "n": 3,
+        "rank": null,
+        "raw": -155.14,
+        "score": 58.1,
+        "tier": "hard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": false,
+        "crew": "opus",
+        "crew_mean": 120.48,
+        "model": "claude-opus-5-5",
+        "n": 14,
+        "rank": 1,
+        "raw": 155.97,
+        "score": 131.78,
+        "tier": "hard",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 14
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder-full",
+        "crew_mean": 51.64,
+        "model": "muse-wonder-full-1.0",
+        "n": 1,
+        "rank": null,
+        "raw": 155.97,
+        "score": 55.01,
+        "tier": "hard",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "opus@medium",
+        "crew_mean": 129.72,
+        "model": "claude-opus-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 155.97,
+        "score": 130.57,
+        "tier": "hard",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 116.38,
+        "model": "gpt-6.1-sol",
+        "n": 8,
+        "rank": null,
+        "raw": 59.88,
+        "score": 104.49,
+        "tier": "hard",
+        "type": "refactor",
+        "unit": "tasks",
+        "units": 8
+      },
+      {
+        "below_support": false,
+        "crew": "opus",
+        "crew_mean": 120.48,
+        "model": "claude-opus-5-5",
+        "n": 11,
+        "rank": 1,
+        "raw": -7.17,
+        "score": 86.24,
+        "tier": "hard",
+        "type": "security",
+        "unit": "tasks",
+        "units": 11
+      },
+      {
+        "below_support": true,
+        "crew": "astra",
+        "crew_mean": 96.73,
+        "model": "gpt-6-astra",
+        "n": 1,
+        "rank": null,
+        "raw": 55.97,
+        "score": 95.42,
+        "tier": "hard",
+        "type": "security",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "muse-wonder-full",
+        "crew_mean": 51.64,
+        "model": "muse-wonder-full-1.0",
+        "n": 2,
+        "rank": null,
+        "raw": -202.62,
+        "score": 35.75,
+        "tier": "hard",
+        "type": "security",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "opus@medium",
+        "crew_mean": 129.72,
+        "model": "claude-opus-5-5",
+        "n": 6,
+        "rank": null,
+        "raw": 130.97,
+        "score": 129.93,
+        "tier": "hard",
+        "type": "security",
+        "unit": "tasks",
+        "units": 6
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 116.38,
+        "model": "gpt-6.1-sol",
+        "n": 3,
+        "rank": null,
+        "raw": 89.31,
+        "score": 113.92,
+        "tier": "hard",
+        "type": "security",
+        "unit": "tasks",
+        "units": 3
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 84.39,
+        "model": "claude-sonnet-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 155.97,
+        "score": 86.7,
+        "tier": "hard",
+        "type": "security",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": false,
+        "crew": "opus@medium",
+        "crew_mean": 129.72,
+        "model": "claude-opus-5-5",
+        "n": 33,
+        "rank": 1,
+        "raw": 162.78,
+        "score": 147.04,
+        "tier": "hard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 33
+      },
+      {
+        "below_support": false,
+        "crew": "opus",
+        "crew_mean": 120.48,
+        "model": "claude-opus-5-5",
+        "n": 118,
+        "rank": 2,
+        "raw": 211.66,
+        "score": 193.17,
+        "tier": "hard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 118
+      },
+      {
+        "below_support": false,
+        "crew": "sol",
+        "crew_mean": 116.38,
+        "model": "gpt-6.1-sol",
+        "n": 18,
+        "rank": 3,
+        "raw": 82.8,
+        "score": 103.79,
+        "tier": "hard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 18
+      },
+      {
+        "below_support": false,
+        "crew": "muse-wonder-full",
+        "crew_mean": 51.64,
+        "model": "muse-wonder-full-1.0",
+        "n": 16,
+        "rank": 4,
+        "raw": -62.27,
+        "score": 12.02,
+        "tier": "hard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 16
+      },
+      {
+        "below_support": true,
+        "crew": "grok",
+        "crew_mean": 80.16,
+        "model": "grok-4.7",
+        "n": 4,
+        "rank": null,
+        "raw": 2.93,
+        "score": 71.08,
+        "tier": "hard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 4
+      },
+      {
+        "below_support": true,
+        "crew": "sonnet",
+        "crew_mean": 84.39,
+        "model": "claude-sonnet-5-5",
+        "n": 4,
+        "rank": null,
+        "raw": -22.07,
+        "score": 71.87,
+        "tier": "hard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 4
+      },
+      {
+        "below_support": true,
+        "crew": "terra",
+        "crew_mean": 79.42,
+        "model": "gpt-6.1-terra",
+        "n": 1,
+        "rank": null,
+        "raw": 177.93,
+        "score": 82.6,
+        "tier": "hard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": false,
+        "crew": "opus",
+        "crew_mean": 95.06,
+        "model": "claude-opus-5-5",
+        "n": 12,
+        "rank": 1,
+        "raw": 113.86,
+        "score": 100.44,
+        "tier": "xhard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 12
+      },
+      {
+        "below_support": true,
+        "crew": "opus@high",
+        "crew_mean": 90.78,
+        "model": "claude-opus-5-5",
+        "n": 2,
+        "rank": null,
+        "raw": -47.6,
+        "score": 82.13,
+        "tier": "xhard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 2
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 115.34,
+        "model": "gpt-6.1-sol",
+        "n": 4,
+        "rank": null,
+        "raw": 227.4,
+        "score": 128.53,
+        "tier": "xhard",
+        "type": "other",
+        "unit": "tasks",
+        "units": 4
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 95.06,
+        "model": "claude-opus-5-5",
+        "n": 1,
+        "rank": null,
+        "raw": 27.4,
+        "score": 92.88,
+        "tier": "xhard",
+        "type": "security",
+        "unit": "tasks",
+        "units": 1
+      },
+      {
+        "below_support": true,
+        "crew": "opus",
+        "crew_mean": 95.06,
+        "model": "claude-opus-5-5",
+        "n": 6,
+        "rank": null,
+        "raw": 44.07,
+        "score": 86.57,
+        "tier": "xhard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 6
+      },
+      {
+        "below_support": true,
+        "crew": "sol",
+        "crew_mean": 115.34,
+        "model": "gpt-6.1-sol",
+        "n": 1,
+        "rank": null,
+        "raw": 127.4,
+        "score": 115.73,
+        "tier": "xhard",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 1
+      }
+    ],
+    "min_support": 10,
+    "provisional": false,
+    "role": "implementers",
+    "settled": false,
+    "unit": "tasks",
+    "window": {
+      "key": "30d",
+      "since": "2026-10-09T09:11:25Z",
+      "until": "2026-11-08T09:11:25Z"
+    }
+  },
+  "min_support_default": 10,
+  "pilots": {
+    "fleet_average": 42.0,
+    "min_support": 10,
+    "provisional": false,
+    "role": "pilots",
+    "rows": [
+      {
+        "below_support": false,
+        "counts": {
+          "confirmed_warnings": 55,
+          "costly_misses": 2,
+          "dismissed_warnings": 89,
+          "f1_lift": 160.69,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 1,
+          "tier_calibration": 367
+        },
+        "crew": "haiku",
+        "model": "claude-haiku-5-5",
+        "per_100": {
+          "confirmed_warnings": 6.09,
+          "costly_misses": 0.26,
+          "dismissed_warnings": 9.86,
+          "f1_lift": 20.79,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 0.11,
+          "tier_calibration": 78.25
+        },
+        "provisional_terms": [],
+        "rank": 1,
+        "raw": 48.18,
+        "runs_without_model": 0,
+        "score": 47.94,
+        "stats": [
+          {
+            "key": "recall_percent",
+            "label": "Recall (%)",
+            "value": 71.75
+          },
+          {
+            "key": "precision_percent",
+            "label": "Precision (%)",
+            "value": 85.7
+          },
+          {
+            "key": "f1_percent",
+            "label": "F1 (%)",
+            "value": 78.11
+          },
+          {
+            "key": "filer_f1_percent",
+            "label": "Filer's F1 (%)",
+            "value": 61.24
+          },
+          {
+            "key": "missed_files",
+            "label": "Landed files no pilot selector covered",
+            "value": 907
+          },
+          {
+            "key": "unused_selectors",
+            "label": "Pilot selectors that covered no landed file",
+            "value": 377
+          },
+          {
+            "key": "selectors_per_task",
+            "label": "Selectors per task",
+            "value": 3.41
+          },
+          {
+            "key": "within_one_tier_percent",
+            "label": "Assessed within one tier (%)",
+            "value": 99.57
+          },
+          {
+            "key": "cost_per_assessment",
+            "label": "Cost per assessment (USD)",
+            "value": 0.08095517989650709
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median pilot run (seconds)",
+            "value": 163.06
+          },
+          {
+            "key": "warning_precision_percent",
+            "label": "Warning precision (%)",
+            "value": 38.19
+          },
+          {
+            "key": "holds_per_100_assessments",
+            "label": "Holds per 100 assessments",
+            "value": 21.14
+          },
+          {
+            "key": "settled_assessments",
+            "label": "Settled assessments",
+            "value": 903
+          },
+          {
+            "key": "excluded_assessments",
+            "label": "Excluded or pending assessments",
+            "value": 464
+          },
+          {
+            "key": "missed_scope_block_count",
+            "label": "Missed scope blocks",
+            "value": 1
+          }
+        ],
+        "term_units": {
+          "confirmed_warnings": 903,
+          "dismissed_warnings": 903,
+          "missed_scope_blocks": 903,
+          "tier_calibration": 469
+        },
+        "unit": "assessed tasks",
+        "units": 773,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 5872552,
+          "efforts": "xhigh",
+          "input_tokens": 724,
+          "invocations": 35,
+          "output_tokens": 1304784,
+          "provider_cost_count": 35,
+          "provider_cost_usd": 3.8544359299999993
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "confirmed_warnings": 14,
+          "costly_misses": 0,
+          "dismissed_warnings": 3,
+          "f1_lift": 73.86,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 0,
+          "tier_calibration": 191
+        },
+        "crew": "haiku@high",
+        "model": "claude-haiku-5-5",
+        "per_100": {
+          "confirmed_warnings": 3.03,
+          "costly_misses": 0,
+          "dismissed_warnings": 0.65,
+          "f1_lift": 18.51,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 0,
+          "tier_calibration": 77.02
+        },
+        "provisional_terms": [],
+        "rank": 2,
+        "raw": 46.21,
+        "runs_without_model": 0,
+        "score": 45.91,
+        "stats": [
+          {
+            "key": "recall_percent",
+            "label": "Recall (%)",
+            "value": 71.4
+          },
+          {
+            "key": "precision_percent",
+            "label": "Precision (%)",
+            "value": 84.26
+          },
+          {
+            "key": "f1_percent",
+            "label": "F1 (%)",
+            "value": 77.3
+          },
+          {
+            "key": "filer_f1_percent",
+            "label": "Filer's F1 (%)",
+            "value": 63.72
+          },
+          {
+            "key": "missed_files",
+            "label": "Landed files no pilot selector covered",
+            "value": 441
+          },
+          {
+            "key": "unused_selectors",
+            "label": "Pilot selectors that covered no landed file",
+            "value": 202
+          },
+          {
+            "key": "selectors_per_task",
+            "label": "Selectors per task",
+            "value": 3.22
+          },
+          {
+            "key": "within_one_tier_percent",
+            "label": "Assessed within one tier (%)",
+            "value": 100
+          },
+          {
+            "key": "cost_per_assessment",
+            "label": "Cost per assessment (USD)",
+            "value": 0.04110745550125314
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median pilot run (seconds)",
+            "value": 100.83
+          },
+          {
+            "key": "warning_precision_percent",
+            "label": "Warning precision (%)",
+            "value": 82.35
+          },
+          {
+            "key": "holds_per_100_assessments",
+            "label": "Holds per 100 assessments",
+            "value": 6.81
+          },
+          {
+            "key": "settled_assessments",
+            "label": "Settled assessments",
+            "value": 462
+          },
+          {
+            "key": "excluded_assessments",
+            "label": "Excluded or pending assessments",
+            "value": 81
+          },
+          {
+            "key": "missed_scope_block_count",
+            "label": "Missed scope blocks",
+            "value": 0
+          }
+        ],
+        "term_units": {
+          "confirmed_warnings": 462,
+          "dismissed_warnings": 462,
+          "missed_scope_blocks": 462,
+          "tier_calibration": 248
+        },
+        "unit": "assessed tasks",
+        "units": 399,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 46963035,
+          "efforts": "high",
+          "input_tokens": 10464,
+          "invocations": 565,
+          "output_tokens": 9689223,
+          "provider_cost_count": 565,
+          "provider_cost_usd": 22.71936211000001
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "confirmed_warnings": 47,
+          "costly_misses": 2,
+          "dismissed_warnings": 55,
+          "f1_lift": 175.52,
+          "lock_wait_hours": 1.49,
+          "missed_scope_blocks": 1,
+          "tier_calibration": 419
+        },
+        "crew": "luna",
+        "model": "gpt-6-luna",
+        "per_100": {
+          "confirmed_warnings": 4.56,
+          "costly_misses": 0.21,
+          "dismissed_warnings": 5.34,
+          "f1_lift": 18.34,
+          "lock_wait_hours": 0.16,
+          "missed_scope_blocks": 0.1,
+          "tier_calibration": 74.56
+        },
+        "provisional_terms": [],
+        "rank": 3,
+        "raw": 44.67,
+        "runs_without_model": 0,
+        "score": 44.59,
+        "stats": [
+          {
+            "key": "recall_percent",
+            "label": "Recall (%)",
+            "value": 71.77
+          },
+          {
+            "key": "precision_percent",
+            "label": "Precision (%)",
+            "value": 85.4
+          },
+          {
+            "key": "f1_percent",
+            "label": "F1 (%)",
+            "value": 78.0
+          },
+          {
+            "key": "filer_f1_percent",
+            "label": "Filer's F1 (%)",
+            "value": 62.06
+          },
+          {
+            "key": "missed_files",
+            "label": "Landed files no pilot selector covered",
+            "value": 1096
+          },
+          {
+            "key": "unused_selectors",
+            "label": "Pilot selectors that covered no landed file",
+            "value": 469
+          },
+          {
+            "key": "selectors_per_task",
+            "label": "Selectors per task",
+            "value": 3.36
+          },
+          {
+            "key": "within_one_tier_percent",
+            "label": "Assessed within one tier (%)",
+            "value": 99.11
+          },
+          {
+            "key": "cost_per_assessment",
+            "label": "Cost per assessment (USD)",
+            "value": null
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median pilot run (seconds)",
+            "value": 131.17
+          },
+          {
+            "key": "warning_precision_percent",
+            "label": "Warning precision (%)",
+            "value": 46.08
+          },
+          {
+            "key": "holds_per_100_assessments",
+            "label": "Holds per 100 assessments",
+            "value": 14.99
+          },
+          {
+            "key": "settled_assessments",
+            "label": "Settled assessments",
+            "value": 1030
+          },
+          {
+            "key": "excluded_assessments",
+            "label": "Excluded or pending assessments",
+            "value": 691
+          },
+          {
+            "key": "missed_scope_block_count",
+            "label": "Missed scope blocks",
+            "value": 1
+          }
+        ],
+        "term_units": {
+          "confirmed_warnings": 1030,
+          "dismissed_warnings": 1030,
+          "missed_scope_blocks": 1030,
+          "tier_calibration": 562
+        },
+        "unit": "assessed tasks",
+        "units": 957,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 4043888,
+          "efforts": "xhigh",
+          "input_tokens": 19299295,
+          "invocations": 22,
+          "output_tokens": 520069,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "confirmed_warnings": 7,
+          "costly_misses": 1,
+          "dismissed_warnings": 3,
+          "f1_lift": 69.54,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 1,
+          "tier_calibration": 192
+        },
+        "crew": "luna@high",
+        "model": "gpt-6-luna",
+        "per_100": {
+          "confirmed_warnings": 1.37,
+          "costly_misses": 0.24,
+          "dismissed_warnings": 0.59,
+          "f1_lift": 16.68,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 0.2,
+          "tier_calibration": 69.82
+        },
+        "provisional_terms": [],
+        "rank": 4,
+        "raw": 36.83,
+        "runs_without_model": 0,
+        "score": 36.83,
+        "stats": [
+          {
+            "key": "recall_percent",
+            "label": "Recall (%)",
+            "value": 71.89
+          },
+          {
+            "key": "precision_percent",
+            "label": "Precision (%)",
+            "value": 84.69
+          },
+          {
+            "key": "f1_percent",
+            "label": "F1 (%)",
+            "value": 77.77
+          },
+          {
+            "key": "filer_f1_percent",
+            "label": "Filer's F1 (%)",
+            "value": 66.24
+          },
+          {
+            "key": "missed_files",
+            "label": "Landed files no pilot selector covered",
+            "value": 436
+          },
+          {
+            "key": "unused_selectors",
+            "label": "Pilot selectors that covered no landed file",
+            "value": 196
+          },
+          {
+            "key": "selectors_per_task",
+            "label": "Selectors per task",
+            "value": 3.07
+          },
+          {
+            "key": "within_one_tier_percent",
+            "label": "Assessed within one tier (%)",
+            "value": 100
+          },
+          {
+            "key": "cost_per_assessment",
+            "label": "Cost per assessment (USD)",
+            "value": 0.011749017074340527
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median pilot run (seconds)",
+            "value": 79.38
+          },
+          {
+            "key": "warning_precision_percent",
+            "label": "Warning precision (%)",
+            "value": 70
+          },
+          {
+            "key": "holds_per_100_assessments",
+            "label": "Holds per 100 assessments",
+            "value": 4.82
+          },
+          {
+            "key": "settled_assessments",
+            "label": "Settled assessments",
+            "value": 511
+          },
+          {
+            "key": "excluded_assessments",
+            "label": "Excluded or pending assessments",
+            "value": 111
+          },
+          {
+            "key": "missed_scope_block_count",
+            "label": "Missed scope blocks",
+            "value": 1
+          }
+        ],
+        "term_units": {
+          "confirmed_warnings": 511,
+          "dismissed_warnings": 511,
+          "missed_scope_blocks": 511,
+          "tier_calibration": 275
+        },
+        "unit": "assessed tasks",
+        "units": 417,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 44965661,
+          "efforts": "high",
+          "input_tokens": 285035620,
+          "invocations": 523,
+          "output_tokens": 3167926,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "confirmed_warnings": 0,
+          "costly_misses": 0,
+          "dismissed_warnings": 1,
+          "f1_lift": 32.41,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 0,
+          "tier_calibration": 120
+        },
+        "crew": "muse-spark@high",
+        "model": "muse-spark-1.3-contributor",
+        "per_100": {
+          "confirmed_warnings": 0,
+          "costly_misses": 0,
+          "dismissed_warnings": 0.38,
+          "f1_lift": 13.68,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 0,
+          "tier_calibration": 86.33
+        },
+        "provisional_terms": [],
+        "rank": 5,
+        "raw": 34.88,
+        "runs_without_model": 0,
+        "score": 34.88,
+        "stats": [
+          {
+            "key": "recall_percent",
+            "label": "Recall (%)",
+            "value": 71.85
+          },
+          {
+            "key": "precision_percent",
+            "label": "Precision (%)",
+            "value": 82.35
+          },
+          {
+            "key": "f1_percent",
+            "label": "F1 (%)",
+            "value": 76.74
+          },
+          {
+            "key": "filer_f1_percent",
+            "label": "Filer's F1 (%)",
+            "value": 68.67
+          },
+          {
+            "key": "missed_files",
+            "label": "Landed files no pilot selector covered",
+            "value": 250
+          },
+          {
+            "key": "unused_selectors",
+            "label": "Pilot selectors that covered no landed file",
+            "value": 135
+          },
+          {
+            "key": "selectors_per_task",
+            "label": "Selectors per task",
+            "value": 3.23
+          },
+          {
+            "key": "within_one_tier_percent",
+            "label": "Assessed within one tier (%)",
+            "value": 100
+          },
+          {
+            "key": "cost_per_assessment",
+            "label": "Cost per assessment (USD)",
+            "value": null
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median pilot run (seconds)",
+            "value": 100.25
+          },
+          {
+            "key": "warning_precision_percent",
+            "label": "Warning precision (%)",
+            "value": 0
+          },
+          {
+            "key": "holds_per_100_assessments",
+            "label": "Holds per 100 assessments",
+            "value": 1.68
+          },
+          {
+            "key": "settled_assessments",
+            "label": "Settled assessments",
+            "value": 264
+          },
+          {
+            "key": "excluded_assessments",
+            "label": "Excluded or pending assessments",
+            "value": 34
+          },
+          {
+            "key": "missed_scope_block_count",
+            "label": "Missed scope blocks",
+            "value": 0
+          }
+        ],
+        "term_units": {
+          "confirmed_warnings": 264,
+          "dismissed_warnings": 264,
+          "missed_scope_blocks": 264,
+          "tier_calibration": 139
+        },
+        "unit": "assessed tasks",
+        "units": 237,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 26208218,
+          "efforts": "high",
+          "input_tokens": 0,
+          "invocations": 287,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      },
+      {
+        "below_support": true,
+        "counts": {
+          "confirmed_warnings": 0,
+          "costly_misses": 0,
+          "dismissed_warnings": 0,
+          "f1_lift": 1.52,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 0,
+          "tier_calibration": 3
+        },
+        "crew": "muse-spark",
+        "model": "muse-spark-1.3-contributor",
+        "per_100": {
+          "confirmed_warnings": 0,
+          "costly_misses": 0,
+          "dismissed_warnings": 0,
+          "f1_lift": 18.94,
+          "lock_wait_hours": 0,
+          "missed_scope_blocks": 0,
+          "tier_calibration": 75
+        },
+        "provisional_terms": [
+          "confirmed_warnings",
+          "dismissed_warnings",
+          "missed_scope_blocks",
+          "tier_calibration"
+        ],
+        "rank": null,
+        "raw": 18.94,
+        "runs_without_model": 0,
+        "score": 18.94,
+        "stats": [
+          {
+            "key": "recall_percent",
+            "label": "Recall (%)",
+            "value": 59.38
+          },
+          {
+            "key": "precision_percent",
+            "label": "Precision (%)",
+            "value": 82.61
+          },
+          {
+            "key": "f1_percent",
+            "label": "F1 (%)",
+            "value": 69.09
+          },
+          {
+            "key": "filer_f1_percent",
+            "label": "Filer's F1 (%)",
+            "value": 45.83
+          },
+          {
+            "key": "missed_files",
+            "label": "Landed files no pilot selector covered",
+            "value": 13
+          },
+          {
+            "key": "unused_selectors",
+            "label": "Pilot selectors that covered no landed file",
+            "value": 4
+          },
+          {
+            "key": "selectors_per_task",
+            "label": "Selectors per task",
+            "value": 2.88
+          },
+          {
+            "key": "within_one_tier_percent",
+            "label": "Assessed within one tier (%)",
+            "value": 100
+          },
+          {
+            "key": "cost_per_assessment",
+            "label": "Cost per assessment (USD)",
+            "value": null
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median pilot run (seconds)",
+            "value": 89.95
+          },
+          {
+            "key": "warning_precision_percent",
+            "label": "Warning precision (%)",
+            "value": null
+          },
+          {
+            "key": "holds_per_100_assessments",
+            "label": "Holds per 100 assessments",
+            "value": 0
+          },
+          {
+            "key": "settled_assessments",
+            "label": "Settled assessments",
+            "value": 7
+          },
+          {
+            "key": "excluded_assessments",
+            "label": "Excluded or pending assessments",
+            "value": 4
+          },
+          {
+            "key": "missed_scope_block_count",
+            "label": "Missed scope blocks",
+            "value": 0
+          }
+        ],
+        "term_units": {
+          "confirmed_warnings": 7,
+          "dismissed_warnings": 7,
+          "missed_scope_blocks": 7,
+          "tier_calibration": 4
+        },
+        "unit": "assessed tasks",
+        "units": 8,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 0,
+          "efforts": "",
+          "input_tokens": 0,
+          "invocations": 0,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
+        }
+      }
+    ],
+    "score_key": "Score: per 100 assessed tasks, credit for f1 lift, tier calibration, confirmed warnings; debits for dismissed warnings, missed scope blocks, costly misses, lock-wait hours. The fleet average is 42.0.",
+    "settled": false,
+    "tasks_scanned": 11994,
+    "terms": [
+      {
+        "group": "credit",
+        "key": "f1_lift",
+        "label": "F1 lift",
+        "weight": 1.0
+      },
+      {
+        "group": "credit",
+        "key": "tier_calibration",
+        "label": "Tier calibration",
+        "weight": 0.25
+      },
+      {
+        "group": "credit",
+        "key": "confirmed_warnings",
+        "label": "Confirmed warnings",
+        "weight": 3.0
+      },
+      {
+        "group": "problem",
+        "key": "dismissed_warnings",
+        "label": "Dismissed warnings",
+        "weight": -1.0
+      },
+      {
+        "group": "problem",
+        "key": "missed_scope_blocks",
+        "label": "Missed scope blocks",
+        "weight": -3.0
+      },
+      {
+        "group": "problem",
+        "key": "costly_misses",
+        "label": "Costly misses",
+        "weight": -1.0
+      },
+      {
+        "group": "problem",
+        "key": "lock_wait_hours",
+        "label": "Lock-wait hours",
+        "weight": -1.0
+      }
+    ],
+    "unit": "assessed tasks",
+    "window": {
+      "key": "30d",
+      "since": "2026-10-09T09:11:48Z",
+      "until": "2026-11-08T09:11:48Z"
+    }
+  },
+  "reviewers": {
+    "provisional": {
+      "fleet_average": 135.78,
+      "min_support": 10,
+      "provisional": true,
+      "provisional_units": 1387,
+      "role": "reviewers",
+      "rows": [
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 70.5,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "opus",
+          "model": "claude-opus-5-5",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 391.67,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 18,
+          "rank": 1,
+          "raw": 391.67,
+          "runs_without_model": 0,
+          "score": 231.74,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 0
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 18
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": null
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": null
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 0
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 18
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 0
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": null
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 18,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 272.5,
+            "fixes_held": 29,
+            "incomplete_reviews": 10,
+            "missed_regressions": 0,
+            "rejected_findings": 9
+          },
+          "crew": "haiku",
+          "model": "claude-haiku-5-5",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 168.21,
+            "fixes_held": 17.9,
+            "incomplete_reviews": 6.17,
+            "missed_regressions": 0,
+            "rejected_findings": 5.56
+          },
+          "provisional": 162,
+          "rank": 2,
+          "raw": 177.47,
+          "runs_without_model": 0,
+          "score": 170.95,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 81
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 81
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 75.31
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 79.72
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 32
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 110
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 20
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 7.3
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 162,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 983.25,
+            "fixes_held": 24,
+            "incomplete_reviews": 19,
+            "missed_regressions": 0,
+            "rejected_findings": 11
+          },
+          "crew": "sol",
+          "model": "gpt-6.1-sol",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 163.88,
+            "fixes_held": 4,
+            "incomplete_reviews": 3.17,
+            "missed_regressions": 0,
+            "rejected_findings": 1.83
+          },
+          "provisional": 600,
+          "rank": 4,
+          "raw": 164.46,
+          "runs_without_model": 0,
+          "score": 163.09,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 137
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 463
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 64.96
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 84.51
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 65
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 486
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 49
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 4.1
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 600,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 55,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "terra",
+          "model": "gpt-6.1-terra",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 152.78,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 36,
+          "rank": 5,
+          "raw": 152.78,
+          "runs_without_model": 0,
+          "score": 145.05,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 0
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 36
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": null
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": null
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 0
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 36
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 0
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": null
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 36,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 48,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "opus@medium",
+          "model": "claude-opus-5-5",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 141.18,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 34,
+          "rank": 6,
+          "raw": 141.18,
+          "runs_without_model": 0,
+          "score": 138.65,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 0
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 34
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": null
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": null
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 0
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 34
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 0
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": null
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 34,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 108.75,
+            "fixes_held": 1,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "grok",
+          "model": "grok-4.7",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 135.94,
+            "fixes_held": 1.25,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 80,
+          "rank": 7,
+          "raw": 137.19,
+          "runs_without_model": 0,
+          "score": 136.8,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 2
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 78
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 100
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 73.46
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": true
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 1
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 79
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 0
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 10.95
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 80,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 126,
+            "fixes_held": 1,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "muse-wonder",
+          "model": "muse-wonder-1.0",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 116.67,
+            "fixes_held": 0.93,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 108,
+          "rank": 8,
+          "raw": 117.59,
+          "runs_without_model": 0,
+          "score": 117.59,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 4
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 104
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 100
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 82.1
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": true
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 3
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 104
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 1
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 1.89
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 108,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 159420,
+            "efforts": "high",
+            "input_tokens": 0,
+            "invocations": 1,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 24,
+            "fixes_held": 11,
+            "incomplete_reviews": 5,
+            "missed_regressions": 0,
+            "rejected_findings": 1
+          },
+          "crew": "luna",
+          "model": "gpt-6-luna",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 39.34,
+            "fixes_held": 18.03,
+            "incomplete_reviews": 8.2,
+            "missed_regressions": 0,
+            "rejected_findings": 1.64
+          },
+          "provisional": 61,
+          "rank": 9,
+          "raw": 51.64,
+          "runs_without_model": 0,
+          "score": 51.64,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 57
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 4
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 87.72
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 78.74
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 39
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 15
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 7
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 6.17
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 61,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 89.5,
+            "fixes_held": 12,
+            "incomplete_reviews": 14,
+            "missed_regressions": 0,
+            "rejected_findings": 18
+          },
+          "crew": "sonnet",
+          "model": "claude-sonnet-5-5",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 50.56,
+            "fixes_held": 6.78,
+            "incomplete_reviews": 7.91,
+            "missed_regressions": 0,
+            "rejected_findings": 10.17
+          },
+          "provisional": 177,
+          "rank": 10,
+          "raw": 43.22,
+          "runs_without_model": 0,
+          "score": 43.22,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 100
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 77
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 86
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 79.72
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 74
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 88
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 15
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 10.37
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 177,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 15.25,
+            "fixes_held": 6,
+            "incomplete_reviews": 5,
+            "missed_regressions": 4,
+            "rejected_findings": 0
+          },
+          "crew": "muse-spark",
+          "model": "muse-spark-1.3-contributor",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 20.61,
+            "fixes_held": 8.11,
+            "incomplete_reviews": 6.76,
+            "missed_regressions": 5.41,
+            "rejected_findings": 0
+          },
+          "provisional": 74,
+          "rank": 11,
+          "raw": 14.53,
+          "runs_without_model": 0,
+          "score": 14.53,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 74
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 0
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 93.24
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 75.43
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": true
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 61
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 6
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 2
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 5
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 5.27
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 74,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": true,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 0,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "gemini-flash",
+          "model": "gemini-3.8-flash-high",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 0,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 1,
+          "rank": null,
+          "raw": 0,
+          "runs_without_model": 0,
+          "score": 0,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 0
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 1
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": null
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": null
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 0
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 0
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 1
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": null
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 1,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        }
+      ],
+      "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 135.8.",
+      "settled": false,
+      "tasks_scanned": 11994,
+      "terms": [
+        {
+          "group": "credit",
+          "key": "findings_held",
+          "label": "Findings that held",
+          "weight": 1.0
+        },
+        {
+          "group": "credit",
+          "key": "fixes_held",
+          "label": "Fixes that held",
+          "weight": 1.0
+        },
+        {
+          "group": "problem",
+          "key": "rejected_findings",
+          "label": "Rejected findings",
+          "weight": -1.0
+        },
+        {
+          "group": "problem",
+          "key": "false_rejects",
+          "label": "False rejects",
+          "weight": -2.0
+        },
+        {
+          "group": "problem",
+          "key": "failed_fixes",
+          "label": "Failed fixes",
+          "weight": -1.0
+        },
+        {
+          "group": "problem",
+          "key": "missed_regressions",
+          "label": "Missed regressions",
+          "weight": -2.0
+        },
+        {
+          "group": "problem",
+          "key": "incomplete_reviews",
+          "label": "Incomplete reviews",
+          "weight": -0.5
+        }
+      ],
+      "unit": "settled reviews",
+      "window": {
+        "key": "30d",
+        "since": "2026-10-09T09:11:36Z",
+        "until": "2026-11-08T09:11:36Z"
+      }
+    },
+    "settled": {
+      "fleet_average": 61.99,
+      "min_support": 10,
+      "provisional": false,
+      "provisional_units": 0,
+      "role": "reviewers",
+      "rows": [
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 140,
+            "fixes_held": 50,
+            "incomplete_reviews": 28,
+            "missed_regressions": 0,
+            "rejected_findings": 20
+          },
+          "crew": "luna",
+          "model": "gpt-6-luna",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 65.42,
+            "fixes_held": 23.36,
+            "incomplete_reviews": 13.08,
+            "missed_regressions": 0,
+            "rejected_findings": 9.35
+          },
+          "provisional": 0,
+          "rank": 1,
+          "raw": 72.9,
+          "runs_without_model": 0,
+          "score": 71.56,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 214
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 0
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 77.57
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 94.38
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 116
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 50
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 48
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 20.03
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 214,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 50,
+            "fixes_held": 23,
+            "incomplete_reviews": 9,
+            "missed_regressions": 4,
+            "rejected_findings": 15
+          },
+          "crew": "sonnet",
+          "model": "claude-sonnet-5-5",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 33.11,
+            "fixes_held": 15.23,
+            "incomplete_reviews": 5.96,
+            "missed_regressions": 2.65,
+            "rejected_findings": 9.93
+          },
+          "provisional": 0,
+          "rank": 2,
+          "raw": 30.13,
+          "runs_without_model": 0,
+          "score": 30.13,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 149
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 2
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": 93.96
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": 77.86
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": true
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 116
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 25
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 1
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 9
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": 12.35
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 151,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": true,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 24,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "opus",
+          "model": "claude-opus-5-5",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 2400,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 0,
+          "rank": null,
+          "raw": 2400,
+          "runs_without_model": 0,
+          "score": 137.41,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 0
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 1
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": null
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": null
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 0
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 1
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 0
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": null
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 1,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        }
+      ],
+      "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 62.0.",
+      "settled": true,
+      "tasks_scanned": 11994,
+      "terms": [
+        {
+          "group": "credit",
+          "key": "findings_held",
+          "label": "Findings that held",
+          "weight": 1.0
+        },
+        {
+          "group": "credit",
+          "key": "fixes_held",
+          "label": "Fixes that held",
+          "weight": 1.0
+        },
+        {
+          "group": "problem",
+          "key": "rejected_findings",
+          "label": "Rejected findings",
+          "weight": -1.0
+        },
+        {
+          "group": "problem",
+          "key": "false_rejects",
+          "label": "False rejects",
+          "weight": -2.0
+        },
+        {
+          "group": "problem",
+          "key": "failed_fixes",
+          "label": "Failed fixes",
+          "weight": -1.0
+        },
+        {
+          "group": "problem",
+          "key": "missed_regressions",
+          "label": "Missed regressions",
+          "weight": -2.0
+        },
+        {
+          "group": "problem",
+          "key": "incomplete_reviews",
+          "label": "Incomplete reviews",
+          "weight": -0.5
+        }
+      ],
+      "unit": "settled reviews",
+      "window": {
+        "key": "30d",
+        "since": "2026-09-09T09:11:48Z",
+        "until": "2026-10-09T09:11:48Z"
+      }
+    }
+  },
+  "roles": [
+    "implementers",
+    "reviewers",
+    "pilots"
+  ],
+  "roles_omitted": [
+    "orchestrators"
+  ],
+  "schema_version": 1
+}
