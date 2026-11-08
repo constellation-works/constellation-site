@@ -71,6 +71,14 @@ winner, and unavailable measurements stay unavailable.
 Names, hypotheses and verdict reasons use the snapshot's sanitized public text;
 individual task/run records and diagnostic fields are not rendered.
 
+Each analytics page also has a monthly archive: once a calendar month has
+ended (a snapshot from a later month exists), that month's last snapshot is
+rendered at `/analytics/<page>/<YYYY-MM>/` through the same renderer as the
+live page, starting with 2026-11; nothing before the first routine snapshot
+(2026-11-08) is backfilled. Every live and archived page carries a snapshot
+picker (a plain link list, no JavaScript) listing Latest and each archived
+month, and the `/analytics/` index lists the available months.
+
 ## Local preview
 
 ```sh

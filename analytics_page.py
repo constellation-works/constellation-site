@@ -120,6 +120,172 @@ def e(value):
     return html.escape(str(value), quote=True)
 
 
+# Monthly snapshot archive. The archive starts at the first routine snapshot
+# (2026-11-08); nothing earlier is backfilled. A month becomes an archive
+# entry once a snapshot from a later month exists, i.e. once that month has
+# ended; the newest snapshot's own month is the live "Latest" page.
+ARCHIVE_FLOOR = datetime.date(2026, 11, 8)
+_STAMP = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$")
+
+
+def _snapshot_dirs(base):
+    base = pathlib.Path(base)
+    if not base.is_dir():
+        return []
+    dated = []
+    for path in base.iterdir():
+        if not path.is_dir() or not DAY.fullmatch(path.name):
+            continue
+        try:
+            day = datetime.date.fromisoformat(path.name)
+        except ValueError:
+            continue
+        dated.append((day, path))
+    return sorted(dated)
+
+
+def _window_stamps(directory):
+    """Validated (since, until) stamps for a snapshot, or (None, None).
+
+    Only known window fields are read: meta.json's reliability window first,
+    then each page file's own window. Anything unparseable is ignored rather
+    than published.
+    """
+    directory = pathlib.Path(directory)
+    candidates = []
+    try:
+        meta = json.loads((directory / "meta.json").read_text(encoding="utf-8"))
+        candidates.append(((meta.get("windows") or {}).get("reliability") or {}))
+    except (OSError, json.JSONDecodeError, AttributeError):
+        pass
+    for name, keys in (
+        ("metrics.json", ("durations", "window")),
+        ("scorecards.json", ("implementers", "window")),
+        ("reliability.json", ("window",)),
+    ):
+        try:
+            node = json.loads((directory / name).read_text(encoding="utf-8"))
+            for key in keys:
+                node = node.get(key) or {}
+            candidates.append(node)
+        except (OSError, json.JSONDecodeError, AttributeError):
+            continue
+    for window in candidates:
+        since, until = window.get("since"), window.get("until")
+        if not (isinstance(since, str) and isinstance(until, str)
+                and _STAMP.fullmatch(since) and _STAMP.fullmatch(until)):
+            continue
+        try:
+            if parse_time(since) <= parse_time(until):
+                return since, until
+        except (ValueError, OverflowError):
+            continue
+    return None, None
+
+
+def snapshot_entry(directory):
+    directory = pathlib.Path(directory)
+    since, until = _window_stamps(directory)
+    return {
+        "month": directory.name[:7],
+        "date": directory.name,
+        "directory": directory,
+        "since": since,
+        "until": until,
+    }
+
+
+def latest_snapshot_entry(base, required=None):
+    dated = _snapshot_dirs(base)
+    if required:
+        dated = [(day, path) for day, path in dated if (path / required).is_file()]
+    return snapshot_entry(dated[-1][1]) if dated else None
+
+
+def monthly_archive_entries(base, required=None):
+    """Latest snapshot of each closed calendar month, newest month first."""
+    dated = _snapshot_dirs(base)
+    if not dated:
+        return []
+    open_month = dated[-1][0].isoformat()[:7]
+    by_month = {}
+    for day, path in dated:
+        if day < ARCHIVE_FLOOR:
+            continue
+        if required and not (path / required).is_file():
+            continue
+        by_month[day.isoformat()[:7]] = path
+    months = sorted((m for m in by_month if m < open_month), reverse=True)
+    return [snapshot_entry(by_month[month]) for month in months]
+
+
+def month_label(month):
+    return datetime.date(int(month[:4]), int(month[5:7]), 1).strftime("%B %Y")
+
+
+def _window_html(entry):
+    if not entry.get("since") or not entry.get("until"):
+        return ""
+    return (
+        f', window <time datetime="{e(entry["since"])}">{e(entry["since"][:10])}</time>'
+        f' to <time datetime="{e(entry["until"])}">{e(entry["until"][:10])}</time>'
+    )
+
+
+def snapshot_picker(page, latest, archives, current=None):
+    """No-JS link list: Latest plus each archived month, newest first.
+
+    Every date sits inside a <time> element, and the current entry carries
+    aria-current plus visible "(current)" text.
+    """
+    if latest is None:
+        return ""
+
+    def mark(is_current):
+        return (
+            ' aria-current="page" class="is-current"', ' <span class="snapshot-current">(current)</span>'
+        ) if is_current else ("", "")
+
+    attrs, suffix = mark(current is None)
+    items = [
+        f'<li><a href="/analytics/{e(page)}/"{attrs}>Latest</a>'
+        f' <span class="snapshot-detail">snapshot <time datetime="{e(latest["date"])}">{e(latest["date"])}</time>'
+        f'{_window_html(latest)}</span>{suffix}</li>'
+    ]
+    for entry in archives:
+        attrs, suffix = mark(current == entry["month"])
+        items.append(
+            f'<li><a href="/analytics/{e(page)}/{e(entry["month"])}/"{attrs}>'
+            f'<time datetime="{e(entry["month"])}">{e(month_label(entry["month"]))}</time></a>'
+            f' <span class="snapshot-detail">(<time datetime="{e(entry["month"])}">{e(entry["month"])}</time>)'
+            f' snapshot <time datetime="{e(entry["date"])}">{e(entry["date"])}</time>{_window_html(entry)}</span>{suffix}</li>'
+        )
+    return (
+        '<nav class="snapshot-picker" aria-label="Snapshot months">'
+        '<span class="snapshot-picker-label">Snapshot</span><ul>'
+        + "".join(items)
+        + "</ul></nav>"
+    )
+
+
+def archive_banner(page, entry):
+    return (
+        '<p class="archive-banner">Historical snapshot: this page shows the '
+        f'<time datetime="{e(entry["month"])}">{e(month_label(entry["month"]))}</time> snapshot from '
+        f'<time datetime="{e(entry["date"])}">{e(entry["date"])}</time>{_window_html(entry)}. '
+        f'<a href="/analytics/{e(page)}/">Back to Latest</a>.</p>'
+    )
+
+
+def picker_html(base, page, required=None, current=None):
+    return snapshot_picker(
+        page,
+        latest_snapshot_entry(base, required),
+        monthly_archive_entries(base, required),
+        current,
+    )
+
+
 def asset(root, name):
     digest = hashlib.sha256((root / "public" / "assets" / name).read_bytes()).hexdigest()
     return f"/assets/{name}?v={digest[:10]}"
@@ -1375,7 +1541,7 @@ def section_outcome(metrics):
     return section("outcomes", "Outcome by complexity", intro, body)
 
 
-def render_body(metrics):
+def render_body(metrics, picker="", banner=""):
     toc = """<nav class="toc" aria-label="Metrics sections"><ul>
 <li><a href="#duration">Duration</a></li>
 <li><a href="#completed">Tasks completed</a></li>
@@ -1413,7 +1579,7 @@ def render_body(metrics):
         "</ul></section>"
     )
     return (
-        f'<article class="analytics">{hero}{toc}'
+        f'<article class="analytics">{hero}{banner}{picker}{toc}'
         + section_duration(metrics)
         + section_completions(metrics)
         + section_defects(metrics)
@@ -1428,7 +1594,11 @@ def render_body(metrics):
     )
 
 
-def render_page(root, metrics, day):
+def render_page(root, metrics, day, picker=None, banner="", archive_month=None, url=None):
+    root = pathlib.Path(root)
+    if picker is None:
+        picker = picker_html(root / "data" / "analytics", "metrics", "metrics.json", archive_month)
+    page_url = url or "https://constellation-works.com/analytics/metrics/"
     description = "30-day Orbit metrics: duration for succeeded runs; tokens and turns for done tasks; plus completions, defects, cost, diff size and friction."
     footer = f"""<footer>
   <div class="wrap">
@@ -1447,13 +1617,13 @@ def render_page(root, metrics, day):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Metrics — Constellation Works</title>
 <meta name="description" content="{e(description)}">
-<link rel="canonical" href="https://constellation-works.com/analytics/metrics/">
+<link rel="canonical" href="{e(page_url)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/brand/png/cw-favicon-180.png">
 <meta property="og:title" content="Metrics — Constellation Works">
 <meta property="og:description" content="{e(description)}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://constellation-works.com/analytics/metrics/">
+<meta property="og:url" content="{e(page_url)}">
 <meta property="og:image" content="https://constellation-works.com/brand/png/cw-lockup-light-1520.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1466,12 +1636,26 @@ def render_page(root, metrics, day):
 <body>
 {HEADER}
 <main class="wrap">
-{render_body(metrics)}
+{render_body(metrics, picker, banner)}
 </main>
 {footer}
 </body>
 </html>
 """
+
+
+def load_metrics(directory):
+    path = pathlib.Path(directory) / "metrics.json"
+    try:
+        metrics = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        sys.exit(f"{path}: {exc}")
+    if metrics.get("schema_version") != 1:
+        sys.exit(f"{path}: schema_version {metrics.get('schema_version')!r} is not 1")
+    window = (metrics.get("durations") or {}).get("window") or {}
+    if not window.get("since") or not window.get("until"):
+        sys.exit(f"{path}: durations.window has no UTC since/until")
+    return metrics
 
 
 def newest_metrics(root):
@@ -1484,21 +1668,12 @@ def newest_metrics(root):
     )
     if not days:
         sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/metrics.json")
-    path = days[-1] / "metrics.json"
-    try:
-        metrics = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        sys.exit(f"{path}: {exc}")
-    if metrics.get("schema_version") != 1:
-        sys.exit(f"{path}: schema_version {metrics.get('schema_version')!r} is not 1")
-    window = (metrics.get("durations") or {}).get("window") or {}
-    if not window.get("since") or not window.get("until"):
-        sys.exit(f"{path}: durations.window has no UTC since/until")
-    return days[-1].name, metrics
+    return days[-1].name, load_metrics(days[-1])
 
 
 def build(root):
     root = pathlib.Path(root)
+    base = root / "data" / "analytics"
     day, metrics = newest_metrics(root)
     dest = root / "public" / "analytics" / "metrics"
     if dest.exists():
@@ -1506,3 +1681,18 @@ def build(root):
     dest.mkdir(parents=True)
     (dest / "index.html").write_text(render_page(root, metrics, day), encoding="utf-8")
     print(f"built metrics ({day}) -> {dest}")
+    for entry in monthly_archive_entries(base, "metrics.json"):
+        archived = load_metrics(entry["directory"])
+        month_dest = dest / entry["month"]
+        month_dest.mkdir(parents=True)
+        (month_dest / "index.html").write_text(
+            render_page(
+                root, archived, entry["date"],
+                picker=picker_html(base, "metrics", "metrics.json", entry["month"]),
+                banner=archive_banner("metrics", entry),
+                archive_month=entry["month"],
+                url=f"https://constellation-works.com/analytics/metrics/{entry['month']}/",
+            ),
+            encoding="utf-8",
+        )
+        print(f"built metrics archive {entry['month']} ({entry['date']}) -> {month_dest}")
