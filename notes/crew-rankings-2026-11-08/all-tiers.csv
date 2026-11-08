@@ -1,0 +1,11 @@
+rank,crew,model,effort,tasks,score,landed_pct
+1,opus@medium,claude-opus-5-5,medium,90,119.8,98.9
+2,sol,gpt-6.1-sol,high,153,106.3,95.4
+3,sonnet,claude-sonnet-5-5,high,67,103.2,100.0
+4,muse-spark,muse-spark-1.3-contributor,xhigh,150,100.7,99.3
+5,haiku,claude-haiku-5-5,xhigh,177,99.0,98.9
+6,luna,gpt-6-luna,xhigh,169,98.5,97.0
+7,muse-wonder,muse-wonder-1.0,high,129,93.7,98.4
+8,terra,gpt-6.1-terra,high,105,93.1,98.1
+9,opus,claude-opus-5-5,"medium, high",36,91.1,100.0
+10,grok,grok-4.7,high,54,88.9,92.6
