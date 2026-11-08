@@ -33,7 +33,9 @@ def fixture():
                  "crew_mix": [{"crew": "luna", "tasks": 18}]},
             ],
             "metrics": [{
-                "metric": "cost_usd", "kind": "mean", "unit": "usd",
+                "metric": "cost_usd", "kind": "mean", "unit": "usd", "better": "lower",
+                "differences": [{"arm": "treatment", "overall": {
+                    "estimate": -2, "interval": [-3, -1]}}],
                 "arms": [
                     {"arm": "control", "mean": 4, "mean_interval": [3, 5],
                      "median": 3.5, "median_interval": [2, 4],
@@ -42,7 +44,8 @@ def fixture():
                      "n": 18, "open": 1, "unmeasured": 2},
                 ],
             }, {
-                "metric": "delivery_done_rate", "kind": "rate", "unit": "rate",
+                "metric": "delivery_done_rate", "kind": "rate", "unit": "rate", "better": "higher",
+                "differences": [{"arm": "treatment", "overall": {"estimate": None}}],
                 "arms": [
                     {"arm": "control", "mean": 0.9, "mean_interval": [0.7, 1],
                      "n": 20, "open": 0, "unmeasured": 0},
@@ -64,13 +67,15 @@ class ExperimentsPageTest(unittest.TestCase):
         self.assertEqual(data, original)
         for text in (
             "Can the treatment lower cost &amp; preserve quality?", "sol (20 tasks)",
-            "luna (18 tasks)", "4.00 USD", "3.00 USD – 5.00 USD",
-            "3.50 USD", "2.00 USD – 4.00 USD", "20 measured tasks",
+            "luna (18 tasks)", "$4.00", "$3.00 – $5.00",
+            "$3.50", "$2.00 – $4.00", "20 measured tasks",
             "1 open tasks; 2 unmeasured tasks", "90.0%", "70.0% – 100.0%",
             "<strong>Verdict:</strong> inconclusive.", "<strong>Chosen arm:</strong> treatment.",
             "Statistical recommendation: control.", "Quality interval straddles the limit.",
             "2026-10-01T01:02:03.123456789Z", "2026-11-08T02:03:04.987654321Z",
-            "UTC.", "not a rolling 30-day window", "Other per-arm outcomes",
+            "UTC.", "not a rolling 30-day window", "Raw per-arm outcomes",
+            "Difference from control", "-$2.00, -$3.00 to -$1.00", "not measured",
+            "treatment: -$2.00 difference from control", "better than control",
             'href="https://constellation-works.com/analytics/experiments/"',
         ):
             self.assertIn(text, doc)
@@ -143,10 +148,57 @@ class ExperimentsPageTest(unittest.TestCase):
     def test_unavailable_and_zero_are_distinct(self):
         for value in (None, True, "5", float("nan"), float("inf")):
             self.assertEqual(build.experiment_value(value, "USD"), "Unavailable")
-        self.assertEqual(build.experiment_value(0, "USD"), "0.00 USD")
+        self.assertEqual(build.experiment_value(0, "USD"), "$0.00")
         for interval in (None, [], [1], [2, 1], [False, 1], [0, float("inf")]):
             self.assertEqual(build.experiment_interval(interval, "USD"), "Unavailable")
-        self.assertEqual(build.experiment_interval([0, 0], "USD"), "0.00 USD – 0.00 USD")
+        self.assertEqual(build.experiment_interval([0, 0], "USD"), "$0.00 – $0.00")
+
+    def test_difference_chart_order_collapse_formatting_and_raw_hidden(self):
+        data = fixture()
+        exp = data["experiments"][0]
+        exp["metrics"].append({
+            "metric": "total_tokens", "kind": "mean", "unit": None, "better": "lower",
+            "exploratory": True,
+            "differences": [{"arm": "treatment", "overall": {
+                "estimate": 13097061.69, "interval": [8994127.15, 17750050.23]}}],
+            "arms": [{"arm": "control", "mean": 1, "n": 1}, {"arm": "treatment", "mean": 2, "n": 1}],
+        })
+        exp["metrics"].append({
+            "metric": "implement_duration", "kind": "mean", "unit": "minutes", "better": "lower",
+            "exploratory": True,
+            "differences": [{"arm": "treatment", "overall": {"estimate": 38.5}}],
+            "arms": [{"arm": "control", "mean": 1, "n": 1}, {"arm": "treatment", "mean": 2, "n": 1}],
+        })
+        doc = build.render_experiments_page(data, "2026-11-08")
+        # Primary (cost) before guardrail (delivery rate), exploratory collapsed.
+        self.assertLess(doc.index(">Cost <"), doc.index("Delivery done rate"))
+        self.assertIn('<span class="diff-kind">Primary</span>', doc)
+        self.assertIn('<span class="diff-kind">Guardrail</span>', doc)
+        self.assertIn("<summary>Other metrics (2)</summary>", doc)
+        self.assertIn("+13.1M tokens", doc)
+        self.assertIn("+38.5 min, interval unavailable", doc)
+        self.assertNotIn("13,097,061.69", doc)
+        self.assertNotIn("13097061", doc)
+        # Rate differences are points; the fixture rate arm is unmeasured.
+        rate = {"metric": "delivery_done_rate", "unit": "rate", "better": "higher"}
+        self.assertEqual(build.experiment_difference(0.25, rate), "+25.0 points")
+        self.assertEqual(build.experiment_difference(11.64, exp["metrics"][0]), "+$11.64")
+        # Raw tables live only inside the collapsed raw block.
+        before_raw, _, raw = doc.partition('<details class="experiment-raw">')
+        self.assertNotIn("<table", before_raw)
+        self.assertIn("<table", raw)
+        self.assertIn("$4.00", raw)
+        # Chart itself needs no script and every measured row carries a text equivalent.
+        chart = doc.partition('<div class="diff-chart">')[2].partition('<details class="experiment-raw">')[0]
+        self.assertNotIn("<script", chart)
+        self.assertIn('class="sr-only">treatment:', chart)
+
+    def test_difference_without_arm_entry_is_not_measured(self):
+        data = fixture()
+        data["experiments"][0]["metrics"][0]["differences"] = []
+        doc = build.render_experiments_page(data, "2026-11-08")
+        chart = doc.partition('<div class="diff-chart">')[2].partition('<details class="experiment-raw">')[0]
+        self.assertIn("not measured", chart)
 
     def test_build_newest_and_refuse_missing_or_invalid_newest(self):
         SCRATCH.mkdir(parents=True, exist_ok=True)
@@ -192,12 +244,19 @@ class ExperimentsPageTest(unittest.TestCase):
         self.assertNotIn("hard-tier-explore-first", doc)
         by_model = next(x for x in concluded if x["name"] == "hard-tier-by-model")
         self.assertEqual(by_model["primary_metric"], "cost_usd")
-        section = doc.split("<h2>" + build.html.escape(by_model["name"]), 1)[1].split("</section>", 1)[0]
-        self.assertIn("<h3>Primary outcome</h3><h4>Cost</h4>", section)
+        section = doc.split("<h2>" + build.html.escape(by_model["name"]), 1)[1].split("\n</section>", 1)[0]
+        self.assertIn("<h3>Difference from control</h3>", section)
+        self.assertIn('<details class="experiment-raw"><summary>Raw per-arm outcomes</summary>', section)
+        chart, _, raw = section.partition('<details class="experiment-raw">')
+        self.assertNotIn("<table", chart)
+        self.assertIn("<table", raw)
+        self.assertIn("Other metrics (", chart)
         for metric in by_model["metrics"]:
+            if metric["metric"] not in build.EXPERIMENT_METRICS:
+                continue
             label = build.EXPERIMENT_METRICS[metric["metric"]][0]
             suffix = " (exploratory, not a decision metric)" if metric.get("exploratory") else ""
-            self.assertIn(f"<h4>{label}{suffix}</h4>", section)
+            self.assertIn(f"<h4>{label}{suffix}</h4>", raw)
         for text in ("ORB-", "jrun-", "/home/", "dk-server", "dropped"):
             self.assertNotIn(text, doc)
 

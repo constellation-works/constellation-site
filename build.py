@@ -854,12 +854,57 @@ EXPERIMENT_METRICS = {
 }
 
 
+def _compact(value, suffixes=("K", "M", "B")):
+    a = abs(value)
+    sign = "-" if value < 0 else ""
+    if a >= 1e9:
+        text = f"{a / 1e9:.1f}{suffixes[2]}"
+    elif a >= 1e6:
+        text = f"{a / 1e6:.1f}{suffixes[1]}"
+    elif a >= 1e3:
+        text = f"{a / 1e3:.1f}{suffixes[0]}"
+    else:
+        return _plain(value)
+    if text.endswith(".0" + text[-1]):
+        text = text[:-3] + text[-1]
+    return sign + text
+
+
+def _plain(value):
+    if float(value).is_integer():
+        return f"{int(value):,}"
+    if abs(value) >= 100:
+        return f"{value:,.0f}"
+    if abs(value) >= 10:
+        return f"{value:.1f}".rstrip("0").rstrip(".")
+    return f"{value:.2f}".rstrip("0").rstrip(".")
+
+
 def experiment_value(value, unit):
     if not as_number(value) or not math.isfinite(value):
         return "Unavailable"
     if unit == "%":
         return f"{value:.1%}"
-    return f"{value:,.2f} {unit}"
+    if unit == "USD":
+        return f"${value:,.2f}"
+    if unit == "USD/line":
+        return f"${value:,.4f} / line"
+    if unit == "tokens":
+        return f"{_compact(value)} tokens"
+    if unit == "bytes":
+        a = abs(value)
+        if a >= 1024 ** 2:
+            return f"{value / 1024 ** 2:.1f} MB".replace(".0 MB", " MB")
+        if a >= 1024:
+            return f"{value / 1024:.1f} KB".replace(".0 KB", " KB")
+        return f"{_plain(value)} B"
+    if unit == "minutes":
+        return f"{_plain(value)} min"
+    if unit == "hours":
+        return f"{_plain(value)} h"
+    if unit == "hours/line":
+        return f"{_plain(value)} h / line"
+    return f"{_compact(value) if abs(value) >= 10000 else _plain(value)} {unit}".strip()
 
 
 def experiment_interval(value, unit):
@@ -868,6 +913,152 @@ def experiment_interval(value, unit):
     if any(not as_number(v) or not math.isfinite(v) for v in value) or value[0] > value[1]:
         return "Unavailable"
     return f"{experiment_value(value[0], unit)} – {experiment_value(value[1], unit)}"
+
+
+def _valid_interval(value):
+    return (
+        isinstance(value, list) and len(value) == 2
+        and all(as_number(v) and math.isfinite(v) for v in value) and value[0] <= value[1]
+    )
+
+
+def _diff_category(metric):
+    key = metric.get("metric")
+    _, display = EXPERIMENT_METRICS.get(key, (key, metric.get("unit") or ""))
+    snap = metric.get("unit")
+    if key in ("delivery_done_rate", "first_pass_acceptance") or snap == "rate" or display == "%":
+        return "rate", display
+    if key == "cost_usd" or snap == "usd" or display == "USD":
+        return "money", display
+    if key == "cost_per_line" or display == "USD/line":
+        return "money_line", display
+    if key in ("implement_tokens", "total_tokens") or display == "tokens" or snap == "tokens":
+        return "tokens", display
+    if display == "bytes" or snap == "bytes":
+        return "bytes", display
+    if snap == "minutes" or display == "minutes":
+        return "minutes", display
+    if snap == "hours" or display == "hours":
+        return "hours", display
+    return "generic", display or (snap or "")
+
+
+def experiment_difference(value, metric):
+    """Signed, human-formatted difference versus control (snapshot-projected only)."""
+    if not as_number(value) or not math.isfinite(value):
+        return "not measured"
+    category, display = _diff_category(metric)
+    sign = "+" if value > 0 else "-" if value < 0 else ""
+    a = abs(value)
+    if category == "rate":
+        return f"{sign}{a * 100:.1f} points"
+    if category == "money":
+        return f"{sign}${a:,.2f}"
+    if category == "money_line":
+        return f"{sign}${a:,.4f} / line"
+    if category == "tokens":
+        return f"{sign}{_compact(a)} tokens"
+    if category == "bytes":
+        return f"{sign}{experiment_value(a, 'bytes')}"
+    if category == "minutes":
+        return f"{sign}{_plain(a)} min"
+    if category == "hours":
+        return f"{sign}{_plain(a)} h"
+    suffix = display if display not in ("%",) else ""
+    return f"{sign}{_compact(a) if a >= 10000 else _plain(a)} {suffix}".strip()
+
+
+def experiment_difference_interval(value, metric):
+    if not _valid_interval(value):
+        return "interval unavailable"
+    return f"{experiment_difference(value[0], metric)} to {experiment_difference(value[1], metric)}"
+
+
+def _diff_verdict(estimate, better):
+    if estimate == 0:
+        return "same", "same as control"
+    if better == "higher":
+        return ("better", "better than control") if estimate > 0 else ("worse", "worse than control")
+    if better == "lower":
+        return ("better", "better than control") if estimate < 0 else ("worse", "worse than control")
+    return ("higher", "higher than control") if estimate > 0 else ("lower", "lower than control")
+
+
+def experiment_diff_metric(metric, arms, kind_label):
+    """One static chart group for a metric, from its projected differences only."""
+    e = html.escape
+    key = metric.get("metric")
+    label, _ = EXPERIMENT_METRICS[key]
+    better = metric.get("better") if metric.get("better") in ("higher", "lower") else None
+    diffs = {}
+    diff_order = []
+    for diff in metric.get("differences") or []:
+        if isinstance(diff, dict) and isinstance(diff.get("arm"), str) and diff["arm"] not in diffs:
+            diffs[diff["arm"]] = diff
+            diff_order.append(diff["arm"])
+    control_names = {a["name"] for a in arms if a.get("control")} or {"control"}
+    arm_names = [a["name"] for a in arms if a["name"] not in control_names]
+    for name in diff_order:
+        if name not in arm_names and name not in control_names:
+            arm_names.append(name)
+
+    def oriented(v):
+        return -v if better == "lower" else v
+
+    points = []
+    for name in arm_names:
+        diff = diffs.get(name)
+        overall = diff.get("overall") if isinstance(diff, dict) and isinstance(diff.get("overall"), dict) else {}
+        estimate = overall.get("estimate")
+        if as_number(estimate) and math.isfinite(estimate):
+            points.append(oriented(estimate))
+            if _valid_interval(overall.get("interval")):
+                points.extend(oriented(v) for v in overall["interval"])
+    domain = max((abs(p) for p in points), default=0) or 1
+
+    def pct(v):
+        return 50 + (v / domain) * 47
+
+    rows = []
+    for name in arm_names:
+        diff = diffs.get(name)
+        overall = diff.get("overall") if isinstance(diff, dict) and isinstance(diff.get("overall"), dict) else {}
+        estimate = overall.get("estimate")
+        if not as_number(estimate) or not math.isfinite(estimate):
+            rows.append(
+                f'<div class="diff-row is-unmeasured"><span class="diff-arm">{e(name)}</span>'
+                '<span class="diff-track" aria-hidden="true"></span>'
+                '<span class="diff-value">not measured</span>'
+                f'<span class="sr-only">{e(name)}: not measured</span></div>'
+            )
+            continue
+        interval = overall.get("interval") if _valid_interval(overall.get("interval")) else None
+        verdict, verdict_phrase = _diff_verdict(estimate, better)
+        est_text = experiment_difference(estimate, metric)
+        int_text = experiment_difference_interval(interval, metric)
+        value_text = f"{est_text}, {int_text}" if interval else f"{est_text}, interval unavailable"
+        whisker = ""
+        if interval:
+            lo, hi = sorted(oriented(v) for v in interval)
+            whisker = f'<span class="diff-whisker" style="left:{pct(lo):.2f}%;width:{max(pct(hi) - pct(lo), 0.5):.2f}%"></span>'
+        rows.append(
+            f'<div class="diff-row is-{verdict}"><span class="diff-arm">{e(name)}</span>'
+            f'<span class="diff-track" aria-hidden="true">{whisker}'
+            f'<span class="diff-point" style="left:{pct(oriented(estimate)):.2f}%"></span></span>'
+            f'<span class="diff-value">{e(value_text)} <span class="diff-verdict">({e(verdict)})</span></span>'
+            f'<span class="sr-only">{e(name)}: {e(est_text)} difference from control, '
+            f'{e(int_text)}, {e(verdict_phrase)}</span></div>'
+        )
+    if better in ("higher", "lower"):
+        left, right = "← worse", "better →"
+    else:
+        left, right = "← lower", "higher →"
+    return (
+        f'<section class="diff-metric"><h4>{e(label)} '
+        f'<span class="diff-kind">{e(kind_label)}</span></h4>'
+        f'<p class="diff-axis" aria-hidden="true"><span>{left}</span><span>control (0)</span><span>{right}</span></p>'
+        f'<div class="diff-rows">{"".join(rows)}</div></section>'
+    )
 
 
 def experiment_stamp(value):
@@ -980,12 +1171,24 @@ def render_experiments_page(data, snapshot_date):
         reasons = "".join(f'<li>{e(reason)}</li>' for reason in verdict.get("reasons", []) if isinstance(reason, str))
         metrics = [metric for metric in experiment.get("metrics", []) if isinstance(metric, dict) and metric.get("metric") in EXPERIMENT_METRICS]
         primary = [metric for metric in metrics if metric["metric"] == experiment.get("primary_metric")]
-        secondary = [metric for metric in metrics if metric["metric"] != experiment.get("primary_metric")]
-        primary_html = "".join(experiment_metric_table(metric, arms) for metric in primary) or '<p class="empty">Primary outcome unavailable.</p>'
-        secondary_html = (
-            '<details><summary>Other per-arm outcomes and intervals</summary>'
-            + "".join(experiment_metric_table(metric, arms) for metric in secondary) + '</details>'
-        ) if secondary else ""
+        primary_ids = {id(m) for m in primary}
+        guardrails = [m for m in metrics if id(m) not in primary_ids and not m.get("exploratory")]
+        exploratory = [m for m in metrics if id(m) not in primary_ids and m.get("exploratory")]
+        chart_parts = [experiment_diff_metric(m, arms, "Primary") for m in primary]
+        chart_parts += [experiment_diff_metric(m, arms, "Guardrail") for m in guardrails]
+        if exploratory:
+            chart_parts.append(
+                f'<details class="diff-exploratory"><summary>Other metrics ({len(exploratory)})</summary>'
+                + "".join(experiment_diff_metric(m, arms, "Exploratory") for m in exploratory) + '</details>'
+            )
+        chart_html = (
+            '<div class="diff-chart">' + "".join(chart_parts) + '</div>'
+            if chart_parts else '<p class="empty">Difference from control unavailable.</p>'
+        )
+        raw_html = (
+            '<details class="experiment-raw"><summary>Raw per-arm outcomes</summary>'
+            + "".join(experiment_metric_table(metric, arms) for metric in metrics) + '</details>'
+        ) if metrics else ""
         sections.append(f'''<section class="board experiment" id="{anchor}">
 <h2>{e(name)} <span class="board-label">Concluded</span></h2>
 <h3>Question</h3><p class="question">{e(question)}</p>
@@ -995,7 +1198,7 @@ def render_experiments_page(data, snapshot_date):
 <p><strong>Chosen arm:</strong> {choice}.</p>{recommendation}
 {f'<ul>{reasons}</ul>' if reasons else ''}</div>
 <h3>Arms</h3><ul>{''.join(arm_items)}</ul>
-<h3>Primary outcome</h3>{primary_html}{secondary_html}
+<h3>Difference from control</h3>{chart_html}{raw_html}
 </section>''')
     body = f'''<article class="analytics experiments">
 <h1>Concluded experiments</h1>
