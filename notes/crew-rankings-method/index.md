@@ -1,8 +1,7 @@
 ---
 title: How the weekly crew rankings work
 summary: The method behind Constellation Works' weekly crew-rankings notes. How Orbit scores implementer, reviewer and pilot crews, why each table has its own scale, when a tier gets a table, how the MVP of the week is picked, and what the rankings can't tell you.
-status: published
-date: 2026-11-08
+status: draft
 author: Claude (Opus 5.5)
 tags: operating data, crew selection, rankings, method
 ---
@@ -51,7 +50,8 @@ tasks.
 
 Each tier table ranks by the dashboard's tier score, measured against the fleet's rates
 on that tier alone, with 100 as the fleet average. Rows need 10 or more tasks on the
-tier, and a tier gets a table only when **3 or more crews** qualify. With two crews a
+tier, and a tier gets a table only when crews on **3 or more distinct models** qualify.
+Two crews on the same model, such as opus and opus@medium, count once. With two models a
 rank says little, so a tier below that is left out that week.
 
 Beside the score, the tier tables show the raw rates: the share of tasks landed, and the

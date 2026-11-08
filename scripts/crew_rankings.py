@@ -28,7 +28,8 @@ The method is on the standing page notes/crew-rankings-method. In short:
 - All tiers ranks the implementers scorecard rows. Their score is already
   adjusted for each crew's tier mix, so crews on different tiers compare.
 - A tier table ranks by the dashboard tier score (`--by-type` crew_mean) and
-  appears only when MIN_CREWS or more crews have MIN_TASKS tasks on that tier.
+  appears only when MIN_MODELS or more distinct models have MIN_TASKS tasks on
+  that tier (opus and opus@medium count once).
 - Reviewers and pilots rank the scorecard's ranked rows (at or above its
   minimum support). Their scores centre on the fleet average, not 100.
 - The MVP is the crew, across all shown tables, with the largest lead over its
@@ -47,7 +48,7 @@ import pathlib
 import subprocess
 
 MIN_TASKS = 10
-MIN_CREWS = 3
+MIN_MODELS = 3
 TIERS = ("low", "medium", "hard", "xhard")
 UNKNOWN_MODEL = "model unknown"
 
@@ -214,7 +215,7 @@ def main():
     tier_rows.sort(key=lambda r: (TIERS.index(r["tier"]), -r["score"]))
     write_csv(path("by-tier.csv"), tier_rows)
     per_tier = {t: [r for r in tier_rows if r["tier"] == t] for t in TIERS}
-    shown = [t for t in TIERS if len(per_tier[t]) >= MIN_CREWS]
+    shown = [t for t in TIERS if len({r['model'] for r in per_tier[t]}) >= MIN_MODELS]
 
     # Reviewers and pilots: the scorecard's ranked rows.
     def role_rows(card):
@@ -291,7 +292,7 @@ def main():
         "window": a.window, "since": per_task["since"], "computed_at": per_task["computed_at"],
         "task_attempts": len(per_task["tasks"]),
         "min_support": {"implementers": rows["min_support"], "reviewers": reviewers["min_support"],
-                        "pilots": pilots["min_support"], "tier_tasks": MIN_TASKS, "tier_crews": MIN_CREWS},
+                        "pilots": pilots["min_support"], "tier_tasks": MIN_TASKS, "tier_models": MIN_MODELS},
         "fleet_average": {"implementers": rows["fleet_average"], "reviewers": reviewers["fleet_average"],
                           "pilots": pilots["fleet_average"]},
         "reviews_provisional": prov, "reviews_settled": settled,
