@@ -213,6 +213,67 @@ class AgentsPageTest(unittest.TestCase):
             "github.event_name != 'pull_request' && github.ref == 'refs/heads/main'",
         )
 
+    def test_analytics_automerge_dispatches_website_publish(self):
+        automerge = (ROOT / ".github" / "workflows" / "analytics-automerge.yml").read_text(
+            encoding="utf-8"
+        )
+        website = (ROOT / ".github" / "workflows" / "website.yml").read_text(
+            encoding="utf-8"
+        )
+
+        # The merge is still armed with the run's GITHUB_TOKEN, so the push to
+        # main it produces starts no workflow runs.
+        self.assertIn("GH_TOKEN: ${{ github.token }}", automerge)
+        self.assertRegex(automerge, r"(?m)^\s+gh pr merge .*--auto --squash")
+        self.assertIn('--match-head-commit "$HEAD_SHA"', automerge)
+
+        # A pull_request closed run cannot be the delivery path: events created
+        # with GITHUB_TOKEN (other than workflow_dispatch/repository_dispatch)
+        # create no runs, so a closed trigger would never fire for these
+        # merges. The dispatch must live in the arming run instead.
+        self.assertIn(
+            "types: [opened, reopened, synchronize, ready_for_review]", automerge
+        )
+
+        # The automerge job can dispatch workflows (workflow_dispatch always
+        # creates a run, even from GITHUB_TOKEN) alongside its merge scoping.
+        job = re.search(
+            r"(?ms)^  automerge:\n(.*?)(?=^  [a-z][a-z0-9_-]*:\n|\Z)", automerge
+        )
+        self.assertIsNotNone(job, "automerge workflow has no automerge job")
+        for permission in ("contents: write", "pull-requests: write", "actions: write"):
+            self.assertIn(permission, job.group(1))
+
+        # The dispatch targets website.yml on main, only for eligible PRs, and
+        # only after the merge is observed: website.yml deploys main, so an
+        # early dispatch would deploy the pre-merge commit.
+        dispatch = re.search(
+            r"(?ms)^      - name: Dispatch Website publish once merged\n"
+            r"        if: steps\.guard\.outputs\.eligible == 'true'\n"
+            r"(.*?)(?=^      - name: |\Z)",
+            automerge,
+        )
+        self.assertIsNotNone(dispatch, "automerge workflow has no guarded dispatch step")
+        step = dispatch.group(1)
+        self.assertIn("--json state,autoMergeRequest", step)
+        self.assertIn("MERGED", step)
+        self.assertRegex(step, r"gh workflow run website\.yml --repo .+ --ref main")
+        self.assertLess(
+            automerge.index("MERGED"),
+            automerge.index("gh workflow run website.yml"),
+            "the dispatch must wait for the merge instead of firing at arm time",
+        )
+
+        # The dispatch must land: website.yml offers workflow_dispatch and its
+        # publish job runs for non-pull_request events on main.
+        self.assertIn("workflow_dispatch:", website)
+
+        # The Cloudflare deploy token stays out of the automerge job: no
+        # secrets and no environment there; secrets live only in website.yml.
+        self.assertNotIn("secrets.", automerge)
+        self.assertNotRegex(automerge, r"(?m)^    environment:")
+        self.assertIn("secrets.CLOUDFLARE_API_TOKEN", website)
+
     def test_live_snapshot_boards(self):
         directory = build.latest_analytics_dir()
         self.assertIsNotNone(directory)
