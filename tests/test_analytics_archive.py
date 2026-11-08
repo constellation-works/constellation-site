@@ -235,5 +235,166 @@ class ArchiveBuildTest(unittest.TestCase):
         self.assertIn("var(--fg)", css[css.index(".snapshot-picker-label"):])
 
 
+class WrongTypeWindowCandidatesTest(unittest.TestCase):
+    """Non-object window candidates are ignored (ORB-23436)."""
+
+    RELIABILITY_SINCE = "2026-10-09T17:22:36.488867042Z"
+    RELIABILITY_UNTIL = "2026-11-08T17:22:36.488867042Z"
+    METRICS_SINCE = "2026-10-05T00:00:00+00:00"
+    METRICS_UNTIL = "2026-11-04T00:00:00+00:00"
+
+    _MISSING = object()
+
+    def setUp(self):
+        SCRATCH.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def valid_reliability(self):
+        return {"since": self.RELIABILITY_SINCE, "until": self.RELIABILITY_UNTIL}
+
+    @property
+    def valid_metrics(self):
+        return {"since": self.METRICS_SINCE, "until": self.METRICS_UNTIL}
+
+    def _make_snapshot(self, tmp, *, meta_reliability=_MISSING, meta_metrics=_MISSING,
+                       reliability_window=_MISSING, metrics_durations=_MISSING):
+        directory = Path(tmp) / "2026-11-30"
+        directory.mkdir(parents=True, exist_ok=True)
+        windows = {}
+        if meta_reliability is not self._MISSING:
+            windows["reliability"] = meta_reliability
+        if meta_metrics is not self._MISSING:
+            windows["metrics"] = meta_metrics
+        (directory / "meta.json").write_text(json.dumps({"windows": windows}), encoding="utf-8")
+        if reliability_window is self._MISSING:
+            (directory / "reliability.json").write_text(json.dumps({}), encoding="utf-8")
+        else:
+            (directory / "reliability.json").write_text(
+                json.dumps({"window": reliability_window}), encoding="utf-8")
+        if metrics_durations is self._MISSING:
+            (directory / "metrics.json").write_text(json.dumps({}), encoding="utf-8")
+        else:
+            (directory / "metrics.json").write_text(
+                json.dumps({"durations": metrics_durations}), encoding="utf-8")
+        return directory
+
+    def test_meta_reliability_wrong_type_falls_back_to_page_window(self):
+        for bad in (["unexpected"], "unexpected", 42):
+            with self.subTest(bad=bad):
+                with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+                    directory = self._make_snapshot(
+                        tmp, meta_reliability=bad, reliability_window=self.valid_reliability)
+                    for page in ("agents", "reliability", "experiments", None):
+                        self.assertEqual(
+                            analytics_page._window_stamps(directory, page),
+                            (self.RELIABILITY_SINCE, self.RELIABILITY_UNTIL),
+                            (page, bad),
+                        )
+
+    def test_page_window_wrong_type_falls_back_to_meta(self):
+        for bad in (["unexpected"], "unexpected", 42):
+            with self.subTest(bad=bad):
+                with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+                    directory = self._make_snapshot(
+                        tmp, meta_reliability=self.valid_reliability, reliability_window=bad)
+                    for page in ("agents", "reliability", "experiments", None):
+                        self.assertEqual(
+                            analytics_page._window_stamps(directory, page),
+                            (self.RELIABILITY_SINCE, self.RELIABILITY_UNTIL),
+                            (page, bad),
+                        )
+
+    def test_metrics_window_wrong_type_falls_back(self):
+        for bad in (["unexpected"], "unexpected", 42):
+            with self.subTest(kind="durations-window", bad=bad):
+                with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+                    directory = self._make_snapshot(
+                        tmp, meta_metrics=self.valid_metrics,
+                        metrics_durations={"window": bad})
+                    self.assertEqual(
+                        analytics_page._window_stamps(directory, "metrics"),
+                        (self.METRICS_SINCE, self.METRICS_UNTIL),
+                    )
+            with self.subTest(kind="durations-itself", bad=bad):
+                with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+                    directory = self._make_snapshot(
+                        tmp, meta_metrics=self.valid_metrics, metrics_durations=bad)
+                    self.assertEqual(
+                        analytics_page._window_stamps(directory, "metrics"),
+                        (self.METRICS_SINCE, self.METRICS_UNTIL),
+                    )
+            with self.subTest(kind="meta-metrics", bad=bad):
+                with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+                    directory = self._make_snapshot(
+                        tmp, meta_metrics=bad,
+                        metrics_durations={"window": self.valid_metrics})
+                    self.assertEqual(
+                        analytics_page._window_stamps(directory, "metrics"),
+                        (self.METRICS_SINCE, self.METRICS_UNTIL),
+                    )
+
+    def test_all_candidates_malformed_returns_none(self):
+        with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+            directory = self._make_snapshot(
+                tmp, meta_reliability=["unexpected"], reliability_window="unexpected")
+            for page in ("agents", "reliability", "experiments", None):
+                self.assertEqual(analytics_page._window_stamps(directory, page), (None, None), page)
+                entry = analytics_page.snapshot_entry(directory, page)
+                self.assertIsNone(entry["since"], page)
+                self.assertIsNone(entry["until"], page)
+                self.assertEqual(analytics_page._window_html(entry, page), "", page)
+        with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+            directory = self._make_snapshot(
+                tmp, meta_metrics="unexpected", metrics_durations=["unexpected"])
+            self.assertEqual(analytics_page._window_stamps(directory, "metrics"), (None, None))
+            entry = analytics_page.snapshot_entry(directory, "metrics")
+            self.assertEqual(analytics_page._window_html(entry, "metrics"), "")
+
+    def test_build_all_with_malformed_meta_windows_still_renders(self):
+        with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+            root = make_root(tmp, ("2026-10-31", "2026-11-08", "2026-11-30", "2026-12-15"))
+            archived = root / "data" / "analytics" / "2026-11-30"
+            meta_path = archived / "meta.json"
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            meta["windows"]["reliability"] = ["unexpected"]
+            meta["windows"]["metrics"] = "unexpected"
+            meta_path.write_text(json.dumps(meta), encoding="utf-8")
+            # Page payloads stay valid, so every page must still render.
+            build_all(root)
+            out = root / "public" / "analytics"
+            for slug in PAGES:
+                self.assertTrue((out / slug / "2026-11" / "index.html").is_file(), slug)
+            live_agents = (out / "agents" / "index.html").read_text(encoding="utf-8")
+            self.assertIn("fleet reliability reference window", picker_html(live_agents))
+
+    def test_agents_archive_omits_window_when_all_candidates_malformed(self):
+        with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
+            root = make_root(tmp, ("2026-10-31", "2026-11-08", "2026-11-30", "2026-12-15"))
+            archived = root / "data" / "analytics" / "2026-11-30"
+            meta_path = archived / "meta.json"
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            meta["windows"]["reliability"] = ["unexpected"]
+            meta_path.write_text(json.dumps(meta), encoding="utf-8")
+            reliability_path = archived / "reliability.json"
+            reliability = json.loads(reliability_path.read_text(encoding="utf-8"))
+            reliability["window"] = "unexpected"
+            reliability_path.write_text(json.dumps(reliability), encoding="utf-8")
+            entry = analytics_page.snapshot_entry(archived, "agents")
+            self.assertEqual((entry["since"], entry["until"]), (None, None))
+            with patch.object(build, "ROOT", root):
+                build.build_analytics_index()
+                build.build_agents()
+            archive = (root / "public" / "analytics" / "agents" / "2026-11" / "index.html").read_text(
+                encoding="utf-8")
+            self.assertIn("Historical snapshot", archive)
+            banner = re.search(r'<p class="archive-banner">.*?</p>', archive, re.S).group(0)
+            self.assertNotIn("fleet reliability reference window", banner)
+            self.assertNotIn(f'datetime="{self.RELIABILITY_SINCE}"', banner)
+            picker = picker_html(archive)
+            item = picker.split('href="/analytics/agents/2026-11/"')[1].split("</li>")[0]
+            self.assertNotIn("fleet reliability reference window", item)
+            self.assertNotIn(f'datetime="{self.RELIABILITY_SINCE}"', item)
+
+
 if __name__ == "__main__":
     unittest.main()
