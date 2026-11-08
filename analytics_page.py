@@ -22,6 +22,7 @@ LOW_ACTOR_SAMPLE = 5
 CHART_W = 640
 CHART_H = 168
 CHART_PAD = 8
+TABLE_PREVIEW_ROWS = 7
 
 TIER_LABEL = {
     "all": "All",
@@ -575,11 +576,38 @@ def label_cells(row_html, headers):
     return CELL_OPEN.sub(tag, row_html)
 
 
-def table(caption, headers, rows):
+def with_row_disclosure(rows, render_table, more_label="rows"):
+    """Render a table once when short, or split its rows behind a native disclosure."""
+    rows = list(rows)
+    if len(rows) <= TABLE_PREVIEW_ROWS:
+        return render_table(rows, False)
+
+    hidden_count = len(rows) - TABLE_PREVIEW_ROWS
+    return (
+        render_table(rows[:TABLE_PREVIEW_ROWS], False)
+        + '<details class="analytics-table-more">'
+        + f'<summary>Show {hidden_count} more {e(more_label)}</summary>'
+        + render_table(rows[TABLE_PREVIEW_ROWS:], True)
+        + '</details>'
+    )
+
+
+def table(caption, headers, rows, more_label="rows"):
     head = "".join(f'<th scope="col">{header}</th>' for header in headers)
-    body = "".join("<tr>" + label_cells("".join(rows_cells), headers) + "</tr>" for rows_cells in rows)
-    cap = f"<caption>{caption}</caption>" if caption else ""
-    return f'<div class="table"><table>{cap}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
+    rendered_rows = [
+        "<tr>" + label_cells("".join(row_cells), headers) + "</tr>"
+        for row_cells in rows
+    ]
+
+    def render_table(part, overflow):
+        if overflow:
+            cap = f'<caption class="sr-only">Additional {e(more_label)}</caption>'
+        else:
+            cap = f"<caption>{caption}</caption>" if caption else ""
+        body = "".join(part)
+        return f'<div class="table"><table>{cap}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
+
+    return with_row_disclosure(rendered_rows, render_table, more_label)
 
 
 def score_card(label, value_html, detail_html=""):
@@ -670,6 +698,7 @@ def section_duration(metrics):
         "Average duration and runs per UTC day, newest first.",
         ["Day", "All", "Low", "Medium", "Hard"],
         daily_rows,
+        more_label="days",
     ) if daily_rows else ""
     actors = _actor_table(durations.get("actors") or [], "durations.actors", with_trend=True)
     by_complexity = []
@@ -791,6 +820,7 @@ def section_completions(metrics):
         "Tasks closed per UTC day, newest first. Extra hard and unset are in Done and in Other.",
         ["Day", "Done", "Low", "Medium", "Hard", "Other", "Archived", "Rejected"],
         rows,
+        more_label="days",
     ) if rows else ""
     intro = "Tasks that moved to done in each UTC day, by complexity. This board is not filtered by run outcome."
     body = "".join([
@@ -862,6 +892,7 @@ def section_defects(metrics):
         "Defects per UTC day, newest first.",
         ["Day", "Total", "Fix-for-a-fix", "Other regression", "Unattributed"],
         daily_rows,
+        more_label="days",
     ) if daily_rows else ""
     intro = "Defects filed in the window, by what caused them and by what found them. A rise is a worse result."
     body = "".join([
