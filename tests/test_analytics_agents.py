@@ -151,7 +151,11 @@ class AgentsPageTest(unittest.TestCase):
         workflow = (ROOT / ".github" / "workflows" / "website.yml").read_text(
             encoding="utf-8"
         )
-        snapshot = "data/analytics/2026-11-08/scorecards.json"
+        analytics_inputs = (
+            "data/analytics/2026-11-08/scorecards.json",
+            "data/analytics/2026-11-08/metrics.json",
+            "data/analytics/2026-11-08/reliability.json",
+        )
         existing_inputs = (
             "public/index.html",
             "notes/example/index.md",
@@ -162,8 +166,6 @@ class AgentsPageTest(unittest.TestCase):
         unrelated_inputs = (
             "README.md",
             "unrelated/file.txt",
-            "data/analytics/2026-11-08/metrics.json",
-            "data/analytics/2026-11-08/raw/bundle.json",
         )
 
         for event in ("pull_request", "push"):
@@ -172,10 +174,11 @@ class AgentsPageTest(unittest.TestCase):
             def matches_any(path):
                 return any(github_path_matches(pattern, path) for pattern in patterns)
 
-            self.assertTrue(
-                matches_any(snapshot),
-                f"{event} does not select a snapshot-only change",
-            )
+            for path in analytics_inputs:
+                self.assertTrue(
+                    matches_any(path),
+                    f"{event} does not select build input {path}",
+                )
             for path in existing_inputs:
                 self.assertTrue(matches_any(path), f"{event} no longer selects {path}")
             for path in unrelated_inputs:
