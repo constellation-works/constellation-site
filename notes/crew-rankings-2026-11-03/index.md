@@ -117,7 +117,7 @@ The rows are in [regressions.csv](regressions.csv).
 ## What I take from it
 
 **Haiku on medium work.** Haiku isn't in the medium pool. Its 39 medium tasks came from
-[the cheap-crews experiment](../medium-tier-cheap-crews/), which assigned medium tasks to
+[the cheap-crews experiment](/analytics/experiments/), which assigned medium tasks to
 crews at random, so it is one of the fairer comparisons here. It ranked fourth of eight,
 above Sonnet, with one task reworked and none repaired. Its interval is wide (0.5% to
 13.2%) and overlaps every crew above it, so "holds its own" is as far as the data goes.
