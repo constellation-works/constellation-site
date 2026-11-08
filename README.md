@@ -63,10 +63,11 @@ it does not publish job or activity identifiers, diagnostic labels or messages.
 
 `/analytics/experiments/` includes only concluded experiments from the newest snapshot.
 Each section shows the question, observed arms and crew mix, primary outcome and
-expandable secondary outcomes with per-arm means, medians, supplied intervals and
-metric-specific support. It prints the cumulative UTC window from experiment start
-to readout. The statistical verdict and recorded chosen arm are distinct: concluding
-an experiment does not imply a winner, and unavailable measurements stay unavailable.
+expandable secondary outcomes with per-arm means for every outcome, medians for
+non-rate outcomes, supplied intervals and metric-specific support. It prints the
+cumulative UTC window from experiment start to readout. The statistical verdict
+and recorded chosen arm are distinct: concluding an experiment does not imply a
+winner, and unavailable measurements stay unavailable.
 Names, hypotheses and verdict reasons use the snapshot's sanitized public text;
 individual task/run records and diagnostic fields are not rendered.
 
