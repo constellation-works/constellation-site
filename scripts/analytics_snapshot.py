@@ -228,7 +228,7 @@ _PATH_SEGMENT = r"[A-Za-z0-9._~%+@\-]+"
 _API_ROUTE = r"api/(?:diagnostics|metrics|tasks)(?:/|\?|#|$)"
 # Preserve closing tags, but do not exempt multi-segment paths after "<".
 ABS_PATH = re.compile(
-    r"(?<![\w./\\\-])/(?!(?<=</)[A-Za-z][A-Za-z0-9:-]*\s*>)(?!"
+    r"(?<![\w./\\\-])/(?!(?<=</)[A-Za-z][A-Za-z0-9._:-]*\s*>)(?!"
     + _API_ROUTE + r")" + _PATH_SEGMENT + r"(?:/" + _PATH_SEGMENT + r")*/?"
 )
 FILE_URI = re.compile(r"\bfile:/+[^\s\"'<>]*", re.IGNORECASE)

@@ -16,6 +16,8 @@ HOSTS = ["dk-server-1", "dk-server-2"]
 PATH_SAMPLES = [
     "</srv/acme/customer>",
     "</srv/acme/customer.txt>",
+    "</my_el/customer.txt>",
+    "</my.el/customer>",
     "</home/private/customer.txt>",
     "<~/secret/notes.txt>",
     "<code>/srv/acme/customer</code>",
@@ -106,9 +108,12 @@ class PathRedactionTest(unittest.TestCase):
         for source in API_SOURCES:
             self.assertEqual(snapshot.sanitize(source, patterns, [0]), source)
         for prose in ["delivered on 3/4 runs (haiku/luna)", "and/or", "crew / model", "haiku / claude-opus-5-5",
-                      "<b>ok</b> <span>done</span>"]:
+                      "<b>ok</b> <span>done</span>", "</my_el>", "</my.el>", "<my_el>ok</my_el> <my.el>ok</my.el>"]:
             with self.subTest(prose=prose):
                 self.assertEqual(snapshot.sanitize(prose, patterns, [0]), prose)
+
+    def test_guard_accepts_closing_tags_with_underscore_or_dot_names(self):
+        snapshot.guard(minimal_docs("see </my_el> and </my.el> in prose"), HOSTS)
 
     def test_sanitize_leaves_relative_paths_without_extension(self):
         patterns = snapshot.forbidden_patterns(HOSTS)
