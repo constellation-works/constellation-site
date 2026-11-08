@@ -178,6 +178,7 @@ class AgentsPageTest(unittest.TestCase):
             "build.py",
             "wrangler.toml",
             ".github/workflows/website.yml",
+            ".github/requirements/website.txt",
         )
         unrelated_inputs = (
             "README.md",
