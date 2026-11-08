@@ -29,6 +29,12 @@ it could only measure label bias or a leak.
 
 ### Lookups in the main run and the Opus 5 follow-up
 
+> **Erratum:** The historical paragraph below states 12 sessions, but its
+> listed groups add up to 13. The original session logs are not available in
+> the published data, so neither the total nor the individual group counts
+> can be verified; the exact number of sessions that looked up the crew table
+> remains unresolved.
+
 The session logs were checked before this design was fixed. In 12 of 30
 sessions the orchestrator read the store's crew table (`orbit config show`, or
 `config.toml` directly) before filing tasks and saw each crew's provider and

@@ -91,6 +91,8 @@ def classify(message):
     for category, group, pattern in COMPILED:
         if pattern.search(message):
             return category, group
+    # The final regex does not match empty or newline-only messages.
+    return "orbit_defect", "machine"
 
 
 def iso(value):
@@ -205,7 +207,8 @@ def measure(args):
         if r["state"] != "failed":
             continue
         messages = steps.get(r["run_id"]) or [""]
-        if not steps.get(r["run_id"]):
+        # Count absent and whitespace-only first failed-step messages alike.
+        if not messages[0].strip():
             unclassified += 1
         category, group = classify(messages[0])
         categories[category] += 1
