@@ -311,6 +311,30 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
   color: var(--muted); border: 1px solid var(--rule-strong); border-radius: 999px;
   vertical-align: middle;
 }
+/* Snapshot picker: a plain link list (no JavaScript). It wraps within the
+   text column, so it cannot scroll the page sideways at phone widths. */
+.snapshot-picker {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+  max-width: 100%; min-width: 0; margin: 0 0 20px; font-size: 15px;
+}
+.snapshot-picker-label { font-weight: 600; color: var(--fg); }
+.snapshot-picker ul {
+  list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px;
+  margin: 0; padding: 0; max-width: 100%; min-width: 0;
+}
+.snapshot-picker li { margin: 0; max-width: 100%; overflow-wrap: anywhere; }
+.snapshot-picker a { color: var(--muted); }
+.snapshot-picker a:hover { color: var(--fg); }
+.snapshot-picker a.is-current { color: var(--fg); font-weight: 600; text-decoration: none; }
+.snapshot-picker .snapshot-detail, .snapshot-picker .snapshot-current { color: var(--muted); }
+.archive-banner {
+  max-width: 40em; margin: 0 0 16px; padding: 10px 14px;
+  background: var(--card); border: 1px solid var(--rule-strong); border-radius: 8px;
+  color: var(--lede); overflow-wrap: anywhere;
+}
+.snapshot-months { max-width: 40em; min-width: 0; }
+.snapshot-months ul { padding-left: 1.2em; }
+.snapshot-months li { overflow-wrap: anywhere; margin: 0 0 .45em; }
 .analytics .board-nav { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0 0 48px; font-size: 15px; }
 .analytics .board-nav a { color: var(--muted); text-decoration: none; }
 .analytics .board-nav a:hover { color: var(--fg); }
@@ -392,6 +416,8 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .experiments summary { cursor: pointer; color: var(--link); }
 .experiments summary:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
 @media (max-width: 560px) {
+  .snapshot-picker, .snapshot-picker ul { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .snapshot-picker a { display: inline-block; padding: 2px 0; }
   .analytics section[id] { scroll-margin-top: 80px; }
   .analytics .board { scroll-margin-top: 80px; }
   .analytics .board h2 { font-size: 22px; }

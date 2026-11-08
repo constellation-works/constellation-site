@@ -10,6 +10,9 @@ and any files the note links to (data, images). Output is a page per note, a
 via analytics_page.py. public/analytics/ is generated too: do not edit or commit it.
 /analytics/reliability/ uses the newest snapshot's reliability.json aggregates.
 /analytics/experiments/ uses the newest snapshot's concluded experiments.json entries.
+Each analytics page also renders /analytics/<page>/<YYYY-MM>/ for every closed
+calendar month from that month's last snapshot (floor 2026-11-08, no backfill),
+with a no-JavaScript snapshot picker; see analytics_page.monthly_archive_entries.
 
 Front matter is `key: value` lines between `---` fences:
 
@@ -664,7 +667,11 @@ def render_board(board):
 </section>'''
 
 
-def render_agents_body(scorecards, snapshot_date):
+def _analytics_base(root=None):
+    return (pathlib.Path(root) if root is not None else ROOT) / "data" / "analytics"
+
+
+def render_agents_body(scorecards, snapshot_date, picker="", banner=""):
     if not isinstance(snapshot_date, str) or not DATE_DIR.fullmatch(snapshot_date):
         sys.exit(f"analytics snapshot date must be YYYY-MM-DD, got {snapshot_date!r}")
     boards = agents_boards(scorecards)
@@ -673,6 +680,7 @@ def render_agents_body(scorecards, snapshot_date):
     sections = "\n".join(render_board(board) for board in boards)
     return f'''<article class="analytics">
 <h1>Agent scorecards</h1>
+{banner}{picker}
 <p class="summary">Implementer, reviewer and pilot crews from the daily public snapshot. Each scorecard shows its own window. How a score is built is <a href="/notes/crew-rankings-method/">how the crew rankings work</a>.</p>
 <p class="as-of">Snapshot {e(snapshot_date)}.</p>
 <nav class="board-nav" aria-label="Scorecards">
@@ -682,29 +690,47 @@ def render_agents_body(scorecards, snapshot_date):
 </article>'''
 
 
-def render_agents_page(scorecards, snapshot_date):
+def render_agents_page(scorecards, snapshot_date, picker=None, banner="", archive_month=None, url=None, root=None):
+    if picker is None:
+        picker = analytics_page.picker_html(_analytics_base(root), "agents", "scorecards.json", archive_month)
     return page(
         "Agent scorecards — Constellation Works",
         "Implementer, reviewer and pilot scorecards from the daily public snapshot, each with its own window.",
-        f"{SITE}/analytics/agents/",
-        render_agents_body(scorecards, snapshot_date),
+        url or f"{SITE}/analytics/agents/",
+        render_agents_body(scorecards, snapshot_date, picker, banner),
         current="analytics",
     )
 
 
-def build_agents():
-    directory = latest_analytics_dir()
+def build_agents(root=None):
+    base_root = pathlib.Path(root) if root is not None else ROOT
+    directory = latest_analytics_dir(base_root)
     if directory is None:
         sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/ snapshot to render")
     scorecards = load_scorecards(directory)
-    dest = ROOT / "public" / "analytics" / "agents"
+    dest = base_root / "public" / "analytics" / "agents"
     if dest.exists():
         shutil.rmtree(dest)
     dest.mkdir(parents=True)
     (dest / "index.html").write_text(
-        render_agents_page(scorecards, directory.name), encoding="utf-8"
+        render_agents_page(scorecards, directory.name, root=base_root), encoding="utf-8"
     )
     print(f"built agent scorecards -> {dest} from {directory.name}")
+    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "scorecards.json"):
+        month_dest = dest / entry["month"]
+        month_dest.mkdir(parents=True)
+        (month_dest / "index.html").write_text(
+            render_agents_page(
+                load_scorecards(entry["directory"]), entry["date"],
+                picker=analytics_page.picker_html(_analytics_base(base_root), "agents", "scorecards.json", entry["month"]),
+                banner=analytics_page.archive_banner("agents", entry),
+                archive_month=entry["month"],
+                url=f"{SITE}/analytics/agents/{entry['month']}/",
+                root=base_root,
+            ),
+            encoding="utf-8",
+        )
+        print(f"built agent scorecards archive {entry['month']} -> {month_dest} from {entry['date']}")
 
 
 RELIABILITY_OUTCOMES = (
@@ -771,7 +797,9 @@ def reliability_table(rows, denominator, caption):
     )
 
 
-def render_reliability_page(data, snapshot_date):
+def render_reliability_page(data, snapshot_date, picker=None, banner="", archive_month=None, url=None, root=None):
+    if picker is None:
+        picker = analytics_page.picker_html(_analytics_base(root), "reliability", "reliability.json", archive_month)
     if not isinstance(snapshot_date, str) or not DATE_DIR.fullmatch(snapshot_date):
         sys.exit("reliability snapshot date must be YYYY-MM-DD")
     counts, (since, until) = reliability_aggregates(data)
@@ -802,6 +830,7 @@ def render_reliability_page(data, snapshot_date):
     empty = '<p class="empty">No recorded runs in this window. Rates are unavailable.</p>' if not counts["total"] else ""
     body = f'''<article class="analytics">
 <h1>Reliability</h1>
+{banner}{picker}
 <p class="summary">Success, failure and other outcomes across the fleet over 30 days, from the daily public snapshot.</p>
 <p class="as-of">Snapshot {snapshot_date}. {counts["total"]:,} recorded runs; {settled:,} settled outcomes.</p>
 <nav class="board-nav" aria-label="Reliability">
@@ -813,23 +842,45 @@ def render_reliability_page(data, snapshot_date):
     return page(
         "Reliability — Constellation Works",
         "Aggregate Orbit success and failure counts and rates over 30 days.",
-        f"{SITE}/analytics/reliability/", body, current="analytics",
+        url or f"{SITE}/analytics/reliability/", body, current="analytics",
     )
 
 
-def build_reliability():
-    directory = latest_analytics_dir()
-    if directory is None:
-        sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/ snapshot to render")
+def _load_reliability(directory):
     try:
-        data = json.loads((directory / "reliability.json").read_text(encoding="utf-8"))
+        return json.loads((pathlib.Path(directory) / "reliability.json").read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         sys.exit("build.py: newest snapshot must contain valid reliability.json")
-    rendered = render_reliability_page(data, directory.name)
-    dest = ROOT / "public" / "analytics" / "reliability"
-    dest.mkdir(parents=True, exist_ok=True)
+
+
+def build_reliability(root=None):
+    base_root = pathlib.Path(root) if root is not None else ROOT
+    directory = latest_analytics_dir(base_root)
+    if directory is None:
+        sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/ snapshot to render")
+    data = _load_reliability(directory)
+    rendered = render_reliability_page(data, directory.name, root=base_root)
+    dest = base_root / "public" / "analytics" / "reliability"
+    if dest.exists():
+        shutil.rmtree(dest)
+    dest.mkdir(parents=True)
     (dest / "index.html").write_text(rendered, encoding="utf-8")
     print(f"built reliability -> {dest} from {directory.name}")
+    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "reliability.json"):
+        month_dest = dest / entry["month"]
+        month_dest.mkdir(parents=True)
+        (month_dest / "index.html").write_text(
+            render_reliability_page(
+                _load_reliability(entry["directory"]), entry["date"],
+                picker=analytics_page.picker_html(_analytics_base(base_root), "reliability", "reliability.json", entry["month"]),
+                banner=analytics_page.archive_banner("reliability", entry),
+                archive_month=entry["month"],
+                url=f"{SITE}/analytics/reliability/{entry['month']}/",
+                root=base_root,
+            ),
+            encoding="utf-8",
+        )
+        print(f"built reliability archive {entry['month']} -> {month_dest} from {entry['date']}")
 
 
 EXPERIMENT_METRICS = {
@@ -1122,7 +1173,9 @@ def experiment_metric_table(metric, arms):
     return f'<h4>{label}{qualifier}</h4>' + analytics_page.with_row_disclosure(rows, render_rows, "arms")
 
 
-def render_experiments_page(data, snapshot_date):
+def render_experiments_page(data, snapshot_date, picker=None, banner="", archive_month=None, url=None, root=None):
+    if picker is None:
+        picker = analytics_page.picker_html(_analytics_base(root), "experiments", "experiments.json", archive_month)
     if not isinstance(data, dict) or type(data.get("schema_version")) is not int or data["schema_version"] != 1:
         sys.exit("experiments.json: expected schema_version 1")
     if not isinstance(data.get("experiments"), list):
@@ -1202,6 +1255,7 @@ def render_experiments_page(data, snapshot_date):
 </section>''')
     body = f'''<article class="analytics experiments">
 <h1>Concluded experiments</h1>
+{banner}{picker}
 <p class="summary">Questions, per-arm outcomes and decisions from Orbit's concluded experiments.</p>
 <p class="as-of">Snapshot {e(snapshot_date)}. Built from the committed daily snapshot; no live Orbit calls.</p>
 <p class="board-note">Concluded is a lifecycle state, not proof of a winner. A verdict may be withheld, collecting or inconclusive, and a chosen arm may be absent. Intervals are copied from the readout; unavailable values are not zero. Support is specific to each metric; open regression windows can leave outcomes unsettled. These are experiment outcomes, not ranked crew scorecards. See the <a href="/notes/crew-rankings-method/">method and caveats</a>.</p>
@@ -1211,26 +1265,51 @@ def render_experiments_page(data, snapshot_date):
     return page(
         "Concluded experiments — Constellation Works",
         "Questions, arms, aggregate outcomes, intervals and decisions from concluded Orbit experiments.",
-        f"{SITE}/analytics/experiments/", body, current="analytics",
+        url or f"{SITE}/analytics/experiments/", body, current="analytics",
     )
 
 
-def build_experiments():
-    directory = latest_analytics_dir()
-    if directory is None:
-        sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/ snapshot to render")
+def _load_experiments(directory):
     try:
-        data = json.loads((directory / "experiments.json").read_text(encoding="utf-8"))
+        return json.loads((pathlib.Path(directory) / "experiments.json").read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         sys.exit("build.py: newest snapshot must contain valid experiments.json")
-    rendered = render_experiments_page(data, directory.name)
-    dest = ROOT / "public" / "analytics" / "experiments"
-    dest.mkdir(parents=True, exist_ok=True)
+
+
+def build_experiments(root=None):
+    base_root = pathlib.Path(root) if root is not None else ROOT
+    directory = latest_analytics_dir(base_root)
+    if directory is None:
+        sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/ snapshot to render")
+    data = _load_experiments(directory)
+    rendered = render_experiments_page(data, directory.name, root=base_root)
+    dest = base_root / "public" / "analytics" / "experiments"
+    if dest.exists():
+        shutil.rmtree(dest)
+    dest.mkdir(parents=True)
     (dest / "index.html").write_text(rendered, encoding="utf-8")
     print(f"built experiments -> {dest} from {directory.name}")
+    for entry in analytics_page.monthly_archive_entries(_analytics_base(base_root), "experiments.json"):
+        month_dest = dest / entry["month"]
+        month_dest.mkdir(parents=True)
+        (month_dest / "index.html").write_text(
+            render_experiments_page(
+                _load_experiments(entry["directory"]), entry["date"],
+                picker=analytics_page.picker_html(_analytics_base(base_root), "experiments", "experiments.json", entry["month"]),
+                banner=analytics_page.archive_banner("experiments", entry),
+                archive_month=entry["month"],
+                url=f"{SITE}/analytics/experiments/{entry['month']}/",
+                root=base_root,
+            ),
+            encoding="utf-8",
+        )
+        print(f"built experiments archive {entry['month']} -> {month_dest} from {entry['date']}")
 
 
-def render_analytics_index(directory):
+def render_analytics_index(directory, archives=None):
+    directory = pathlib.Path(directory)
+    if archives is None:
+        archives = analytics_page.monthly_archive_entries(directory.parent)
     """Publish only validated window dates, never arbitrary snapshot metadata."""
     try:
         meta = json.loads((directory / "meta.json").read_text(encoding="utf-8"))
@@ -1262,22 +1341,50 @@ def render_analytics_index(directory):
         f'<p>{description}</p></div></li>'
         for slug, title, description in cards
     )
+    e = html.escape
+    if archives:
+        month_items = "\n".join(
+            f'<li><time datetime="{e(entry["month"])}">{e(analytics_page.month_label(entry["month"]))}</time> '
+            f'(<time datetime="{e(entry["month"])}">{e(entry["month"])}</time>), snapshot '
+            f'<time datetime="{e(entry["date"])}">{e(entry["date"])}</time>'
+            + (f', window <time datetime="{e(entry["since"])}">{e(entry["since"][:10])}</time> to '
+               f'<time datetime="{e(entry["until"])}">{e(entry["until"][:10])}</time>' if entry.get("since") and entry.get("until") else "")
+            + ": "
+            + ", ".join(f'<a href="/analytics/{slug}/{e(entry["month"])}/">{title}</a>' for slug, title, _desc in cards)
+            + "</li>"
+            for entry in archives
+        )
+        months_html = (
+            '<section class="snapshot-months"><h2>Available months</h2>'
+            '<p>Latest is the newest snapshot; each archived month below is that '
+            "month's last snapshot.</p>"
+            f'<ul>{month_items}</ul></section>'
+        )
+    else:
+        months_html = (
+            '<section class="snapshot-months"><h2>Available months</h2>'
+            "<p>No archived months yet: only the latest snapshot is available. "
+            'The first archived month will be <time datetime="2026-11">2026-11</time>, '
+            "once November's month-end snapshot exists and a later snapshot follows it.</p></section>"
+        )
     body = f'''<article class="index analytics-index">
 <h1>Analytics</h1>
 <p class="summary">Public snapshots of how Orbit crews and workflows perform.</p>
 <p>Snapshot <time datetime="{directory.name}">{directory.name}</time>. Reference 30-day UTC window: <time datetime="{since}">{start.date().isoformat()}</time> to <time datetime="{until}">{end.date().isoformat()}</time>. Individual boards may use different windows; experiments use cumulative observation periods.</p>
 <p>Read <a href="/notes/crew-rankings-method/">how the crew rankings work</a>.</p>
 <ul class="notes">{items}</ul>
+{months_html}
 </article>'''
     return page("Analytics | Constellation Works", "Public analytics for Orbit crews and workflows.",
                 f"{SITE}/analytics/", body, current="analytics")
 
 
-def build_analytics_index():
-    directory = latest_analytics_dir()
+def build_analytics_index(root=None):
+    base_root = pathlib.Path(root) if root is not None else ROOT
+    directory = latest_analytics_dir(base_root)
     if directory is None:
         sys.exit("build.py: no analytics snapshot to render")
-    dest = ROOT / "public" / "analytics"
+    dest = base_root / "public" / "analytics"
     dest.mkdir(parents=True, exist_ok=True)
     (dest / "index.html").write_text(render_analytics_index(directory), encoding="utf-8")
     print(f"built analytics index -> {dest} from {directory.name}")
