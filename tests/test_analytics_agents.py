@@ -4,6 +4,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
@@ -104,7 +105,95 @@ def section(doc, element_id):
     return doc[start:] if nxt < 0 else doc[start:nxt]
 
 
+def workflow_event_section(workflow, event):
+    match = re.search(
+        rf"(?ms)^  {re.escape(event)}:\n(.*?)(?=^  [a-z][a-z0-9_-]*:\n|\Z)",
+        workflow,
+    )
+    if not match:
+        raise AssertionError(f"workflow has no {event} event")
+    return match.group(1)
+
+
+def workflow_paths(workflow, event):
+    event_section = workflow_event_section(workflow, event)
+    match = re.search(r"(?m)^    paths:\n((?:^      - .+\n)+)", event_section)
+    if not match:
+        raise AssertionError(f"workflow {event} event has no path filters")
+    return [
+        line.strip()[2:].strip().strip('"')
+        for line in match.group(1).splitlines()
+    ]
+
+
+def github_path_matches(pattern, path):
+    # The workflow's patterns use only literal characters, * and **. A single
+    # star stays within one path segment; a double star can cross directories.
+    regex = re.escape(pattern).replace(r"\*\*", ".*").replace(r"\*", "[^/]*")
+    return re.fullmatch(regex, path) is not None
+
+
+def workflow_job_condition(workflow, job):
+    match = re.search(
+        rf"(?ms)^  {re.escape(job)}:\n(.*?)(?=^  [a-z][a-z0-9_-]*:\n|\Z)",
+        workflow,
+    )
+    if not match:
+        raise AssertionError(f"workflow has no {job} job")
+    condition = re.search(r"(?m)^    if: (.+)$", match.group(1))
+    if not condition:
+        raise AssertionError(f"workflow {job} job has no condition")
+    return condition.group(1)
+
+
 class AgentsPageTest(unittest.TestCase):
+    def test_website_workflow_routes_analytics_snapshot_changes(self):
+        workflow = (ROOT / ".github" / "workflows" / "website.yml").read_text(
+            encoding="utf-8"
+        )
+        snapshot = "data/analytics/2026-11-08/scorecards.json"
+        existing_inputs = (
+            "public/index.html",
+            "notes/example/index.md",
+            "build.py",
+            "wrangler.toml",
+            ".github/workflows/website.yml",
+        )
+        unrelated_inputs = (
+            "README.md",
+            "unrelated/file.txt",
+            "data/analytics/2026-11-08/metrics.json",
+            "data/analytics/2026-11-08/raw/bundle.json",
+        )
+
+        for event in ("pull_request", "push"):
+            patterns = workflow_paths(workflow, event)
+
+            def matches_any(path):
+                return any(github_path_matches(pattern, path) for pattern in patterns)
+
+            self.assertTrue(
+                matches_any(snapshot),
+                f"{event} does not select a snapshot-only change",
+            )
+            for path in existing_inputs:
+                self.assertTrue(matches_any(path), f"{event} no longer selects {path}")
+            for path in unrelated_inputs:
+                self.assertFalse(matches_any(path), f"{event} unexpectedly selects {path}")
+
+        self.assertRegex(
+            workflow_event_section(workflow, "push"),
+            r"(?m)^    branches: \[main\]$",
+        )
+        self.assertEqual(
+            workflow_job_condition(workflow, "build"),
+            "github.event_name == 'pull_request'",
+        )
+        self.assertEqual(
+            workflow_job_condition(workflow, "publish"),
+            "github.event_name != 'pull_request' && github.ref == 'refs/heads/main'",
+        )
+
     def test_live_snapshot_boards(self):
         directory = build.latest_analytics_dir()
         self.assertIsNotNone(directory)
