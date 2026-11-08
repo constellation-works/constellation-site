@@ -296,9 +296,28 @@ class AgentsPageTest(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 build.latest_analytics_dir(root)
 
+    def test_analytics_index_projects_only_validated_snapshot_window(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp) / "2026-11-08"
+            directory.mkdir()
+            meta = {"windows": {"reliability": {"label": "30d", "since": "2026-10-09T00:00:00Z", "until": "2026-11-08T00:00:00Z"}}, "secret": "ORB-12345 /private/path host.internal"}
+            (directory / "meta.json").write_text(json.dumps(meta), encoding="utf-8")
+            document = build.render_analytics_index(directory)
+            for slug in ("agents", "metrics", "reliability", "experiments"):
+                self.assertIn(f'href="/analytics/{slug}/"', document)
+            for expected in ("2026-11-08", "2026-10-09T00:00:00Z", "/notes/crew-rankings-method/"):
+                self.assertIn(expected, document)
+            for secret in ("ORB-12345", "/private/path", "host.internal"):
+                self.assertNotIn(secret, document)
+            meta["windows"]["reliability"]["since"] = "ORB-12345"
+            (directory / "meta.json").write_text(json.dumps(meta), encoding="utf-8")
+            with self.assertRaises(SystemExit):
+                build.render_analytics_index(directory)
+
     def test_notes_header_stays_current_only_on_notes(self):
         self.assertEqual(build.header_html("notes"), build.HEADER)
-        self.assertNotIn('aria-current="page"', build.header_html("analytics"))
+        self.assertIn('href="/analytics/" aria-current="page"', build.header_html("analytics"))
+        self.assertNotIn('href="/notes/" aria-current="page"', build.header_html("analytics"))
 
     def test_build_writes_the_page_from_the_newest_snapshot(self):
         env = os.environ.copy()
