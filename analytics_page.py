@@ -1373,7 +1373,7 @@ def render_body(metrics):
         "<section id=\"caveats\"><h2>Notes</h2><ul>"
         "<li>Figures are aggregates of crews, models and complexities: counts, rates, durations, lines and cost. "
         "The page does not list individual tasks.</li>"
-        "<li>Duration uses the succeeded-run filter. Tokens, turns, lines, friction and cost use the outcome printed on that section.</li>"
+        "<li>Duration uses succeeded runs. Tokens and turns use done tasks. Other boards have no outcome filter.</li>"
         "<li>Dimmed model and crew rows are a small sample and are not ranked.</li>"
         "<li>Outcome by complexity is a separate all-time mix.</li>"
         "</ul></section>"
@@ -1395,7 +1395,7 @@ def render_body(metrics):
 
 
 def render_page(root, metrics, day):
-    description = "Succeeded Orbit runs over the latest 30-day snapshot: duration, completions, defects, tokens, cost, diff size, friction and turns."
+    description = "30-day Orbit metrics: duration for succeeded runs; tokens and turns for done tasks; plus completions, defects, cost, diff size and friction."
     footer = f"""<footer>
   <div class="wrap">
     <span>&copy; 2026 Constellation Works</span>
