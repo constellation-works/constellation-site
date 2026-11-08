@@ -9,6 +9,7 @@ on:
       - "build.py"
       - "analytics_page.py"
       - "data/analytics/**"
+      - ".github/requirements/website.txt"
       - "wrangler.toml"
       - ".github/workflows/website.yml"
   pull_request:
@@ -18,6 +19,7 @@ on:
       - "build.py"
       - "analytics_page.py"
       - "data/analytics/**"
+      - ".github/requirements/website.txt"
       - "wrangler.toml"
       - ".github/workflows/website.yml"
   workflow_dispatch:
