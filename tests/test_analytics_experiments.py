@@ -66,16 +66,20 @@ class ExperimentsPageTest(unittest.TestCase):
         doc = build.render_experiments_page(data, "2026-11-08")
         self.assertEqual(data, original)
         for text in (
-            "Can the treatment lower cost &amp; preserve quality?", "sol (20 tasks)",
-            "luna (18 tasks)", "$4.00", "$3.00 – $5.00",
+            "Can the treatment lower cost &amp; preserve quality?",
+            '<span class="crew-chip">sol <span class="unit">20</span></span>',
+            '<span class="crew-chip">luna <span class="unit">18</span></span>', "$4.00", "$3.00 – $5.00",
             "$3.50", "$2.00 – $4.00", "20 measured tasks",
             "1 open tasks; 2 unmeasured tasks", "90.0%", "70.0% – 100.0%",
-            "<strong>Verdict:</strong> inconclusive.", "<strong>Chosen arm:</strong> treatment.",
+            "<dt>Verdict</dt><dd>inconclusive</dd>", "<dt>Chosen arm</dt><dd>treatment</dd>",
+            "<dt>Primary metric</dt><dd>Cost</dd>", "<dt>Enrolled</dt><dd>38 tasks</dd>",
             "Statistical recommendation: control.", "Quality interval straddles the limit.",
             "2026-10-01T01:02:03.123456789Z", "2026-11-08T02:03:04.987654321Z",
             "UTC.", "not a rolling 30-day window", "Raw per-arm outcomes",
-            "Difference from control", "-$2.00, -$3.00 to -$1.00", "not measured",
-            "treatment: -$2.00 difference from control", "better than control",
+            "Difference from control", '<span class="sc-value">-$2.00</span>',
+            '<span class="sc-iv">-$3.00 to -$1.00</span>', "Not measured for any arm: Delivery done rate.",
+            "treatment: -$2.00 difference from control, -$3.00 to -$1.00",
+            '<span class="sc-tag">Better</span>',
             'href="https://constellation-works.com/analytics/experiments/"',
         ):
             self.assertIn(text, doc)
@@ -108,8 +112,10 @@ class ExperimentsPageTest(unittest.TestCase):
         data["experiments"][0]["verdict"] = {"state": "collecting"}
         data["experiments"][0]["concluded_arm"] = None
         doc = build.render_experiments_page(data, "2026-11-08")
-        self.assertIn("<strong>Verdict:</strong> collecting.", doc)
-        self.assertIn("<strong>Chosen arm:</strong> None recorded.", doc)
+        self.assertIn("<dt>Verdict</dt><dd>collecting</dd>", doc)
+        self.assertIn("<dt>Chosen arm</dt><dd>None recorded</dd>", doc)
+        self.assertIn("<h3>Why no decision</h3>", doc)
+        self.assertIn('status-collecting"><span class="status-dot" aria-hidden="true"></span>Collecting</span>', doc)
 
     def test_empty_snapshot_and_bad_schema_or_windows(self):
         self.assertIn("No concluded experiments", build.render_experiments_page(
@@ -145,6 +151,97 @@ class ExperimentsPageTest(unittest.TestCase):
         self.assertIn("&lt;script&gt;", doc)
         self.assertIn("&lt;img", doc)
 
+    def test_scorecard_classifies_cells_by_interval_and_direction(self):
+        import re
+
+        data = fixture()
+        exp = data["experiments"][0]
+        exp["arms"].append({"name": "other", "n": 4, "crew_mix": [{"crew": "other", "tasks": 3}, {"crew": "sol", "tasks": 1}]})
+        exp["metrics"][0]["differences"].append({"arm": "other", "overall": {"estimate": 1, "interval": [-1, 2]}})
+        exp["metrics"][1]["differences"] = [
+            {"arm": "treatment", "overall": {"estimate": -0.1, "interval": [-0.2, -0.05]}},
+            {"arm": "other", "overall": {"estimate": 0.05}},
+        ]
+        doc = build.render_experiments_page(data, "2026-11-08")
+        cells = re.findall(r'<td class="sc-cell is-([a-z-]+)" data-label="([^"]+)">', doc)
+        self.assertEqual(cells, [
+            ("better", "treatment"), ("lean-worse", "other"),
+            ("worse", "treatment"), ("lean-better", "other"),
+        ])
+        # Lower-is-better cost: a negative estimate plots right of zero (better side).
+        dot = re.search(r'is-better" data-label="treatment">.*?class="sc-dot" style="left:([\d.]+)%', doc).group(1)
+        self.assertGreater(float(dot), 50)
+        # Higher-is-better rate: a negative estimate plots left of zero (worse side).
+        dots = re.findall(r'class="sc-dot" style="left:([\d.]+)%', doc)
+        self.assertLess(float(dots[2]), 50)
+        self.assertIn('<span class="sc-iv">no interval</span>', doc)
+        # Clear signals list only the cells whose interval excludes zero.
+        signals = doc.partition('<ul class="signals">')[2].partition("</ul>")[0]
+        self.assertEqual(re.findall(r'<li class="signal is-(\w+)">', signals), ["better", "worse"])
+        self.assertIn('<span class="signal-value">-10.0 pts <span class="unit">points</span></span>', signals)
+        # Picker card counts the same clear cells.
+        self.assertIn('<span class="is-better">1 clear better</span>', doc)
+        self.assertIn('<span class="is-worse">1 clear worse</span>', doc)
+        # The filter keeps clear rows and the primary row; it is hidden until JS wires it.
+        self.assertIn('<button type="button" class="sc-filter" aria-pressed="false" hidden>Clear signals only</button>', doc)
+        self.assertEqual(re.findall(r'data-clear="(\d)"', doc), ["1", "1"])
+
+    def test_readout_question_reasons_and_treatment_fidelity(self):
+        data = fixture()
+        exp = data["experiments"][0]
+        exp["population"] = {"complexity": ["medium"]}
+        exp["guardrail_definition"] = {"delivery_done_rate": "-5pt", "secret_metric": "x"}
+        exp["verdict"]["reasons"] = ["arm `treatment`'s delivery_done_rate guardrail straddles"]
+        exp["concluded_arm"] = None
+        doc = build.render_experiments_page(data, "2026-11-08")
+        self.assertIn(
+            '<p class="question-short">Does treatment lower cost on medium tasks compared with control, '
+            "within the delivery done rate guardrails?</p>", doc)
+        self.assertIn("<summary>Full question and design</summary>", doc)
+        self.assertNotIn("secret_metric", doc)
+        self.assertIn("<h3>Why no decision</h3>", doc)
+        self.assertIn("<li>arm <code>treatment</code>&#x27;s delivery_done_rate guardrail straddles</li>", doc)
+        # Own crew: the crew named like the arm, else n minus recorded mismatches for a lone arm.
+        self.assertIn('<td data-label="Ran on its own crew"><span class="unit">Not recorded</span></td>', doc)
+        exp["warning_kinds"] = {"crew_mismatch": 3}
+        doc = build.render_experiments_page(data, "2026-11-08")
+        self.assertIn('<span class="fid-text">15 / 18</span>', doc)
+        self.assertIn("n=18 · 15/18 on own crew", doc)
+        self.assertIn('<td data-label="Ran on its own crew"><span class="unit">Reference arm</span></td>', doc)
+        arm = {"name": "luna", "n": 5, "crew_mix": [{"crew": "luna", "tasks": 4}, {"crew": "sol", "tasks": 1}]}
+        self.assertEqual(build.experiment_fidelity(arm, 3, {"crew_mismatch": 9}), (4, 5))
+        self.assertIsNone(build.experiment_fidelity({"name": "pool", "n": 5, "crew_mix": []}, 2, {"crew_mismatch": 1}))
+        self.assertEqual(build.experiment_fidelity({"name": "pool", "n": 0}, 1, {}), (0, 0))
+
+    def test_picker_cards_and_sections_render_without_javascript(self):
+        import re
+
+        directory = build.latest_analytics_dir()
+        data = json.loads((directory / "experiments.json").read_text())
+        doc = build.render_experiments_page(data, directory.name)
+        concluded = [x for x in data["experiments"] if x["status"] == "concluded"]
+        cards = re.findall(r'<a class="exp-card" href="#(experiment-\d+)" data-exp="\1">', doc)
+        sections = re.findall(r'<section class="board experiment" id="(experiment-\d+)" data-exp-section>', doc)
+        self.assertEqual(cards, sections)
+        self.assertEqual(len(cards), len(concluded))
+        # No-JS: nothing ships hidden except the JS-only filter buttons and the theme toggle.
+        self.assertEqual(len(re.findall(r"\shidden[\s>]", doc)), len(concluded) + 1)
+        self.assertIn('<script src="/assets/analytics.js?v=', doc)
+        self.assertIn('href="/assets/analytics.css?v=', doc)
+        script = (build.ROOT / "public" / "assets" / "analytics.js").read_text()
+        self.assertNotIn("fetch(", script)
+        # Each card reports the arms, tasks and the same clear-signal counts as its section.
+        for experiment, anchor in zip(concluded, sections):
+            section = doc.partition(f'id="{anchor}"')[2].partition("\n</section>")[0]
+            card = doc.partition(f'href="#{anchor}"')[2].partition("</a>")[0]
+            better = section.partition('<ul class="signals">')[2].partition("</ul>")[0].count('class="signal is-better"')
+            worse = section.partition('<ul class="signals">')[2].partition("</ul>")[0].count('class="signal is-worse"')
+            self.assertIn(f"{better} clear better", card)
+            self.assertIn(f"{worse} clear worse", card)
+            enrolled = sum(arm["n"] for arm in experiment["arms"])
+            self.assertIn(f"{enrolled:,} tasks", card)
+        self.assertIn('<details><summary>Method and caveats</summary>', doc)
+
     def test_unavailable_and_zero_are_distinct(self):
         for value in (None, True, "5", float("nan"), float("inf")):
             self.assertEqual(build.experiment_value(value, "USD"), "Unavailable")
@@ -170,13 +267,15 @@ class ExperimentsPageTest(unittest.TestCase):
             "arms": [{"arm": "control", "mean": 1, "n": 1}, {"arm": "treatment", "mean": 2, "n": 1}],
         })
         doc = build.render_experiments_page(data, "2026-11-08")
-        # Primary (cost) before guardrail (delivery rate), exploratory collapsed.
-        self.assertLess(doc.index(">Cost <"), doc.index("Delivery done rate"))
-        self.assertIn('<span class="diff-kind">Primary</span>', doc)
-        self.assertIn('<span class="diff-kind">Guardrail</span>', doc)
-        self.assertIn("<summary>Other metrics (2)</summary>", doc)
-        self.assertIn("+13.1M tokens", doc)
-        self.assertIn("+38.5 min, interval unavailable", doc)
+        # Primary (cost) first in the scorecard, exploratory collapsed in its own matrix.
+        decision, _, other = doc.partition("<summary>Other metrics (2)</summary>")
+        matrix = decision.partition('<table class="scorecard">')[2]
+        self.assertTrue(matrix.startswith("<caption"))
+        self.assertIn('<tr class="is-primary" data-clear="1"><th scope="row"><span class="sc-metric">Cost <span class="sc-primary">Primary</span>', matrix)
+        self.assertIn("+13.1M tokens", other)
+        self.assertIn('<span class="sc-value">+13.1M</span>', other)
+        self.assertIn('<span class="sc-iv">no interval</span>', other)
+        self.assertIn("treatment: +38.5 min difference from control, no interval", other)
         self.assertNotIn("13,097,061.69", doc)
         self.assertNotIn("13097061", doc)
         # Rate differences are points; the fixture rate arm is unmeasured.
@@ -185,11 +284,11 @@ class ExperimentsPageTest(unittest.TestCase):
         self.assertEqual(build.experiment_difference(11.64, exp["metrics"][0]), "+$11.64")
         # Raw tables live only inside the collapsed raw block.
         before_raw, _, raw = doc.partition('<details class="experiment-raw">')
-        self.assertNotIn("<table", before_raw)
+        self.assertNotIn("<table><caption", before_raw)
         self.assertIn("<table", raw)
         self.assertIn("$4.00", raw)
-        # Chart itself needs no script and every measured row carries a text equivalent.
-        chart = doc.partition('<div class="diff-chart">')[2].partition('<details class="experiment-raw">')[0]
+        # The scorecard needs no script and every measured cell carries a text equivalent.
+        chart = doc.partition('<table class="scorecard">')[2].partition('<details class="experiment-raw">')[0]
         self.assertNotIn("<script", chart)
         self.assertIn('class="sr-only">treatment:', chart)
 
@@ -292,7 +391,8 @@ class ExperimentsPageTest(unittest.TestCase):
         directory = build.latest_analytics_dir()
         data = json.loads((directory / "experiments.json").read_text())
         doc = build.render_experiments_page(data, directory.name)
-        chart = doc.partition('<div class="diff-chart">')[2]
+        chart = doc.partition('<table class="scorecard">')[2]
+        self.assertTrue(chart)
         for pattern in (
             re.compile(r"[+-]0(?![\d.])"),
             re.compile(r"[+-]\$0\.0+(?![\d])"),
@@ -304,8 +404,8 @@ class ExperimentsPageTest(unittest.TestCase):
         data = fixture()
         data["experiments"][0]["metrics"][0]["differences"] = []
         doc = build.render_experiments_page(data, "2026-11-08")
-        chart = doc.partition('<div class="diff-chart">')[2].partition('<details class="experiment-raw">')[0]
-        self.assertIn("not measured", chart)
+        self.assertIn("No treatment results yet. treatment has 18 enrolled tasks.", doc)
+        self.assertNotIn('<table class="scorecard">', doc)
 
     def test_build_newest_and_refuse_missing_or_invalid_newest(self):
         SCRATCH.mkdir(parents=True, exist_ok=True)
@@ -352,10 +452,10 @@ class ExperimentsPageTest(unittest.TestCase):
         by_model = next(x for x in concluded if x["name"] == "hard-tier-by-model")
         self.assertEqual(by_model["primary_metric"], "cost_usd")
         section = doc.split("<h2>" + build.html.escape(by_model["name"]), 1)[1].split("\n</section>", 1)[0]
-        self.assertIn("<h3>Difference from control</h3>", section)
+        self.assertIn("<h3>Difference from control <span", section)
         self.assertIn('<details class="experiment-raw"><summary>Raw per-arm outcomes</summary>', section)
         chart, _, raw = section.partition('<details class="experiment-raw">')
-        self.assertNotIn("<table", chart)
+        self.assertNotIn("<table><caption", chart)
         self.assertIn("<table", raw)
         self.assertIn("Other metrics (", chart)
         for metric in by_model["metrics"]:

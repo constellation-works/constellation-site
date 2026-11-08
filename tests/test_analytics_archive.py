@@ -170,7 +170,7 @@ class ArchiveBuildTest(unittest.TestCase):
                 "agents": ("fleet reliability reference window", reliability_since,
                            "each board shows its own observation window"),
                 "metrics": ("metrics window", metrics_since,
-                            "each board shows its own window"),
+                            "a board prints its own window only where it differs"),
                 "reliability": ("fleet reliability window", reliability_since, None),
             }
             for slug, (label, since, pointer) in expectations.items():

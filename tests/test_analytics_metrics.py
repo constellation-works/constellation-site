@@ -168,6 +168,9 @@ def expected_text(metrics, attrs):
         return analytics_page.format_ratio(value, base)
     if fmt == "scope":
         return analytics_page.format_scope(value)
+    if fmt == "per-done":
+        # Derived on the page: the field divided by its base, two decimals.
+        return f"{float(value) / float(base):.2f}"
     if fmt == "usd-per":
         if value is None or isinstance(value, bool):
             return "—"
@@ -305,6 +308,19 @@ class MetricsPageTest(unittest.TestCase):
         self.assertIn(f">{analytics_page.format_ms(average)}<", self.html)
 
     def test_windowed_sections_show_utc_bounds_and_outcomes_show_scope(self):
+        # One window statement up top; a board repeats a window only when its own differs.
+        page_window = self.metrics["durations"]["window"]
+        heroes = elements(
+            self.tree,
+            lambda node: node.tag == "p" and "window-statement" in node.attrs.get("class", "").split(),
+        )
+        self.assertEqual(len(heroes), 1)
+        for bound in ("since", "until"):
+            stamps = elements(
+                heroes[0],
+                lambda node: node.tag == "time" and node.attrs.get("data-field") == f"durations.window.{bound}",
+            )
+            self.assertEqual([node.attrs["datetime"] for node in stamps], [page_window[bound]])
         windowed_sections = {
             "duration": "durations",
             "completed": "completions",
@@ -324,14 +340,23 @@ class MetricsPageTest(unittest.TestCase):
                 self.assertEqual(len(section_nodes), 1)
                 section_node = section_nodes[0]
                 window = lookup(self.metrics, f"{metrics_path}.window")
+                same = analytics_page.same_window(window, page_window)
                 for bound in ("since", "until"):
                     timestamps = elements(
                         section_node,
                         lambda node: node.tag == "time"
                         and node.attrs.get("data-field") == f"{metrics_path}.window.{bound}",
                     )
-                    self.assertEqual(len(timestamps), 1)
-                    self.assertEqual(timestamps[0].attrs["datetime"], window[bound])
+                    if same:
+                        # Printed the same as the page window: not repeated on the board.
+                        self.assertEqual(timestamps, [])
+                        self.assertEqual(
+                            analytics_page.format_stamp(window[bound]),
+                            analytics_page.format_stamp(page_window[bound]),
+                        )
+                    else:
+                        self.assertEqual(len(timestamps), 1)
+                        self.assertEqual(timestamps[0].attrs["datetime"], window[bound])
 
         outcome_sections = elements(
             self.tree,
@@ -467,7 +492,10 @@ class MetricsPageTest(unittest.TestCase):
                 self.assertNotIn(source, self.html)
         scripts = re.findall(r'<script[^>]*src="([^"]+)"', self.html)
         self.assertTrue(scripts)
-        self.assertTrue(all("theme" in src for src in scripts))
+        self.assertTrue(all("theme" in src or "analytics.js" in src for src in scripts))
+        script = (ROOT / "public" / "assets" / "analytics.js").read_text(encoding="utf-8")
+        for pattern in (r"fetch\s*\(", "XMLHttpRequest", "/api/", "localhost"):
+            self.assertIsNone(re.search(pattern, script), pattern)
         problems = []
 
         def walk(node):
@@ -530,6 +558,90 @@ class MetricsPageTest(unittest.TestCase):
         row_header = re.search(r'\.analytics tbody th\[scope="row"\] \{[^}]*display: block', rules)
         self.assertIsNotNone(row_header, "row headers must stop being a nowrap flex row on a phone")
         self.assertIn("min-width: 0", rules)
+
+    def test_boards_are_grouped_and_render_stacked_without_javascript(self):
+        expected = {
+            "speed": ["duration", "turns"],
+            "throughput": ["completed", "outcomes"],
+            "quality": ["defects", "friction"],
+            "spend": ["cost", "tokens", "diff"],
+        }
+        groups = elements(self.tree, lambda node: node.tag == "section" and "data-group" in node.attrs)
+        self.assertEqual([node.attrs["id"] for node in groups], list(expected))
+        for group in groups:
+            boards = elements(group, lambda node: node.tag == "section" and "metric-board" in node.attrs.get("class", ""))
+            self.assertEqual([node.attrs["id"] for node in boards], expected[group.attrs["id"]])
+            self.assertNotIn("hidden", group.attrs)
+        # The group links are plain anchors; only the JS-only "All" tab ships hidden.
+        nav = elements(self.tree, lambda node: node.tag == "nav" and "group-nav" in node.attrs.get("class", ""))
+        self.assertEqual(len(nav), 1)
+        links = elements(nav[0], lambda node: node.tag == "a")
+        self.assertEqual([link.attrs["href"] for link in links], ["#speed", "#throughput", "#quality", "#spend", "#metrics-all"])
+        hidden = elements(self.tree, lambda node: "hidden" in node.attrs)
+        self.assertEqual([node.tag for node in hidden], ["button", "li"])
+
+    def test_glance_tiles_link_to_boards_and_follow_metric_direction(self):
+        tiles = elements(self.tree, lambda node: node.tag == "a" and "tile" in node.attrs.get("class", "").split())
+        self.assertGreaterEqual(len(tiles), 8)
+        board_ids = {node.attrs["id"] for node in elements(self.tree, lambda node: "metric-board" in node.attrs.get("class", ""))}
+        for tile in tiles:
+            self.assertIn(tile.attrs["href"][1:], board_ids)
+        deltas = {}
+        for tile in tiles:
+            label = all_text(elements(tile, lambda node: "tile-label" in node.attrs.get("class", ""))[0])
+            found = elements(tile, lambda node: "delta" in node.attrs.get("class", "").split())
+            deltas[label] = found[0].attrs["class"].split()[-1] if found else None
+        cur, prev = self.metrics["durations"]["current"]["all"]["avg"], self.metrics["durations"]["previous"]["all"]["avg"]
+        self.assertEqual(deltas["Duration"], analytics_page.delta_class(cur, prev, "duration"))
+        cur, prev = self.metrics["defects"]["current"]["total"], self.metrics["defects"]["previous"]["total"]
+        self.assertEqual(deltas["Defects"], analytics_page.delta_class(cur, prev, "worse"))
+        done = self.metrics["completions"]["current"]["done"]["total"]
+        prev_done = self.metrics["completions"]["previous"]["done"]["total"]
+        self.assertEqual(
+            deltas["Defects per done task *"],
+            analytics_page.delta_class(cur / done, prev / prev_done, "worse"),
+        )
+        # The derived tile and its footnote say how the rate is computed.
+        self.assertIn("* derived on this page", self.html)
+        caveats = all_text(elements(self.tree, lambda node: node.attrs.get("id") == "caveats")[0])
+        self.assertIn("* Derived on this page: defects per done task is defects filed in the window divided by tasks moved to done", caveats)
+
+    def test_coverage_and_thin_sample_warnings_come_from_the_snapshot(self):
+        def warnings(section_id):
+            section = elements(self.tree, lambda node: node.tag == "section" and node.attrs.get("id") == section_id)[0]
+            return elements(section, lambda node: node.tag == "p" and "warn" in node.attrs.get("class", "").split())
+
+        coverage = self.metrics["turns"]["coverage"]
+        turns = warnings("turns")
+        self.assertEqual(len(turns), 1 if coverage["measured_rate"] < analytics_page.COVERAGE_WARN_RATE else 0)
+        if turns:
+            fields = [node.attrs.get("data-field") for node in elements(turns[0], lambda node: "data-field" in node.attrs)]
+            self.assertEqual(fields, ["turns.coverage.measured", "turns.coverage.tasks", "turns.coverage.measured_rate"])
+        thin = [
+            key for key in ("low", "medium", "hard", "xhard")
+            if isinstance(self.metrics["durations"]["current"].get(key), dict)
+            and 0 < self.metrics["durations"]["current"][key]["n"] < analytics_page.THIN_TIER_RUNS
+        ]
+        duration = warnings("duration")
+        self.assertEqual(len(duration), 1 if thin else 0)
+        if thin:
+            fields = [node.attrs.get("data-field") for node in elements(duration[0], lambda node: "data-field" in node.attrs)]
+            self.assertEqual(fields, [f"durations.current.{key}.n" for key in thin])
+
+        # The same renderer stays quiet when coverage is full.
+        import copy
+        full = copy.deepcopy(self.metrics)
+        full["turns"]["coverage"]["measured_rate"] = 0.9
+        self.assertNotIn('class="warn"', analytics_page.section_turns(full))
+
+    def test_outcome_board_is_labelled_all_time_and_daily_tables_collapse(self):
+        outcomes = elements(self.tree, lambda node: node.tag == "section" and node.attrs.get("id") == "outcomes")[0]
+        self.assertIn("All time, not the window above", all_text(outcomes))
+        for caption in ("Average duration and runs per UTC day", "Tasks closed per UTC day", "Defects per UTC day"):
+            start = self.html.index(f"<caption>{caption}")
+            opened = self.html.rfind('<details class="more">', 0, start)
+            closed = self.html.rfind("</details>", 0, start)
+            self.assertGreater(opened, closed, caption)
 
     def _parent(self, target):
         found = []

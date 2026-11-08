@@ -289,8 +289,8 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 @media (forced-colors: active) {
   .strip .tick, .strip .gap, .strip .dot, .strip .key span::before { forced-color-adjust: none; background: CanvasText; }
   .strip .dot, .strip .key .k-dot::before { background: Highlight; }
-  .diff-whisker, .diff-whisker::before, .diff-whisker::after, .diff-point { forced-color-adjust: none; background: CanvasText; }
-  .diff-row.is-better .diff-point { background: Highlight; }
+  .sc-zero, .sc-range, .sc-dot, .sc-plot::before, .fid-bar span { forced-color-adjust: none; background: CanvasText; }
+  .sc-cell.is-better .sc-dot { background: Highlight; }
 }
 
 /* Agent scorecards share these tokens. A phone stacks each row so the page
@@ -355,62 +355,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .experiments .experiment { overflow-wrap: anywhere; }
 .experiments h3 { margin: 26px 0 10px; font-size: 18px; font-weight: 500; }
 .experiments h4 { margin: 20px 0 8px; font-size: 16px; font-weight: 500; }
-.experiments .experiment-decision {
-  border-left: 2px solid var(--rule-strong); padding: 8px 0 8px 20px; margin: 24px 0;
-}
-.experiments .experiment-decision p { margin: 0 0 6px; }
-.experiments .experiment-decision ul { margin-bottom: 0; }
 .experiments td { white-space: normal; vertical-align: top; }
-/* Difference-from-control chart: static, no JS. Better is always to the right;
-   the verdict word and point shape carry the signal besides colour. */
-.diff-chart { max-width: 100%; min-width: 0; }
-.diff-metric { margin: 0 0 28px; min-width: 0; }
-.diff-metric h4 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
-.diff-kind {
-  font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
-  color: var(--muted); border: 1px solid var(--rule-strong); border-radius: 999px; padding: 1px 7px;
-}
-.diff-axis {
-  display: flex; justify-content: space-between; gap: 12px;
-  font-size: 13px; color: var(--muted); margin: 0 0 4px;
-}
-.diff-row {
-  display: grid; grid-template-columns: minmax(0, 8rem) minmax(0, 1fr) minmax(0, 15rem);
-  column-gap: 14px; align-items: center; padding: 7px 0;
-  border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; min-width: 0;
-}
-.diff-row:last-child { border-bottom: 0; }
-.diff-arm { font-weight: 500; overflow-wrap: anywhere; min-width: 0; }
-.diff-track {
-  position: relative; height: 28px; min-width: 0;
-  background:
-    linear-gradient(var(--rule-strong), var(--rule-strong)) 50% 0 / 1px 100% no-repeat,
-    linear-gradient(var(--rule), var(--rule)) 0 50% / 100% 1px no-repeat;
-}
-.diff-whisker { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--muted); border-radius: 1px; }
-.diff-whisker::before, .diff-whisker::after {
-  content: ""; position: absolute; top: -4px; width: 2px; height: 10px; background: var(--muted);
-}
-.diff-whisker::before { left: 0; } .diff-whisker::after { right: 0; }
-.diff-point {
-  position: absolute; top: 50%; width: 11px; height: 11px;
-  transform: translate(-50%, -50%); border-radius: 50%;
-  background: var(--accent); box-shadow: 0 0 0 2px var(--bg);
-}
-.diff-row.is-better .diff-point { background: var(--better); }
-.diff-row.is-better .diff-whisker { background: var(--better); }
-.diff-row.is-better .diff-whisker::before, .diff-row.is-better .diff-whisker::after { background: var(--better); }
-.diff-row.is-worse .diff-point { background: var(--worse); border-radius: 2px; transform: translate(-50%, -50%) rotate(45deg); }
-.diff-row.is-worse .diff-whisker { background: var(--worse); }
-.diff-row.is-worse .diff-whisker::before, .diff-row.is-worse .diff-whisker::after { background: var(--worse); }
-.diff-value { text-align: right; overflow-wrap: anywhere; min-width: 0; }
-.diff-verdict { color: var(--muted); }
-.diff-row.is-unmeasured .diff-value { color: var(--muted); }
-.diff-row.is-unmeasured .diff-track {
-  background:
-    linear-gradient(var(--rule-strong), var(--rule-strong)) 50% 0 / 1px 100% no-repeat,
-    repeating-linear-gradient(90deg, var(--rule) 0 6px, transparent 6px 12px) 0 50% / 100% 1px no-repeat;
-}
 .diff-exploratory, .experiment-raw { border-top: 1px solid var(--rule); padding-top: 12px; }
 .experiments details { margin-top: 24px; }
 .experiments summary { cursor: pointer; color: var(--link); }
@@ -440,11 +385,6 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
     content: attr(data-label); color: var(--muted); flex: 0 0 4.5rem; text-align: left;
   }
   .analytics td .value { min-width: 0; overflow-wrap: anywhere; }
-  /* Chart rows stack: arm and value on one line, track full width below. */
-  .diff-row { grid-template-columns: minmax(0, 1fr) minmax(0, auto); column-gap: 10px; padding: 10px 0 12px; }
-  .diff-row .diff-track { grid-column: 1 / -1; grid-row: 2; height: 30px; }
-  .diff-value { max-width: 16rem; }
-  .diff-axis { flex-wrap: wrap; }
 }
 
 @media (max-width: 400px) {

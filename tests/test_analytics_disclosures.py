@@ -61,7 +61,7 @@ class AnalyticsDisclosureTests(unittest.TestCase):
         self.assertEqual(re.findall(r'data-label="Arm"><span class="value">(.*?)</span>', visible), [f"arm-{i}" for i in range(7)])
         self.assertEqual(re.findall(r'data-label="Arm"><span class="value">(.*?)</span>', tail), ["arm-7", "arm-8"])
 
-    def test_completions_preview_is_newest_first_and_anchor_stays_on_heading(self):
+    def test_completions_daily_table_is_collapsed_newest_first_and_anchor_stays_on_heading(self):
         directory = build.latest_analytics_dir(ROOT)
         metrics = json.loads((directory / "metrics.json").read_text(encoding="utf-8"))
         buckets = metrics["completions"]["buckets"]
@@ -70,9 +70,11 @@ class AnalyticsDisclosureTests(unittest.TestCase):
         table_start = rendered.index("<caption>Tasks closed per UTC day")
         table_end = rendered.index("</table>", table_start)
         first_table = rendered[table_start:table_end]
+        # The daily table sits in its own collapsed disclosure, whole and newest first.
+        self.assertGreater(rendered.rfind('<details class="more">', 0, table_start), rendered.rfind("</details>", 0, table_start))
         indexes = re.findall(r'data-field="completions\.buckets\.(\d+)\.start"', first_table)
-        self.assertEqual(indexes, [str(i) for i in reversed(range(len(buckets)))][:7])
-        self.assertTrue(rendered.startswith('<section id="completed" aria-labelledby="completed-title">'))
+        self.assertEqual(indexes, [str(i) for i in reversed(range(len(buckets)))])
+        self.assertTrue(rendered.startswith('<section class="metric-board" id="completed" aria-labelledby="completed-title">'))
 
     def test_disclosure_css_uses_theme_tokens_focus_and_bounded_phone_scrolling(self):
         css = (ROOT / "public" / "assets" / "notes.css").read_text(encoding="utf-8")

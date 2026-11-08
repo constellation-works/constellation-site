@@ -79,6 +79,16 @@ PART_LABEL = {
     "invocations": "invocations",
 }
 TOKEN_TIERS = ("low", "medium", "hard", "xhard")
+# A tier average over fewer runs than this is flagged as a thin sample.
+THIN_TIER_RUNS = 30
+# Below this share of done tasks measured, a board carries a coverage warning.
+COVERAGE_WARN_RATE = 0.5
+GROUPS = (
+    ("speed", "Speed", (("duration", "Duration"), ("turns", "Turns"))),
+    ("throughput", "Throughput", (("completed", "Tasks completed"), ("outcomes", "Outcomes"))),
+    ("quality", "Quality", (("defects", "Defects"), ("friction", "Friction"))),
+    ("spend", "Spend", (("cost", "Cost"), ("tokens", "Tokens"), ("diff", "Lines"))),
+)
 EVENT_FAMILIES = ("step_recovery", "final_recovery", "auto_fix", "merge_conflict", "failed_ci")
 SCOPE_LABEL = {"all_time": "all time"}
 
@@ -154,7 +164,7 @@ def _window_label(page):
     if page == "reliability":
         return "fleet reliability window", None
     if page == "metrics":
-        return "metrics window", "each board shows its own window"
+        return "metrics window", "a board prints its own window only where it differs"
     if page == "experiments":
         return (
             "fleet reliability reference window",
@@ -419,6 +429,18 @@ def format_share(part, total):
     return f"{round(float(part) / float(total) * 100)}% of done"
 
 
+def per_done(part, total):
+    """Derived on this page: a count divided by the tasks done in the same window."""
+    if part is None or isinstance(part, bool) or not total or isinstance(total, bool):
+        return None
+    return float(part) / float(total)
+
+
+def format_per_done(part, total):
+    value = per_done(part, total)
+    return "—" if value is None else f"{value:.2f}"
+
+
 def format_scope(value):
     return SCOPE_LABEL.get(value, str(value))
 
@@ -434,6 +456,8 @@ def format_delta(current, previous, mode):
     arrow = "▲" if ratio >= 0 else "▼"
     if mode == "duration":
         word = "slower" if ratio >= 0 else "faster"
+    elif mode.startswith("rate-"):
+        word = "higher" if ratio >= 0 else "lower"
     else:
         word = "more" if ratio >= 0 else "fewer"
     return f"{arrow} {number}% {word}"
@@ -445,7 +469,7 @@ def delta_class(current, previous, mode):
     if float(previous) == 0:
         return "flat"
     ratio = (float(current) - float(previous)) / float(previous) * 100
-    worse_when_up = mode in ("duration", "worse")
+    worse_when_up = mode in ("duration", "worse", "rate-worse")
     if abs(ratio) <= 5:
         return "flat"
     up_is_bad = ratio > 0 if worse_when_up else ratio < 0
@@ -805,7 +829,7 @@ def with_row_disclosure(rows, render_table, more_label="rows"):
     )
 
 
-def table(caption, headers, rows, more_label="rows"):
+def table(caption, headers, rows, more_label="rows", preview=True):
     head = "".join(f'<th scope="col">{header}</th>' for header in headers)
     rendered_rows = [
         "<tr>" + label_cells("".join(row_cells), headers) + "</tr>"
@@ -820,24 +844,59 @@ def table(caption, headers, rows, more_label="rows"):
         body = "".join(part)
         return f'<div class="table"><table>{cap}<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
+    if not preview:
+        return render_table(rendered_rows, False)
     return with_row_disclosure(rendered_rows, render_table, more_label)
 
 
 def score_card(label, value_html, detail_html=""):
     detail = f'<p class="detail">{detail_html}</p>' if detail_html else ""
-    return f'<article class="score"><h3>{e(label)}</h3>{value_html}{detail}</article>'
+    return f'<article class="score"><h4>{e(label)}</h4>{value_html}{detail}</article>'
 
 
 def cards(html_cards):
     return f'<div class="scores">{"".join(html_cards)}</div>'
 
 
-def section(anchor, title, intro, body):
+def section(anchor, title, intro, body, badge=""):
     return (
-        f'<section id="{e(anchor)}" aria-labelledby="{e(anchor)}-title">'
-        f'<h2 id="{e(anchor)}-title">{e(title)}</h2>'
+        f'<section class="metric-board" id="{e(anchor)}" aria-labelledby="{e(anchor)}-title">'
+        f'<div class="board-head"><h3 id="{e(anchor)}-title">{e(title)}</h3>{badge}</div>'
         f'<p class="lede">{intro}</p>{body}</section>'
     )
+
+
+def more(summary, inner):
+    """A native disclosure for secondary detail (daily tables, per-model rows)."""
+    if not inner:
+        return ""
+    return f'<details class="more"><summary>{e(summary)}</summary>{inner}</details>'
+
+
+def warn(title, body_html):
+    return f'<p class="warn"><strong>{e(title)}</strong> <span>{body_html}</span></p>'
+
+
+def same_window(window, page_window):
+    """True when a board's window prints the same as the page window (minute precision)."""
+    if not isinstance(window, dict) or not isinstance(page_window, dict):
+        return False
+    try:
+        return (
+            window.get("key") == page_window.get("key")
+            and format_stamp(window["since"]) == format_stamp(page_window["since"])
+            and format_stamp(window["until"]) == format_stamp(page_window["until"])
+        )
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
+def board_window(window, prefix, metrics):
+    """A board prints its own window only when it differs from the page window up top."""
+    page_window = (metrics.get("durations") or {}).get("window") or {}
+    if same_window(window, page_window):
+        return ""
+    return window_line(window, prefix)
 
 
 def bucket_stat(buckets, key, stat, unit):
@@ -907,19 +966,29 @@ def section_duration(metrics):
                 + "</td>"
             )
         daily_rows.append("".join(cells))
-    daily = table(
+    daily = more("Daily figures, newest first", table(
         "Average duration and runs per UTC day, newest first.",
         ["Day", "All", "Low", "Medium", "Hard"],
         daily_rows,
         more_label="days",
-    ) if daily_rows else ""
+        preview=False,
+    )) if daily_rows else ""
+    thin = []
+    for key in ("low", "medium", "hard", "xhard"):
+        cell = current.get(key)
+        if isinstance(cell, dict) and isinstance(cell.get("n"), int) and 0 < cell["n"] < THIN_TIER_RUNS:
+            thin.append(
+                f"{e(TIER_LABEL[key])} has only "
+                + fig(unit_count(cell["n"], "runs"), "runs", f"durations.current.{key}.n")
+            )
+    warning = warn("Thin sample", "; ".join(thin) + ". Read those averages as a small sample.") if thin else ""
     actors = _actor_table(durations.get("actors") or [], "durations.actors", with_trend=True)
     by_complexity = []
     for index, band in enumerate(durations.get("implement_one_by_complexity") or []):
         label = TIER_LABEL.get(band.get("complexity"), band.get("complexity") or "Tier")
         count = fig(unit_count(band.get("n"), "runs"), "runs", f"durations.implement_one_by_complexity.{index}.n")
         by_complexity.append(
-            f"<h3>{e(label)}</h3><p class=\"detail\">{count}</p>"
+            f"<h4>{e(label)}</h4><p class=\"detail\">{count}</p>"
             + _actor_table(band.get("actors") or [], f"durations.implement_one_by_complexity.{index}.actors", with_trend=False)
         )
     outcome = text_fig(durations.get("outcome"), "durations.outcome")
@@ -929,21 +998,21 @@ def section_duration(metrics):
         "Failed, cancelled, no-diff and unknown outcomes are excluded. "
         "Extra hard runs are included in All and omitted from the low, medium and hard lines."
     )
+    actor_count = len(durations.get("actors") or [])
     body = "".join([
-        window_line(window, "durations.window"),
+        board_window(window, "durations.window", metrics),
+        warning,
         cards(tier_cards),
-        "<h3>Average by day</h3>",
+        "<h4>Average by day</h4>",
         legend([(f"s-{key}", TIER_LABEL[key], "line") for key in DURATION_LINES]),
         chart,
-        "<h3>Runs by day</h3>",
+        "<h4>Runs by day</h4>",
         legend([("s-low", "Low", "bar"), ("s-medium", "Medium", "bar"), ("s-hard", "Hard", "bar"), ("s-other", "Other", "bar")]),
         bars,
         daily,
-        "<h3>By model</h3>",
-        "<p class=\"detail\">Sorted by runs. Dimmed rows are a small sample and are not ranked.</p>",
-        actors,
-        "<h3>By model within a complexity</h3>",
-        "".join(by_complexity),
+        more(f"By model ({actor_count} models)",
+             "<p class=\"detail\">Sorted by runs. Dimmed rows are a small sample and are not ranked.</p>" + actors),
+        more("By model within a complexity", "".join(by_complexity)),
     ])
     return section("duration", "Duration", intro, body)
 
@@ -1029,15 +1098,16 @@ def section_completions(metrics):
         cells.append("<td>" + fig(unit_count(bucket.get("archived"), "archived"), "archived", f"completions.buckets.{index}.archived") + "</td>")
         cells.append("<td>" + fig(unit_count(bucket.get("rejected"), "rejected"), "rejected", f"completions.buckets.{index}.rejected") + "</td>")
         rows.append("".join(cells))
-    daily = table(
+    daily = more("Daily figures, newest first", table(
         "Tasks closed per UTC day, newest first. Extra hard and unset are in Done and in Other.",
         ["Day", "Done", "Low", "Medium", "Hard", "Other", "Archived", "Rejected"],
         rows,
         more_label="days",
-    ) if rows else ""
+        preview=False,
+    )) if rows else ""
     intro = "Tasks that moved to done in each UTC day, by complexity. This board is not filtered by run outcome."
     body = "".join([
-        window_line(window, "completions.window"),
+        board_window(window, "completions.window", metrics),
         cards(tier_cards),
         legend([("s-low", "Low", "bar"), ("s-medium", "Medium", "bar"), ("s-hard", "Hard", "bar"), ("s-other", "Other", "bar")]),
         chart,
@@ -1101,20 +1171,37 @@ def section_defects(metrics):
         for key, _label, _cls in LINEAGE:
             cells.append("<td>" + fig(unit_count((bucket.get("lineage") or {}).get(key), "defects"), "defects", f"defects.buckets.{index}.lineage.{key}") + "</td>")
         daily_rows.append("".join(cells))
-    daily = table(
+    daily = more("Daily figures, newest first", table(
         "Defects per UTC day, newest first.",
         ["Day", "Total", "Fix-for-a-fix", "Other regression", "Unattributed"],
         daily_rows,
         more_label="days",
-    ) if daily_rows else ""
+        preview=False,
+    )) if daily_rows else ""
+    done_now = ((metrics.get("completions") or {}).get("current") or {}).get("done") or {}
+    done_prev = ((metrics.get("completions") or {}).get("previous") or {}).get("done") or {}
+    rate_now = per_done(current.get("total"), done_now.get("total"))
+    rate_prev = per_done(previous.get("total"), done_prev.get("total"))
+    per_done_card = ""
+    if rate_now is not None:
+        detail = "defects filed ÷ tasks done"
+        if rate_prev is not None:
+            detail = from_delta(rate_now, rate_prev, "worse", fig(
+                format_per_done(previous.get("total"), done_prev.get("total")), "per-done",
+                "defects.previous.total", base="completions.previous.done.total",
+            )) + " · " + detail
+        per_done_card = score_card("Per done task *", fig(
+            format_per_done(current.get("total"), done_now.get("total")), "per-done",
+            total_field, cls="value", base="completions.current.done.total",
+        ), detail)
     intro = "Defects filed in the window, by what caused them and by what found them. A rise is a worse result."
     body = "".join([
-        window_line(window, "defects.window"),
-        cards([headline, *lineage_cards]),
+        board_window(window, "defects.window", metrics),
+        cards([headline, *([per_done_card] if per_done_card else []), *lineage_cards]),
         legend([(cls, label, "bar") for _key, label, cls in LINEAGE]),
         chart,
         daily,
-        "<h3>By origin</h3>",
+        "<h4>By origin</h4>",
         origin_table,
     ])
     return section("defects", "Defects", intro, body)
@@ -1125,6 +1212,60 @@ def _series_index(series, complexity, cohort="all"):
         if item.get("complexity") == complexity and item.get("cohort") == cohort:
             return index
     return None
+
+
+def from_delta(current, previous, mode, previous_fig):
+    """'▼ from <previous>' for a figure whose change is shown against a previous level."""
+    cls = delta_class(current, previous, mode)
+    arrow = "▲" if current is not None and previous is not None and current > previous else "▼"
+    if current is not None and previous is not None and current == previous:
+        arrow = "="
+    return f'<span class="delta {cls}">{arrow} from {previous_fig}</span>'
+
+
+def turns_warning(coverage):
+    rate = coverage.get("measured_rate")
+    if not isinstance(rate, (int, float)) or isinstance(rate, bool) or rate >= COVERAGE_WARN_RATE:
+        return ""
+    return warn(
+        "Thin coverage",
+        "Only " + fig(unit_count(coverage.get("measured"), "tasks"), "tasks", "turns.coverage.measured")
+        + " of " + fig(unit_count(coverage.get("tasks"), "tasks"), "tasks", "turns.coverage.tasks")
+        + " (" + fig(format_percent(rate), "percent", "turns.coverage.measured_rate")
+        + ") had a measurable first edit. Read these figures as a sample, not the fleet.",
+    )
+
+
+def tokens_warning(metrics):
+    total = (metrics.get("tokens") or {}).get("total") or {}
+    measured = total.get("n")
+    uncovered = total.get("excluded_uncovered")
+    silent = total.get("excluded_no_invocations")
+    numbers = [measured, uncovered, silent]
+    if any(not isinstance(v, int) or isinstance(v, bool) for v in numbers):
+        return ""
+    excluded = uncovered + silent
+    if not excluded or excluded * 10 < measured + excluded:
+        return ""
+    return warn(
+        "Partial coverage",
+        fig(unit_count(uncovered, "tasks"), "tasks", "tokens.total.excluded_uncovered")
+        + " had no token coverage and "
+        + fig(unit_count(silent, "tasks"), "tasks", "tokens.total.excluded_no_invocations")
+        + " had no invocations; they are left out of the means, which cover "
+        + fig(unit_count(measured, "tasks"), "tasks", "tokens.total.n") + ".",
+    )
+
+
+def cost_warning(index, total):
+    excluded = total.get("excluded_invocations")
+    if not isinstance(excluded, int) or isinstance(excluded, bool) or excluded <= 0:
+        return ""
+    return warn(
+        "Partial coverage",
+        fig(unit_count(excluded, "invocations"), "invocations", f"friction.families.{index}.total.excluded_invocations")
+        + " are excluded from this total; the snapshot does not say what they cost.",
+    )
 
 
 def section_tokens(metrics):
@@ -1199,16 +1340,18 @@ def section_tokens(metrics):
         "Tasks by model. The means above pool every model; the snapshot has no per-model token mean.",
         ["Model", "Tasks"],
         model_rows,
+        preview=False,
     ) if model_rows else ""
     outcome = text_fig(tokens.get("outcome"), "tokens.outcome")
     scope = fig(format_scope(tokens.get("scope")), "scope", "tokens.scope")
     intro = f"Tokens per task with outcome {outcome}, scope {scope}. This is not the succeeded-run filter used for duration."
     body = "".join([
-        window_line(window, "tokens.window"),
+        board_window(window, "tokens.window", metrics),
+        tokens_warning(metrics),
         cards(tier_cards),
         legend([(f"s-{key}", TIER_LABEL[key], "line") for key in TOKEN_TIERS]),
         chart,
-        model_table,
+        more(f"Tasks by model ({len(model_rows)} models)", model_table),
     ])
     return section("tokens", "Tokens", intro, body)
 
@@ -1265,7 +1408,8 @@ def section_cost(metrics):
     ) if points else ""
     intro = "Spend recorded on the delivery-friction board, in USD, for tasks that reached done. A rise is a worse result."
     body = "".join([
-        window_line(window, "friction.window"),
+        board_window(window, "friction.window", metrics),
+        cost_warning(index, total),
         cards([score_card("Cost", _family_count(index, family), detail)]),
         legend([("s-cost", "Cost", "line")]),
         chart,
@@ -1358,16 +1502,15 @@ def section_diff(metrics):
         min_note = "<p class=\"detail\">Dimmed crews are under " + fig(unit_count(diff.get("min_deliveries"), "deliveries"), "deliveries", "diff.min_deliveries") + " or marked thin, and are not ranked.</p>"
     intro = "Lines added and deleted by deliveries that landed in the window, split into code, tests and other files. Crews are the implementing crews."
     body = "".join([
-        window_line(window, "diff.window"),
+        board_window(window, "diff.window", metrics),
         cards([score_card("Deliveries", deliveries, "Mean net " + fig(format_lines((overall.get("mean") or {}).get("net")), "lines", "diff.overall.total.mean.net"))]),
         legend([("s-all", "Mean net lines", "line")]),
         chart,
-        "<h3>By line kind</h3>",
-        table("", ["Kind", "Mean", "Median", "Sum"], measure_rows),
-        "<h3>By crew</h3>",
+        more("By line kind", table("", ["Kind", "Mean", "Median", "Sum"], measure_rows, preview=False)),
+        "<h4>By crew</h4>",
         min_note,
         f'<div class="hbars" data-ymax="{y_max:g}">{"".join(bar_rows)}</div>',
-        table("Mean lines per delivery, by crew.", ["Crew", "Deliveries", "Mean net", "Mean code added", "Median net"], crew_rows),
+        more("Crew details", table("Mean lines per delivery, by crew.", ["Crew", "Deliveries", "Mean net", "Mean code added", "Median net"], crew_rows, preview=False)),
     ])
     return section("diff", "Lines changed", intro, body)
 
@@ -1430,18 +1573,22 @@ def section_friction(metrics):
         "Done tasks by crew. These are the crew totals on the friction board, not per-crew event rates.",
         ["Crew", "Tasks"],
         crew_rows,
+        preview=False,
     ) if crew_rows else ""
+    sparse = [family.get("label") or family.get("family") for family in families
+              if isinstance(family, dict) and (family.get("total") or {}).get("sparse")]
+    sparse_note = warn("Thin sample", e(", ".join(str(name) for name in sparse)) + " have too few events to compare.") if sparse else ""
     intro = (
         "Step recoveries, final recoveries, pull-request auto-fixes, merge conflicts and failed checks. "
         "Rates are events per task that reached done. Cost is in its own section. A rise is a worse result."
     )
     body = "".join([
-        window_line(window, "friction.window"),
+        board_window(window, "friction.window", metrics),
+        sparse_note,
         cards(event_cards),
         legend(legend_items),
         chart,
-        "<h3>By crew</h3>",
-        crew_table,
+        more(f"Done tasks by crew ({len(crew_rows)} crews)", crew_table),
     ])
     return section("friction", "Delivery friction", intro, body)
 
@@ -1523,13 +1670,14 @@ def section_turns(metrics):
     intro_outcome = text_fig(turns.get("outcome"), "turns.outcome")
     intro = f"Turns until the first edit on tasks with outcome {intro_outcome}. Means use tasks with a measured edit. This is not the succeeded-run filter used for duration."
     body = "".join([
-        window_line(window, "turns.window"),
+        board_window(window, "turns.window", metrics),
+        turns_warning(coverage),
         cards(tier_cards),
         "<p class=\"detail\">" + " · ".join(excluded_bits) + "</p>" if excluded_bits else "",
         legend([(f"s-{key}", TIER_LABEL[key], "line") for key in ("low", "medium", "hard", "xhard")]),
         chart,
-        "<h3>By provider</h3>",
-        table("Tasks in the turns window, by provider. Turn means above are pooled.", ["Provider", "Tasks"], provider_rows),
+        more(f"Tasks by provider ({len(provider_rows)} providers)",
+             table("Tasks in the turns window, by provider. Turn means above are pooled.", ["Provider", "Tasks"], provider_rows, preview=False)),
     ])
     return section("turns", "Turns to first edit", intro, body)
 
@@ -1585,35 +1733,168 @@ def section_outcome(metrics):
         legend([("s-low", "Done", "bar"), ("s-hard", "Rejected", "bar"), ("s-other", "Archived", "bar")]),
         '<div class="outcomes">' + "".join(blocks) + "</div>",
     ])
-    return section("outcomes", "Outcome by complexity", intro, body)
+    return section("outcomes", "Outcome by complexity", intro, body,
+                   badge='<span class="scope-pill">All time, not the window above</span>')
+
+
+def _tile(href, group, label, value_html, delta_html, sub_html):
+    return (
+        f'<li><a class="tile" href="#{e(href)}">'
+        f'<span class="tile-head"><span class="tile-label">{e(label)}</span>'
+        f'<span class="tile-group">{e(group)} <span aria-hidden="true">→</span></span></span>'
+        f'<span class="tile-value">{value_html}</span>'
+        f'<span class="tile-delta">{delta_html}</span>'
+        f'<span class="tile-sub">{sub_html}</span></a></li>'
+    )
+
+
+def glance(metrics):
+    """At-a-glance tiles. Every figure is a marked span; '*' marks a rate derived here."""
+    tiles = []
+    durations = metrics.get("durations") or {}
+    cur = (durations.get("current") or {}).get("all") or {}
+    prev = (durations.get("previous") or {}).get("all") or {}
+    if cur:
+        tiles.append(_tile(
+            "duration", "Speed", "Duration",
+            fig(format_ms(cur.get("avg")), "duration", "durations.current.all.avg"),
+            delta_fig(cur.get("avg"), prev.get("avg"), "duration", "durations.current.all.avg", "durations.previous.all.avg") if prev else "",
+            '<span class="label">p95</span> ' + fig(format_ms(cur.get("p95")), "duration", "durations.current.all.p95")
+            + " · " + fig(unit_count(cur.get("n"), "runs"), "runs", "durations.current.all.n"),
+        ))
+    completions = metrics.get("completions") or {}
+    done = (completions.get("current") or {}).get("done") or {}
+    prev_done = (completions.get("previous") or {}).get("done") or {}
+    if done:
+        tiles.append(_tile(
+            "completed", "Throughput", "Tasks done",
+            fig(unit_count(done.get("total"), "tasks"), "tasks", "completions.current.done.total"),
+            delta_fig(done.get("total"), prev_done.get("total"), "better", "completions.current.done.total", "completions.previous.done.total") if prev_done else "",
+            fig(unit_count((completions.get("current") or {}).get("rejected"), "rejected"), "rejected", "completions.current.rejected")
+            + " · " + fig(unit_count((completions.get("current") or {}).get("archived"), "archived"), "archived", "completions.current.archived"),
+        ))
+    defects = metrics.get("defects") or {}
+    dcur = defects.get("current") or {}
+    dprev = defects.get("previous") or {}
+    if dcur:
+        tiles.append(_tile(
+            "defects", "Quality", "Defects",
+            fig(unit_count(dcur.get("total"), "defects"), "defects", "defects.current.total"),
+            delta_fig(dcur.get("total"), dprev.get("total"), "worse", "defects.current.total", "defects.previous.total") if dprev else "",
+            fig(format_ratio((dcur.get("lineage") or {}).get("unattributed"), dcur.get("total")), "ratio",
+                "defects.current.lineage.unattributed", base="defects.current.total") + " unattributed",
+        ))
+        rate_now = per_done(dcur.get("total"), done.get("total"))
+        rate_prev = per_done(dprev.get("total"), prev_done.get("total"))
+        if rate_now is not None:
+            tiles.append(_tile(
+                "defects", "Quality", "Defects per done task *",
+                fig(format_per_done(dcur.get("total"), done.get("total")), "per-done", "defects.current.total",
+                    base="completions.current.done.total"),
+                from_delta(rate_now, rate_prev, "worse", fig(
+                    format_per_done(dprev.get("total"), prev_done.get("total")), "per-done",
+                    "defects.previous.total", base="completions.previous.done.total")) if rate_prev is not None else "",
+                "defects filed ÷ tasks done",
+            ))
+    index, cost = _family(metrics, "cost")
+    if cost is not None:
+        total = cost.get("total") or {}
+        previous = cost.get("previous") or {}
+        tiles.append(_tile(
+            "cost", "Spend", "Spend",
+            _family_count(index, cost).replace(' class="value"', ""),
+            delta_fig(total.get("count"), previous.get("count"), "worse", f"friction.families.{index}.total.count", f"friction.families.{index}.previous.count") if previous else "",
+            "done tasks only",
+        ))
+        tiles.append(_tile(
+            "cost", "Spend", "Cost per done task",
+            fig(format_usd(total.get("rate")), "usd", f"friction.families.{index}.total.rate"),
+            delta_fig(total.get("rate"), previous.get("rate"), "rate-worse", f"friction.families.{index}.total.rate", f"friction.families.{index}.previous.rate") if previous else "",
+            "spend ÷ " + fig(unit_count(total.get("denominator"), "tasks"), "tasks", f"friction.families.{index}.total.denominator") + " done",
+        ))
+    index, final = _family(metrics, "final_recovery")
+    if final is not None:
+        total = final.get("total") or {}
+        previous = final.get("previous") or {}
+        tiles.append(_tile(
+            "friction", "Quality", final.get("label") or "Final recoveries",
+            fig(format_percent(total.get("rate")), "percent", f"friction.families.{index}.total.rate"),
+            delta_fig(total.get("rate"), previous.get("rate"), "rate-worse", f"friction.families.{index}.total.rate", f"friction.families.{index}.previous.rate") if previous else "",
+            "of done tasks · " + fig(unit_count(total.get("count"), final.get("unit") or "events"), "events", f"friction.families.{index}.total.count"),
+        ))
+    turns = metrics.get("turns") or {}
+    ttotal = turns.get("total") or {}
+    coverage = turns.get("coverage") or {}
+    if ttotal:
+        tiles.append(_tile(
+            "turns", "Speed", "Turns to first edit",
+            fig(format_turns(ttotal.get("mean_turns")), "turns", "turns.total.mean_turns"),
+            '<span class="delta flat">no previous window</span>',
+            fig(format_percent(coverage.get("measured_rate")), "percent", "turns.coverage.measured_rate") + " of done tasks measured",
+        ))
+    return (
+        '<section class="glance" aria-labelledby="glance-title">'
+        '<div class="glance-head"><h2 id="glance-title">At a glance</h2>'
+        '<p class="glance-key"><span class="delta good">Blue</span> improved · <span class="delta bad">orange</span> got worse'
+        ' · grey within five percent · * derived on this page</p></div>'
+        f'<ul class="tiles">{"".join(tiles)}</ul></section>'
+    )
 
 
 def render_body(metrics, picker="", banner=""):
-    toc = """<nav class="toc" aria-label="Metrics sections"><ul>
-<li><a href="#duration">Duration</a></li>
-<li><a href="#completed">Tasks completed</a></li>
-<li><a href="#defects">Defects</a></li>
-<li><a href="#tokens">Tokens</a></li>
-<li><a href="#cost">Cost</a></li>
-<li><a href="#diff">Lines changed</a></li>
-<li><a href="#friction">Friction</a></li>
-<li><a href="#turns">Turns</a></li>
-<li><a href="#outcomes">Outcomes</a></li>
-</ul></nav>"""
     durations = metrics.get("durations") or {}
     window = durations.get("window") or {}
     outcome = text_fig(metrics.get("outcome"), "outcome")
-    key = text_fig(window.get("key"), "durations.window.key") if window.get("key") else ""
+    statement = ""
+    if window.get("since") and window.get("until"):
+        statement = (
+            '<p class="window window-statement">'
+            + (text_fig(window["key"], "durations.window.key") + " window · " if window.get("key") else "")
+            + stamp(window["since"], "durations.window.since") + " – " + stamp(window["until"], "durations.window.until")
+            + "</p>"
+        )
+        if window.get("previous_since") and window.get("previous_until"):
+            statement += (
+                '<p class="window window-previous">Changes compare with the window before: '
+                + stamp(window["previous_since"], "durations.window.previous_since") + " – "
+                + stamp(window["previous_until"], "durations.window.previous_until") + ".</p>"
+            )
     hero = (
         '<p class="eyebrow">Orbit metrics</p>'
         "<h1>Metrics</h1>"
         f"<p class=\"summary\">Duration, completions, defects, tokens, cost, diff size, friction and turns. "
-        f"Duration outcome {outcome}. Window {key}.</p>"
-        + window_line(window, "durations.window")
-        + "<p class=\"detail\">Each thirty-day section prints the UTC window of its snapshot field; "
-        "the outcome-by-complexity board is an all-time mix with no thirty-day window. "
-        "Days are UTC. The page is rendered from the committed snapshot and does not call Orbit.</p>"
+        f"Duration outcome {outcome}.</p>"
+        + statement
+        + "<p class=\"detail\">Every board below uses this UTC window unless it prints its own; "
+        "the outcome-by-complexity board is an all-time mix. "
+        "The page is rendered from the committed snapshot and does not call Orbit.</p>"
     )
+    boards = {
+        "duration": section_duration,
+        "turns": section_turns,
+        "completed": section_completions,
+        "outcomes": section_outcome,
+        "defects": section_defects,
+        "friction": section_friction,
+        "cost": section_cost,
+        "tokens": section_tokens,
+        "diff": section_diff,
+    }
+    tabs = []
+    groups = []
+    for key, title, members in GROUPS:
+        names = " · ".join(label for _anchor, label in members)
+        tabs.append(
+            f'<li><a href="#{key}" data-tab="{key}">{e(title)} <span class="tab-boards">{e(names)}</span></a></li>'
+        )
+        groups.append(
+            f'<section class="metric-group" id="{key}" data-group="{key}" aria-labelledby="{key}-title">'
+            f'<h2 id="{key}-title">{e(title)}</h2>'
+            + "".join(boards[anchor](metrics) for anchor, _label in members)
+            + "</section>"
+        )
+    tabs.append('<li hidden><a href="#metrics-all" data-tab="all">All boards</a></li>')
+    nav = f'<nav class="group-nav" aria-label="Metric groups"><ul>{"".join(tabs)}</ul></nav>'
     caveats = (
         "<section id=\"caveats\"><h2>Notes</h2><ul>"
         "<li>Figures are aggregates of crews, models and complexities: counts, rates, durations, lines and cost. "
@@ -1621,21 +1902,22 @@ def render_body(metrics, picker="", banner=""):
         "<li>Duration uses succeeded runs. Tokens and turns use done tasks. "
         "Completions and cost take no run-outcome query filter, but completions count tasks moved to done "
         "and cost covers spend for tasks that reached done. Other boards take no run-outcome query filter.</li>"
+        "<li>* Derived on this page: defects per done task is defects filed in the window divided by tasks moved to done "
+        "in the same window; its previous figure divides the previous window's defects by the previous window's done tasks. "
+        "Cost per done task and event rates come from the snapshot itself.</li>"
+        "<li>A change within five percent is shown grey. Blue and orange follow each metric's direction: "
+        "fewer defects or a shorter duration is blue.</li>"
+        "<li>Coverage and thin-sample warnings are computed from the snapshot: a board warns when under half of its done tasks "
+        "were measured, when a tenth or more were left out, or when a complexity tier has fewer than thirty runs.</li>"
         "<li>Dimmed model and crew rows are a small sample and are not ranked.</li>"
         "<li>Outcome by complexity is a separate all-time mix.</li>"
         "</ul></section>"
     )
     return (
-        f'<article class="analytics">{hero}{banner}{picker}{toc}'
-        + section_duration(metrics)
-        + section_completions(metrics)
-        + section_defects(metrics)
-        + section_tokens(metrics)
-        + section_cost(metrics)
-        + section_diff(metrics)
-        + section_friction(metrics)
-        + section_turns(metrics)
-        + section_outcome(metrics)
+        f'<article class="analytics metrics-page" id="metrics-all">{hero}{banner}{picker}'
+        + glance(metrics)
+        + nav
+        + "".join(groups)
         + caveats
         + "</article>"
     )
@@ -1656,7 +1938,8 @@ def render_page(root, metrics, day, picker=None, banner="", archive_month=None, 
     </span>
   </div>
 </footer>
-<script src="{asset(root, 'theme.js')}"></script>"""
+<script src="{asset(root, 'theme.js')}"></script>
+<script src="{asset(root, 'analytics.js')}" defer></script>"""
     return f"""<!doctype html>
 <html lang="en">
 <head>
