@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the Notes section, the agent scorecards page and the metrics page.
+"""Build the Notes section and the public analytics pages.
 
 Each note is a directory under notes/ holding index.md (front matter plus Markdown)
 and any files the note links to (data, images). Output is a page per note, a
@@ -8,6 +8,7 @@ and any files the note links to (data, images). Output is a page per note, a
 /analytics/agents/ is rendered from the newest data/analytics/<YYYY-MM-DD>/scorecards.json.
 /analytics/metrics/ is rendered from the newest data/analytics/<YYYY-MM-DD>/metrics.json
 via analytics_page.py. public/analytics/ is generated too: do not edit or commit it.
+/analytics/reliability/ uses the newest snapshot's reliability.json aggregates.
 
 Front matter is `key: value` lines between `---` fences:
 
@@ -694,6 +695,131 @@ def build_agents():
     print(f"built agent scorecards -> {dest} from {directory.name}")
 
 
+RELIABILITY_OUTCOMES = (
+    ("succeeded", "Succeeded"),
+    ("failed", "Direct failures"),
+    ("cascaded", "Cascaded failures"),
+    ("cancelled", "Cancelled"),
+    ("held", "Held"),
+    ("upgrade_paused", "Paused for upgrade"),
+    ("in_flight", "In flight"),
+    ("skipped", "Skipped"),
+    ("unknown", "Unknown outcome"),
+)
+UTC_STAMP = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?Z")
+
+
+def reliability_aggregates(data):
+    """Project only known numeric fields and validated timestamps, never labels.
+
+    In particular, source, by_job, activities, observed_states and arbitrary
+    future diagnostic fields have no route into the public HTML.
+    """
+    if not isinstance(data, dict) or type(data.get("schema_version")) is not int or data["schema_version"] != 1:
+        sys.exit("reliability.json: expected schema_version 1")
+    window = data.get("window")
+    if not isinstance(window, dict) or window.get("label") != "30d":
+        sys.exit("reliability.json: expected a 30d UTC window")
+    stamps = [window.get(key) for key in ("since", "until")]
+    if any(not isinstance(value, str) or not UTC_STAMP.fullmatch(value) for value in stamps):
+        sys.exit("reliability.json: expected exact UTC since/until timestamps")
+    try:
+        since, until = [datetime.datetime.fromisoformat(value.replace("Z", "+00:00")) for value in stamps]
+    except ValueError:
+        sys.exit("reliability.json: invalid UTC timestamp")
+    if until - since != datetime.timedelta(days=30):
+        sys.exit("reliability.json: UTC window must span 30 days")
+    totals = data.get("totals")
+    runs = totals.get("job_runs") if isinstance(totals, dict) else None
+    counts = runs.get("counts") if isinstance(runs, dict) else None
+    keys = ("total",) + tuple(key for key, _label in RELIABILITY_OUTCOMES)
+    if not isinstance(counts, dict) or any(type(counts.get(key)) is not int or counts[key] < 0 for key in keys):
+        sys.exit("reliability.json: expected non-negative integer outcome counts")
+    if counts["total"] != sum(counts[key] for key, _label in RELIABILITY_OUTCOMES):
+        sys.exit("reliability.json: outcome counts do not add up to total")
+    return {key: counts[key] for key in keys}, stamps
+
+
+def reliability_table(rows, denominator, caption):
+    """Rates are recomputed from counts; zero support never becomes 0% success."""
+    rendered = []
+    for label, count in rows:
+        rate = f"{count / denominator:.2%}" if denominator else "Unavailable"
+        rendered.append(
+            f'<tr><td data-label="Outcome"><span class="value">{html.escape(label)}</span></td>'
+            f'<td class="num" data-label="Count"><span class="value">{count:,} runs</span></td>'
+            f'<td class="num" data-label="Rate"><span class="value">{rate}</span></td></tr>'
+        )
+    return (
+        '<div class="table"><table>'
+        f'<caption class="sr-only">{html.escape(caption)}</caption>'
+        '<thead><tr><th scope="col">Outcome</th><th scope="col" class="num">Count (runs)</th>'
+        '<th scope="col" class="num">Rate (%)</th></tr></thead>'
+        f'<tbody>{"".join(rendered)}</tbody></table></div>'
+    )
+
+
+def render_reliability_page(data, snapshot_date):
+    if not isinstance(snapshot_date, str) or not DATE_DIR.fullmatch(snapshot_date):
+        sys.exit("reliability snapshot date must be YYYY-MM-DD")
+    counts, (since, until) = reliability_aggregates(data)
+    settled = counts["succeeded"] + counts["failed"]
+    window = render_window(since, until)
+    outcomes = dict(RELIABILITY_OUTCOMES)
+    sections = []
+    boards = (
+        ("settled", "Success and failure", ("succeeded", "failed"), settled,
+         "Rates use successes plus direct failures. Cascaded failures are wrapper echoes "
+         "rolled into the originating failure, so they are excluded from this denominator."),
+        ("failures", "Failure categories", ("failed", "cascaded"), counts["total"],
+         "Direct failures and cascaded failures are shown separately. Each rate is a share "
+         "of all recorded runs, including unsettled and other outcomes."),
+        ("other-outcomes", "Other outcomes",
+         ("cancelled", "held", "upgrade_paused", "in_flight", "skipped", "unknown"), counts["total"],
+         "These outcomes are excluded from the success and failure rates above. "
+         "Each rate here is a share of all recorded runs."),
+    )
+    for element_id, title, keys, denominator, note in boards:
+        rows = [(outcomes[key], counts[key]) for key in keys]
+        sections.append(
+            f'<section class="board" id="{element_id}"><h2>{title}</h2>{window}'
+            f'<p class="score-key">{note}</p>'
+            f'<p class="board-note">Denominator: {denominator:,} runs.</p>'
+            + reliability_table(rows, denominator, title) + '</section>'
+        )
+    empty = '<p class="empty">No recorded runs in this window. Rates are unavailable.</p>' if not counts["total"] else ""
+    body = f'''<article class="analytics">
+<h1>Reliability</h1>
+<p class="summary">Success, failure and other outcomes across the fleet over 30 days, from the daily public snapshot.</p>
+<p class="as-of">Snapshot {snapshot_date}. {counts["total"]:,} recorded runs; {settled:,} settled outcomes.</p>
+<nav class="board-nav" aria-label="Reliability">
+<a href="#settled">Success and failure</a><a href="#failures">Failure categories</a><a href="#other-outcomes">Other outcomes</a>
+</nav>
+{empty}{"".join(sections)}
+<p class="board-note">Counts reflect the snapshot at collection time; in-flight and held outcomes can change in later snapshots. Rates describe observed outcomes, not a causal comparison of crews.</p>
+</article>'''
+    return page(
+        "Reliability — Constellation Works",
+        "Aggregate Orbit success and failure counts and rates over 30 days.",
+        f"{SITE}/analytics/reliability/", body, current="analytics",
+    )
+
+
+def build_reliability():
+    directory = latest_analytics_dir()
+    if directory is None:
+        sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/ snapshot to render")
+    try:
+        data = json.loads((directory / "reliability.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        sys.exit("build.py: newest snapshot must contain valid reliability.json")
+    rendered = render_reliability_page(data, directory.name)
+    dest = ROOT / "public" / "analytics" / "reliability"
+    dest.mkdir(parents=True, exist_ok=True)
+    (dest / "index.html").write_text(rendered, encoding="utf-8")
+    print(f"built reliability -> {dest} from {directory.name}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--drafts", action="store_true", help="include drafts, marked and noindex")
@@ -715,6 +841,7 @@ def main():
     print(f"built {len(shown)} note(s) -> {OUT}" + (f"; skipped {skipped} draft(s)" if skipped else ""))
     build_agents()
     analytics_page.build(ROOT)
+    build_reliability()
 
 
 if __name__ == "__main__":
