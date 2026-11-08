@@ -80,23 +80,33 @@ Reviewer and pilot rows need the scorecard's minimum support, 10 units.
 
 ### MVP of the week
 
-One crew is named MVP by a fixed rule. Among the top rows of every table the note shows
-(all tiers, each shown tier, reviewers and pilots), the MVP is the crew with the largest
-lead over its own table's second place, divided by that table's scale: 100 for the
-implementer tables, and the fleet average for reviewers and pilots. Dividing by the
-scale lets a lead on one table be compared with a lead on another.
+One model is named MVP by a fixed rule, scored on the implementer tier tables the note
+shows that week. The all-tiers, reviewer and pilot tables appear in the note but don't
+count toward it.
 
-The rule rewards a clear lead, not a high score. A crew that tops a crowded table by a
-point won't be MVP over one that tops another table by thirty.
+- **Points.** In each counted tier, 1st place earns 5 points, 2nd 3 and 3rd 1. Places
+  below 3rd earn nothing.
+- **By model.** A model counts once per tier, through its best-scoring crew, so opus and
+  opus@medium are one entry. Places are taken against the next distinct model.
+- **Ties.** Equal points go to the larger *margin*: the sum, over the counted tiers, of the
+  model's score minus the next distinct model's score below it (0 in last place). Still
+  equal, the model with more tasks on those tiers wins. Still equal, there is no MVP.
 
-The note is written by that week's MVP crew, named with its score in the byline. When
-the sample is too thin to pick one, the configured crew writes it and the note says so.
+The note's MVP points table shows each model's place and points per tier, its margin and
+its total.
+
+The rule rewards placing near the top across tiers, not one large score: a model that
+places on two tiers can beat one that wins a single tier.
+
+The note is written by the MVP model's best crew, named with its points in the byline.
+When no tier has crews on 3 or more models, or a tie survives every tie-break, there is
+no MVP: the configured crew writes the note, and the note says so.
 
 ## Limits
 
 - **One week.** Most rows are under 100 tasks, so the intervals are wide and the order can
   change next week. Read a rank as a direction, not a verdict. The MVP is one week's
-  biggest lead, not the best crew.
+  standing, not the best model.
 - **Not a controlled comparison.** A crew's tasks are what its pool drew or what an
   operator assigned. The task pilot sets each task's tier. Two crews on the same tier
   didn't get the same tasks, and the tier-mix adjustment corrects for tier, not for
