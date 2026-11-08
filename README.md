@@ -58,8 +58,16 @@ calls.
 failure rates use successes plus direct failures; cascaded failures (wrapper echoes)
 are excluded from that denominator. Failure categories and other outcomes show counts
 and shares of all recorded runs. Each board prints its exact 30-day UTC window and
-denominator. The renderer reads only known aggregate counts and validated timestamps;
-it does not publish job or activity identifiers, diagnostic labels or messages.
+denominator. The `Failure rate by job` board breaks the same settled rate down per
+job from `by_job[].job_id`. Each job's denominator is its own successes plus
+direct failures, recomputed from counts; cascaded failures (wrapper echoes) are
+excluded, as in Success and failure above. Only job ids matching the `SAFE_JOB_ID`
+allowlist reach the page; anything else is dropped before rendering. Each bar
+shows the `JOB_LABELS` display name for its id (for example,
+`orb20863_visual_eval` maps to `Visual eval`), falling back to the raw job id
+verbatim when the id has no mapped label. The renderer reads only known aggregate
+counts, allowlisted job ids and validated timestamps; it does not publish
+activity identifiers, diagnostic labels or messages.
 
 `/analytics/experiments/` includes only concluded experiments from the newest snapshot.
 Each section shows the question, observed arms and crew mix, and a Difference from
