@@ -295,12 +295,14 @@ class MetricsPageTest(unittest.TestCase):
         self.assertEqual([node.attrs["content"] for node in open_graph_descriptions], [expected])
 
     def test_format_matches_the_dashboard_duration_rule(self):
+        # Fixed fixtures cover the sub-minute, minute and hour branches
+        # without depending on whatever the newest live snapshot holds.
+        for value, expected in ((45000, "45s"), (1200000, "20.0m"), (3660000, "1h 01m")):
+            self.assertEqual(analytics_page.format_ms(value), expected)
+            self.assertEqual(local_ms(value), expected)
         average = self.metrics["durations"]["current"]["all"]["avg"]
-        self.assertEqual(local_ms(average), "18.9m")
         self.assertEqual(analytics_page.format_ms(average), local_ms(average))
-        self.assertEqual(analytics_page.format_ms(45000), "45s")
-        self.assertEqual(analytics_page.format_ms(3660000), "1h 01m")
-        self.assertIn(">18.9m<", self.html)
+        self.assertIn(f">{analytics_page.format_ms(average)}<", self.html)
 
     def test_windowed_sections_show_utc_bounds_and_outcomes_show_scope(self):
         windowed_sections = {
