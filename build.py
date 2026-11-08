@@ -9,6 +9,7 @@ and any files the note links to (data, images). Output is a page per note, a
 /analytics/metrics/ is rendered from the newest data/analytics/<YYYY-MM-DD>/metrics.json
 via analytics_page.py. public/analytics/ is generated too: do not edit or commit it.
 /analytics/reliability/ uses the newest snapshot's reliability.json aggregates.
+/analytics/experiments/ uses the newest snapshot's concluded experiments.json entries.
 
 Front matter is `key: value` lines between `---` fences:
 
@@ -34,6 +35,7 @@ import datetime
 import hashlib
 import html
 import json
+import math
 import pathlib
 import re
 import shutil
@@ -820,6 +822,193 @@ def build_reliability():
     print(f"built reliability -> {dest} from {directory.name}")
 
 
+EXPERIMENT_METRICS = {
+    "implement_tokens": ("Implementation tokens", "tokens"),
+    "total_tokens": ("Total tokens", "tokens"),
+    "cost_usd": ("Cost", "USD"),
+    "lead_time": ("Lead time", "hours"),
+    "implement_duration": ("Implementation duration", "minutes"),
+    "turns_before_first_edit": ("Turns before first edit", "turns"),
+    "result_bytes_before_first_edit": ("Results before first edit", "bytes"),
+    "first_pass_acceptance": ("First-pass acceptance", "%"),
+    "review_repairs": ("Review repairs", "repairs/task"),
+    "step_recoveries": ("Step recoveries", "recoveries/task"),
+    "final_recoveries": ("Final recoveries", "recoveries/task"),
+    "failed_checks": ("Failed checks", "checks/task"),
+    "merge_conflicts": ("Merge conflicts", "conflicts/task"),
+    "delivery_done_rate": ("Delivery done rate", "%"),
+    "escaped_regressions": ("Escaped regressions", "regressions/task"),
+    "lines_changed": ("Lines changed", "lines"),
+    "cost_per_line": ("Cost per line", "USD/line"),
+    "lead_time_per_line": ("Lead time per line", "hours/line"),
+}
+
+
+def experiment_value(value, unit):
+    if not as_number(value) or not math.isfinite(value):
+        return "Unavailable"
+    if unit == "%":
+        return f"{value:.1%}"
+    return f"{value:,.2f} {unit}"
+
+
+def experiment_interval(value, unit):
+    if not isinstance(value, list) or len(value) != 2:
+        return "Unavailable"
+    if any(not as_number(v) or not math.isfinite(v) for v in value) or value[0] > value[1]:
+        return "Unavailable"
+    return f"{experiment_value(value[0], unit)} – {experiment_value(value[1], unit)}"
+
+
+def experiment_stamp(value):
+    # Keep nanosecond precision from the snapshot, while normalizing the UTC suffix.
+    if not isinstance(value, str):
+        sys.exit("experiments.json: missing UTC observation window")
+    value = value.removesuffix("+00:00") + "Z" if value.endswith("+00:00") else value
+    if not UTC_STAMP.fullmatch(value):
+        sys.exit("experiments.json: invalid UTC observation window")
+    try:
+        datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        sys.exit("experiments.json: invalid UTC observation window")
+    return value
+
+
+def experiment_count(value):
+    return f"{value:,}" if type(value) is int and value >= 0 else "Unavailable"
+
+
+def experiment_metric_table(metric, arms):
+    """Only named aggregate outcomes are rendered; unknown fields are never dumped."""
+    key = metric.get("metric")
+    label, unit = EXPERIMENT_METRICS[key]
+    outcomes = {row["arm"]: row for row in metric.get("arms", []) if isinstance(row, dict) and isinstance(row.get("arm"), str)}
+    rows = []
+    for arm in arms:
+        outcome = outcomes.get(arm["name"], {})
+        measured = as_number(outcome.get("n")) and outcome["n"] > 0
+        cells = [("Arm", html.escape(arm["name"]))]
+        for stat in ("mean", "median"):
+            if stat == "median" and metric.get("kind") == "rate":
+                continue
+            value = experiment_value(outcome.get(stat), unit) if measured else "Unavailable"
+            interval = experiment_interval(outcome.get(stat + "_interval"), unit) if measured else "Unavailable"
+            cells.append((stat.title(), f'{value}<br><span class="unit">Interval: {interval}</span>'))
+        support = (
+            f'{experiment_count(outcome.get("n"))} measured tasks<br>'
+            f'<span class="unit">{experiment_count(outcome.get("open"))} open tasks; '
+            f'{experiment_count(outcome.get("unmeasured"))} unmeasured tasks</span>'
+        )
+        cells.append(("Support", support))
+        rows.append("<tr>" + "".join(
+            f'<td data-label="{heading}"><span class="value">{value}</span></td>'
+            for heading, value in cells
+        ) + "</tr>")
+    columns = ["Arm", "Mean"] + ([] if metric.get("kind") == "rate" else ["Median"]) + ["Support"]
+    return (
+        f'<h4>{label}</h4><div class="table"><table>'
+        f'<caption class="sr-only">{label}: per-arm outcomes and supplied intervals</caption>'
+        '<thead><tr>' + "".join(f'<th scope="col">{col}</th>' for col in columns)
+        + '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>'
+    )
+
+
+def render_experiments_page(data, snapshot_date):
+    if not isinstance(data, dict) or type(data.get("schema_version")) is not int or data["schema_version"] != 1:
+        sys.exit("experiments.json: expected schema_version 1")
+    if not isinstance(data.get("experiments"), list):
+        sys.exit("experiments.json: expected experiments array")
+    e = html.escape
+    sections, links = [], []
+    for experiment in data["experiments"]:
+        if not isinstance(experiment, dict) or experiment.get("status") != "concluded":
+            continue
+        # Only public, sanitized narrative fields from analytics_snapshot.py are used.
+        name = experiment.get("name") or "Unnamed experiment"
+        question = experiment.get("hypothesis") or "Question unavailable in this snapshot."
+        since, until = (experiment_stamp(experiment.get(key)) for key in ("started_at", "as_of"))
+        if datetime.datetime.fromisoformat(since.replace("Z", "+00:00")) > datetime.datetime.fromisoformat(until.replace("Z", "+00:00")):
+            sys.exit("experiments.json: observation window ends before it starts")
+        anchor = f"experiment-{len(sections) + 1}"
+        links.append(f'<a href="#{anchor}">{e(name)}</a>')
+        arms = [arm for arm in experiment.get("arms", []) if isinstance(arm, dict) and isinstance(arm.get("name"), str)]
+        arm_names = {arm["name"] for arm in arms}
+        arm_items = []
+        for arm in arms:
+            mix = ", ".join(
+                f'{e(row["crew"])} ({experiment_count(row.get("tasks"))} tasks)'
+                for row in arm.get("crew_mix", [])
+                if isinstance(row, dict) and isinstance(row.get("crew"), str)
+                and not gap_identity(row["crew"], row.get("model"))
+            )
+            flags = [label for key, label in (("control", "control"), ("drifted", "drifted")) if arm.get(key)]
+            if arm.get("retired_segment") is not None:
+                flags.append("retired")
+            arm_items.append(
+                f'<li><strong>{e(arm["name"])}</strong>'
+                + (f' ({", ".join(flags)})' if flags else "")
+                + f' · {experiment_count(arm.get("n"))} enrolled tasks'
+                + (f' · Observed crews: {mix}' if mix else "") + '</li>'
+            )
+        verdict = experiment.get("verdict") or {}
+        verdict_text = verdict.get("label") or verdict.get("state") or "Unavailable"
+        state = verdict.get("state")
+        if state and state != verdict_text:
+            verdict_text += f" ({state})"
+        chosen = experiment.get("concluded_arm")
+        choice = e(chosen) if isinstance(chosen, str) and chosen in arm_names else "None recorded"
+        recommended = verdict.get("arm")
+        recommendation = f'<p>Statistical recommendation: {e(recommended)}.</p>' if isinstance(recommended, str) and recommended in arm_names else ""
+        reasons = "".join(f'<li>{e(reason)}</li>' for reason in verdict.get("reasons", []) if isinstance(reason, str))
+        metrics = [metric for metric in experiment.get("metrics", []) if isinstance(metric, dict) and metric.get("metric") in EXPERIMENT_METRICS]
+        primary = [metric for metric in metrics if metric["metric"] == experiment.get("primary_metric")]
+        secondary = [metric for metric in metrics if metric["metric"] != experiment.get("primary_metric")]
+        primary_html = "".join(experiment_metric_table(metric, arms) for metric in primary) or '<p class="empty">Primary outcome unavailable.</p>'
+        secondary_html = (
+            '<details><summary>Other per-arm outcomes and intervals</summary>'
+            + "".join(experiment_metric_table(metric, arms) for metric in secondary) + '</details>'
+        ) if secondary else ""
+        sections.append(f'''<section class="board experiment" id="{anchor}">
+<h2>{e(name)} <span class="board-label">Concluded</span></h2>
+<h3>Question</h3><p class="question">{e(question)}</p>
+{render_window(since, until)}
+<p class="board-note">Cumulative observations from experiment start to readout, not a rolling 30-day window.</p>
+<div class="experiment-decision"><p><strong>Verdict:</strong> {e(verdict_text)}.</p>
+<p><strong>Chosen arm:</strong> {choice}.</p>{recommendation}
+{f'<ul>{reasons}</ul>' if reasons else ''}</div>
+<h3>Arms</h3><ul>{''.join(arm_items)}</ul>
+<h3>Primary outcome</h3>{primary_html}{secondary_html}
+</section>''')
+    body = f'''<article class="analytics experiments">
+<h1>Concluded experiments</h1>
+<p class="summary">Questions, per-arm outcomes and decisions from Orbit's concluded experiments.</p>
+<p class="as-of">Snapshot {e(snapshot_date)}. Built from the committed daily snapshot; no live Orbit calls.</p>
+<p class="board-note">Concluded is a lifecycle state, not proof of a winner. A verdict may be withheld, collecting or inconclusive, and a chosen arm may be absent. Intervals are copied from the readout; unavailable values are not zero. Support is specific to each metric; open regression windows can leave outcomes unsettled. These are experiment outcomes, not ranked crew scorecards. See the <a href="/notes/crew-rankings-method/">method and caveats</a>.</p>
+<nav class="board-nav" aria-label="Experiments">{' '.join(links)}</nav>
+{''.join(sections) if sections else '<p class="empty">No concluded experiments in this snapshot.</p>'}
+</article>'''
+    return page(
+        "Concluded experiments — Constellation Works",
+        "Questions, arms, aggregate outcomes, intervals and decisions from concluded Orbit experiments.",
+        f"{SITE}/analytics/experiments/", body, current="analytics",
+    )
+
+
+def build_experiments():
+    directory = latest_analytics_dir()
+    if directory is None:
+        sys.exit("build.py: no data/analytics/<YYYY-MM-DD>/ snapshot to render")
+    try:
+        data = json.loads((directory / "experiments.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        sys.exit("build.py: newest snapshot must contain valid experiments.json")
+    rendered = render_experiments_page(data, directory.name)
+    dest = ROOT / "public" / "analytics" / "experiments"
+    dest.mkdir(parents=True, exist_ok=True)
+    (dest / "index.html").write_text(rendered, encoding="utf-8")
+    print(f"built experiments -> {dest} from {directory.name}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--drafts", action="store_true", help="include drafts, marked and noindex")
@@ -842,6 +1031,7 @@ def main():
     build_agents()
     analytics_page.build(ROOT)
     build_reliability()
+    build_experiments()
 
 
 if __name__ == "__main__":
