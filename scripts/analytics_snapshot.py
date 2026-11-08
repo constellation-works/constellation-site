@@ -226,9 +226,10 @@ TASK_ID = re.compile(r"ORB-[0-9]+")
 RUN_ID = re.compile(r"jrun-[0-9A-Za-z-]+")
 _PATH_SEGMENT = r"[A-Za-z0-9._~%+@\-]+"
 _API_ROUTE = r"api/(?:diagnostics|metrics|tasks)(?:/|\?|#|$)"
-# A slash right after "<" is an HTML closing tag (</span>), not a path.
+# Preserve closing tags, but do not exempt multi-segment paths after "<".
 ABS_PATH = re.compile(
-    r"(?<![\w./\\\-<])/(?!" + _API_ROUTE + r")" + _PATH_SEGMENT + r"(?:/" + _PATH_SEGMENT + r")*/?"
+    r"(?<![\w./\\\-])/(?!(?<=</)[A-Za-z][A-Za-z0-9:-]*\s*>)(?!"
+    + _API_ROUTE + r")" + _PATH_SEGMENT + r"(?:/" + _PATH_SEGMENT + r")*/?"
 )
 FILE_URI = re.compile(r"\bfile:/+[^\s\"'<>]*", re.IGNORECASE)
 WINDOWS_PATH = re.compile(r"(?:(?<![A-Za-z0-9_])[A-Za-z]:[\\/][^\s\"'<>]*|\\\\[^\s\"'<>]+)")

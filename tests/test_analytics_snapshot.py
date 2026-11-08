@@ -14,6 +14,11 @@ spec.loader.exec_module(snapshot)
 
 HOSTS = ["dk-server-1", "dk-server-2"]
 PATH_SAMPLES = [
+    "</srv/acme/customer>",
+    "</srv/acme/customer.txt>",
+    "</home/private/customer.txt>",
+    "<~/secret/notes.txt>",
+    "<code>/srv/acme/customer</code>",
     "/srv/acme/customer.txt",
     "/root/acme/customer.txt",
     "/mnt/acme/customer.txt",
