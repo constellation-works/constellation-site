@@ -25,10 +25,20 @@ Front matter is `key: value` lines between `---` fences:
     date:     YYYY-MM-DD, the day it was first published; required once published
     updated:  optional YYYY-MM-DD of the last material change; defaults to date
     image:    optional file in the note's directory for og:image (1200x630)
-    author:   optional comma-separated authors; defaults to Constellation Works
+    author:   optional comma-separated authors; defaults to Constellation Works. A weekly
+              crew-ranking byline, `<crew@effort> (<model>), MVP of the week, <score>`
+              (the crew labelled as on the boards, `(est.)` included), is one author.
     tags:     optional comma-separated topics
 
 Author, created and updated dates and tags are shown under the page title.
+
+A weekly crew-ranking note (scripts/crew_rankings.py) carries two markers in its body:
+
+- `<!-- crews-by-role: data/crew-rankings/<YYYY-MM-DD> -->` on its own line is replaced by
+  the /ranking/ page's Crews by role component, every role stacked, rendered by the same
+  render_crews_by_role from that directory's scorecards.json (STD-07 §R30);
+- `{{victory-address}}` marks the writer's unwritten victory address. A draft builds with
+  it; a published note that still has it fails the build.
 
 Drafts are skipped unless --drafts is passed, so merging a draft never publishes it.
 With --drafts they build marked as drafts and noindex, for local review.
@@ -56,6 +66,11 @@ OUT = ROOT / "public" / "notes"
 SITE = "https://constellation-works.com"
 
 FIELDS = {"title", "summary", "status", "date", "updated", "image", "author", "tags"}
+# A weekly crew-ranking byline is one author, though it has commas.
+MVP_BYLINE = re.compile(r"[^,()]+(?: \(est\.\))? \([^()]+\), MVP of the week, [^,]+")
+VICTORY_PLACEHOLDER = "{{victory-address}}"
+CREWS_EMBED = re.compile(r"<!-- crews-by-role: (\S+) -->")
+CREWS_DATA = re.compile(r"data/crew-rankings/\d{4}-\d{2}-\d{2}")
 
 
 def asset(name):
@@ -92,11 +107,18 @@ def parse(path):
     if meta["updated"] and meta["date"] and meta["updated"] < meta["date"]:
         sys.exit(f"{path}: updated is before date")
     meta["tags"] = [t.strip() for t in meta.get("tags", "").split(",") if t.strip()]
-    meta["authors"] = [a.strip() for a in meta.get("author", "").split(",") if a.strip()] or ["Constellation Works"]
+    author = meta.get("author", "")
+    meta["authors"] = (
+        [author] if MVP_BYLINE.fullmatch(author)
+        else [a.strip() for a in author.split(",") if a.strip()]
+    ) or ["Constellation Works"]
     if meta.get("image") and not (path.parent / meta["image"]).is_file():
         sys.exit(f"{path}: image {meta['image']} not found")
     meta["slug"] = path.parent.name
     meta["body"] = text[m.end():]
+    if meta["status"] == "published" and VICTORY_PLACEHOLDER in meta["body"]:
+        sys.exit(f"{path}: the victory address is still the {VICTORY_PLACEHOLDER} placeholder; "
+                 "the MVP crew writes it before the note is published")
     return meta
 
 
@@ -251,6 +273,26 @@ def rail(note, files):
     return f'<aside class="rail">\n{status(note)}{listing}</aside>'
 
 
+def embed_crews_by_role(body, path):
+    """Replace each crews-by-role marker with the /ranking/ page's own component.
+
+    Returns the body and whether it embedded one (the page then loads the
+    component's stylesheet and script, analytics.css and analytics.js).
+    """
+    found = False
+
+    def swap(match):
+        nonlocal found
+        rel = match.group(1)
+        directory = ROOT / rel
+        if not CREWS_DATA.fullmatch(rel) or not (directory / "scorecards.json").is_file():
+            sys.exit(f"{path}: crews-by-role needs data/crew-rankings/<YYYY-MM-DD> with a scorecards.json, got {rel!r}")
+        found = True
+        return f'<div class="analytics crews-embed">\n{render_crews_by_role(directory)}\n</div>'
+
+    return CREWS_EMBED.sub(swap, body), found
+
+
 def build_note(note):
     e = html.escape
     url = f"{SITE}/notes/{note['slug']}/"
@@ -259,13 +301,14 @@ def build_note(note):
     # Everything beside index.md is published; the link card is not listed as data.
     files = sorted(f for f in src.iterdir() if f.is_file() and f.name != "index.md")
     data = [f for f in files if f.name != note.get("image")]
+    text, embedded = embed_crews_by_role(render_body(note["body"]), src / "index.md")
     # The rail comes last so narrow screens list the data after the text; wide screens
     # still place it in the margin beside the title (grid-row in notes.css).
     body = f"""<article class="note">
 <h1>{e(note['title'])}</h1>
 {meta_block(note)}
 <p class="summary">{e(note['summary'])}</p>
-{render_body(note['body'])}
+{text}
 {rail(note, data)}
 </article>"""
     dest = OUT / note["slug"]
@@ -274,7 +317,9 @@ def build_note(note):
         shutil.copy2(f, dest / f.name)
     title = f"{note['title']} — Constellation Works"
     (dest / "index.html").write_text(
-        page(title, note["summary"], url, body, image, note["status"] == "draft", "article"),
+        page(title, note["summary"], url, body, image, note["status"] == "draft", "article",
+             extra_css=("analytics.css",) if embedded else (),
+             extra_js=("analytics.js",) if embedded else ()),
         encoding="utf-8",
     )
 
