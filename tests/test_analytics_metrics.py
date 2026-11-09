@@ -676,6 +676,16 @@ class MetricsPageTest(unittest.TestCase):
         full["turns"]["coverage"]["measured_rate"] = 0.9
         self.assertNotIn('class="warn"', analytics_page.section_turns(full))
 
+    def test_cost_warning_rule_matches_the_rendered_caveat(self):
+        self.assertIn('class="warn"', analytics_page.cost_warning(5, {"excluded_invocations": 1}))
+        self.assertEqual("", analytics_page.cost_warning(5, {"excluded_invocations": 0}))
+
+        caveats = all_text(elements(self.tree, lambda node: node.attrs.get("id") == "caveats")[0])
+        self.assertIn(
+            "cost warns whenever any invocation was left out because the cost total carries no measured-invocation count to compare against",
+            caveats,
+        )
+
     def test_outcome_board_is_labelled_all_time_and_daily_tables_collapse(self):
         outcomes = elements(self.tree, lambda node: node.tag == "section" and node.attrs.get("id") == "outcomes")[0]
         self.assertIn("All time, not the window above", all_text(outcomes))
