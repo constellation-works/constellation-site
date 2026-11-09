@@ -1,276 +1,55 @@
 {
- "computed_at": "2026-11-08T06:05:20.415Z",
- "fallback_crew": "opus",
- "fleet_average": {
-  "implementers": 100.0,
-  "pilots": 41.46,
-  "reviewers": 135.48
- },
- "implementer_mvp": {
-  "field": [
-   "claude-haiku-5-5",
-   "claude-opus-5-5",
-   "claude-sonnet-5-5",
-   "gpt-6-luna",
-   "gpt-6.1-sol",
-   "gpt-6.1-terra",
-   "grok-4.7",
-   "muse-spark-1.3-contributor",
-   "muse-wonder-1.0"
-  ],
-  "k": 30,
-  "k_sensitivity": {
-   "10": [
-    "claude-opus-5-5"
-   ],
-   "30": [
-    "claude-opus-5-5"
-   ],
-   "60": [
-    "claude-opus-5-5"
-   ]
+  "date": "2026-11-08",
+  "window": {
+    "key": "30d",
+    "since": "2026-10-09T00:00:00Z",
+    "until": "2026-11-08T00:00:00Z"
   },
-  "phase": 1,
-  "qualified": true,
-  "table": [
-   {
-    "avg_loo": 99.03,
-    "crews": "opus@medium:90 opus:36 opus@high:2",
-    "crown": 110.16,
-    "k": 3,
-    "model": "claude-opus-5-5",
-    "place": 1,
-    "pooled_units": 128,
-    "raw": 112.77,
-    "raw_mean_of_crews": 112.77,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "opus@medium:119.8 opus:91.1 opus@high:-112.4"
-   },
-   {
-    "avg_loo": 99.51,
-    "crews": "sol:153",
-    "crown": 106.19,
-    "k": 1,
-    "model": "gpt-6.1-sol",
-    "place": 2,
-    "pooled_units": 153,
-    "raw": 107.51,
-    "raw_mean_of_crews": 107.5,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "sol:106.3"
-   },
-   {
-    "avg_loo": 100.34,
-    "crews": "sonnet:67",
-    "crown": 103.25,
-    "k": 1,
-    "model": "claude-sonnet-5-5",
-    "place": 3,
-    "pooled_units": 67,
-    "raw": 104.56,
-    "raw_mean_of_crews": 104.56,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "sonnet:103.2"
-   },
-   {
-    "avg_loo": 100.55,
-    "crews": "muse-spark:150",
-    "crown": 100.8,
-    "k": 1,
-    "model": "muse-spark-1.3-contributor",
-    "place": 4,
-    "pooled_units": 150,
-    "raw": 100.85,
-    "raw_mean_of_crews": 100.85,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "muse-spark:100.7"
-   },
-   {
-    "avg_loo": 100.88,
-    "crews": "haiku:177",
-    "crown": 99.28,
-    "k": 1,
+  "windows": {
+    "implementers": {
+      "key": "30d",
+      "since": "2026-10-09T00:00:00Z",
+      "until": "2026-11-08T00:00:00Z"
+    },
+    "implementers_by_tier": {
+      "key": "30d",
+      "since": "2026-10-09T00:00:00Z",
+      "until": "2026-11-08T00:00:00Z"
+    },
+    "reviewers_provisional": {
+      "key": "30d",
+      "since": "2026-10-09T00:00:00Z",
+      "until": "2026-11-08T00:00:00Z"
+    },
+    "reviewers_settled": {
+      "key": "30d",
+      "since": "2026-09-09T00:00:00Z",
+      "until": "2026-10-09T00:00:00Z"
+    },
+    "pilots": {
+      "key": "30d",
+      "since": "2026-10-09T00:00:00Z",
+      "until": "2026-11-08T00:00:00Z"
+    }
+  },
+  "mvp": {
+    "crew": "haiku",
+    "label": "haiku@xhigh (est.)",
     "model": "claude-haiku-5-5",
-    "place": 5,
-    "pooled_units": 177,
-    "raw": 99.01,
-    "raw_mean_of_crews": 99.01,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "haiku:99.0"
-   },
-   {
-    "avg_loo": 100.95,
-    "crews": "luna:169",
-    "crown": 98.9,
-    "k": 1,
-    "model": "gpt-6-luna",
-    "place": 6,
-    "pooled_units": 169,
-    "raw": 98.53,
-    "raw_mean_of_crews": 98.53,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "luna:98.5"
-   },
-   {
-    "avg_loo": 101.47,
-    "crews": "muse-wonder:129",
-    "crown": 95.2,
-    "k": 1,
-    "model": "muse-wonder-1.0",
-    "place": 7,
-    "pooled_units": 129,
-    "raw": 93.74,
-    "raw_mean_of_crews": 93.74,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "muse-wonder:93.7"
-   },
-   {
-    "avg_loo": 101.35,
-    "crews": "terra:105",
-    "crown": 94.96,
-    "k": 1,
-    "model": "gpt-6.1-terra",
-    "place": 8,
-    "pooled_units": 105,
-    "raw": 93.13,
-    "raw_mean_of_crews": 93.14,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "terra:93.1"
-   },
-   {
-    "avg_loo": 101.17,
-    "crews": "grok:54",
-    "crown": 93.28,
-    "k": 1,
-    "model": "grok-4.7",
-    "place": 9,
-    "pooled_units": 54,
-    "raw": 88.89,
-    "raw_mean_of_crews": 88.88,
-    "raw_method": "pooled counts",
-    "scorecard_scores": "grok:88.9"
-   }
-  ],
-  "winners": [
-   "claude-opus-5-5"
-  ]
- },
- "min_support": {
-  "implementers": 10,
-  "pilots": 10,
-  "reviewers": 10,
-  "tier_models": 3,
-  "tier_tasks": 10
- },
- "models": [
-  [
-   "grok",
-   "grok-4.7"
-  ],
-  [
-   "haiku",
-   "claude-haiku-5-5"
-  ],
-  [
-   "haiku@high",
-   "claude-haiku-5-5"
-  ],
-  [
-   "luna",
-   "gpt-6-luna"
-  ],
-  [
-   "luna@high",
-   "gpt-6-luna"
-  ],
-  [
-   "muse-spark",
-   "muse-spark-1.3-contributor"
-  ],
-  [
-   "muse-spark@high",
-   "muse-spark-1.3-contributor"
-  ],
-  [
-   "muse-wonder",
-   "muse-wonder-1.0"
-  ],
-  [
-   "opus",
-   "claude-opus-5-5"
-  ],
-  [
-   "opus@medium",
-   "claude-opus-5-5"
-  ],
-  [
-   "sol",
-   "gpt-6.1-sol"
-  ],
-  [
-   "sonnet",
-   "claude-sonnet-5-5"
-  ],
-  [
-   "terra",
-   "gpt-6.1-terra"
-  ]
- ],
- "ranked": {
-  "all_tiers": 10,
-  "low": 4,
-  "medium": 6,
-  "pilots": 3,
-  "reviewers": 10
- },
- "reviewer_window": {
-  "computed_at": "2026-11-08T06:05:54.280Z",
-  "since": "2026-10-09T06:06:04Z",
-  "window": "30d"
- },
- "reviews_provisional": 1379,
- "reviews_settled": 1379,
- "since": "2026-11-01T06:05:30Z",
- "task_attempts": 1138,
- "tiers_omitted": {
-  "hard": [
-   "opus@medium",
-   "sol",
-   "opus"
-  ],
-  "xhard": []
- },
- "tiers_shown": [
-  "low",
-  "medium"
- ],
- "window": "7d",
- "windows": {
-  "implementers": {
-   "since": "2026-11-01T06:05:54Z",
-   "until": "2026-11-08T06:05:42Z"
+    "effort": "unknown",
+    "effort_estimate": "xhigh",
+    "score": 144.33,
+    "units": 394,
+    "rank": 1
   },
-  "pilots": {
-   "since": "2026-11-01T06:06:14Z",
-   "until": "2026-11-08T06:06:04Z"
-  },
-  "reviewers": {
-   "since": "2026-10-09T06:06:04Z",
-   "until": "2026-11-08T06:05:54Z"
-  },
-  "tiers": {
-   "since": "2026-11-01T06:05:30Z",
-   "until": "2026-11-08T06:05:20Z"
+  "writer": {
+    "crew": "haiku",
+    "source": "mvp",
+    "mvp_crew": "haiku",
+    "model": "claude-haiku-5-5",
+    "effort": "unknown",
+    "effort_estimate": "xhigh",
+    "score": 144.3,
+    "units": 394
   }
- },
- "writer": {
-  "co_implementer_mvps": [],
-  "crew": "opus",
-  "crown": 110.16,
-  "implementer_mvp_crew": "opus",
-  "model": "claude-opus-5-5",
-  "raw": 112.77,
-  "source": "implementer_mvp",
-  "units": 128
- }
 }
