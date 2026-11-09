@@ -1,0 +1,55 @@
+{
+  "date": "2026-11-03",
+  "window": {
+    "key": "30d",
+    "since": "2026-10-04T00:00:00Z",
+    "until": "2026-11-03T00:00:00Z"
+  },
+  "windows": {
+    "implementers": {
+      "key": "30d",
+      "since": "2026-10-04T00:00:00Z",
+      "until": "2026-11-03T00:00:00Z"
+    },
+    "implementers_by_tier": {
+      "key": "30d",
+      "since": "2026-10-04T00:00:00Z",
+      "until": "2026-11-03T00:00:00Z"
+    },
+    "reviewers_provisional": {
+      "key": "30d",
+      "since": "2026-10-04T00:00:00Z",
+      "until": "2026-11-03T00:00:00Z"
+    },
+    "reviewers_settled": {
+      "key": "30d",
+      "since": "2026-09-04T00:00:00Z",
+      "until": "2026-10-04T00:00:00Z"
+    },
+    "pilots": {
+      "key": "30d",
+      "since": "2026-10-04T00:00:00Z",
+      "until": "2026-11-03T00:00:00Z"
+    }
+  },
+  "mvp": {
+    "crew": "haiku",
+    "label": "haiku@xhigh (est.)",
+    "model": "claude-haiku-5-5",
+    "effort": "unknown",
+    "effort_estimate": "xhigh",
+    "score": 143.2,
+    "units": 403,
+    "rank": 1
+  },
+  "writer": {
+    "crew": "haiku",
+    "source": "mvp",
+    "mvp_crew": "haiku",
+    "model": "claude-haiku-5-5",
+    "effort": "unknown",
+    "effort_estimate": "xhigh",
+    "score": 143.2,
+    "units": 403
+  }
+}
