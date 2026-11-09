@@ -1,0 +1,27 @@
+rank,crew,model,effort,effort_estimate,units,score,fleet_average,landed_pct
+1,haiku,claude-haiku-5-5,unknown,xhigh,403,143.2,102.32,98.5
+2,sol,gpt-6.1-sol,unknown,high,988,128.6,102.32,94.6
+3,sol,gpt-6.1-sol,high,,29,119.4,102.32,100.0
+4,sonnet,claude-sonnet-5-5,unknown,high,179,115.1,102.32,96.6
+5,luna,gpt-6-luna,unknown,xhigh,621,114.6,102.32,97.9
+6,opus,claude-opus-5-5,medium,,50,113.2,102.32,98.0
+7,haiku,claude-haiku-5-5,xhigh,,97,110.5,102.32,99.0
+8,luna,gpt-6-luna,xhigh,,74,105.0,102.32,95.9
+9,opus,claude-opus-5-5,unknown,medium,523,104.1,102.32,96.2
+10,terra,gpt-6.1-terra,high,,71,104.0,102.32,95.8
+11,muse-spark,muse-spark-1.3-contributor,xhigh,,66,103.8,102.32,98.5
+12,sonnet,claude-sonnet-5-5,high,,48,100.9,102.32,95.8
+13,grok,grok-4.7,unknown,high,203,95.2,102.32,96.6
+14,muse-wonder,muse-wonder-1.0,high,,91,93.7,102.32,97.8
+15,grok,grok-4.7,high,,62,92.5,102.32,98.4
+16,muse-spark,muse-spark-1.3-contributor,unknown,xhigh,217,78.8,102.32,99.1
+17,muse-wonder,muse-wonder-1.0,unknown,high,158,74.3,102.32,98.7
+18,gemini-flash,gemini-3.8-flash-high,unknown,,125,71.0,102.32,92.8
+20,muse-wonder-full,muse-wonder-full-1.0,unknown,high,37,-0.1,102.32,100.0
+21,terra,gpt-6.1-terra,unknown,high,68,-22.1,102.32,85.3
+,argon,gemini-4-argon-high,unknown,,3,109.3,102.32,66.7
+,opus,claude-opus-5-5,high,,6,86.2,102.32,100.0
+,astra,gpt-6-astra,unknown,medium,5,75.3,102.32,80.0
+,muse-wonder-full,muse-wonder-full-1.0,high,,2,66.2,102.32,100.0
+,argon,gemini-4-argon-high,provider default,,4,-30.3,102.32,50.0
+,luna,gpt-6.1-luna,unknown,xhigh,1,-187.5,102.32,0.0
