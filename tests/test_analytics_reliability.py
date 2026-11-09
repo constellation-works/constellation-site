@@ -262,6 +262,55 @@ class ReliabilityTests(unittest.TestCase):
         self.assertNotIn("fetch(", document)
         self.assertNotIn("/api/", document)
 
+    def test_table_value_cells_are_body_text_not_headline(self):
+        data = fixture()
+        data["by_job"] = [self.by_job_row("task_auto_pipeline", 80, 20)]
+        document = build.render_reliability_page(data, "2026-11-08")
+        # The by-job bars keep their analytics.css styling.
+        self.assertIn("/assets/analytics.css?v=", document)
+        by_job = section(document, "by-job")
+        self.assertIn('class="hbar"', by_job)
+        self.assertIn('class="hbar-plot"', by_job)
+        # The three existing tables keep their value spans, outside score cards.
+        for element_id in ("settled", "failures", "other-outcomes"):
+            board = section(document, element_id)
+            self.assertIn('<span class="value">', board)
+            self.assertIsNone(
+                re.search(r'class="[^"]*(?<![-\w])score(?![-\w])[^"]*"', board),
+                msg=f"table cells in #{element_id} must not sit inside a score card",
+            )
+        # No stylesheet loaded by this page may turn those table .value
+        # cells into headline-size blocks: every rule that sets a
+        # headline-scale font-size on a .value selector must be scoped to
+        # .score, which the table cells above are not inside of.
+        linked = re.findall(r'href="(/assets/[^"]+\.css)(?:\?[^"]*)?"', document)
+        self.assertTrue(linked)
+        stylesheets = {}
+        for href in linked:
+            stylesheets[href] = (ROOT / "public" / href.split("?")[0].lstrip("/")).read_text()
+        analytics_hrefs = [href for href in linked if href.endswith("/analytics.css")]
+        self.assertTrue(analytics_hrefs)
+        for href in analytics_hrefs:
+            self.assertIn(".hbar", stylesheets[href],
+                           msg=f"{href} must still style the by-job bars")
+        for href, css in stylesheets.items():
+            for match in re.finditer(r"([^{}]+)\{([^{}]*)\}", css):
+                selectors, declarations = match.group(1), match.group(2)
+                if not re.search(r"\.value(?![-\w])", selectors):
+                    continue
+                if not re.search(
+                    r"font-size\s*:\s*(clamp\s*\(\s*(2[4-9]|[3-9]\d)px|"
+                    r"(2[4-9]|[3-9]\d)(\.\d+)?px)",
+                    declarations,
+                ):
+                    continue
+                for selector in selectors.split(","):
+                    if re.search(r"\.value(?![-\w])", selector):
+                        self.assertIn(
+                            ".score", selector,
+                            msg=f"headline .value rule must be scoped to .score: {selector.strip()}",
+                        )
+
 
 if __name__ == "__main__":
     unittest.main()
