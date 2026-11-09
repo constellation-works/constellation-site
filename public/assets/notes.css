@@ -299,8 +299,8 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .analytics .as-of,
 .analytics .board-window,
 .analytics .support-note,
-.analytics .board-note { color: var(--muted); font-size: 15px; margin: 0 0 12px; max-width: 40em; }
-.analytics .score-key { max-width: 40em; margin: 0 0 8px; }
+.analytics .board-note { color: var(--muted); font-size: 15px; margin: 0 0 12px; max-width: 100%; }
+.analytics .score-key { max-width: 100%; margin: 0 0 8px; }
 .analytics .board { margin: 0 0 64px; scroll-margin-top: 96px; }
 .analytics .board h2 {
   font-size: 28px; letter-spacing: -.02em; font-weight: 600; line-height: 1.2; margin: 0 0 12px;
@@ -320,7 +320,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .snapshot-picker-label { font-weight: 600; color: var(--fg); }
 .snapshot-picker ul {
   list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px;
-  margin: 0; padding: 0; max-width: 100%; min-width: 0;
+  flex: 1 1 0; margin: 0; padding: 0; max-width: 100%; min-width: 0;
 }
 .snapshot-picker li { margin: 0; max-width: 100%; overflow-wrap: anywhere; }
 .snapshot-picker a { color: var(--muted); }
@@ -328,7 +328,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .snapshot-picker a.is-current { color: var(--fg); font-weight: 600; text-decoration: none; }
 .snapshot-picker .snapshot-detail, .snapshot-picker .snapshot-current { color: var(--muted); }
 .archive-banner {
-  max-width: 40em; margin: 0 0 16px; padding: 10px 14px;
+  max-width: 100%; margin: 0 0 16px; padding: 10px 14px;
   background: var(--card); border: 1px solid var(--rule-strong); border-radius: 8px;
   color: var(--lede); overflow-wrap: anywhere;
 }
@@ -351,7 +351,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .analytics-table-more summary:focus-visible {
   outline: 2px solid var(--link); outline-offset: 4px; border-radius: 2px;
 }
-.experiments .question { max-width: 42em; }
+.experiments .question { max-width: 100%; }
 .experiments .experiment { overflow-wrap: anywhere; }
 .experiments h3 { margin: 26px 0 10px; font-size: 18px; font-weight: 500; }
 .experiments h4 { margin: 20px 0 8px; font-size: 16px; font-weight: 500; }
@@ -361,7 +361,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .experiments summary { cursor: pointer; color: var(--link); }
 .experiments summary:focus-visible { outline: 2px solid var(--link); outline-offset: 4px; }
 @media (max-width: 560px) {
-  .snapshot-picker, .snapshot-picker ul { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .snapshot-picker, .snapshot-picker ul { gap: 4px; }
   .snapshot-picker a { display: inline-block; padding: 2px 0; }
   .analytics section[id] { scroll-margin-top: 80px; }
   .analytics .board { scroll-margin-top: 80px; }

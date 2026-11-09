@@ -148,6 +148,21 @@ def workflow_job_condition(workflow, job):
 
 
 class AgentsPageTest(unittest.TestCase):
+    def test_snapshot_picker_keeps_concise_value_beside_label(self):
+        picker = build.analytics_page.snapshot_picker(
+            "agents",
+            {"date": "2026-11-08", "since": "2026-10-09T00:00:00Z", "until": "2026-11-08T00:00:00Z"},
+            [{"month": "2026-10", "date": "2026-10-31", "since": "2026-10-01T00:00:00Z", "until": "2026-10-31T00:00:00Z"}],
+        )
+        self.assertIn('class="snapshot-picker-label">Snapshot</span><ul>', picker)
+        self.assertIn("Latest · <time datetime=\"2026-11-08\">2026-11-08</time>", picker)
+        self.assertIn(
+            'title="Latest snapshot 2026-11-08, fleet reliability reference window '
+            '2026-10-09 to 2026-11-08 (each board shows its own observation window)"',
+            picker,
+        )
+        self.assertNotIn("snapshot-detail", picker)
+
     def test_summary_and_descriptions_allow_earlier_settled_window(self):
         data = scorecards()
         self.assertLess(
