@@ -1078,8 +1078,8 @@ def tier_heatmap(block, overall_rows):
             label = TIER_LABELS[tier]
             slot = slots[tier].get(key)
             if slot is None:
-                cells.append(f'<td data-label="{label}" class="hm hm-none"><span class="hm-score">—</span>'
-                             '<span class="sr-only">no tasks</span></td>')
+                cells.append(f'<td data-label="{label}" class="hm hm-none"><span class="hm-v">'
+                             '<span class="hm-score">–</span><span class="hm-sub">no tasks</span></span></td>')
                 continue
             thin = slot["rank"] is None
             star = '<span class="hm-star" aria-hidden="true">★ </span>' if slot["rank"] == 1 else ""
@@ -1130,11 +1130,12 @@ def tier_heatmap(block, overall_rows):
     anchors = "".join(f'<span id="implementers-{tier}"></span>' for tier in TIER_ORDER if tier not in with_column)
     return f'''<section class="board" id="tiers" aria-labelledby="tiers-title">{anchors}
 <div class="board-head"><h3 id="tiers-title">Implementers by tier</h3>
-<p class="board-key">Each tier's fleet rate is 100 · ★ best ranked crew in the tier · faded = under {min_support} {e(unit)}</p></div>
-{board_window_line(since, until)}
-<p class="score-key">{e(TIER_SCORE_KEY)}</p>
-{estimate_note(identities.values())}{body}
+<p class="board-key">Each tier's fleet rate is 100. ★ marks the best ranked crew in a tier; faded cells have under {min_support} {e(unit)} and stay unranked.</p></div>
+{body}
 {legend}
+<div class="hm-foot">{board_window_line(since, until)}
+<p class="score-key">{e(TIER_SCORE_KEY)}</p>
+{estimate_note(identities.values())}</div>
 </section>''', slots
 
 
