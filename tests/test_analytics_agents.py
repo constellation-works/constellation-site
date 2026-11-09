@@ -644,6 +644,45 @@ class RankingPageTest(unittest.TestCase):
         self.assertEqual(build.heat_class(80), "hm-w1")
         self.assertEqual(build.heat_class(60), "hm-w2")
 
+    def test_tier_heatmap_card_cells_and_small_print_below(self):
+        block = {
+            "cells": [
+                {"crew": "best", "crew_mean": 140.0, "model": "m-best", "n": 20, "tier": "low", "type": "ui"},
+                {"crew": "mid", "crew_mean": 90.0, "model": "m-mid", "n": 12, "tier": "medium", "type": "ui"},
+                {"crew": "thin", "crew_mean": 180.0, "model": "m-thin", "n": 3, "tier": "low", "type": "ui"},
+            ],
+            "min_support": 7,
+            "unit": "tasks",
+            "window": window("2026-10-09T09:11:25Z", "2026-11-08T09:11:25Z"),
+        }
+        heatmap, _slots = build.tier_heatmap(block, [])
+        # One legend line under the heading, threshold from the data.
+        self.assertIn(
+            "Each tier's fleet rate is 100. ★ marks the best ranked crew in a tier; "
+            "faded cells have under 7 tasks and stay unranked.", heatmap)
+        self.assertLess(heatmap.index("faded cells have under 7 tasks"), heatmap.index("<table"))
+        # Starred ranked cell: star, score and task count, no unranked mark.
+        best = heatmap[heatmap.index('<span class="crew-name">best</span>'):]
+        best = best[:best.index("</tr>")]
+        self.assertIn('data-rank="1"', best)
+        self.assertIn("★", best)
+        self.assertIn("20 tasks", best)
+        self.assertNotIn("unranked", best)
+        # Faded cell: greyed (is-thin), score shown, counted as unranked.
+        self.assertIn('data-rank="unranked"', heatmap)
+        self.assertIn("is-thin", heatmap)
+        self.assertIn("3 tasks · unranked", heatmap)
+        # Empty cell: a bordered card with a visible dash and "no tasks".
+        self.assertIn('class="hm hm-none"', heatmap)
+        self.assertIn('<span class="hm-score">–</span><span class="hm-sub">no tasks</span>', heatmap)
+        self.assertNotIn('<span class="sr-only">no tasks</span>', heatmap)
+        # Window, score definition and (est.) note sit below the table as small print.
+        foot = heatmap[heatmap.index('<div class="hm-foot">'):]
+        self.assertGreater(heatmap.index('<div class="hm-foot">'), heatmap.index("</table>"))
+        self.assertIn('datetime="2026-10-09T09:11:25Z"', foot)
+        self.assertIn(build.TIER_SCORE_KEY.replace("'", "&#x27;"), foot)
+        self.assertNotIn('datetime="2026-10-09T09:11:25Z"', heatmap[:heatmap.index('<div class="hm-foot">')].split("<table", 1)[0])
+
     def test_settled_board_hidden_when_absent(self):
         data = scorecards()
         data["reviewers"]["settled"] = None

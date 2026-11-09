@@ -623,15 +623,16 @@
 .board-toggle button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
 .board-toggle button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 
-/* Crew × tier heatmap. 100 is each tier's fleet rate. */
-.analytics .heatmap-wrap { border: 1px solid var(--rule-strong); border-radius: 12px; padding: 4px; margin: 12px 0 10px; width: fit-content; max-width: 100%; }
-.analytics table.heatmap { border-collapse: separate; border-spacing: 4px; width: auto; }
-.heatmap thead th { padding: 6px 10px; min-width: 7.5rem; }
-.heatmap thead th:first-child { min-width: 9rem; }
-.heatmap tbody th { padding: 6px 10px 6px 4px; font-weight: 400; border: 0; vertical-align: middle; }
-.analytics .heatmap td.hm { border: 0; border-radius: 6px; padding: 6px 10px; vertical-align: top; }
+/* Crew × tier heatmap. 100 is each tier's fleet rate. The grid spans the
+   full board width: a crew column, then the four tiers as equal card columns. */
+.analytics .heatmap-wrap { margin: 12px 0 10px; width: 100%; max-width: 100%; overflow-x: auto; }
+.analytics table.heatmap { border-collapse: separate; border-spacing: 4px 6px; width: 100%; table-layout: fixed; }
+.heatmap thead th { padding: 6px 10px; }
+.heatmap thead th:first-child { width: 22%; }
+.heatmap tbody th { padding: 6px 10px 6px 4px; font-weight: 600; border: 0; vertical-align: middle; }
+.analytics .heatmap td.hm { border: 1px solid transparent; border-radius: 8px; padding: 8px 10px; vertical-align: top; }
 .hm-v { display: flex; flex-direction: column; }
-.hm-score { font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; }
+.hm-score { font-family: var(--mono); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .hm-sub { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .hm-star { color: var(--fg); }
 .hm-b2 { background: color-mix(in srgb, var(--link) 34%, transparent); }
@@ -639,8 +640,10 @@
 .hm-0 { background: var(--card); }
 .hm-w1 { background: color-mix(in srgb, var(--proposed) 17%, transparent); }
 .hm-w2 { background: color-mix(in srgb, var(--proposed) 36%, transparent); }
-.analytics .heatmap td.hm-none { background: none; color: var(--muted); }
+.analytics .heatmap td.hm-none { background: none; border-color: var(--rule-strong); color: var(--muted); }
 .analytics .heatmap td.is-thin { opacity: .5; }
+.hm-foot { font-size: 12px; color: var(--muted); margin-top: 10px; }
+.hm-foot .board-window, .hm-foot .score-key, .hm-foot .board-note { font-size: 12px; }
 .hm-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 12px; color: var(--muted); }
 .hm-swatches { display: inline-flex; gap: 2px; }
 .hm-swatches i { width: 22px; height: 10px; border-radius: 2px; display: inline-block; }
