@@ -913,6 +913,37 @@ class RankingPageTest(unittest.TestCase):
             self.assertEqual(block.count("Score: per 100"), 1, element_id)
             self.assertEqual(len(re.findall(r"credit for", block)), 1, element_id)
 
+    def test_ranking_boards_collapse_at_their_own_width_not_the_phone_breakpoint(self):
+        # ORB-23658: between 561px and desktop the Overall table squeezed its Model
+        # column to a few letters. Every ranking board now collapses on its own box
+        # (a container query), at a width measured to keep names on one line.
+        css = (ROOT / "public" / "assets" / "analytics.css").read_text(encoding="utf-8")
+        self.assertIn(".ranking-page .role-group, .crews-by-role { container: ranking / inline-size; }", css)
+        blocks = {
+            int(width): body
+            for width, body in re.findall(r"@container ranking \(max-width: (\d+)px\) \{(.*?)\n\}", css, re.S)
+        }
+        tables = [body for width, body in blocks.items()
+                  if ".analytics .bar-table, .analytics table.heatmap { display: block;" in body]
+        self.assertEqual(len(tables), 1, "one container block stacks the role tables and the heatmap")
+        table_width = next(w for w, body in blocks.items() if body in tables)
+        self.assertGreater(table_width, 800, "the Overall table needs ~841px with names on one line")
+        self.assertIn(".overall-table", tables[0])
+        self.assertTrue(any(".model-line {" in body for body in blocks.values()))
+        self.assertTrue(any(".bar-row {" in body for body in blocks.values()))
+        # The board layouts no longer switch on the viewport's phone breakpoint.
+        for body in re.findall(r"@media \(max-width: \d+px\) \{(.*?)\n\}", css, re.S):
+            for selector in (".overall-table", ".model-line", ".bar-row", ".heatmap"):
+                self.assertNotIn(selector, body)
+        # Above a collapse point names stay whole.
+        self.assertRegex(css, r"\.analytics \.bar-table \.crew-name, \.analytics \.bar-table \.crew-model,\n"
+                              r"\.rank-list \.crew-name, \.rank-list \.crew-model \{ white-space: nowrap;")
+        doc = build.render_ranking_body(scorecards(), "2026-11-08", rank_board())
+        overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
+        self.assertIn('<div class="table"><table class="bar-table overall-table">', overall)
+        self.assertIn('class="crews-by-role"', doc)
+        self.assertIn('class="model-board"', doc)
+
     def test_old_agents_urls_redirect_to_ranking(self):
         rules = (ROOT / "public" / "_redirects").read_text(encoding="utf-8").splitlines()
         for line in ("/analytics/agents /ranking/ 301", "/analytics/agents/ /ranking/ 301",
