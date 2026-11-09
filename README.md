@@ -60,7 +60,13 @@ with four stat cards:
   probabilities and per-effort splits left out. Then "Crews by role":
   takeaway callouts, the crew table with the fleet-average marker, and implementers
   by tier. Crews by role is one renderer, `render_crews_by_role(directory, role)`,
-  which takes a snapshot directory so a weekly note can reuse it.
+  which takes a snapshot directory so a weekly note can reuse it. A scorecard row is one
+  crew, model and recorded effort, so every crew board names the crew as `crew@effort`
+  (`sol@high`; a crew already named `haiku@high` stays as is). A row whose effort was not
+  recorded shows the crew's configured effort marked `sol@high (est.)` (the exporter's
+  `effort_estimate`, read with `orbit config get crews.<crew>.effort`), with one note per
+  board; without one it reads `effort unknown`. Snapshots from before the split show bare
+  crew names.
 - **Reviewers** — the provisional/settled toggle, each board with its own window.
 - **Pilots** — the pilot crew table.
 

@@ -429,6 +429,89 @@ def board_window(board, name):
     return since, until
 
 
+EST_NOTE = "(est.): effort not recorded on those runs; shown is the crew's configured effort."
+
+
+def effort_text(row):
+    """A row's effort identity: its effort label, or None.
+
+    Scorecards split a crew's rows by recorded reasoning effort, so the effort
+    is part of the row's identity (``effort unknown`` when unrecorded). A
+    snapshot written before the split carries neither field and its crews
+    render as before.
+    """
+    label = row.get("effort_label")
+    if isinstance(label, str) and label.strip():
+        return " ".join(label.split())
+    effort = row.get("reasoning_effort")
+    if isinstance(effort, str) and effort.strip():
+        return "effort unknown" if effort == "unknown" else effort
+    return None
+
+
+def crew_view(row):
+    """How a crew row is named: ``crew@effort`` on every board.
+
+    - a crew name that already carries its effort (``haiku@high``) is shown as is;
+    - a plain crew gets its recorded effort appended (``sol@high``);
+    - an unrecorded effort shows the crew's configured effort, the snapshot's
+      ``effort_estimate``, marked ``(est.)``; without one it reads
+      ``effort unknown``.
+
+    Returns the identity effort plus (base, suffix, estimated); a snapshot
+    without effort fields keeps the bare crew name, as before.
+    """
+    crew = row["crew"]
+    effort = effort_text(row)
+    view = {"effort": effort, "base": crew, "suffix": "", "estimated": False}
+    if effort is None:
+        return view
+    if "@" in crew:
+        base, _sep, tail = crew.partition("@")
+        view.update(base=base, suffix=f"@{tail}")
+        return view
+    recorded = row.get("reasoning_effort")
+    if isinstance(recorded, str) and recorded.strip() and recorded != "unknown":
+        view["suffix"] = f"@{recorded}"
+    elif effort != "effort unknown":
+        view["suffix"] = f" · {effort}"  # recorded as something other than an effort, e.g. provider default
+    else:
+        estimate = row.get("effort_estimate")
+        if isinstance(estimate, str) and estimate.strip() and estimate != "unknown":
+            view.update(suffix=f"@{estimate} (est.)", estimated=True)
+        else:
+            view["suffix"] = " · effort unknown"
+    return view
+
+
+def crew_key(row):
+    """A crew row's identity on a board: crew, model and effort."""
+    return (row["crew"], row["model"], row.get("effort"))
+
+
+def crew_label(row):
+    """Plain-text crew name with its effort, e.g. ``sol@high`` or ``sol@high (est.)``."""
+    if "base" not in row:
+        return row["crew"]
+    return row["base"] + row["suffix"]
+
+
+def crew_name_html(row):
+    """The crew name with its effort beside it in the secondary style, on one line."""
+    e = html.escape
+    if "base" not in row or not row["suffix"]:
+        return e(row["crew"])
+    est = " is-est" if row["estimated"] else ""
+    return f'{e(row["base"])}<span class="crew-effort{est}">{e(row["suffix"])}</span>'
+
+
+def estimate_note(rows):
+    """The board's one note explaining "(est.)", when any shown row is estimated."""
+    if not any(row.get("estimated") for row in rows):
+        return ""
+    return f'<p class="board-note est-note">{html.escape(EST_NOTE)}</p>'
+
+
 def display_rows(board, name):
     """Rows safe to publish: gaps removed, and thin rows left unranked."""
     unit = require_text(board, "unit", name)
@@ -453,6 +536,7 @@ def display_rows(board, name):
         rows.append({
             "crew": crew,
             "model": model,
+            **crew_view(row),
             "units": units,
             "rank": rank,
             "score": row.get("score") if as_number(row.get("score")) else None,
@@ -465,6 +549,7 @@ def display_rows(board, name):
             -row["units"],
             row["crew"],
             row["model"],
+            row["effort"] or "",
         ),
     )
     return {
@@ -513,9 +598,9 @@ def tier_slots(block):
 
     A crew's tier support is the sum of its task-type cells and its tier score
     is the tier crew score (``crew_mean``), the same for every type. Crews keep
-    their model in the key, as the overall board does, so a second model run
-    under the same crew name (luna on gpt-6.1-luna) is its own row rather
-    than one task added to the main row. Each tier is ranked separately; a slot
+    their model and effort in the key, as the overall board does, so a second
+    model run under the same crew name (luna on gpt-6.1-luna), or the same
+    model at another effort, is its own row rather than adding to the main row. Each tier is ranked separately; a slot
     under ``min_support`` stays unranked.
     """
     name = "implementers by tier"
@@ -537,8 +622,10 @@ def tier_slots(block):
         count = cell.get("n")
         if not as_number(count) or count <= 0:
             continue
+        view = crew_view(cell)
         slot = grouped[tier].setdefault(
-            (crew, model), {"crew": crew, "model": model, "tier": tier, "units": 0, "score": None, "rank": None}
+            (crew, model, view["effort"]),
+            {"crew": crew, "model": model, **view, "tier": tier, "units": 0, "score": None, "rank": None},
         )
         slot["units"] += count
         if slot["score"] is None and as_number(cell.get("crew_mean")):
@@ -548,7 +635,7 @@ def tier_slots(block):
             del slots[key]
         ranked = sorted(
             (slot for slot in slots.values() if slot["units"] >= min_support),
-            key=lambda slot: (-slot["score"], -slot["units"], slot["crew"], slot["model"]),
+            key=lambda slot: (-slot["score"], -slot["units"], slot["crew"], slot["model"], slot["effort"] or ""),
         )
         for index, slot in enumerate(ranked, 1):
             slot["rank"] = index
@@ -592,9 +679,9 @@ def role_rows(board, name):
     by_identity = {}
     for row in board.get("rows") or []:
         if isinstance(row, dict) and isinstance(row.get("crew"), str) and isinstance(row.get("model"), str):
-            by_identity.setdefault((row["crew"], row["model"]), row)
+            by_identity.setdefault((row["crew"], row["model"], effort_text(row)), row)
     for row in shown["rows"]:
-        row["per_100"] = per_100_rates(by_identity.get((row["crew"], row["model"]), {}), terms)
+        row["per_100"] = per_100_rates(by_identity.get(crew_key(row), {}), terms)
     shown["terms"] = terms
     shown["fleet"] = fleet_average(board)
     return shown
@@ -700,7 +787,7 @@ def implementer_takeaways(slots, rows, terms, unit):
             leaders.append((tier, ranked))
     groups = []
     for tier, ranked in leaders:
-        key = (ranked[0]["crew"], ranked[0]["model"])
+        key = crew_key(ranked[0])
         if groups and groups[-1]["key"] == key:
             groups[-1]["tiers"].append((tier, ranked))
         else:
@@ -710,7 +797,7 @@ def implementer_takeaways(slots, rows, terms, unit):
         tiers = group["tiers"]
         names = [TIER_LABELS[tier] for tier, _ranked in tiers]
         label = join_words([names[0]] + [lower_first(name) for name in names[1:]])
-        crew = tiers[0][1][0]["crew"]
+        crew = crew_name_html(tiers[0][1][0])
         if len(tiers) > 1:
             count = "both" if len(tiers) == 2 else f"all {len(tiers)}"
             head = f"{crew} leads {count} tiers"
@@ -725,7 +812,7 @@ def implementer_takeaways(slots, rows, terms, unit):
             tier_word = TIER_LABELS[tier].lower()
             if len(ranked) > 1:
                 second = ranked[1]
-                head = f'{crew} {fmt_score(lead["score"])}, {second["crew"]} {fmt_score(second["score"])}'
+                head = f'{crew} {fmt_score(lead["score"])}, {crew_name_html(second)} {fmt_score(second["score"])}'
                 sub = f'{fmt_count(lead["units"])} vs {fmt_count(second["units"])} {tier_word} {unit}'
             else:
                 head = f'{crew} {fmt_score(lead["score"])}'
@@ -733,20 +820,21 @@ def implementer_takeaways(slots, rows, terms, unit):
         cards.append((label, head, sub))
     sizeable = [s for tier in TIER_ORDER for s in slots[tier].values() if s["rank"] is not None]
     if sizeable:
-        weakest = min(sizeable, key=lambda s: (s["score"], -s["units"], s["crew"]))
+        weakest = min(sizeable, key=lambda s: (s["score"], -s["units"], s["crew"], s["effort"] or ""))
         if weakest["score"] < 100:
             tier_word = TIER_LABELS[weakest["tier"]].lower()
-            head = f'{weakest["crew"]} {fmt_score(weakest["score"])} on {tier_word}'
+            head = f'{crew_name_html(weakest)} {fmt_score(weakest["score"])} on {e(tier_word)}'
             sub = f'{fmt_count(weakest["units"])} {tier_word} {unit}'
-            note = weakest_term(rows, terms, (weakest["crew"], weakest["model"]))
+            note = weakest_term(rows, terms, crew_key(weakest))
             if note:
                 sub += f" · {note}"
             cards.append(("Watch", head, sub))
     if not cards:
         return ""
+    # Heads are HTML: crew names come from crew_name_html, the rest is numbers.
     items = "".join(
         f'<li><div class="tile takeaway"><span class="tile-head">{e(label)}</span>'
-        f'<span class="takeaway-head">{e(head)}</span><span class="tile-sub">{e(sub)}</span></div></li>'
+        f'<span class="takeaway-head">{head}</span><span class="tile-sub">{e(sub)}</span></div></li>'
         for label, head, sub in cards
     )
     return f'<ul class="tiles takeaways" aria-label="Takeaways">{items}</ul>'
@@ -755,7 +843,7 @@ def implementer_takeaways(slots, rows, terms, unit):
 def weakest_term(rows, terms, identity):
     """The term where this crew is worst among ranked crews, by weighted gap from their mean."""
     ranked = [row for row in rows if row["rank"] is not None]
-    row = next((r for r in ranked if (r["crew"], r["model"]) == identity), None)
+    row = next((r for r in ranked if crew_key(r) == identity), None)
     if row is None:
         return ""
     extremes = term_extremes(rows, terms)
@@ -777,7 +865,7 @@ def weakest_term(rows, terms, identity):
 def crew_cell(row):
     e = html.escape
     return (
-        f'<span class="crew-id"><span class="crew-name">{e(row["crew"])}</span>'
+        f'<span class="crew-id"><span class="crew-name">{crew_name_html(row)}</span>'
         f'<span class="crew-model">{e(row["model"])}</span></span>'
     )
 
@@ -855,7 +943,7 @@ def implementers_overall(shown):
     if unranked:
         rows_html = "".join(
             f'<tr data-rank="unranked"><td data-label="Rank" class="rank unranked">{rank_text(None)}</td>'
-            f'<td data-label="Crew">{e(row["crew"])}</td>'
+            f'<td data-label="Crew">{crew_name_html(row)}</td>'
             f'<td data-label="Model" class="crew-model">{e(row["model"])}</td>'
             f'<td data-label="Score" class="num">{fmt_score(row["score"]) if row["score"] is not None else "unjudged"}</td>'
             f'<td data-label="{e(unit.capitalize())}" class="num">{fmt_count(row["units"])}</td></tr>'
@@ -885,7 +973,7 @@ def implementers_overall(shown):
 {score_key_line(unit, fleet, "select a crew for its breakdown" if items else "")}</div>
 {board_window_line(since, until)}
 <p class="score-key">{e(shown["score_key"])}</p>
-{ranking}
+{estimate_note(shown["rows"])}{ranking}
 <p class="support-note">Rows under {shown["min_support"]} {e(unit)} stay unranked.</p>
 {folded}
 </section>'''
@@ -919,14 +1007,17 @@ def tier_heatmap(block, overall_rows):
     identities = {}
     for tier in TIER_ORDER:
         for key, slot in slots[tier].items():
-            identities.setdefault(key, {"crew": slot["crew"], "model": slot["model"], "units": 0, "sized": False})
+            identities.setdefault(key, {
+                **{name: slot[name] for name in ("crew", "model", "effort", "base", "suffix", "estimated")},
+                "units": 0, "sized": False,
+            })
             identities[key]["units"] += slot["units"]
             identities[key]["sized"] = identities[key]["sized"] or slot["rank"] is not None
-    order = {(row["crew"], row["model"]): index for index, row in enumerate(overall_rows)}
-    ranked_overall = {(row["crew"], row["model"]) for row in overall_rows if row["rank"] is not None}
+    order = {crew_key(row): index for index, row in enumerate(overall_rows)}
+    ranked_overall = {crew_key(row) for row in overall_rows if row["rank"] is not None}
     keys = sorted(
         identities,
-        key=lambda key: (order.get(key, len(order)), -identities[key]["units"], key[0], key[1]),
+        key=lambda key: (order.get(key, len(order)), -identities[key]["units"], key[0], key[1], key[2] or ""),
     )
     main = [key for key in keys if key in ranked_overall or identities[key]["sized"]]
     rest = [key for key in keys if key not in main]
@@ -994,7 +1085,7 @@ def tier_heatmap(block, overall_rows):
 <p class="board-key">Each tier's fleet rate is 100 · ★ best ranked crew in the tier · faded = under {min_support} {e(unit)}</p></div>
 {board_window_line(since, until)}
 <p class="score-key">{e(TIER_SCORE_KEY)}</p>
-{body}
+{estimate_note(identities.values())}{body}
 {legend}
 </section>''', slots
 
@@ -1038,7 +1129,7 @@ def role_bar_board(shown, element_id, title, label=None, note_html="", columns=(
 {score_key_line(unit, fleet)}</div>
 {board_window_line(since, until)}
 {note_html}<p class="score-key">{e(shown["score_key"])}{(" " + e(key_note)) if key_note else ""}</p>
-{table_html}
+{estimate_note(shown["rows"])}{table_html}
 <p class="support-note">Rows under {shown["min_support"]} {e(unit)} stay unranked and are faded.</p>
 {footer}
 </section>'''
@@ -1073,7 +1164,7 @@ def thin_board_note(shown, what):
     )
     shown_unranked = [row for row in shown["rows"] if row["rank"] is None and row["score"] is not None]
     if shown_unranked:
-        names = join_words(f'{row["crew"]} ({fmt_score(row["score"])})' for row in shown_unranked)
+        names = join_words(f'{crew_label(row)} ({fmt_score(row["score"])})' for row in shown_unranked)
         text += f" {names} {'is' if len(shown_unranked) == 1 else 'are'} shown but not ranked."
     return text
 
@@ -1218,19 +1309,27 @@ def rank_rows(rank):
 
 
 def pooled_models(shown):
-    """Ranked crews pooled into their model: units-weighted mean score."""
+    """Ranked crews pooled into their model: units-weighted mean score.
+
+    Every effort row of a model is pooled; its crews are listed by label
+    (``sol · high``) so the pooling inputs stay distinguishable.
+    """
     pooled = {}
     for row in shown["rows"]:
         if row["rank"] is None or row["score"] is None or not row["units"]:
             continue
-        slot = pooled.setdefault(row["model"], {"weighted": 0.0, "units": 0, "crews": []})
+        slot = pooled.setdefault(row["model"], {"weighted": 0.0, "units": 0, "crews": [], "labelled": False})
+        slot["labelled"] = slot["labelled"] or row.get("effort") is not None
+        slot["estimated"] = slot.get("estimated", False) or bool(row.get("estimated"))
         slot["weighted"] += row["score"] * row["units"]
         slot["units"] += row["units"]
-        if row["crew"] not in slot["crews"]:
-            slot["crews"].append(row["crew"])
+        label = crew_label(row)
+        if label not in slot["crews"]:
+            slot["crews"].append(label)
     out = {}
     for model, slot in pooled.items():
-        out[model] = {"score": slot["weighted"] / slot["units"], "units": slot["units"], "crews": slot["crews"]}
+        out[model] = {"score": slot["weighted"] / slot["units"], "units": slot["units"], "crews": slot["crews"],
+                      "labelled": slot["labelled"], "estimated": slot["estimated"]}
     return out
 
 
@@ -1305,6 +1404,7 @@ def overall_models(scorecards, rank=None, rule=None):
         overall = 0.0
         units = 0
         crews = []
+        labelled = estimated = False
         for role, weight in weights:
             slot = roles[role]["models"].get(model)
             if slot is not None and slot.get("index") is not None:
@@ -1313,10 +1413,13 @@ def overall_models(scorecards, rank=None, rule=None):
                 overall += weight * slot["index"]
                 units += slot["units"]
                 crews.extend(crew for crew in slot["crews"] if crew not in crews)
+                labelled = labelled or bool(slot.get("labelled"))
+                estimated = estimated or bool(slot.get("estimated"))
             else:
                 cells[role] = None
                 overall += weight * missing
-        rows.append({"model": model, "overall": overall / total, "cells": cells, "units": units, "crews": crews})
+        rows.append({"model": model, "overall": overall / total, "cells": cells, "units": units, "crews": crews,
+                     "labelled": labelled, "estimated": estimated})
     rows.sort(key=lambda row: (-row["overall"], row["model"]))
     for index, row in enumerate(rows, 1):
         row["place"] = index
@@ -1382,6 +1485,11 @@ def role_cell(cell, role):
     )
 
 
+def crews_text(row):
+    """A model's crews on one line; commas once the labels carry efforts (``sol@high, sol@high (est.)``)."""
+    return (", " if row.get("labelled") else " · ").join(row["crews"])
+
+
 def overall_board(overall, rule=None):
     e = html.escape
     rule = rule or OVERALL_RULE
@@ -1392,7 +1500,7 @@ def overall_board(overall, rule=None):
         body.append(
             f'<tr data-rank="{row["place"]}"><td class="rank" data-label="Rank">{rank_text(row["place"])}</td>'
             f'<th scope="row" data-label="Model"><span class="crew-id"><span class="crew-name">{model_dot(row["model"])}'
-            f'{e(row["model"])}</span><span class="crew-model">{e(" · ".join(row["crews"]))}</span></span></th>'
+            f'{e(row["model"])}</span><span class="crew-model">{e(crews_text(row))}</span></span></th>'
             f'<td class="bar-cell" data-label="Overall">{score_bar(row["overall"], 100, scale)}'
             f'<span class="score-num">{fmt_score(row["overall"])}</span></td>'
             + "".join(role_cell(row["cells"][role], role) for role in ROLE_ORDER)
@@ -1433,7 +1541,7 @@ def overall_board(overall, rule=None):
 <h2 id="overall-title">Overall</h2>
 <p class="board-note score-key">{e(overall_rule_text(rule))}</p>
 <div class="weight-bar" role="img" aria-label="Weights: {e(weights_label)}">{segments}</div>
-{table}
+{estimate_note(rows)}{table}
 <ul class="legend rank-legend"><li><i class="k-above" aria-hidden="true"></i>above average</li>
 <li><i class="k-below" aria-hidden="true"></i>below average</li>
 <li><span class="k-fleet" aria-hidden="true"></span> fleet average, 100</li>
@@ -1702,12 +1810,12 @@ def role_callouts(shown, role, board=None):
     cards = []
     if ranked:
         top = ranked[0]
-        cards.append(("Top", f'{top["crew"]} {fmt_score(top["score"])}', f'{fmt_count(top["units"])} {unit} · {top["model"]}'))
+        cards.append(("Top", f'{crew_name_html(top)} {fmt_score(top["score"])}', f'{fmt_count(top["units"])} {unit} · {top["model"]}'))
         busiest = max(ranked, key=lambda row: (row["units"], -row["rank"]))
         total = sum(row["units"] for row in shown["rows"]) or 1
         cards.append((
             "Volume",
-            f'{busiest["crew"]} {fmt_score(busiest["score"])} on {fmt_count(busiest["units"])}',
+            f'{crew_name_html(busiest)} {fmt_score(busiest["score"])} on {fmt_count(busiest["units"])}',
             f'{busiest["units"] / total * 100:.0f}% of this board\'s {unit}',
         ))
         if fleet is not None:
@@ -1716,7 +1824,7 @@ def role_callouts(shown, role, board=None):
                 worst = sorted(below, key=lambda row: row["score"])[:2]
                 cards.append((
                     "Below fleet",
-                    ", ".join(f'{row["crew"]} {fmt_score(row["score"])}' for row in worst),
+                    ", ".join(f'{crew_name_html(row)} {fmt_score(row["score"])}' for row in worst),
                     f'{len(below)} of {len(ranked)} ranked {plural(len(ranked), "crew")} under the fleet average {fmt_score(fleet)}',
                 ))
     if role == "reviewers":
@@ -1729,9 +1837,10 @@ def role_callouts(shown, role, board=None):
             cards.append(("Unranked", f'{len(unranked)} {plural(len(unranked), "crew")}', f'under {shown["min_support"]} {unit} or unjudged'))
     if not cards:
         return ""
+    # Heads are HTML: crew names come from crew_name_html, the rest is fixed text and numbers.
     items = "".join(
         f'<li><div class="tile takeaway"><span class="tile-head">{e(label)}</span>'
-        f'<span class="takeaway-head">{e(head)}</span><span class="tile-sub">{e(sub)}</span></div></li>'
+        f'<span class="takeaway-head">{head}</span><span class="tile-sub">{e(sub)}</span></div></li>'
         for label, head, sub in cards
     )
     return f'<ul class="tiles takeaways" aria-label="Callouts">{items}</ul>'
@@ -1912,7 +2021,7 @@ def render_ranking_body(scorecards, snapshot_date, rank=None, weekly=()):
             ("Ranked crews", str(len(ranked(impl))), f'of {len(impl["rows"])}'),
             ("Implemented tasks", fmt_count(units(impl["rows"])) or "0", "30 days"),
             ("Fleet average", fmt_score(impl["fleet"]), f'per 100 {impl["unit"]}'),
-            ("Top crew", top["crew"] if top else "—", fmt_score(top["score"]) if top else ""),
+            ("Top crew", crew_label(top) if top else "—", fmt_score(top["score"]) if top else ""),
         ]
 
     def role_stats(shown, volume, volume_sub):
@@ -1921,7 +2030,7 @@ def render_ranking_body(scorecards, snapshot_date, rank=None, weekly=()):
             ("Ranked crews", str(len(ranked(shown))), f'of {len(shown["rows"])}'),
             (volume, fmt_count(units(shown["rows"])) or "0", volume_sub),
             ("Fleet average", fmt_score(shown["fleet"]), f'per 100 {shown["unit"]}'),
-            ("Top crew", top["crew"] if top else "—", fmt_score(top["score"]) if top else ""),
+            ("Top crew", crew_label(top) if top else "—", fmt_score(top["score"]) if top else ""),
         ]
 
     panels = {

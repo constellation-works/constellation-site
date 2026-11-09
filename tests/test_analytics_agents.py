@@ -99,6 +99,79 @@ def scorecards():
     }
 
 
+def effort_row(crew, model, effort, units, rank, score, estimate=None):
+    """A scorecard row split by effort, as the exporter writes it since ORB-23657."""
+    out = row(crew, model, units, rank, score)
+    out["reasoning_effort"] = effort
+    out["effort_label"] = "effort unknown" if effort == "unknown" else effort
+    if estimate is not None:
+        out["effort_estimate"] = estimate
+    return out
+
+
+def effort_cell(crew, model, effort, n, crew_mean, tier="low", kind="ui", estimate=None):
+    cell = {"below_support": n < 10, "crew": crew, "crew_mean": crew_mean, "model": model, "n": n,
+            "rank": None, "tier": tier, "type": kind, "units": n, "reasoning_effort": effort,
+            "effort_label": "effort unknown" if effort == "unknown" else effort}
+    if estimate is not None:
+        cell["effort_estimate"] = estimate
+    return cell
+
+
+def effort_scorecards():
+    """Two efforts of one crew (sol) on every board.
+
+    sol's unrecorded rows carry its configured effort (high) as the estimate, so
+    a recorded and an estimated row read sol@high and sol@high (est.); argon
+    has no configured effort; haiku@high already names its effort.
+    """
+    data = scorecards()
+    data["implementers"]["rows"] = [
+        effort_row("sol", "gpt-6.1-sol", "unknown", 30, 1, 132.6, estimate="high"),
+        effort_row("sol", "gpt-6.1-sol", "high", 20, 2, 115.5),
+        effort_row("opus", "claude-opus-5-5", "medium", 15, 3, 90.0),
+        effort_row("haiku@high", "claude-haiku-5-5", "high", 12, 4, 85.0),
+        effort_row("argon", "gemini-4-argon-high", "unknown", 11, 5, 80.0),
+        effort_row("sol", "gpt-6.1-sol", "xhigh", 4, None, 140.0),
+    ]
+    data["implementers"]["fleet_average"] = 110.0
+    data["implementers_by_tier"]["cells"] = [
+        effort_cell("sol", "gpt-6.1-sol", "unknown", 10, 130.0, estimate="high"),
+        effort_cell("sol", "gpt-6.1-sol", "high", 12, 120.0),
+        effort_cell("opus", "claude-opus-5-5", "medium", 10, 80.0),
+        effort_cell("sol", "gpt-6.1-sol", "high", 11, 125.0, tier="medium"),
+        effort_cell("sol", "gpt-6.1-sol", "unknown", 10, 105.0, tier="medium", estimate="high"),
+    ]
+    data["reviewers"]["provisional"]["rows"] = [
+        effort_row("sol", "gpt-6.1-sol", "unknown", 15, 1, 130.0, estimate="high"),
+        effort_row("sol", "gpt-6.1-sol", "high", 12, 2, 90.0),
+        effort_row("opus", "claude-opus-5-5", "medium", 11, 3, 80.0),
+    ]
+    data["reviewers"]["provisional"]["fleet_average"] = 100.0
+    data["reviewers"]["settled"]["rows"] = [
+        effort_row("sol", "gpt-6.1-sol", "unknown", 15, 1, 120.0, estimate="high"),
+        effort_row("sol", "gpt-6.1-sol", "high", 12, 2, 95.0),
+    ]
+    data["pilots"]["rows"] = [
+        effort_row("sol", "gpt-6.1-sol", "high", 12, 1, 60.0),
+        effort_row("sol", "gpt-6.1-sol", "unknown", 11, 2, 40.0, estimate="high"),
+        effort_row("opus", "claude-opus-5-5", "medium", 10, 3, 30.0),
+    ]
+    data["pilots"]["fleet_average"] = 45.0
+    return data
+
+
+def board_crews(html_text):
+    """Each crew cell on a board as plain text: (crew with effort, model)."""
+    found = re.findall(r'<span class="crew-id"><span class="crew-name">(.*?)</span><span class="crew-model">(.*?)</span></span>',
+                       html_text)
+    return [(re.sub(r"<[^>]+>", "", name), model) for name, model in found]
+
+
+def plain(html_text):
+    return re.sub(r"<[^>]+>", "", html_text)
+
+
 def rank_measure(weight, contribution=None, reason=None):
     measured = contribution is not None
     return {
@@ -417,18 +490,26 @@ class RankingPageTest(unittest.TestCase):
         # the overall board: summing every luna cell would read 654 low tasks.
         directory = build.latest_analytics_dir()
         data = json.loads((directory / "scorecards.json").read_text(encoding="utf-8"))
+        # A slot is one crew, model and effort; a snapshot that splits rows by
+        # effort has one slot per effort, each summing only its own cells.
         slots, _min_support = build.tier_slots(data["implementers_by_tier"])
         low = slots["low"]
-        expected = sum(
-            cell["n"] for cell in data["implementers_by_tier"]["cells"]
-            if cell["tier"] == "low" and cell["crew"] == "luna" and cell["model"] == "gpt-6-luna"
-        )
-        self.assertEqual(low[("luna", "gpt-6-luna")]["units"], expected)
-        self.assertEqual(low[("luna", "gpt-6.1-luna")]["units"], 1)
+        for (crew, model, effort), slot in low.items():
+            if crew != "luna":
+                continue
+            expected = sum(
+                cell["n"] for cell in data["implementers_by_tier"]["cells"]
+                if cell["tier"] == "low" and cell["crew"] == crew and cell["model"] == model
+                and build.effort_text(cell) == effort
+            )
+            self.assertEqual(slot["units"], expected)
+        self.assertTrue(any(key[:2] == ("luna", "gpt-6-luna") for key in low))
+        self.assertTrue(any(key[:2] == ("luna", "gpt-6.1-luna") for key in low))
+        main = max((slot for key, slot in low.items() if key[:2] == ("luna", "gpt-6-luna")), key=lambda slot: slot["units"])
         doc = build.render_ranking_body(data, directory.name)
         tiers = section(doc, "tiers")
-        self.assertIn(f"{expected:,} tasks", tiers)
-        self.assertNotIn(f"{expected + 1:,} tasks", tiers)
+        self.assertIn(f'{main["units"]:,} tasks', tiers)
+        self.assertNotIn(f'{main["units"] + 1:,} tasks', tiers)
 
     def test_takeaways_are_derived_from_the_tiers(self):
         directory = build.latest_analytics_dir()
@@ -440,9 +521,10 @@ class RankingPageTest(unittest.TestCase):
             leaders = [slot for slot in slots[tier].values() if slot["rank"] == 1]
             if leaders:
                 self.assertIn(leaders[0]["crew"], cards)
+        text = re.sub(r"<[^>]+>", "", cards)
         sized = [slot for tier in build.TIER_ORDER for slot in slots[tier].values() if slot["rank"] is not None]
         weakest = min(sized, key=lambda slot: slot["score"])
-        self.assertIn(f'{weakest["crew"]} {weakest["score"]:.1f}', cards)
+        self.assertIn(f'{build.crew_label(weakest)} {build.fmt_score(weakest["score"])}', text)
         self.assertIn(">Watch<", cards)
 
     def test_term_breakdown_flags_best_worst_and_unmeasured(self):
@@ -508,11 +590,12 @@ class RankingPageTest(unittest.TestCase):
         slots, min_support = build.tier_slots(scorecards()["implementers_by_tier"])
         self.assertEqual(min_support, 10)
         low = slots["low"]
-        self.assertEqual(low[("haiku", "claude-haiku-5-5")]["units"], 12)
-        self.assertEqual(low[("haiku", "claude-haiku-5-5")]["rank"], 2)
-        self.assertEqual(low[("opus", "claude-opus-5-5")]["rank"], 1)
-        self.assertIsNone(low[("thin", "gpt-thin")]["rank"])
-        self.assertNotIn(("gap", "model unknown"), low)
+        # A snapshot without efforts keys each slot with no effort.
+        self.assertEqual(low[("haiku", "claude-haiku-5-5", None)]["units"], 12)
+        self.assertEqual(low[("haiku", "claude-haiku-5-5", None)]["rank"], 2)
+        self.assertEqual(low[("opus", "claude-opus-5-5", None)]["rank"], 1)
+        self.assertIsNone(low[("thin", "gpt-thin", None)]["rank"])
+        self.assertNotIn(("gap", "model unknown", None), low)
 
         def cell(name):
             start = tiers.index(f'<span class="crew-name">{name}</span>')
@@ -669,6 +752,111 @@ class RankingPageTest(unittest.TestCase):
         self.assertEqual(cells["claude-haiku-5-5"]["units"], 40)
         self.assertAlmostEqual(cells["claude-haiku-5-5"]["index"], (150 * 30 + 110 * 10) / 40 / 125 * 100)
         self.assertEqual(cells["claude-opus-5-5"]["place"], 2)
+
+    def test_rows_split_by_effort_name_the_effort_beside_the_crew(self):
+        doc = build.render_ranking_body(effort_scorecards(), "2026-11-09")
+        sol_est, sol_high = ("sol@high (est.)", "gpt-6.1-sol"), ("sol@high", "gpt-6.1-sol")
+        opus = ("opus@medium", "claude-opus-5-5")
+        boards = {
+            "implementer-crews": [sol_est, sol_high, opus, ("haiku@high", "claude-haiku-5-5"),
+                                  ("argon · effort unknown", "gemini-4-argon-high")],
+            "tiers": [sol_est, sol_high, opus],
+            "reviewers-provisional": [sol_est, sol_high, opus],
+            "reviewers-settled": [sol_est, sol_high],
+            "pilot-crews": [sol_high, sol_est, opus],
+        }
+        for element_id, expected in boards.items():
+            with self.subTest(board=element_id):
+                board_html = section(doc, element_id)
+                crews = board_crews(board_html)
+                self.assertEqual(crews, expected)
+                self.assertEqual(len(set(crews)), len(crews), "two rows on one board read the same")
+                # One note per board explains the estimate.
+                self.assertEqual(board_html.count(build.EST_NOTE.replace("'", "&#x27;")), 1)
+        # The effort sits in the secondary style inside the crew name, on its line;
+        # a crew already named with its effort is split the same way.
+        self.assertIn('<span class="crew-name">sol<span class="crew-effort">@high</span></span>', doc)
+        self.assertIn('<span class="crew-name">sol<span class="crew-effort is-est">@high (est.)</span></span>', doc)
+        self.assertIn('<span class="crew-name">haiku<span class="crew-effort">@high</span></span>', doc)
+        # The unranked fold names the effort too.
+        folded = section(doc, "implementer-crews")
+        folded = plain(folded[folded.index('<details class="more unranked-crews"'):])
+        self.assertIn("sol@xhigh", folded)
+        # Each effort keeps its own tier slot: sums are not merged across efforts.
+        tiers = section(doc, "tiers")
+        self.assertIn("12 tasks", tiers)
+        self.assertNotIn("22 tasks", tiers)
+        slots, _ = build.tier_slots(effort_scorecards()["implementers_by_tier"])
+        self.assertEqual(slots["low"][("sol", "gpt-6.1-sol", "high")]["units"], 12)
+        self.assertEqual(slots["low"][("sol", "gpt-6.1-sol", "effort unknown")]["units"], 10)
+
+    def test_crew_label_rule(self):
+        def label(crew, **fields):
+            return build.crew_label({"crew": crew, **build.crew_view({"crew": crew, **fields})})
+
+        self.assertEqual(label("sol"), "sol")  # snapshot without efforts
+        self.assertEqual(label("haiku@high"), "haiku@high")
+        self.assertEqual(label("sol", reasoning_effort="high", effort_label="high"), "sol@high")
+        self.assertEqual(label("haiku@high", reasoning_effort="high", effort_label="high"), "haiku@high")
+        self.assertEqual(label("sol", reasoning_effort="unknown", effort_label="effort unknown",
+                               effort_estimate="high"), "sol@high (est.)")
+        self.assertEqual(label("argon", reasoning_effort="unknown", effort_label="effort unknown"),
+                         "argon · effort unknown")
+        self.assertEqual(label("argon", effort_label="provider default"), "argon · provider default")
+
+    def test_callouts_name_the_effort_beside_the_crew(self):
+        doc = build.render_ranking_body(effort_scorecards(), "2026-11-09")
+        callouts = re.findall(r'<ul class="tiles takeaways" aria-label="(?:Takeaways|Callouts)">.*?</ul>', doc)
+        self.assertEqual(len(callouts), 3)
+        implementers, reviewers, pilots = (plain(item) for item in callouts)
+        self.assertIn("sol@high (est.) 130.0, sol@high 120.0", implementers)
+        self.assertIn("sol@high 125.0, sol@high (est.) 105.0", implementers)
+        # Different efforts lead the two tiers, so they are not merged into one card.
+        self.assertNotIn("leads both tiers", implementers)
+        self.assertIn("opus@medium 80.0 on low", implementers)
+        self.assertIn("Topsol@high (est.) 130.0", reviewers)
+        self.assertIn("Below fleetopus@medium 80.0, sol@high 90.0", reviewers)
+        self.assertIn("Topsol@high 60.0", pilots)
+        self.assertIn("sol@high (est.) 40.0", pilots)
+        self.assertIn('<span class="takeaway-head">sol<span class="crew-effort">@high</span> 60.0</span>', doc)
+        # The top-crew stat card names the effort as well.
+        self.assertIn('<span class="stat-value">sol@high (est.)</span>', doc)
+
+    def test_overall_pools_every_effort_row_into_its_model(self):
+        data = effort_scorecards()
+        overall = build.overall_models(data)
+        cells = {row["model"]: row["cells"] for row in overall["rows"]}
+        sol = cells["gpt-6.1-sol"]
+        self.assertEqual(sol["implementers"]["units"], 50)
+        self.assertAlmostEqual(sol["implementers"]["score"], (132.6 * 30 + 115.5 * 20) / 50)
+        self.assertEqual(sol["reviewers"]["units"], 27)
+        self.assertAlmostEqual(sol["reviewers"]["score"], (130.0 * 15 + 90.0 * 12) / 27)
+        self.assertEqual(sol["pilots"]["units"], 23)
+        self.assertEqual([row["model"] for row in overall["rows"]].count("gpt-6.1-sol"), 1)
+        row_ = next(row for row in overall["rows"] if row["model"] == "gpt-6.1-sol")
+        self.assertEqual(row_["crews"], ["sol@high (est.)", "sol@high"])
+        doc = build.render_ranking_body(data, "2026-11-09")
+        self.assertIn('<span class="crew-model">sol@high (est.), sol@high</span>', doc)
+        overall_html = doc[doc.index('aria-labelledby="overall-title"'):]
+        overall_html = overall_html[:overall_html.index("</section>")]
+        self.assertEqual(overall_html.count('class="board-note est-note"'), 1)
+
+    def test_snapshot_without_efforts_renders_crews_as_before(self):
+        doc = build.render_ranking_body(scorecards(), "2026-11-08")
+        self.assertNotIn("crew-effort", doc)
+        self.assertNotIn("effort unknown", doc)
+        self.assertNotIn("est-note", doc)
+        self.assertIn('<span class="crew-name">haiku</span><span class="crew-model">claude-haiku-5-5</span>', doc)
+        data = scorecards()
+        data["implementers"]["rows"] = [
+            row("haiku", "claude-haiku-5-5", 30, 1, 150.0),
+            row("haiku@high", "claude-haiku-5-5", 10, 2, 110.0),
+        ]
+        data["implementers"]["fleet_average"] = 125.0
+        overall = build.overall_models(data)
+        haiku = next(item for item in overall["rows"] if item["model"] == "claude-haiku-5-5")
+        self.assertEqual(haiku["crews"][:2], ["haiku", "haiku@high"])
+        self.assertIn('<span class="crew-model">haiku · haiku@high</span>', build.render_ranking_body(data, "2026-11-08"))
 
     def test_models_board_from_rank_and_omitted_without_it(self):
         with_rank = build.render_ranking_body(scorecards(), "2026-11-08", rank_board())
