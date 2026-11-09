@@ -1,5 +1,5 @@
 {
-  "computed_at": "2026-11-09T07:26:17.806Z",
+  "computed_at": "2026-11-09T08:30:00.315Z",
   "eligibility_rule": "At least 30 implemented tasks spanning at least 2 assessed tiers with at least 5 tasks each. The board needs 3 such models.",
   "eligible_models": 9,
   "execution": "managed",
@@ -97,14 +97,15 @@
       "band_size": 1,
       "cost": {
         "cost_unknown": false,
-        "coverage": 0.824,
-        "expected_per_task": 2.7391,
-        "per_task": 1.5388,
-        "ratio": 0.5618
+        "coverage": 0.8251,
+        "expected_per_task": 2.7404,
+        "per_task": 1.5442,
+        "ratio": 0.5635
       },
       "crews": [
         {
           "crew": "sol",
+          "effort_estimate": "high",
           "tasks": 861
         },
         {
@@ -119,11 +120,11 @@
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 123.49,
-        "p90": 133.78
+        "p10": 122.98,
+        "p90": 133.21
       },
-      "landed_rate": 0.9394,
-      "landed_tasks": 822.0,
+      "landed_rate": 0.9406,
+      "landed_tasks": 823.0,
       "measures": {
         "ci_failures": {
           "actual": null,
@@ -138,8 +139,8 @@
         },
         "crew_rework": {
           "actual": 117.0,
-          "contribution": -1.92,
-          "expected": 83.68,
+          "contribution": -1.83,
+          "expected": 84.02,
           "reason": null,
           "residual": -0.04,
           "status": "measured",
@@ -148,9 +149,9 @@
           "weight": 5.0
         },
         "escaped_regressions": {
-          "actual": 180.25,
-          "contribution": 25.22,
-          "expected": 394.13,
+          "actual": 182.25,
+          "contribution": 24.49,
+          "expected": 395.77,
           "reason": null,
           "residual": 0.24,
           "status": "measured",
@@ -171,7 +172,7 @@
         },
         "review_outcome": {
           "actual": 23.5,
-          "contribution": 6.47,
+          "contribution": 6.42,
           "expected": 11.51,
           "reason": null,
           "residual": 0.28,
@@ -195,8 +196,8 @@
       "model": "gpt-6.1-sol",
       "rank": 1,
       "rank_label": "1",
-      "raw_score": 129.77,
-      "score": 128.71,
+      "raw_score": 129.09,
+      "score": 128.06,
       "tasks_by_tier": {
         "hard": 153,
         "low": 16,
@@ -206,10 +207,10 @@
       },
       "tiers": [
         {
-          "cost_coverage": 0.732,
-          "cost_per_task": 2.3032,
+          "cost_coverage": 0.7386,
+          "cost_per_task": 2.3312,
           "cost_unknown": true,
-          "score": 113.54,
+          "score": 112.82,
           "tasks": 153,
           "tier": "hard"
         },
@@ -217,7 +218,7 @@
           "cost_coverage": 0.75,
           "cost_per_task": 0.8001,
           "cost_unknown": true,
-          "score": 95.94,
+          "score": 96.1,
           "tasks": 16,
           "tier": "low"
         },
@@ -225,7 +226,7 @@
           "cost_coverage": 0.8484,
           "cost_per_task": 1.3738,
           "cost_unknown": false,
-          "score": 130.48,
+          "score": 129.88,
           "tasks": 699,
           "tier": "medium"
         },
@@ -233,7 +234,7 @@
           "cost_coverage": 0.0,
           "cost_per_task": null,
           "cost_unknown": true,
-          "score": 106.73,
+          "score": 106.44,
           "tasks": 1,
           "tier": "unassessed"
         },
@@ -241,7 +242,7 @@
           "cost_coverage": 0.6667,
           "cost_per_task": 6.8112,
           "cost_unknown": true,
-          "score": 735.21,
+          "score": 718.02,
           "tasks": 6,
           "tier": "xhard"
         }
@@ -253,33 +254,34 @@
       "band_size": 1,
       "cost": {
         "cost_unknown": false,
-        "coverage": 0.8803,
-        "expected_per_task": 0.4203,
-        "per_task": 0.3974,
-        "ratio": 0.9455
+        "coverage": 0.8792,
+        "expected_per_task": 0.4233,
+        "per_task": 0.3976,
+        "ratio": 0.9393
       },
       "crews": [
         {
           "crew": "haiku",
+          "effort_estimate": "xhigh",
           "tasks": 590
+        },
+        {
+          "crew": "haiku@high",
+          "tasks": 3
         },
         {
           "crew": "haiku@xhigh",
           "tasks": 1
-        },
-        {
-          "crew": "system",
-          "tasks": 2
         }
       ],
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 110.72,
-        "p90": 117.83
+        "p10": 110.81,
+        "p90": 117.73
       },
-      "landed_rate": 0.9848,
-      "landed_tasks": 584.0,
+      "landed_rate": 0.9832,
+      "landed_tasks": 586.0,
       "measures": {
         "ci_failures": {
           "actual": null,
@@ -294,24 +296,24 @@
         },
         "crew_rework": {
           "actual": 14.0,
-          "contribution": 1.12,
-          "expected": 27.19,
+          "contribution": 1.05,
+          "expected": 26.93,
           "reason": null,
           "residual": 0.02,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 593,
+          "units": 596,
           "weight": 5.0
         },
         "escaped_regressions": {
           "actual": 25.5,
-          "contribution": 3.34,
-          "expected": 44.67,
+          "contribution": 3.36,
+          "expected": 45.46,
           "reason": null,
           "residual": 0.03,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 593,
+          "units": 596,
           "weight": 30.0
         },
         "final_recoveries": {
@@ -327,7 +329,7 @@
         },
         "review_outcome": {
           "actual": 16.0,
-          "contribution": 10.63,
+          "contribution": 10.55,
           "expected": 7.3,
           "reason": null,
           "residual": 0.46,
@@ -351,60 +353,61 @@
       "model": "claude-haiku-5-5",
       "rank": 2,
       "rank_label": "2",
-      "raw_score": 115.09,
-      "score": 114.5,
+      "raw_score": 114.96,
+      "score": 114.38,
       "tasks_by_tier": {
         "low": 534,
-        "medium": 59
+        "medium": 62
       },
       "tiers": [
         {
-          "cost_coverage": 0.882,
-          "cost_per_task": 0.3468,
+          "cost_coverage": 0.8839,
+          "cost_per_task": 0.3466,
           "cost_unknown": false,
-          "score": 114.22,
+          "score": 113.96,
           "tasks": 534,
           "tier": "low"
         },
         {
-          "cost_coverage": 0.8644,
-          "cost_per_task": 0.865,
+          "cost_coverage": 0.8387,
+          "cost_per_task": 0.8607,
           "cost_unknown": false,
-          "score": 124.44,
-          "tasks": 59,
+          "score": 125.12,
+          "tasks": 62,
           "tier": "medium"
         }
       ],
-      "units": 593,
+      "units": 596,
       "weights_measured": 55.0
     },
     {
       "band_size": 5,
       "cost": {
         "cost_unknown": false,
-        "coverage": 0.8759,
-        "expected_per_task": 0.3428,
-        "per_task": 0.1155,
-        "ratio": 0.337
+        "coverage": 0.8748,
+        "expected_per_task": 0.3426,
+        "per_task": 0.1154,
+        "ratio": 0.3369
       },
       "crews": [
         {
           "crew": "luna",
-          "tasks": 692
+          "effort_estimate": "xhigh",
+          "tasks": 689
         },
         {
           "crew": "luna@xhigh",
-          "tasks": 1
+          "tasks": 6
         }
       ],
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 96.81,
-        "p90": 108.4
+        "p10": 97.57,
+        "p90": 108.12
       },
-      "landed_rate": 0.9784,
-      "landed_tasks": 678.0,
+      "landed_rate": 0.977,
+      "landed_tasks": 679.0,
       "measures": {
         "ci_failures": {
           "actual": null,
@@ -418,25 +421,25 @@
           "weight": 10.0
         },
         "crew_rework": {
-          "actual": 31.0,
-          "contribution": -0.06,
-          "expected": 30.24,
+          "actual": 29.0,
+          "contribution": 0.04,
+          "expected": 29.61,
           "reason": null,
           "residual": 0.0,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 693,
+          "units": 695,
           "weight": 5.0
         },
         "escaped_regressions": {
           "actual": 63.0,
-          "contribution": -2.96,
-          "expected": 43.09,
+          "contribution": -2.87,
+          "expected": 43.11,
           "reason": null,
           "residual": -0.03,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 693,
+          "units": 695,
           "weight": 30.0
         },
         "final_recoveries": {
@@ -452,7 +455,7 @@
         },
         "review_outcome": {
           "actual": 14.0,
-          "contribution": 5.83,
+          "contribution": 5.78,
           "expected": 8.47,
           "reason": null,
           "residual": 0.25,
@@ -476,11 +479,11 @@
       "model": "gpt-6-luna",
       "rank": 3,
       "rank_label": "3=",
-      "raw_score": 102.81,
-      "score": 102.9,
+      "raw_score": 102.96,
+      "score": 103.04,
       "tasks_by_tier": {
         "hard": 1,
-        "low": 653,
+        "low": 655,
         "medium": 39
       },
       "tiers": [
@@ -488,52 +491,53 @@
           "cost_coverage": 1.0,
           "cost_per_task": 0.6016,
           "cost_unknown": false,
-          "score": -132.4,
+          "score": -126.07,
           "tasks": 1,
           "tier": "hard"
         },
         {
-          "cost_coverage": 0.8775,
-          "cost_per_task": 0.086,
+          "cost_coverage": 0.8763,
+          "cost_per_task": 0.0859,
           "cost_unknown": false,
-          "score": 106.64,
-          "tasks": 653,
+          "score": 106.71,
+          "tasks": 655,
           "tier": "low"
         },
         {
           "cost_coverage": 0.8462,
           "cost_per_task": 0.6142,
           "cost_unknown": false,
-          "score": 52.67,
+          "score": 53.85,
           "tasks": 39,
           "tier": "medium"
         }
       ],
-      "units": 693,
+      "units": 695,
       "weights_measured": 55.0
     },
     {
       "band_size": 5,
       "cost": {
         "cost_unknown": false,
-        "coverage": 0.8564,
-        "expected_per_task": 2.3114,
-        "per_task": 1.0301,
-        "ratio": 0.4456
+        "coverage": 0.8556,
+        "expected_per_task": 2.3107,
+        "per_task": 1.0348,
+        "ratio": 0.4478
       },
       "crews": [
         {
           "crew": "sonnet",
-          "tasks": 181
+          "effort_estimate": "high",
+          "tasks": 180
         }
       ],
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 90.45,
-        "p90": 113.94
+        "p10": 91.32,
+        "p90": 112.77
       },
-      "landed_rate": 0.9558,
+      "landed_rate": 0.9611,
       "landed_tasks": 173.0,
       "measures": {
         "ci_failures": {
@@ -549,24 +553,24 @@
         },
         "crew_rework": {
           "actual": 10.0,
-          "contribution": 1.91,
-          "expected": 16.83,
+          "contribution": 1.84,
+          "expected": 16.84,
           "reason": null,
           "residual": 0.04,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 181,
+          "units": 180,
           "weight": 5.0
         },
         "escaped_regressions": {
-          "actual": 75.25,
-          "contribution": -6.04,
-          "expected": 64.65,
+          "actual": 76.25,
+          "contribution": -6.42,
+          "expected": 64.73,
           "reason": null,
           "residual": -0.06,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 181,
+          "units": 180,
           "weight": 30.0
         },
         "final_recoveries": {
@@ -582,7 +586,7 @@
         },
         "review_outcome": {
           "actual": 5.5,
-          "contribution": 6.35,
+          "contribution": 6.3,
           "expected": 3.31,
           "reason": null,
           "residual": 0.27,
@@ -606,19 +610,19 @@
       "model": "claude-sonnet-5-5",
       "rank": 3,
       "rank_label": "3=",
-      "raw_score": 102.21,
-      "score": 102.58,
+      "raw_score": 101.72,
+      "score": 102.15,
       "tasks_by_tier": {
         "hard": 11,
         "low": 7,
-        "medium": 163
+        "medium": 162
       },
       "tiers": [
         {
           "cost_coverage": 0.8182,
           "cost_per_task": 2.8358,
           "cost_unknown": false,
-          "score": -4.85,
+          "score": -0.56,
           "tasks": 11,
           "tier": "hard"
         },
@@ -626,35 +630,36 @@
           "cost_coverage": 1.0,
           "cost_per_task": 0.5847,
           "cost_unknown": false,
-          "score": 111.61,
+          "score": 111.14,
           "tasks": 7,
           "tier": "low"
         },
         {
-          "cost_coverage": 0.8528,
-          "cost_per_task": 0.9356,
+          "cost_coverage": 0.8519,
+          "cost_per_task": 0.9401,
           "cost_unknown": false,
-          "score": 105.94,
-          "tasks": 163,
+          "score": 105.25,
+          "tasks": 162,
           "tier": "medium"
         }
       ],
-      "units": 181,
+      "units": 180,
       "weights_measured": 55.0
     },
     {
       "band_size": 5,
       "cost": {
         "cost_unknown": false,
-        "coverage": 0.8793,
-        "expected_per_task": 5.326,
-        "per_task": 6.4203,
-        "ratio": 1.2055
+        "coverage": 0.8812,
+        "expected_per_task": 5.3161,
+        "per_task": 6.4045,
+        "ratio": 1.2048
       },
       "crews": [
         {
           "crew": "opus",
-          "tasks": 402
+          "effort_estimate": "medium",
+          "tasks": 401
         },
         {
           "crew": "opus@high",
@@ -662,17 +667,17 @@
         },
         {
           "crew": "opus@medium",
-          "tasks": 118
+          "tasks": 119
         }
       ],
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 89.16,
-        "p90": 115.87
+        "p10": 89.14,
+        "p90": 115.23
       },
-      "landed_rate": 0.9674,
-      "landed_tasks": 505.0,
+      "landed_rate": 0.9693,
+      "landed_tasks": 506.0,
       "measures": {
         "ci_failures": {
           "actual": null,
@@ -686,20 +691,20 @@
           "weight": 10.0
         },
         "crew_rework": {
-          "actual": 21.0,
-          "contribution": 3.28,
-          "expected": 54.91,
+          "actual": 20.0,
+          "contribution": 3.19,
+          "expected": 54.34,
           "reason": null,
-          "residual": 0.06,
+          "residual": 0.07,
           "status": "measured",
           "unit": "implemented tasks",
           "units": 522,
           "weight": 5.0
         },
         "escaped_regressions": {
-          "actual": 468.25,
-          "contribution": 5.33,
-          "expected": 495.21,
+          "actual": 471.25,
+          "contribution": 5.37,
+          "expected": 499.18,
           "reason": null,
           "residual": 0.05,
           "status": "measured",
@@ -720,7 +725,7 @@
         },
         "review_outcome": {
           "actual": -2.0,
-          "contribution": -6.47,
+          "contribution": -6.42,
           "expected": -0.05,
           "reason": null,
           "residual": -0.28,
@@ -744,8 +749,8 @@
       "model": "claude-opus-5-5",
       "rank": 3,
       "rank_label": "3=",
-      "raw_score": 102.14,
-      "score": 102.3,
+      "raw_score": 102.13,
+      "score": 102.29,
       "tasks_by_tier": {
         "hard": 452,
         "low": 9,
@@ -754,10 +759,10 @@
       },
       "tiers": [
         {
-          "cost_coverage": 0.8783,
-          "cost_per_task": 6.3861,
+          "cost_coverage": 0.8805,
+          "cost_per_task": 6.3679,
           "cost_unknown": false,
-          "score": 114.5,
+          "score": 114.2,
           "tasks": 452,
           "tier": "hard"
         },
@@ -765,7 +770,7 @@
           "cost_coverage": 1.0,
           "cost_per_task": 1.3476,
           "cost_unknown": false,
-          "score": 111.91,
+          "score": 111.44,
           "tasks": 9,
           "tier": "low"
         },
@@ -773,7 +778,7 @@
           "cost_coverage": 0.9737,
           "cost_per_task": 4.8384,
           "cost_unknown": false,
-          "score": 73.3,
+          "score": 74.13,
           "tasks": 38,
           "tier": "medium"
         },
@@ -781,7 +786,7 @@
           "cost_coverage": 0.6957,
           "cost_per_task": 13.7805,
           "cost_unknown": true,
-          "score": -87.11,
+          "score": -82.31,
           "tasks": 23,
           "tier": "xhard"
         }
@@ -793,29 +798,30 @@
       "band_size": 5,
       "cost": {
         "cost_unknown": false,
-        "coverage": 0.9036,
-        "expected_per_task": 2.3051,
-        "per_task": 6.141,
-        "ratio": 2.6641
+        "coverage": 0.904,
+        "expected_per_task": 2.3036,
+        "per_task": 6.1183,
+        "ratio": 2.6559
       },
       "crews": [
         {
           "crew": "grok",
-          "tasks": 248
+          "effort_estimate": "high",
+          "tasks": 246
         },
         {
           "crew": "grok@high",
-          "tasks": 1
+          "tasks": 4
         }
       ],
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 85.19,
-        "p90": 106.71
+        "p10": 84.8,
+        "p90": 105.79
       },
-      "landed_rate": 0.9598,
-      "landed_tasks": 239.0,
+      "landed_rate": 0.96,
+      "landed_tasks": 240.0,
       "measures": {
         "ci_failures": {
           "actual": null,
@@ -829,25 +835,25 @@
           "weight": 10.0
         },
         "crew_rework": {
-          "actual": 13.0,
-          "contribution": 2.13,
-          "expected": 23.5,
+          "actual": 15.0,
+          "contribution": 1.7,
+          "expected": 23.78,
           "reason": null,
           "residual": 0.04,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 249,
+          "units": 250,
           "weight": 5.0
         },
         "escaped_regressions": {
-          "actual": 109.5,
-          "contribution": -10.7,
-          "expected": 83.67,
+          "actual": 110.5,
+          "contribution": -10.57,
+          "expected": 84.18,
           "reason": null,
-          "residual": -0.1,
+          "residual": -0.11,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 249,
+          "units": 250,
           "weight": 30.0
         },
         "final_recoveries": {
@@ -863,7 +869,7 @@
         },
         "review_outcome": {
           "actual": 4.0,
-          "contribution": 3.65,
+          "contribution": 3.63,
           "expected": 2.9,
           "reason": null,
           "residual": 0.16,
@@ -887,19 +893,19 @@
       "model": "grok-4.7",
       "rank": 3,
       "rank_label": "3=",
-      "raw_score": 95.08,
-      "score": 96.18,
+      "raw_score": 94.76,
+      "score": 95.88,
       "tasks_by_tier": {
         "hard": 7,
         "low": 1,
-        "medium": 241
+        "medium": 242
       },
       "tiers": [
         {
           "cost_coverage": 1.0,
           "cost_per_task": 10.4426,
           "cost_unknown": false,
-          "score": -178.21,
+          "score": -169.24,
           "tasks": 7,
           "tier": "hard"
         },
@@ -907,20 +913,20 @@
           "cost_coverage": 1.0,
           "cost_per_task": 6.1109,
           "cost_unknown": false,
-          "score": -133.58,
+          "score": -124.14,
           "tasks": 1,
           "tier": "low"
         },
         {
-          "cost_coverage": 0.9004,
-          "cost_per_task": 6.0024,
+          "cost_coverage": 0.9008,
+          "cost_per_task": 5.9795,
           "cost_unknown": false,
-          "score": 100.55,
-          "tasks": 241,
+          "score": 100.02,
+          "tasks": 242,
           "tier": "medium"
         }
       ],
-      "units": 249,
+      "units": 250,
       "weights_measured": 55.0
     },
     {
@@ -928,23 +934,28 @@
       "cost": {
         "cost_unknown": true,
         "coverage": 0.0091,
-        "expected_per_task": 0.723,
+        "expected_per_task": 0.7228,
         "per_task": 0.0948,
         "ratio": 0.1311
       },
       "crews": [
         {
           "crew": "muse-spark",
+          "effort_estimate": "xhigh",
           "tasks": 438
+        },
+        {
+          "crew": "muse-spark@xhigh",
+          "tasks": 1
         }
       ],
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 90.86,
-        "p90": 99.56
+        "p10": 90.81,
+        "p90": 99.86
       },
-      "landed_rate": 0.9886,
+      "landed_rate": 0.9863,
       "landed_tasks": 433.0,
       "measures": {
         "ci_failures": {
@@ -960,24 +971,24 @@
         },
         "crew_rework": {
           "actual": 6.0,
-          "contribution": 1.67,
-          "expected": 20.48,
+          "contribution": 1.56,
+          "expected": 20.13,
           "reason": null,
           "residual": 0.03,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 438,
+          "units": 439,
           "weight": 5.0
         },
         "escaped_regressions": {
           "actual": 50.75,
-          "contribution": -3.54,
-          "expected": 35.74,
+          "contribution": -3.42,
+          "expected": 35.8,
           "reason": null,
           "residual": -0.03,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 438,
+          "units": 439,
           "weight": 30.0
         },
         "final_recoveries": {
@@ -993,7 +1004,7 @@
         },
         "review_outcome": {
           "actual": 7.5,
-          "contribution": -3.71,
+          "contribution": -3.68,
           "expected": 12.78,
           "reason": null,
           "residual": -0.16,
@@ -1017,56 +1028,61 @@
       "model": "muse-spark-1.3-contributor",
       "rank": 3,
       "rank_label": "3=",
-      "raw_score": 94.42,
-      "score": 95.16,
+      "raw_score": 94.46,
+      "score": 95.18,
       "tasks_by_tier": {
-        "low": 387,
+        "low": 388,
         "medium": 51
       },
       "tiers": [
         {
-          "cost_coverage": 0.0078,
+          "cost_coverage": 0.0077,
           "cost_per_task": 0.1096,
           "cost_unknown": true,
-          "score": 97.27,
-          "tasks": 387,
+          "score": 97.24,
+          "tasks": 388,
           "tier": "low"
         },
         {
           "cost_coverage": 0.0196,
           "cost_per_task": 0.0504,
           "cost_unknown": true,
-          "score": 75.73,
+          "score": 76.23,
           "tasks": 51,
           "tier": "medium"
         }
       ],
-      "units": 438,
+      "units": 439,
       "weights_measured": 55.0
     },
     {
       "band_size": 1,
       "cost": {
         "cost_unknown": true,
-        "coverage": 0.7798,
-        "expected_per_task": 1.4478,
-        "per_task": 0.678,
-        "ratio": 0.4683
+        "coverage": 0.7808,
+        "expected_per_task": 1.44,
+        "per_task": 0.676,
+        "ratio": 0.4695
       },
       "crews": [
         {
           "crew": "terra",
+          "effort_estimate": "high",
           "tasks": 218
+        },
+        {
+          "crew": "terra@high",
+          "tasks": 1
         }
       ],
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 82.12,
-        "p90": 103.49
+        "p10": 82.64,
+        "p90": 103.72
       },
-      "landed_rate": 0.9312,
-      "landed_tasks": 203.0,
+      "landed_rate": 0.9315,
+      "landed_tasks": 204.0,
       "measures": {
         "ci_failures": {
           "actual": null,
@@ -1081,24 +1097,24 @@
         },
         "crew_rework": {
           "actual": 29.0,
-          "contribution": -3.02,
-          "expected": 15.98,
+          "contribution": -2.87,
+          "expected": 16.01,
           "reason": null,
           "residual": -0.06,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 218,
+          "units": 219,
           "weight": 5.0
         },
         "escaped_regressions": {
           "actual": 32.25,
-          "contribution": 8.96,
-          "expected": 51.19,
+          "contribution": 8.76,
+          "expected": 51.36,
           "reason": null,
           "residual": 0.09,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 218,
+          "units": 219,
           "weight": 30.0
         },
         "final_recoveries": {
@@ -1114,7 +1130,7 @@
         },
         "review_outcome": {
           "actual": -1.0,
-          "contribution": -21.2,
+          "contribution": -21.05,
           "expected": 0.83,
           "reason": null,
           "residual": -0.91,
@@ -1138,11 +1154,11 @@
       "model": "gpt-6.1-terra",
       "rank": 4,
       "rank_label": "4",
-      "raw_score": 84.75,
-      "score": 87.29,
+      "raw_score": 84.83,
+      "score": 87.35,
       "tasks_by_tier": {
         "hard": 8,
-        "low": 87,
+        "low": 88,
         "medium": 123
       },
       "tiers": [
@@ -1150,28 +1166,28 @@
           "cost_coverage": 0.5,
           "cost_per_task": 0.7645,
           "cost_unknown": true,
-          "score": 76.83,
+          "score": 78.86,
           "tasks": 8,
           "tier": "hard"
         },
         {
-          "cost_coverage": 0.8276,
-          "cost_per_task": 0.222,
+          "cost_coverage": 0.8295,
+          "cost_per_task": 0.2236,
           "cost_unknown": false,
-          "score": 109.23,
-          "tasks": 87,
+          "score": 108.9,
+          "tasks": 88,
           "tier": "low"
         },
         {
           "cost_coverage": 0.7642,
           "cost_per_task": 1.0236,
           "cost_unknown": true,
-          "score": 86.15,
+          "score": 86.25,
           "tasks": 123,
           "tier": "medium"
         }
       ],
-      "units": 218,
+      "units": 219,
       "weights_measured": 55.0
     },
     {
@@ -1179,28 +1195,29 @@
       "cost": {
         "cost_unknown": true,
         "coverage": 0.0055,
-        "expected_per_task": 2.2133,
+        "expected_per_task": 2.2126,
         "per_task": 0.2099,
         "ratio": 0.0948
       },
       "crews": [
         {
           "crew": "muse-wonder",
+          "effort_estimate": "high",
           "tasks": 359
         },
         {
           "crew": "muse-wonder@high",
-          "tasks": 2
+          "tasks": 4
         }
       ],
       "eligible": true,
       "ineligible_reason": null,
       "interval": {
-        "p10": 58.03,
-        "p90": 80.8
+        "p10": 59.1,
+        "p90": 80.9
       },
-      "landed_rate": 0.9778,
-      "landed_tasks": 353.0,
+      "landed_rate": 0.978,
+      "landed_tasks": 355.0,
       "measures": {
         "ci_failures": {
           "actual": null,
@@ -1215,24 +1232,24 @@
         },
         "crew_rework": {
           "actual": 10.0,
-          "contribution": 3.3,
-          "expected": 33.62,
+          "contribution": 3.21,
+          "expected": 34.08,
           "reason": null,
           "residual": 0.07,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 361,
+          "units": 363,
           "weight": 5.0
         },
         "escaped_regressions": {
-          "actual": 233.0,
-          "contribution": -37.07,
-          "expected": 103.3,
+          "actual": 234.0,
+          "contribution": -35.88,
+          "expected": 104.21,
           "reason": null,
           "residual": -0.36,
           "status": "measured",
           "unit": "implemented tasks",
-          "units": 361,
+          "units": 363,
           "weight": 30.0
         },
         "final_recoveries": {
@@ -1272,19 +1289,19 @@
       "model": "muse-wonder-1.0",
       "rank": 5,
       "rank_label": "5",
-      "raw_score": 66.37,
-      "score": 69.59,
+      "raw_score": 67.47,
+      "score": 70.57,
       "tasks_by_tier": {
         "hard": 3,
         "low": 8,
-        "medium": 350
+        "medium": 352
       },
       "tiers": [
         {
           "cost_coverage": 0.0,
           "cost_per_task": null,
           "cost_unknown": true,
-          "score": 80.17,
+          "score": 80.63,
           "tasks": 3,
           "tier": "hard"
         },
@@ -1292,7 +1309,7 @@
           "cost_coverage": 0.0,
           "cost_per_task": null,
           "cost_unknown": true,
-          "score": 109.77,
+          "score": 109.37,
           "tasks": 8,
           "tier": "low"
         },
@@ -1300,12 +1317,12 @@
           "cost_coverage": 0.0057,
           "cost_per_task": 0.2099,
           "cost_unknown": true,
-          "score": 65.27,
-          "tasks": 350,
+          "score": 66.42,
+          "tasks": 352,
           "tier": "medium"
         }
       ],
-      "units": 361,
+      "units": 363,
       "weights_measured": 55.0
     },
     {
@@ -1313,13 +1330,14 @@
       "cost": {
         "cost_unknown": true,
         "coverage": 0.3333,
-        "expected_per_task": 5.4472,
+        "expected_per_task": 5.4354,
         "per_task": 2.3539,
-        "ratio": 0.4321
+        "ratio": 0.4331
       },
       "crews": [
         {
           "crew": "astra",
+          "effort_estimate": "medium",
           "tasks": 3
         }
       ],
@@ -1342,7 +1360,7 @@
         },
         "crew_rework": {
           "actual": 0.0,
-          "contribution": 5.46,
+          "contribution": 5.18,
           "expected": 0.32,
           "reason": null,
           "residual": 0.11,
@@ -1353,10 +1371,10 @@
         },
         "escaped_regressions": {
           "actual": 0.0,
-          "contribution": 85.03,
-          "expected": 2.47,
+          "contribution": 83.26,
+          "expected": 2.49,
           "reason": null,
-          "residual": 0.82,
+          "residual": 0.83,
           "status": "measured",
           "unit": "implemented tasks",
           "units": 3,
@@ -1375,7 +1393,7 @@
         },
         "review_outcome": {
           "actual": -0.5,
-          "contribution": -11.47,
+          "contribution": -11.39,
           "expected": -0.01,
           "reason": null,
           "residual": -0.49,
@@ -1399,8 +1417,8 @@
       "model": "gpt-6-astra",
       "rank": null,
       "rank_label": null,
-      "raw_score": 179.02,
-      "score": 111.44,
+      "raw_score": 177.04,
+      "score": 111.17,
       "tasks_by_tier": {
         "hard": 3
       },
@@ -1409,7 +1427,7 @@
           "cost_coverage": 0.3333,
           "cost_per_task": 2.3539,
           "cost_unknown": true,
-          "score": 179.02,
+          "score": 177.04,
           "tasks": 3,
           "tier": "hard"
         }
@@ -1424,11 +1442,12 @@
         "coverage": 1.0,
         "expected_per_task": 0.2262,
         "per_task": 0.1806,
-        "ratio": 0.7985
+        "ratio": 0.7986
       },
       "crews": [
         {
           "crew": "luna",
+          "effort_estimate": "xhigh",
           "tasks": 1
         }
       ],
@@ -1451,7 +1470,7 @@
         },
         "crew_rework": {
           "actual": 2.0,
-          "contribution": -155.45,
+          "contribution": -149.21,
           "expected": 0.04,
           "reason": null,
           "residual": -1.96,
@@ -1462,7 +1481,7 @@
         },
         "escaped_regressions": {
           "actual": 0.0,
-          "contribution": 1.2,
+          "contribution": 1.17,
           "expected": 0.01,
           "reason": null,
           "residual": 0.01,
@@ -1508,8 +1527,8 @@
       "model": "gpt-6.1-luna",
       "rank": null,
       "rank_label": null,
-      "raw_score": -54.25,
-      "score": 99.55,
+      "raw_score": -48.04,
+      "score": 99.66,
       "tasks_by_tier": {
         "low": 1
       },
@@ -1518,7 +1537,7 @@
           "cost_coverage": 1.0,
           "cost_per_task": 0.1806,
           "cost_unknown": false,
-          "score": -54.25,
+          "score": -48.04,
           "tasks": 1,
           "tier": "low"
         }
@@ -1538,6 +1557,7 @@
       "crews": [
         {
           "crew": "argon",
+          "effort_estimate": null,
           "tasks": 7
         }
       ],
@@ -1560,7 +1580,7 @@
         },
         "crew_rework": {
           "actual": 3.0,
-          "contribution": -16.58,
+          "contribution": -15.91,
           "expected": 0.7,
           "reason": null,
           "residual": -0.33,
@@ -1571,8 +1591,8 @@
         },
         "escaped_regressions": {
           "actual": 5.0,
-          "contribution": -29.78,
-          "expected": 2.98,
+          "contribution": -28.87,
+          "expected": 2.99,
           "reason": null,
           "residual": -0.29,
           "status": "measured",
@@ -1593,7 +1613,7 @@
         },
         "review_outcome": {
           "actual": 1.0,
-          "contribution": 23.32,
+          "contribution": 23.16,
           "expected": -0.01,
           "reason": null,
           "residual": 1.01,
@@ -1617,8 +1637,8 @@
       "model": "gemini-4-argon-high",
       "rank": null,
       "rank_label": null,
-      "raw_score": 76.97,
-      "score": 99.44,
+      "raw_score": 78.38,
+      "score": 99.63,
       "tasks_by_tier": {
         "hard": 3,
         "medium": 4
@@ -1628,7 +1648,7 @@
           "cost_coverage": 0.0,
           "cost_per_task": null,
           "cost_unknown": true,
-          "score": 165.67,
+          "score": 164.55,
           "tasks": 3,
           "tier": "hard"
         },
@@ -1636,7 +1656,7 @@
           "cost_coverage": 0.0,
           "cost_per_task": null,
           "cost_unknown": true,
-          "score": -77.39,
+          "score": -71.92,
           "tasks": 4,
           "tier": "medium"
         }
@@ -1651,11 +1671,12 @@
         "coverage": 0.0127,
         "expected_per_task": 0.2262,
         "per_task": 0.1254,
-        "ratio": 0.5543
+        "ratio": 0.5544
       },
       "crews": [
         {
           "crew": "gemini-flash",
+          "effort_estimate": null,
           "tasks": 79
         }
       ],
@@ -1678,8 +1699,8 @@
         },
         "crew_rework": {
           "actual": 1.0,
-          "contribution": 1.41,
-          "expected": 3.2,
+          "contribution": 1.29,
+          "expected": 3.11,
           "reason": null,
           "residual": 0.03,
           "status": "measured",
@@ -1689,8 +1710,8 @@
         },
         "escaped_regressions": {
           "actual": 16.0,
-          "contribution": -16.32,
-          "expected": 3.51,
+          "contribution": -15.88,
+          "expected": 3.5,
           "reason": null,
           "residual": -0.16,
           "status": "measured",
@@ -1711,7 +1732,7 @@
         },
         "review_outcome": {
           "actual": 0.5,
-          "contribution": -5.0,
+          "contribution": -4.97,
           "expected": 1.15,
           "reason": null,
           "residual": -0.22,
@@ -1735,8 +1756,8 @@
       "model": "gemini-3.8-flash-high",
       "rank": null,
       "rank_label": null,
-      "raw_score": 80.09,
-      "score": 86.86,
+      "raw_score": 80.45,
+      "score": 87.09,
       "tasks_by_tier": {
         "low": 79
       },
@@ -1745,7 +1766,7 @@
           "cost_coverage": 0.0127,
           "cost_per_task": 0.1254,
           "cost_unknown": true,
-          "score": 80.09,
+          "score": 80.45,
           "tasks": 79,
           "tier": "low"
         }
@@ -1765,6 +1786,7 @@
       "crews": [
         {
           "crew": "muse-wonder-full",
+          "effort_estimate": "high",
           "tasks": 50
         }
       ],
@@ -1787,8 +1809,8 @@
         },
         "crew_rework": {
           "actual": 0.0,
-          "contribution": 5.43,
-          "expected": 5.38,
+          "contribution": 5.16,
+          "expected": 5.32,
           "reason": null,
           "residual": 0.11,
           "status": "measured",
@@ -1798,8 +1820,8 @@
         },
         "escaped_regressions": {
           "actual": 132.0,
-          "contribution": -194.39,
-          "expected": 37.81,
+          "contribution": -188.35,
+          "expected": 38.16,
           "reason": null,
           "residual": -1.88,
           "status": "measured",
@@ -1820,7 +1842,7 @@
         },
         "review_outcome": {
           "actual": 0.5,
-          "contribution": 1.41,
+          "contribution": 1.4,
           "expected": -0.05,
           "reason": null,
           "residual": 0.06,
@@ -1844,8 +1866,8 @@
       "model": "muse-wonder-full-1.0",
       "rank": null,
       "rank_label": null,
-      "raw_score": -87.54,
-      "score": -15.46,
+      "raw_score": -81.79,
+      "score": -11.9,
       "tasks_by_tier": {
         "hard": 48,
         "medium": 2
@@ -1855,7 +1877,7 @@
           "cost_coverage": 0.0,
           "cost_per_task": null,
           "cost_unknown": true,
-          "score": -92.85,
+          "score": -86.93,
           "tasks": 48,
           "tier": "hard"
         },
@@ -1863,7 +1885,7 @@
           "cost_coverage": 0.0,
           "cost_per_task": null,
           "cost_unknown": true,
-          "score": 3.1,
+          "score": 5.83,
           "tasks": 2,
           "tier": "medium"
         }
@@ -1891,12 +1913,12 @@
   "settle_lag": "14d",
   "source": "GET /api/agents/rank?window=30d&execution=managed&live=true",
   "status": "ok",
-  "tasks_scanned": 12404,
+  "tasks_scanned": 12434,
   "unattributed_tasks": 391,
   "weights_total": 80.0,
   "window": {
     "key": "30d",
-    "since": "2026-10-10T07:48:41Z",
-    "until": "2026-11-09T07:48:41Z"
+    "since": "2026-10-10T08:30:00Z",
+    "until": "2026-11-09T08:30:00Z"
   }
 }
