@@ -2,6 +2,7 @@
 node_modules/
 public/notes/
 public/analytics/
+public/ranking/
 
 # Orbit per-user state — not a repository artifact.
 .orbit/

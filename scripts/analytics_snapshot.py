@@ -98,6 +98,21 @@ A relative path with no extension that descends fewer than two
 directories (``src/Makefile``) is left as it is by design. Public API source
 labels (``GET /api/…``) are not file paths and are preserved.
 
+Rank (``rank.json``): ``GET /api/agents/rank?window=30d&execution=managed``
+of the named workspace, the settled implementer-model rank board (the 30
+days ending the settle lag, 14 days, before the snapshot; ``live`` and
+``provisional`` must both be false). Copied: the window, settle lag,
+qualification rules, measures (label, weight, status and sanitized
+definition), the not-scored count by reason and, per model, its band
+(rank, ``rank_label`` and band size), score, raw score, p10-p90 interval,
+cost per task with its ratio and coverage, tasks by tier, landed rate,
+per-measure contributions, crews with task counts and per-tier scores.
+Rows whose model is ``model unknown`` and crews that are attribution gaps
+are dropped and counted in ``dropped.rank``. Paired probabilities,
+z-scores, per-effort usage splits and the unattributed crew list are not
+copied. Snapshots written before this key existed have no ``rank.json``;
+their bundles replay unchanged.
+
 ``meta.json`` records ``schema_version``, ``generated_at``, ``orbit_version``,
 the workspace name, each board's UTC window, and ``dropped``.
 """
@@ -120,7 +135,24 @@ WINDOW = "30d"
 SETTLED_UNTIL = "30d"
 MIN_SUPPORT_DEFAULT = 10
 MIN_CONFIDENT_SAMPLE = 20
-PUBLIC_KEYS = ("scorecards", "metrics", "reliability", "experiments", "meta")
+PUBLIC_KEYS = ("scorecards", "metrics", "reliability", "experiments", "rank", "meta")
+# Snapshots written before the rank board existed have no rank.json; a replay
+# of such a bundle stays valid and the site renders /ranking/ without Models.
+OPTIONAL_KEYS = ("rank",)
+RANK_EXECUTION = "managed"
+RANK_SOURCE = "GET /api/agents/rank?window=30d&execution=managed"
+RANK_MEASURE_FIELDS = ("weight", "units", "actual", "expected", "residual", "contribution")
+RANK_RULES = (
+    "shrinkage_k",
+    "min_tasks",
+    "min_tiers",
+    "min_tier_tasks",
+    "min_eligible_models",
+    "band_probability",
+    "min_cost_coverage",
+    "draws",
+)
+RANK_TIERS = ("low", "medium", "hard", "xhard", "unassessed")
 ROLES = ("implementers", "reviewers", "pilots")
 GAP_CREWS = {"crew unknown", "crew unavailable", "unknown"}
 GAP_MODELS = {"model unknown"}
@@ -237,7 +269,7 @@ TIMESTAMP = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z$")
 TASK_ID = re.compile(r"ORB-[0-9]+")
 RUN_ID = re.compile(r"jrun-[0-9A-Za-z-]+")
 _PATH_SEGMENT = r"[A-Za-z0-9._~%+@\-]+"
-_API_ROUTE = r"api/(?:diagnostics|metrics|tasks)(?:/|\?|#|$)"
+_API_ROUTE = r"api/(?:diagnostics|metrics|tasks|agents)(?:/|\?|#|$)"
 # Preserve closing-tag syntax, including single-segment paths like
 # "</workspace>"; multi-segment paths after "<" are not exempt.
 ABS_PATH = re.compile(
@@ -1557,6 +1589,200 @@ def project_experiments(pairs, dropped, patterns, redactions):
     return projected
 
 
+def rank_text(value, patterns, redactions):
+    """Free text from the rank board, sanitized; anything not a string is dropped."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return sanitize(" ".join(value.split()), patterns, redactions)
+
+
+def project_rank_measure(measure, patterns, redactions):
+    if not isinstance(measure, dict):
+        return None
+    key, label = measure.get("key"), measure.get("label")
+    if not isinstance(key, str) or not SAFE_KEY.fullmatch(key):
+        return None
+    if not isinstance(label, str) or not SAFE_LABEL.fullmatch(label):
+        return None
+    item = {"key": key, "label": label}
+    for field in ("weight", "sign"):
+        item[field] = measure.get(field) if is_number(measure.get(field)) else None
+    for field in ("pillar", "status"):
+        value = measure.get(field)
+        item[field] = value if isinstance(value, str) and SAFE_KEY.fullmatch(value) else None
+    units = measure.get("units")
+    item["units"] = units if isinstance(units, str) and SAFE_LABEL.fullmatch(units) else None
+    item["definition"] = rank_text(measure.get("definition"), patterns, redactions)
+    item["reason"] = rank_text(measure.get("reason"), patterns, redactions)
+    return item
+
+
+def project_rank_row_measures(measures, keys, patterns, redactions):
+    out = {}
+    if not isinstance(measures, dict):
+        return out
+    for key in keys:
+        entry = measures.get(key)
+        if not isinstance(entry, dict):
+            continue
+        item = {field: entry.get(field) if is_number(entry.get(field)) else None for field in RANK_MEASURE_FIELDS}
+        status = entry.get("status")
+        item["status"] = status if isinstance(status, str) and SAFE_KEY.fullmatch(status) else None
+        unit = entry.get("unit")
+        item["unit"] = unit if isinstance(unit, str) and SAFE_LABEL.fullmatch(unit) else None
+        item["reason"] = rank_text(entry.get("reason"), patterns, redactions)
+        out[key] = item
+    return out
+
+
+def project_rank_row(row, measure_keys, dropped, patterns, redactions):
+    if not isinstance(row, dict):
+        return None
+    model = row.get("model")
+    if is_gap_model(model):
+        dropped["rank"] += 1
+        return None
+    if not isinstance(model, str) or not SAFE_TOKEN.fullmatch(model):
+        return None
+    units = row.get("units")
+    if not is_number(units):
+        return None
+    rank = row.get("rank")
+    eligible = row.get("eligible") is True
+    if not eligible or isinstance(rank, bool) or not isinstance(rank, int):
+        rank = None
+    label = row.get("rank_label")
+    band = row.get("band_size")
+    projected = {
+        "model": model,
+        "eligible": eligible,
+        "rank": rank,
+        "rank_label": label if rank is not None and isinstance(label, str) and re.fullmatch(r"[0-9]{1,3}=?", label) else None,
+        "band_size": band if rank is not None and isinstance(band, int) and not isinstance(band, bool) else None,
+        "ineligible_reason": None if eligible else rank_text(row.get("ineligible_reason"), patterns, redactions),
+        "units": units,
+        "tasks_by_tier": {
+            tier: count for tier, count in (numeric_map(row.get("tasks_by_tier")) or {}).items()
+            if tier in RANK_TIERS and is_number(count)
+        },
+        "score": row.get("score") if is_number(row.get("score")) else None,
+        "raw_score": row.get("raw_score") if is_number(row.get("raw_score")) else None,
+        "weights_measured": row.get("weights_measured") if is_number(row.get("weights_measured")) else None,
+        "landed_tasks": row.get("landed_tasks") if is_number(row.get("landed_tasks")) else None,
+        "landed_rate": row.get("landed_rate") if is_number(row.get("landed_rate")) else None,
+    }
+    interval = row.get("interval")
+    if isinstance(interval, dict) and is_number(interval.get("p10")) and is_number(interval.get("p90")):
+        projected["interval"] = {"p10": interval["p10"], "p90": interval["p90"]}
+    else:
+        projected["interval"] = None
+    cost = row.get("cost")
+    if isinstance(cost, dict):
+        projected["cost"] = {
+            "ratio": cost.get("ratio") if is_number(cost.get("ratio")) else None,
+            "per_task": cost.get("per_task") if is_number(cost.get("per_task")) else None,
+            "expected_per_task": cost.get("expected_per_task") if is_number(cost.get("expected_per_task")) else None,
+            "coverage": cost.get("coverage") if is_number(cost.get("coverage")) else None,
+            "cost_unknown": cost.get("cost_unknown") is True,
+        }
+    else:
+        projected["cost"] = None
+    projected["measures"] = project_rank_row_measures(row.get("measures"), measure_keys, patterns, redactions)
+    crews = []
+    for entry in row.get("crews") or []:
+        if not isinstance(entry, dict):
+            continue
+        crew, tasks = entry.get("crew"), entry.get("tasks")
+        if is_gap_crew(crew):
+            dropped["rank"] += 1
+            continue
+        if isinstance(crew, str) and SAFE_TOKEN.fullmatch(crew) and is_number(tasks):
+            crews.append({"crew": crew, "tasks": tasks})
+    projected["crews"] = crews
+    tiers = []
+    for entry in row.get("tiers") or []:
+        if not isinstance(entry, dict) or entry.get("tier") not in RANK_TIERS:
+            continue
+        tiers.append({
+            "tier": entry["tier"],
+            "tasks": entry.get("tasks") if is_number(entry.get("tasks")) else None,
+            "score": entry.get("score") if is_number(entry.get("score")) else None,
+            "cost_per_task": entry.get("cost_per_task") if is_number(entry.get("cost_per_task")) else None,
+            "cost_coverage": entry.get("cost_coverage") if is_number(entry.get("cost_coverage")) else None,
+            "cost_unknown": entry.get("cost_unknown") is True,
+        })
+    projected["tiers"] = tiers
+    return projected
+
+
+def project_rank(payload, dropped, patterns, redactions):
+    """The settled 30d managed implementer-model rank board, public fields only.
+
+    Copied: the window, settle lag and execution scope, the qualification
+    rules, each measure's label, weight, status and sanitized definition, the
+    not-scored count by reason, and per model its band, score, p10-p90
+    interval, cost per task and ratio, tier mix, landed rate, per-measure
+    contributions, crews (with their task counts) and per-tier scores. Not
+    copied: paired probabilities, z-scores, per-effort usage splits, the
+    unattributed crew list and per-row execution splits.
+    """
+    if not isinstance(payload, dict):
+        raise SystemExit("rank board did not return an object")
+    if payload.get("live") is not False or payload.get("provisional") is not False:
+        raise SystemExit("rank board must be the settled board (live and provisional false)")
+    if payload.get("execution") != RANK_EXECUTION:
+        raise SystemExit("rank board must count managed tasks")
+    if payload.get("window") != WINDOW:
+        raise SystemExit(f"rank board must be a {WINDOW} window")
+    measures = []
+    for measure in payload.get("measures") or []:
+        projected = project_rank_measure(measure, patterns, redactions)
+        if projected is not None:
+            measures.append(projected)
+    keys = [measure["key"] for measure in measures]
+    rows = []
+    for row in payload.get("rows") or []:
+        projected = project_rank_row(row, keys, dropped, patterns, redactions)
+        if projected is not None:
+            rows.append(projected)
+    rules_in = payload.get("rules") if isinstance(payload.get("rules"), dict) else {}
+    rules = {key: rules_in.get(key) if is_number(rules_in.get(key)) else None for key in RANK_RULES}
+    percentiles = rules_in.get("interval_percentiles")
+    rules["interval_percentiles"] = (
+        list(percentiles) if isinstance(percentiles, list) and len(percentiles) == 2 and all(is_number(v) for v in percentiles) else None
+    )
+    not_scored = payload.get("not_scored") if isinstance(payload.get("not_scored"), dict) else {}
+    unattributed = payload.get("unattributed") if isinstance(payload.get("unattributed"), dict) else {}
+    settle_lag = payload.get("settle_lag")
+    status = payload.get("status")
+    scales = payload.get("scales_source")
+    return {
+        "computed_at": payload.get("computed_at") if isinstance(payload.get("computed_at"), str) else None,
+        "eligible_models": whole(payload.get("eligible_models")),
+        "execution": RANK_EXECUTION,
+        "live": False,
+        "measures": measures,
+        "not_scored": {
+            "count": whole(not_scored.get("count")),
+            "reasons": numeric_map(not_scored.get("reasons")) or {},
+        },
+        "provisional": False,
+        "qualified": payload.get("qualified") is True,
+        "role": "implementers",
+        "rows": rows,
+        "rules": rules,
+        "scales_source": scales if isinstance(scales, str) and SAFE_KEY.fullmatch(scales) else None,
+        "schema_version": SCHEMA_VERSION,
+        "settle_lag": settle_lag if isinstance(settle_lag, str) and re.fullmatch(r"[0-9]{1,4}[smhdw]", settle_lag) else None,
+        "source": RANK_SOURCE,
+        "status": status if isinstance(status, str) and SAFE_KEY.fullmatch(status) else None,
+        "tasks_scanned": whole(payload.get("tasks_scanned")),
+        "unattributed_tasks": whole(unattributed.get("tasks")),
+        "weights_total": payload.get("weights_total") if is_number(payload.get("weights_total")) else None,
+        "window": window_of(payload),
+    }
+
+
 def empty_dropped():
     return {
         "experiments": 0,
@@ -1568,6 +1794,7 @@ def empty_dropped():
         "metrics_friction": 0,
         "metrics_tokens": 0,
         "pilots": 0,
+        "rank": 0,
         "reliability": 0,
         "reviewers_provisional": 0,
         "reviewers_settled": 0,
@@ -1609,6 +1836,8 @@ def assemble_meta(docs_without_meta, generated_at, version, workspace, until_sup
         "reliability": docs_without_meta["reliability"]["window"],
         "reviewers_provisional": span(scorecards["reviewers"]["provisional"]),
     }
+    if isinstance(docs_without_meta.get("rank"), dict):
+        windows["rank"] = span(docs_without_meta["rank"])
     recorded = dict(dropped)
     if until_supported:
         windows["reviewers_settled"] = span(scorecards["reviewers"]["settled"])
@@ -1670,6 +1899,8 @@ def collect(workspace, dashboard, generated_at, version):
     outcome_mix = http_json(dashboard, "/api/tasks/completion-by-complexity", scope)
     print("reliability", file=sys.stderr)
     reliability = http_json(dashboard, "/api/metrics/reliability", {"window": WINDOW})
+    print("rank", file=sys.stderr)
+    rank = http_json(dashboard, "/api/agents/rank", {"window": WINDOW, "execution": RANK_EXECUTION, **scope})
     print("experiments", file=sys.stderr)
     listed = orbit_json(["experiment", "list"], workspace)
     experiments = listed.get("experiments") if isinstance(listed, dict) else None
@@ -1698,6 +1929,7 @@ def collect(workspace, dashboard, generated_at, version):
         friction=friction,
         outcome_mix=outcome_mix,
         reliability=reliability,
+        rank=rank,
         experiments=readouts,
         generated_at=generated_at,
         version=version,
@@ -1706,7 +1938,7 @@ def collect(workspace, dashboard, generated_at, version):
 
 
 def project_all(cards, until_supported, durations, completions, defects, tokens, turns, diff,
-                friction, outcome_mix, reliability, experiments, generated_at, version, workspace):
+                friction, outcome_mix, reliability, experiments, generated_at, version, workspace, rank=None):
     dropped = empty_dropped()
     patterns = forbidden_patterns(host_names())
     redactions = [0]
@@ -1739,6 +1971,8 @@ def project_all(cards, until_supported, durations, completions, defects, tokens,
         "reliability": reliability_doc,
         "scorecards": scorecards,
     }
+    if rank is not None:
+        docs["rank"] = project_rank(rank, dropped, patterns, redactions)
     docs["meta"] = assemble_meta(docs, generated_at, version, workspace, until_supported, dropped, redactions[0])
     return docs
 
@@ -1759,6 +1993,19 @@ def guard(docs, hosts=None):
             raise SystemExit("a settled reviewer board is required when --until is supported")
     elif settled is not None:
         raise SystemExit("settled reviewer board must be absent when --until is unsupported")
+    rank = docs.get("rank")
+    if rank is not None:
+        if not isinstance(rank, dict):
+            raise SystemExit("rank must be an object")
+        if rank.get("live") is not False or rank.get("provisional") is not False:
+            raise SystemExit("the rank board must be settled (live and provisional false)")
+        if rank.get("execution") != RANK_EXECUTION:
+            raise SystemExit("the rank board must count managed tasks")
+        if (rank.get("window") or {}).get("key") != WINDOW:
+            raise SystemExit(f"the rank board must be a {WINDOW} window")
+        for row in rank.get("rows") or []:
+            if not isinstance(row, dict) or not isinstance(row.get("model"), str) or not SAFE_TOKEN.fullmatch(row["model"]):
+                raise SystemExit("rank rows must name a model")
     for experiment in docs["experiments"]["experiments"]:
         if experiment.get("status") != "concluded":
             raise SystemExit("experiments file contains an experiment that is not concluded")
@@ -1770,7 +2017,7 @@ def write_snapshot(out, docs):
     out.mkdir(parents=True, exist_ok=True)
     raw = out / "raw"
     raw.mkdir(exist_ok=True)
-    text = {key: dump(docs[key]) for key in PUBLIC_KEYS}
+    text = {key: dump(docs[key]) for key in PUBLIC_KEYS if key in docs}
     bundle_text = dump(docs)
     reloaded = json.loads(bundle_text)
     for key, body in text.items():
@@ -1796,8 +2043,9 @@ def load_bundle(source):
         docs = json.loads(path.read_text())
     except json.JSONDecodeError as exc:
         raise SystemExit(f"{path} is not JSON") from exc
-    if not isinstance(docs, dict) or set(docs) != set(PUBLIC_KEYS):
-        raise SystemExit("bundle must contain scorecards, metrics, reliability, experiments and meta")
+    required = set(PUBLIC_KEYS) - set(OPTIONAL_KEYS)
+    if not isinstance(docs, dict) or not required <= set(docs) or not set(docs) <= set(PUBLIC_KEYS):
+        raise SystemExit("bundle must contain scorecards, metrics, reliability, experiments and meta (rank is optional)")
     return docs
 
 
@@ -2060,7 +2308,45 @@ def self_test():
             "experiments": [experiment],
         },
     }
+    docs["rank"] = project_rank({
+        "window": "30d", "since": "2026-09-25T00:00:00Z", "until": "2026-10-25T00:00:00Z",
+        "settle_lag": "14d", "execution": "managed", "live": False, "provisional": False, "status": "ok",
+        "measures": [{"key": "escaped_regressions", "label": "Escaped regressions", "weight": 30.0, "sign": -1.0,
+                      "pillar": "quality", "status": "measured", "units": "implemented tasks",
+                      "definition": "See ORB-1 at /home/daniel/rank.rs", "reason": None}],
+        "weights_total": 30.0,
+        "rules": {"shrinkage_k": 30.0, "min_tasks": 30, "min_tiers": 2, "min_tier_tasks": 5, "interval_percentiles": [10, 90]},
+        "unattributed": {"tasks": 3, "crews": [{"crew": "secret", "tasks": 3}]},
+        "paired_probabilities": {"gpt-a": {"gpt-b": 0.9}},
+        "rows": [
+            {"model": "gpt-a", "rank": 1, "rank_label": "1", "band_size": 1, "eligible": True, "units": 40,
+             "tasks_by_tier": {"low": 20, "medium": 20}, "score": 110.0, "raw_score": 112.0,
+             "interval": {"p10": 105.0, "p90": 115.0}, "z": 1.0,
+             "cost": {"ratio": 0.8, "per_task": 1.0, "expected_per_task": 1.25, "coverage": 0.9, "cost_unknown": False},
+             "measures": {"escaped_regressions": {"status": "measured", "weight": 30.0, "units": 40, "unit": "implemented tasks",
+                                                  "actual": 1.0, "expected": 2.0, "residual": 0.1, "contribution": 3.0}},
+             "landed_tasks": 39.0, "landed_rate": 0.975,
+             "crews": [{"crew": "sol", "tasks": 38}, {"crew": "crew unknown", "tasks": 2}],
+             "effort_split": [{"crew": None, "model": "gpt-a", "provider_cost_usd": 1.0}],
+             "tiers": [{"tier": "low", "tasks": 20, "score": 108.0, "cost_per_task": 0.5, "cost_coverage": 1.0, "cost_unknown": False}]},
+            {"model": "model unknown", "rank": None, "eligible": False, "units": 9},
+            {"model": "gpt-thin", "rank": None, "eligible": False, "ineligible_reason": "8 implemented tasks; 30 needed",
+             "units": 8, "tasks_by_tier": {"hard": 8}, "score": 120.0, "interval": None},
+        ],
+    }, dropped, patterns, redactions)
+    assert [row["model"] for row in docs["rank"]["rows"]] == ["gpt-a", "gpt-thin"]
+    assert docs["rank"]["rows"][0]["crews"] == [{"crew": "sol", "tasks": 38}]
+    assert "paired_probabilities" not in docs["rank"] and "effort_split" not in docs["rank"]["rows"][0]
+    assert "ORB-1" not in docs["rank"]["measures"][0]["definition"]
+    assert dropped["rank"] == 2
+    try:
+        project_rank({"window": "30d", "execution": "managed", "live": True, "provisional": True}, empty_dropped(), patterns, [0])
+    except SystemExit:
+        pass
+    else:
+        raise SystemExit("project_rank accepted a live board")
     docs["meta"] = assemble_meta(docs, "2026-11-08T00:00:00Z", "0.47.0", "orbit", False, dropped, redactions[0])
+    assert docs["meta"]["windows"]["rank"]["key"] == "30d"
     assert "reviewers_settled" not in docs["meta"]["dropped"]
     assert docs["meta"]["reviewer_settled"] is False
     assert docs["scorecards"]["reviewers"]["provisional"]["provisional"] is True

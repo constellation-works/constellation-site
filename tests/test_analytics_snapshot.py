@@ -229,5 +229,88 @@ class ExperimentOmitTest(unittest.TestCase):
                     snapshot.guard(docs, HOSTS)
 
 
+def rank_payload(**overrides):
+    payload = {
+        "window": "30d", "since": "2026-09-25T00:00:00Z", "until": "2026-10-25T00:00:00Z",
+        "settle_lag": "14d", "execution": "managed", "live": False, "provisional": False, "status": "ok",
+        "measures": [{"key": "escaped_regressions", "label": "Escaped regressions", "weight": 30.0, "sign": -1.0,
+                      "pillar": "quality", "status": "measured", "units": "implemented tasks",
+                      "definition": "Escaped regressions, see /home/daniel/rank.rs", "reason": None}],
+        "weights_total": 30.0,
+        "rules": {"shrinkage_k": 30.0, "min_tasks": 30, "min_tiers": 2, "min_tier_tasks": 5},
+        "unattributed": {"tasks": 3, "crews": [{"crew": "secret-crew", "tasks": 3}]},
+        "paired_probabilities": {"gpt-a": {"gpt-b": 0.9}},
+        "rows": [
+            {"model": "gpt-a", "rank": 1, "rank_label": "1", "band_size": 1, "eligible": True, "units": 40,
+             "tasks_by_tier": {"low": 20, "medium": 20}, "score": 110.0, "raw_score": 112.0,
+             "interval": {"p10": 105.0, "p90": 115.0}, "z": 1.0,
+             "cost": {"ratio": 0.8, "per_task": 1.0, "expected_per_task": 1.25, "coverage": 0.9, "cost_unknown": False},
+             "measures": {"escaped_regressions": {"status": "measured", "weight": 30.0, "units": 40,
+                                                  "unit": "implemented tasks", "actual": 1.0, "expected": 2.0,
+                                                  "residual": 0.1, "contribution": 3.0}},
+             "landed_tasks": 39.0, "landed_rate": 0.975,
+             "crews": [{"crew": "sol", "tasks": 38}, {"crew": "crew unknown", "tasks": 2}],
+             "effort_split": [{"crew": None, "model": "gpt-a", "provider_cost_usd": 1.0}],
+             "tiers": [{"tier": "low", "tasks": 20, "score": 108.0, "cost_per_task": 0.5,
+                        "cost_coverage": 1.0, "cost_unknown": False}]},
+            {"model": "model unknown", "rank": None, "eligible": False, "units": 9},
+            {"model": "gpt-thin", "rank": None, "eligible": False, "ineligible_reason": "8 implemented tasks; 30 needed",
+             "units": 8, "tasks_by_tier": {"hard": 8}, "score": 120.0, "interval": None},
+        ],
+    }
+    payload.update(overrides)
+    return payload
+
+
+class RankProjectionTest(unittest.TestCase):
+    def project(self, payload):
+        dropped = snapshot.empty_dropped()
+        projected = snapshot.project_rank(payload, dropped, snapshot.forbidden_patterns(HOSTS), [0])
+        return projected, dropped
+
+    def test_projection_keeps_public_fields_and_drops_gaps(self):
+        rank, dropped = self.project(rank_payload())
+        self.assertEqual([row["model"] for row in rank["rows"]], ["gpt-a", "gpt-thin"])
+        self.assertEqual(rank["rows"][0]["crews"], [{"crew": "sol", "tasks": 38}])
+        self.assertEqual(dropped["rank"], 2)
+        self.assertEqual(rank["source"], snapshot.RANK_SOURCE)
+        self.assertEqual(rank["window"]["key"], "30d")
+        self.assertFalse(rank["live"])
+        self.assertFalse(rank["provisional"])
+        self.assertEqual(rank["execution"], "managed")
+        blob = json.dumps(rank)
+        for private in ("paired_probabilities", "effort_split", '"z"', "secret-crew", "/home/daniel"):
+            self.assertNotIn(private, blob)
+
+    def test_projection_refuses_live_unmanaged_or_other_windows(self):
+        for overrides in ({"live": True}, {"provisional": True}, {"execution": "all"}, {"window": "7d"}):
+            with self.subTest(overrides=overrides):
+                with self.assertRaises(SystemExit):
+                    self.project(rank_payload(**overrides))
+
+    def test_replay_writes_rank_only_when_the_bundle_has_it(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            bundle = root / "bundle.json"
+            docs = minimal_docs()
+            bundle.write_text(snapshot.dump(docs))
+            snapshot.replay(str(bundle), str(root / "without"))
+            self.assertFalse((root / "without" / "rank.json").exists())
+            self.assertTrue((root / "without" / "scorecards.json").exists())
+            docs["rank"], _ = self.project(rank_payload())
+            bundle.write_text(snapshot.dump(docs))
+            snapshot.replay(str(bundle), str(root / "with"))
+            written = json.loads((root / "with" / "rank.json").read_text())
+            self.assertEqual(written["rows"][0]["model"], "gpt-a")
+
+    def test_guard_rejects_a_leaked_path_in_rank(self):
+        docs = minimal_docs()
+        docs["rank"], _ = self.project(rank_payload())
+        snapshot.guard(docs, HOSTS)
+        docs["rank"]["rows"][1]["ineligible_reason"] = "see /srv/acme/customer.txt"
+        with self.assertRaises(SystemExit):
+            snapshot.guard(docs, HOSTS)
+
+
 if __name__ == "__main__":
     unittest.main()

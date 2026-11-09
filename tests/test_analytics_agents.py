@@ -1,4 +1,4 @@
-"""The public agent-scorecards page rendered from a snapshot."""
+"""The public /ranking/ page (model rank, overall index, crews by role) rendered from a snapshot."""
 
 import importlib.util
 import json
@@ -99,6 +99,58 @@ def scorecards():
     }
 
 
+def rank_measure(weight, contribution=None, reason=None):
+    measured = contribution is not None
+    return {
+        "actual": 1.0 if measured else None, "contribution": contribution, "expected": 2.0 if measured else None,
+        "reason": reason, "residual": 0.1 if measured else None, "status": "measured" if measured else "unmeasured",
+        "unit": "implemented tasks", "units": 40 if measured else 0, "weight": weight,
+    }
+
+
+def rank_row(model, rank, label, score, units, crews, eligible=True, reason=None):
+    return {
+        "band_size": 1 if eligible else None, "eligible": eligible, "ineligible_reason": reason,
+        "model": model, "rank": rank, "rank_label": label, "score": score, "raw_score": score,
+        "units": units, "interval": {"p10": score - 4, "p90": score + 4} if eligible else None,
+        "cost": {"cost_unknown": False, "coverage": 0.9, "expected_per_task": 2.0, "per_task": 1.5, "ratio": 0.75},
+        "crews": [{"crew": crew, "tasks": units} for crew in crews],
+        "landed_rate": 0.97, "landed_tasks": units * 0.97,
+        "measures": {"escaped_regressions": rank_measure(30, 4.2), "tool_call_errors": rank_measure(5, reason="not attributed yet")},
+        "tasks_by_tier": {"low": units // 2, "medium": units - units // 2},
+        "tiers": [{"tier": "low", "tasks": units // 2, "score": score, "cost_per_task": 1.2, "cost_coverage": 1.0, "cost_unknown": False},
+                  {"tier": "medium", "tasks": units - units // 2, "score": score, "cost_per_task": 1.8, "cost_coverage": 0.8, "cost_unknown": False}],
+        "weights_measured": 30.0,
+    }
+
+
+def rank_board():
+    return {
+        "computed_at": "2026-11-08T06:00:00Z", "eligible_models": 3, "execution": "managed",
+        "live": False, "provisional": False,
+        "window": window("2026-09-25T06:00:00Z", "2026-10-25T06:00:00Z"),
+        "measures": [
+            {"key": "escaped_regressions", "label": "Escaped regressions", "pillar": "quality", "reason": None,
+             "sign": -1.0, "status": "measured", "units": "implemented tasks", "weight": 30.0,
+             "definition": "Escaped regressions against the tier expectation."},
+            {"key": "tool_call_errors", "label": "Tool-call errors", "pillar": "reliability", "reason": "not attributed yet",
+             "sign": -1.0, "status": "unmeasured", "units": "tool calls", "weight": 5.0,
+             "definition": "Tool calls classed expected or denied."},
+        ],
+        "weights_total": 35.0,
+        "not_scored": {"count": 12, "reasons": {"no_cause": 12}},
+        "rules": {"shrinkage_k": 30, "min_tasks": 30, "min_tiers": 2, "min_tier_tasks": 5,
+                  "min_eligible_models": 3, "band_probability": 0.8, "draws": 1000},
+        "rows": [
+            rank_row("claude-haiku-5-5", 1, "1", 120.0, 60, ["haiku"]),
+            rank_row("claude-opus-5-5", 2, "2", 104.0, 50, ["opus"]),
+            rank_row("gpt-6-luna", 3, "3", 90.0, 40, ["luna"]),
+            rank_row("gpt-tiny", None, None, 130.0, 9, ["tiny"], eligible=False, reason="9 implemented tasks; 30 needed"),
+            rank_row("model unknown", None, None, 100.0, 50, ["gap"], eligible=False, reason="gap"),
+        ],
+    }
+
+
 def section(doc, element_id):
     marker = f'id="{element_id}"'
     start = doc.index(marker)
@@ -147,7 +199,7 @@ def workflow_job_condition(workflow, job):
     return condition.group(1)
 
 
-class AgentsPageTest(unittest.TestCase):
+class RankingPageTest(unittest.TestCase):
     def test_snapshot_picker_keeps_concise_value_beside_label(self):
         picker = build.analytics_page.snapshot_picker(
             "agents",
@@ -169,15 +221,16 @@ class AgentsPageTest(unittest.TestCase):
             data["reviewers"]["settled"]["window"]["until"],
             data["reviewers"]["provisional"]["window"]["until"],
         )
-        doc = build.render_agents_page(data, "2026-11-08")
+        doc = build.render_ranking_page(data, "2026-11-08", weekly=())
+        # The settled reviewer board keeps its own, earlier window; the eyebrow
+        # names the newest snapshot's 30-day window only.
         self.assertIn("2026-09-09T09:11:48Z", section(doc, "reviewers-settled"))
-        summary = re.search(r'<p class="summary">(.*?)</p>', doc).group(1)
-        self.assertIn("Each scorecard shows its own window.", summary)
-        self.assertNotIn("last 30 days", summary.lower())
+        eyebrow = re.search(r'<p class="eyebrow">(.*?)</p>', doc).group(1)
+        plain = re.sub(r"<[^>]+>", "", eyebrow)
+        self.assertEqual(plain, "Snapshot 2026-11-08 · last 30 days · Oct 1 – Oct 31 UTC")
+        self.assertIn('datetime="2026-10-01T00:00:00Z"', eyebrow)
         for attribute in ('name="description"', 'property="og:description"'):
-            description = re.search(rf'<meta {attribute} content="([^"]*)"', doc).group(1)
-            self.assertIn("each with its own window", description)
-            self.assertNotIn("last 30 days", description.lower())
+            self.assertRegex(doc, rf'<meta {attribute} content="Which models Orbit can trust')
 
     def test_website_workflow_routes_analytics_snapshot_changes(self):
         workflow = (ROOT / ".github" / "workflows" / "website.yml").read_text(
@@ -323,16 +376,18 @@ class AgentsPageTest(unittest.TestCase):
         directory = build.latest_analytics_dir()
         self.assertIsNotNone(directory)
         data = json.loads((directory / "scorecards.json").read_text(encoding="utf-8"))
-        doc = build.render_agents_page(data, directory.name)
-        self.assertIn(f"Snapshot {directory.name}.", doc)
+        doc = build.render_ranking_page(data, directory.name, build.load_rank(directory), weekly=())
+        self.assertIn(f'Snapshot <time datetime="{directory.name}">{directory.name}</time> · last 30 days', doc)
         self.assertIn('href="/notes/crew-rankings-method/"', doc)
-        for element_id, payload in (
-            ("implementers", data["implementers"]),
-            ("reviewers", data["reviewers"]["provisional"]),
-            ("reviewers-settled", data["reviewers"]["settled"]),
-            ("pilots", data["pilots"]),
+        boards = [
+            ("implementer-crews", data["implementers"]),
+            ("reviewers-provisional", data["reviewers"]["provisional"]),
+            ("pilot-crews", data["pilots"]),
             ("tiers", data["implementers_by_tier"]),
-        ):
+        ]
+        if data["reviewers"].get("settled"):
+            boards.append(("reviewers-settled", data["reviewers"]["settled"]))
+        for element_id, payload in boards:
             block = section(doc, element_id)
             since, until = payload["window"]["since"], payload["window"]["until"]
             self.assertIn(f'datetime="{since}"', block)
@@ -343,7 +398,6 @@ class AgentsPageTest(unittest.TestCase):
         for tier in build.TIER_ORDER:
             self.assertIn(f'id="implementers-{tier}"', doc)
         self.assertIn(">Provisional<", doc)
-        self.assertIn(">Settled<", doc)
         self.assertIn(">unranked<", doc)
         self.assertNotIn("orchestrator-only", doc)
         self.assertIn("Orchestrators are not scored on this page.", doc)
@@ -355,7 +409,7 @@ class AgentsPageTest(unittest.TestCase):
         # Progressive enhancement: tabs and toggle come from analytics.js.
         self.assertIn("/assets/analytics.js?v=", doc)
         self.assertIn("/assets/analytics.css?v=", doc)
-        self.assertIn('<nav class="group-nav" aria-label="Roles">', doc)
+        self.assertIn('<nav class="group-nav" aria-label="Ranking views">', doc)
         self.assertIn('class="board-toggle" role="group" aria-label="Review window" hidden', doc)
 
     def test_live_snapshot_heatmap_keeps_models_apart(self):
@@ -371,7 +425,7 @@ class AgentsPageTest(unittest.TestCase):
         )
         self.assertEqual(low[("luna", "gpt-6-luna")]["units"], expected)
         self.assertEqual(low[("luna", "gpt-6.1-luna")]["units"], 1)
-        doc = build.render_agents_body(data, directory.name)
+        doc = build.render_ranking_body(data, directory.name)
         tiers = section(doc, "tiers")
         self.assertIn(f"{expected:,} tasks", tiers)
         self.assertNotIn(f"{expected + 1:,} tasks", tiers)
@@ -379,7 +433,7 @@ class AgentsPageTest(unittest.TestCase):
     def test_takeaways_are_derived_from_the_tiers(self):
         directory = build.latest_analytics_dir()
         data = json.loads((directory / "scorecards.json").read_text(encoding="utf-8"))
-        doc = build.render_agents_body(data, directory.name)
+        doc = build.render_ranking_body(data, directory.name)
         cards = re.search(r'<ul class="tiles takeaways".*?</ul>', doc).group(0)
         slots, _ = build.tier_slots(data["implementers_by_tier"])
         for tier in build.TIER_ORDER:
@@ -404,8 +458,8 @@ class AgentsPageTest(unittest.TestCase):
             dict(row("sol", "gpt-sol", 50, 3, 90.0), per_100={"landed": 80.0, "rework": 9.0}),
             dict(row("tiny", "gpt-tiny", 2, None, 300.0), per_100={"landed": 100.0, "rework": 0.0}),
         ]
-        doc = build.render_agents_body(data, "2026-11-08")
-        overall = section(doc, "implementers")
+        doc = build.render_ranking_body(data, "2026-11-08")
+        overall = section(doc, "implementer-crews")
 
         def crew(name):
             start = overall.index(f'<span class="crew-name">{name}</span>')
@@ -428,8 +482,8 @@ class AgentsPageTest(unittest.TestCase):
         self.assertNotIn('class="crew-name">tiny<', overall)
 
     def test_filters_gaps_unranked_rows_and_orchestrators(self):
-        doc = build.render_agents_body(scorecards(), "2026-11-08")
-        implementers = section(doc, "implementers")
+        doc = build.render_ranking_body(scorecards(), "2026-11-08")
+        implementers = section(doc, "implementer-crews")
         self.assertIn("haiku", implementers)
         self.assertIn("per 100 implemented tasks", implementers)
         self.assertIn('data-rank="1"', implementers)
@@ -438,15 +492,15 @@ class AgentsPageTest(unittest.TestCase):
         for gap in ("crew unavailable", "model unknown", "crew unknown", "orchestrator-only", "secret-model"):
             self.assertNotIn(gap, doc)
         self.assertIn("1,387 reviews in this window are still provisional.", doc)
-        self.assertIn(">Provisional<", section(doc, "reviewers"))
+        self.assertIn(">Provisional<", section(doc, "reviewers-provisional"))
         settled = section(doc, "reviewers-settled")
         self.assertIn(">Settled<", settled)
         self.assertIn("2026-09-09T09:11:48Z", settled)
         self.assertIn("per 100 settled reviews", settled)
-        self.assertIn("per 100 assessed tasks", section(doc, "pilots"))
+        self.assertIn("per 100 assessed tasks", section(doc, "pilot-crews"))
 
     def test_tier_heatmap_sums_types_and_reranks(self):
-        doc = build.render_agents_body(scorecards(), "2026-11-08")
+        doc = build.render_ranking_body(scorecards(), "2026-11-08")
         tiers = section(doc, "tiers")
         self.assertIn('datetime="2026-10-09T09:11:25Z"', tiers)
         self.assertIn("Each tier's fleet rate is 100", tiers)
@@ -483,7 +537,7 @@ class AgentsPageTest(unittest.TestCase):
     def test_settled_board_hidden_when_absent(self):
         data = scorecards()
         data["reviewers"]["settled"] = None
-        doc = build.render_agents_body(data, "2026-11-08")
+        doc = build.render_ranking_body(data, "2026-11-08")
         self.assertNotIn("reviewers-settled", doc)
         self.assertNotIn(">Settled<", doc)
         self.assertNotIn("2026-09-09T09:11:48Z", doc)
@@ -493,7 +547,7 @@ class AgentsPageTest(unittest.TestCase):
         data = scorecards()
         data["pilots"]["window"]["key"] = "7d"
         with self.assertRaises(SystemExit):
-            build.render_agents_body(data, "2026-11-08")
+            build.render_ranking_body(data, "2026-11-08")
 
     def test_newest_snapshot_directory(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -517,8 +571,11 @@ class AgentsPageTest(unittest.TestCase):
             meta = {"windows": {"reliability": {"label": "30d", "since": "2026-10-09T00:00:00Z", "until": "2026-11-08T00:00:00Z"}}, "secret": "ORB-12345 /private/path host.internal"}
             (directory / "meta.json").write_text(json.dumps(meta), encoding="utf-8")
             document = build.render_analytics_index(directory)
-            for slug in ("agents", "metrics", "reliability", "experiments"):
+            for slug in ("metrics", "reliability", "experiments"):
                 self.assertIn(f'href="/analytics/{slug}/"', document)
+            # The agents card is now the Ranking card.
+            self.assertIn('href="/ranking/"', document)
+            self.assertNotIn('href="/analytics/agents/"', document)
             for expected in ("2026-11-08", "2026-10-09T00:00:00Z", "/notes/crew-rankings-method/"):
                 self.assertIn(expected, document)
             for secret in ("ORB-12345", "/private/path", "host.internal"):
@@ -532,6 +589,147 @@ class AgentsPageTest(unittest.TestCase):
         self.assertEqual(build.header_html("notes"), build.HEADER)
         self.assertIn('href="/analytics/" aria-current="page"', build.header_html("analytics"))
         self.assertNotIn('href="/notes/" aria-current="page"', build.header_html("analytics"))
+        ranking = build.header_html("ranking")
+        self.assertIn('href="/ranking/" aria-current="page"', ranking)
+        self.assertEqual(ranking.count('aria-current="page"'), 1)
+
+    def test_nav_reads_notes_ranking_analytics_orbit_github(self):
+        index = (ROOT / "public" / "index.html").read_text(encoding="utf-8")
+        for source in (build.HEADER, build.analytics_page.HEADER, index):
+            nav = re.search(r"<nav>(.*?)</nav>", source, re.S).group(1)
+            labels = re.findall(r"<a [^>]*>([^<]+)</a>", nav)
+            self.assertEqual(labels, ["Notes", "Ranking", "Analytics", "Orbit", "GitHub"])
+
+    def test_ranking_page_has_four_tabs_and_one_method_section(self):
+        doc = build.render_ranking_page(scorecards(), "2026-11-08", rank_board(), weekly=())
+        self.assertIn('href="/ranking/" aria-current="page"', doc)
+        tabs = re.findall(r'data-tab="([a-z]+)"', doc)
+        self.assertEqual(tabs, ["overall", "implementers", "reviewers", "pilots"])
+        groups = re.findall(r'<div class="role-group" data-group="([a-z]+)" id="\1"', doc)
+        self.assertEqual(groups, tabs)
+        # Each tab opens with four stat cards.
+        for key in tabs:
+            start = doc.index(f'data-group="{key}"')
+            panel = doc[start:doc.find('class="role-group"', start + 1) if key != "pilots" else doc.index('id="method"')]
+            cards = re.search(r'<ul class="stat-cards".*?</ul>', panel, re.S)
+            self.assertIsNotNone(cards, key)
+            self.assertEqual(cards.group(0).count('<li class="stat">'), 4, key)
+        # Newest snapshot only: no picker, no window chips, no archive links.
+        self.assertNotIn("snapshot-picker", doc)
+        self.assertNotIn("/analytics/agents/", doc)
+        self.assertNotRegex(doc, r'href="/ranking/\d{4}-\d{2}/"')
+        # Method and windows sits outside the tab panels, so every tab shows it.
+        self.assertEqual(doc.count('id="method"'), 1)
+        method = doc[doc.index('id="method"'):]
+        self.assertIn('href="/notes/crew-rankings-method/"', method)
+        self.assertIn("Weekly write-ups", method)
+        self.assertIn("data/analytics/2026-11-08", method)
+
+    def test_overall_index_follows_the_single_rule_constant(self):
+        rule = build.OVERALL_RULE
+        self.assertEqual(rule["weights"], (("implementers", 60), ("reviewers", 25), ("pilots", 15)))
+        self.assertEqual(rule["missing_role_index"], 100)
+        data = scorecards()
+        data["pilots"]["fleet_average"] = 40.0
+        overall = build.overall_models(data, rank_board())
+        self.assertEqual(overall["source"], "rank")
+        rows = {row["model"]: row for row in overall["rows"]}
+        # The field is the ranked models: gaps and gated models stay out.
+        self.assertEqual(set(rows), {"claude-haiku-5-5", "claude-opus-5-5", "gpt-6-luna"})
+        self.assertEqual(overall["gated"], 1)
+        # haiku: implementer index 120 from the rank board, pilots 47.94 against
+        # a fleet of 40, no reviewer crew -> 100.
+        self.assertEqual(overall["roles"]["pilots"]["fleet"], 40.0)
+        pilot_index = 47.94 / 40.0 * 100
+        expected = (60 * 120.0 + 25 * 100 + 15 * pilot_index) / 100
+        self.assertAlmostEqual(rows["claude-haiku-5-5"]["overall"], expected)
+        self.assertIsNone(rows["claude-haiku-5-5"]["cells"]["reviewers"])
+        self.assertEqual(rows["claude-haiku-5-5"]["cells"]["implementers"]["place"], 1)
+        # Changing the constant changes the result and the stated rule.
+        heavy = {"weights": (("implementers", 100), ("reviewers", 0), ("pilots", 0)), "missing_role_index": 100}
+        reweighted = {row["model"]: row for row in build.overall_models(data, rank_board(), heavy)["rows"]}
+        self.assertAlmostEqual(reweighted["claude-opus-5-5"]["overall"], 104.0)
+        self.assertIn("60% implementer + 25% reviewer + 15% pilot", build.overall_rule_text())
+        self.assertIn("counts as 100", build.overall_rule_text())
+        doc = build.render_ranking_body(data, "2026-11-08", rank_board())
+        self.assertIn("60% implementer + 25% reviewer + 15% pilot", doc)
+
+    def test_overall_pools_crews_into_their_model_by_units(self):
+        data = scorecards()
+        data["implementers"]["rows"] = [
+            row("haiku", "claude-haiku-5-5", 30, 1, 150.0),
+            row("haiku@high", "claude-haiku-5-5", 10, 2, 110.0),
+            row("opus", "claude-opus-5-5", 20, 3, 100.0),
+        ]
+        data["implementers"]["fleet_average"] = 125.0
+        overall = build.overall_models(data)
+        self.assertEqual(overall["source"], "scorecards")
+        cells = {row["model"]: row["cells"]["implementers"] for row in overall["rows"]}
+        self.assertAlmostEqual(cells["claude-haiku-5-5"]["score"], (150 * 30 + 110 * 10) / 40)
+        self.assertEqual(cells["claude-haiku-5-5"]["units"], 40)
+        self.assertAlmostEqual(cells["claude-haiku-5-5"]["index"], (150 * 30 + 110 * 10) / 40 / 125 * 100)
+        self.assertEqual(cells["claude-opus-5-5"]["place"], 2)
+
+    def test_models_board_from_rank_and_omitted_without_it(self):
+        with_rank = build.render_ranking_body(scorecards(), "2026-11-08", rank_board())
+        models = with_rank[with_rank.index('id="models"'):with_rank.index('id="crews-implementers"')]
+        for needle in ("claude-haiku-5-5", "claude-opus-5-5", "gpt-6-luna", "Not ranked yet", "gpt-tiny",
+                       "9 of 30 tasks", "p10", "0.75×", "$1.50", "97.0%", "<details"):
+            self.assertIn(needle, models)
+        self.assertNotIn("model unknown", with_rank)
+        self.assertIn('datetime="2026-09-25T06:00:00Z"', models)
+        without = build.render_ranking_body(scorecards(), "2026-11-08")
+        self.assertNotIn('id="models"', without)
+        self.assertNotIn("Not ranked yet", without)
+        self.assertIn('id="crews-implementers"', without)
+        self.assertIn('id="tiers"', without)
+
+    def test_rank_board_must_be_settled_managed_30d(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            self.assertIsNone(build.load_rank(directory))
+            (directory / "rank.json").write_text(json.dumps(rank_board()), encoding="utf-8")
+            self.assertEqual(build.load_rank(directory)["eligible_models"], 3)
+            for key, value in (("live", True), ("provisional", True), ("execution", "all")):
+                board_data = rank_board()
+                board_data[key] = value
+                (directory / "rank.json").write_text(json.dumps(board_data), encoding="utf-8")
+                with self.assertRaises(SystemExit):
+                    build.load_rank(directory)
+
+    def test_crews_by_role_is_one_shared_renderer_over_a_snapshot_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp) / "2026-11-08"
+            directory.mkdir()
+            data = scorecards()
+            data["implementers"]["fleet_average"] = 120.0
+            (directory / "scorecards.json").write_text(json.dumps(data), encoding="utf-8")
+            page_doc = build.render_ranking_body(data, "2026-11-08")
+            for role in ("implementers", "reviewers", "pilots"):
+                shared = build.render_crews_by_role(directory, role)
+                self.assertTrue(shared.startswith(f'<section class="crews-by-role" id="crews-{role}"'))
+                # The page embeds exactly what the shared renderer returns.
+                self.assertIn(shared, page_doc)
+            implementers = build.render_crews_by_role(directory)
+            self.assertIn('id="implementer-crews"', implementers)
+            self.assertIn('id="tiers"', implementers)
+            self.assertIn('class="fleet-mark"', implementers)
+
+    def test_score_explanation_appears_once_per_board(self):
+        doc = build.render_ranking_body(scorecards(), "2026-11-08", rank_board())
+        boards = re.findall(r'<section class="board"[^>]*id="([^"]+)"', doc)
+        self.assertIn("reviewers-provisional", boards)
+        self.assertIn("reviewers-settled", boards)
+        for element_id in ("implementer-crews", "reviewers-provisional", "reviewers-settled", "pilot-crews"):
+            block = section(doc, element_id)
+            self.assertEqual(block.count("Score: per 100"), 1, element_id)
+            self.assertEqual(len(re.findall(r"credit for", block)), 1, element_id)
+
+    def test_old_agents_urls_redirect_to_ranking(self):
+        rules = (ROOT / "public" / "_redirects").read_text(encoding="utf-8").splitlines()
+        for line in ("/analytics/agents /ranking/ 301", "/analytics/agents/ /ranking/ 301",
+                     "/analytics/agents/* /ranking/ 301"):
+            self.assertIn(line, rules)
 
     def test_build_writes_the_page_from_the_newest_snapshot(self):
         env = os.environ.copy()
@@ -546,13 +744,15 @@ class AgentsPageTest(unittest.TestCase):
         )
         directory = build.latest_analytics_dir()
         self.assertIn(f"from {directory.name}", proc.stdout)
-        page = (ROOT / "public" / "analytics" / "agents" / "index.html").read_text(encoding="utf-8")
-        self.assertIn(f"Snapshot {directory.name}.", page)
-        self.assertIn("Implementers", page)
-        self.assertIn("Reviewers", page)
-        self.assertIn("Pilots", page)
+        page = (ROOT / "public" / "ranking" / "index.html").read_text(encoding="utf-8")
+        self.assertIn(f'Snapshot <time datetime="{directory.name}">{directory.name}</time>', page)
+        for label in ("Overall", "Implementers", "Reviewers", "Pilots"):
+            self.assertIn(f'data-tab="{label.lower()}"', page)
+        # No archive: the old agents pages are gone and redirected.
+        self.assertFalse((ROOT / "public" / "analytics" / "agents").exists())
+        self.assertFalse(any((ROOT / "public" / "ranking").glob("*/")))
         ignored = subprocess.run(
-            ["git", "check-ignore", "-q", "public/analytics/agents/index.html"],
+            ["git", "check-ignore", "-q", "public/ranking/index.html"],
             cwd=ROOT,
         )
         self.assertEqual(ignored.returncode, 0)
