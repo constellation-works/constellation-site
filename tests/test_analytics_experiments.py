@@ -109,13 +109,44 @@ class ExperimentsPageTest(unittest.TestCase):
         doc = build.render_experiments_page(data, "2026-11-08")
         self.assertEqual(doc.count('<section class="board experiment"'), 1)
         self.assertNotIn("omit-", doc)
-        data["experiments"][0]["verdict"] = {"state": "collecting"}
+
+    def test_concluded_collecting_is_stopped_early_without_a_running_dot(self):
+        data = fixture()
+        data["experiments"][0]["verdict"] = {
+            "state": "collecting", "label": "collecting", "horizon_reached": False,
+        }
         data["experiments"][0]["concluded_arm"] = None
+        original = copy.deepcopy(data)
         doc = build.render_experiments_page(data, "2026-11-08")
-        self.assertIn("<dt>Verdict</dt><dd>collecting</dd>", doc)
+        self.assertEqual(data, original)
+        self.assertIn("<dt>Verdict</dt><dd>Stopped early - no verdict</dd>", doc)
         self.assertIn("<dt>Chosen arm</dt><dd>None recorded</dd>", doc)
         self.assertIn("<h3>Why no decision</h3>", doc)
-        self.assertIn('status-collecting"><span class="status-dot" aria-hidden="true"></span>Collecting</span>', doc)
+        self.assertEqual(doc.count(
+            'status-stopped-early"><span class="status-stop" aria-hidden="true"></span>'
+            'Stopped early - no verdict</span>'), 2)
+        reason = "Concluded before reaching the minimum sample; no verdict is available."
+        card, _, detail = doc.partition('<section class="board experiment"')
+        self.assertIn(f'<span class="exp-card-reason">{reason}</span>', card)
+        self.assertIn(f'<p class="readout-note">{reason}</p>', detail)
+        self.assertNotIn("collecting", doc.lower())
+        self.assertNotIn('class="status-dot"', doc)
+
+    def test_withheld_and_inconclusive_labels_stay_unchanged(self):
+        for state, label, status in (
+            ("withheld", "no verdict", "Verdict withheld"),
+            ("inconclusive", "inconclusive", "Inconclusive"),
+        ):
+            with self.subTest(state=state):
+                data = fixture()
+                data["experiments"][0]["verdict"] = {"state": state, "label": label}
+                doc = build.render_experiments_page(data, "2026-11-08")
+                self.assertIn(f"<dt>Verdict</dt><dd>{label}</dd>", doc)
+                self.assertEqual(doc.count(
+                    f'status-{state}"><span class="status-dot" aria-hidden="true"></span>'
+                    f'{status}</span>'), 2)
+                self.assertNotIn("Stopped early", doc)
+                self.assertNotIn("Concluded before reaching the minimum sample", doc)
 
     def test_empty_snapshot_and_bad_schema_or_windows(self):
         self.assertIn("No concluded experiments", build.render_experiments_page(

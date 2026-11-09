@@ -2065,7 +2065,9 @@ STATUS_LABEL = {
     "withheld": "Verdict withheld",
     "inconclusive": "Inconclusive",
     "collecting": "Collecting",
+    "stopped-early": "Stopped early - no verdict",
 }
+STOPPED_EARLY_REASON = "Concluded before reaching the minimum sample; no verdict is available."
 
 
 def _join_names(names):
@@ -2266,7 +2268,8 @@ def experiment_scorecard(metrics, treatment, heads, primary_key, caption):
 
 def _status_pill(state, label):
     e = html.escape
-    return f'<span class="status-pill status-{e(state or "unknown")}"><span class="status-dot" aria-hidden="true"></span>{e(label)}</span>'
+    marker = "status-stop" if state == "stopped-early" else "status-dot"
+    return f'<span class="status-pill status-{e(state or "unknown")}"><span class="{marker}" aria-hidden="true"></span>{e(label)}</span>'
 
 
 def render_experiments_page(data, snapshot_date, picker=None, banner="", archive_month=None, url=None, root=None):
@@ -2302,7 +2305,13 @@ def render_experiments_page(data, snapshot_date, picker=None, banner="", archive
         verdict = experiment.get("verdict") or {}
         state = verdict.get("state") if isinstance(verdict.get("state"), str) else None
         verdict_text = verdict.get("label") or state or "Unavailable"
-        status = STATUS_LABEL.get(state, (state or "Concluded").replace("_", " ").capitalize())
+        # Every published experiment is concluded; a frozen collecting verdict
+        # means it stopped before the sample threshold, rather than still running.
+        display_state = "stopped-early" if state == "collecting" else state
+        status = STATUS_LABEL.get(display_state, (state or "Concluded").replace("_", " ").capitalize())
+        status_reason = STOPPED_EARLY_REASON if display_state == "stopped-early" else ""
+        if status_reason:
+            verdict_text = status
         chosen = experiment.get("concluded_arm")
         has_choice = isinstance(chosen, str) and chosen in arm_names
         choice = e(chosen) if has_choice else "None recorded"
@@ -2446,14 +2455,15 @@ def render_experiments_page(data, snapshot_date, picker=None, banner="", archive
         day_word = "day" if days == 1 else "days"
         cards.append(
             f'<li><a class="exp-card" href="#{anchor}" data-exp="{anchor}">'
-            f'<span class="exp-card-head"><span class="exp-card-name">{e(name)}</span>{_status_pill(state, status)}</span>'
-            f'<span class="exp-card-q">{e(short or question)}</span>'
+            f'<span class="exp-card-head"><span class="exp-card-name">{e(name)}</span>{_status_pill(display_state, status)}</span>'
+            + (f'<span class="exp-card-reason">{e(status_reason)}</span>' if status_reason else "")
+            + f'<span class="exp-card-q">{e(short or question)}</span>'
             f'<span class="exp-card-meta"><span>{len(treatment)} {arm_word}</span><span>{enrolled:,} tasks</span><span>{days} {day_word}</span></span>'
             f'<span class="exp-card-signals"><span class="is-better">{better_n} clear better</span>'
             f'<span aria-hidden="true">·</span><span class="is-worse">{worse_n} clear worse</span></span></a></li>'
         )
         sections.append(f'''<section class="board experiment" id="{anchor}" data-exp-section>
-<div class="exp-head"><h2>{e(name)}</h2>{_status_pill(state, status)}</div>
+<div class="exp-head"><h2>{e(name)}</h2>{_status_pill(display_state, status)}</div>
 {render_window(since, until)}
 <p class="board-note">Cumulative observations from experiment start to readout ({days} {day_word}), not a rolling 30-day window.</p>
 <dl class="readout">
@@ -2462,6 +2472,7 @@ def render_experiments_page(data, snapshot_date, picker=None, banner="", archive
 <div><dt>Primary metric</dt><dd>{e(primary_label)}</dd></div>
 <div><dt>Enrolled</dt><dd>{enrolled:,} tasks</dd></div>
 </dl>
+{f'<p class="readout-note">{e(status_reason)}</p>' if status_reason else ''}
 {recommendation}
 <div class="exp-split">
 <div class="exp-question"><h3>Question</h3>{question_html}</div>
@@ -2479,7 +2490,7 @@ def render_experiments_page(data, snapshot_date, picker=None, banner="", archive
 {arms_table}
 </section>''')
     method = '''<section class="exp-method" id="method"><details><summary>Method and caveats</summary><ul>
-<li>Concluded is a lifecycle state, not proof of a winner. A verdict may be withheld, collecting or inconclusive, and a chosen arm may be absent.</li>
+<li>Concluded is a lifecycle state, not proof of a winner. A verdict may be withheld or inconclusive. An experiment stopped before reaching the minimum sample has no verdict, and a chosen arm may be absent.</li>
 <li>A cell is shaded only when its interval excludes zero. Every other cell is a direction, not a result. Intervals are copied from the readout; unavailable values are not zero.</li>
 <li>Each cell is the treatment arm minus control. The plot runs worse to the left and better to the right, using each metric's own direction.</li>
 <li>Support is specific to each metric; open regression windows can leave outcomes unsettled.</li>

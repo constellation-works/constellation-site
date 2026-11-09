@@ -226,6 +226,7 @@ FAILURE_RATE_LABEL = (
 # public snapshot only when the snapshot is regenerated or replayed.
 EXPERIMENT_OMITS = {
     "exp-2b6d910d": "void: treatment not reliably applied and the explorer was removed mid-run",
+    "exp-00c7ef1f": "stopped early by Daniel after 14h (4 tasks, min sample 40 per arm); no verdict possible",
 }
 
 SAFE_KEY = re.compile(r"^[a-z][a-z0-9_]{0,63}$")

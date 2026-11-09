@@ -195,31 +195,38 @@ class ExperimentOmitTest(unittest.TestCase):
                 self.assertNotIn("\n", reason)
 
     def test_omitted_experiments_are_counted_and_never_projected(self):
-        patterns = snapshot.forbidden_patterns(HOSTS)
-        dropped = snapshot.empty_dropped()
-        redactions = [0]
-        omitted_definition, omitted_readout = experiment_pair("exp-2b6d910d", "hard-tier-explore-first")
-        running_definition, _ = experiment_pair("exp-run", "still running", status="running")
-        kept_definition, kept_readout = experiment_pair("exp-alpha", "kept")
-        pairs = [
-            (omitted_definition, omitted_readout),
-            (omitted_definition, None),  # collect() skips the readout of an omitted id
-            (running_definition, None),
-            (kept_definition, kept_readout),
-        ]
-        projected = snapshot.project_experiments(pairs, dropped, patterns, redactions)
-        self.assertEqual([item["id"] for item in projected], ["exp-alpha"])
-        self.assertEqual(dropped["experiments_omitted"], 3)
-        self.assertNotIn("exp-2b6d910d", json.dumps(projected))
-        self.assertNotIn("hard-tier-explore-first", json.dumps(projected))
+        for ident, name in (
+            ("exp-2b6d910d", "hard-tier-explore-first"),
+            ("exp-00c7ef1f", "opus-hard-effort-check"),
+        ):
+            with self.subTest(ident=ident):
+                patterns = snapshot.forbidden_patterns(HOSTS)
+                dropped = snapshot.empty_dropped()
+                redactions = [0]
+                omitted_definition, omitted_readout = experiment_pair(ident, name)
+                running_definition, _ = experiment_pair("exp-run", "still running", status="running")
+                kept_definition, kept_readout = experiment_pair("exp-alpha", "kept")
+                pairs = [
+                    (omitted_definition, omitted_readout),
+                    (omitted_definition, None),  # collect() skips the readout of an omitted id
+                    (running_definition, None),
+                    (kept_definition, kept_readout),
+                ]
+                projected = snapshot.project_experiments(pairs, dropped, patterns, redactions)
+                self.assertEqual([item["id"] for item in projected], ["exp-alpha"])
+                self.assertEqual(dropped["experiments_omitted"], 3)
+                self.assertNotIn(ident, json.dumps(projected))
+                self.assertNotIn(name, json.dumps(projected))
 
     def test_guard_refuses_an_omitted_experiment_in_the_public_snapshot(self):
-        docs = minimal_docs()
-        snapshot.guard(docs, HOSTS)
-        docs["experiments"]["experiments"].append(
-            {"id": "exp-2b6d910d", "status": "concluded", "hypothesis": "clean hypothesis"})
-        with self.assertRaises(SystemExit):
-            snapshot.guard(docs, HOSTS)
+        for ident in snapshot.EXPERIMENT_OMITS:
+            with self.subTest(ident=ident):
+                docs = minimal_docs()
+                snapshot.guard(docs, HOSTS)
+                docs["experiments"]["experiments"].append(
+                    {"id": ident, "status": "concluded", "hypothesis": "clean hypothesis"})
+                with self.assertRaises(SystemExit):
+                    snapshot.guard(docs, HOSTS)
 
 
 if __name__ == "__main__":
