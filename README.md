@@ -59,8 +59,10 @@ with four stat cards:
   free text sanitized, gap models and crews dropped and counted, and paired
   probabilities and per-effort splits left out. Then "Crews by role":
   takeaway callouts, the crew table with the fleet-average marker, and implementers
-  by tier. Crews by role is one renderer, `render_crews_by_role(directory, role)`,
-  which takes a snapshot directory so a weekly note can reuse it. A scorecard row is one
+  by tier. Crews by role is one renderer, `render_crews_by_role(directory, role=None)`,
+  which takes a snapshot directory so a weekly note can reuse it. It never draws a role
+  toggle: with a role it renders that role's boards (each /ranking/ role tab), and
+  without one it stacks every role under a plain heading (the weekly note's body). A scorecard row is one
   crew, model and recorded effort, so every crew board names the crew as `crew@effort`
   (`sol@high`; a crew already named `haiku@high` stays as is). A row whose effort was not
   recorded shows the crew's configured effort marked `sol@high (est.)` (the exporter's

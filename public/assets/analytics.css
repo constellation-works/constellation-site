@@ -748,7 +748,7 @@
 .ranking-page h1 { font-size: clamp(40px, 5vw, 56px); line-height: 1.05; letter-spacing: -.04em; margin: 0 0 16px; }
 .ranking-page .summary { max-width: 38em; color: var(--lede); }
 .ranking-page .group-nav { margin-top: 28px; }
-.ranking-page .group-nav a, .role-pills a, .stat-label, .podium-place, .tab-boards { white-space: nowrap; }
+.ranking-page .group-nav a, .stat-label, .podium-place, .tab-boards { white-space: nowrap; }
 .ranking-page thead th { white-space: nowrap; }
 .ranking-page .role-group > .board,
 .ranking-page .role-group > .crews-by-role { margin-top: 56px; }
@@ -902,14 +902,8 @@
 /* Crews by role: the shared component (also the weekly note's body). */
 .crews-by-role { min-width: 0; }
 .analytics .crews-by-role > h2 { margin: 0 0 8px; }
-.role-pills ul { list-style: none; margin: 18px 0 0; padding: 0 !important; display: flex; flex-wrap: wrap; gap: 8px; }
-.role-pills li { margin: 0; }
-.role-pills a {
-  display: inline-flex; align-items: baseline; gap: 8px; min-height: 36px; padding: 6px 14px;
-  border: 1px solid var(--rule-strong); border-radius: 999px; color: var(--fg); text-decoration: none; font-size: 14px;
-}
-.role-pills a:hover { border-color: var(--muted); color: var(--fg); }
-.role-pills a[aria-current="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.crews-by-role .crew-role + .crew-role { margin-top: 56px; }
+.crews-by-role .crew-role > h2 { margin: 32px 0 0; }
 .analytics .board h3 { font-size: 19px; font-weight: 600; letter-spacing: -.01em; margin: 0; }
 
 /* Method and windows: short cards on every tab. */
@@ -933,9 +927,6 @@
   .analytics .contribs li { grid-template-columns: minmax(0, 1fr) 1.4rem 4rem 3.4rem; gap: 6px; }
   .analytics .gate-list li { grid-template-columns: 8px minmax(0, 1fr) auto; }
   .gate-progress { grid-column: 2 / -1; }
-  .role-pills ul { gap: 6px; }
-  .role-pills a { padding: 6px 12px; font-size: 13px; }
-  .role-pills .tab-boards { display: none; }
 }
 /* Collapse points, by measurement rather than the phone breakpoint (STD-07 §R4, §R30).
    Each board collapses when its own box (container `ranking`: a tab panel, or the

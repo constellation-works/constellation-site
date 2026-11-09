@@ -898,10 +898,45 @@ class RankingPageTest(unittest.TestCase):
                 self.assertTrue(shared.startswith(f'<section class="crews-by-role" id="crews-{role}"'))
                 # The page embeds exactly what the shared renderer returns.
                 self.assertIn(shared, page_doc)
-            implementers = build.render_crews_by_role(directory)
+            implementers = build.render_crews_by_role(directory, "implementers")
             self.assertIn('id="implementer-crews"', implementers)
             self.assertIn('id="tiers"', implementers)
             self.assertIn('class="fleet-mark"', implementers)
+            self.assertIn('class="tiles takeaways"', implementers)
+            # ORB-23665: the stacked form (the weekly note's body) gives every role
+            # once, in order, under a plain heading, with no toggle of its own.
+            stacked = build.render_crews_by_role(directory)
+            self.assertNotIn("<nav", stacked)
+            self.assertNotIn("role-pills", stacked)
+            headings = re.findall(r'<h2 id="crews-(\w+)-title">([^<]+)</h2>', stacked)
+            self.assertEqual(headings, [("implementers", "Implementers"), ("reviewers", "Reviewers"), ("pilots", "Pilots")])
+            for element_id in ("implementer-crews", "tiers", "reviewers-provisional", "pilot-crews"):
+                self.assertEqual(stacked.count(f'id="{element_id}"'), 1, element_id)
+            with self.assertRaises(SystemExit):
+                build.render_crews_by_role(directory, "orchestrators")
+
+    def test_role_tabs_are_the_only_role_navigation(self):
+        # ORB-23665: each role tab rendered Crews by role with its own
+        # Implementers/Reviewers/Pilots toggle under the page's tab strip.
+        doc = build.render_ranking_body(scorecards(), "2026-11-08", rank_board())
+        self.assert_one_role_navigation(doc)
+
+    def assert_one_role_navigation(self, doc):
+        self.assertNotIn("role-pills", doc)
+        self.assertEqual(doc.count("<nav"), 1)
+        self.assertEqual(len(re.findall(r'<nav class="group-nav" aria-label="Ranking views">', doc)), 1)
+        self.assertEqual(re.findall(r'data-tab="(\w+)"', doc), ["overall", "implementers", "reviewers", "pilots"])
+        groups = re.split(r'<div class="role-group" data-group="', doc)[1:]
+        self.assertEqual([g.split('"', 1)[0] for g in groups], ["overall", "implementers", "reviewers", "pilots"])
+        for group in groups:
+            body = group[:group.find('<section class="method-cards"')] if 'method-cards' in group else group
+            self.assertNotIn("<nav", body)
+            self.assertNotIn('href="#crews-', body)
+        # Without JavaScript the panels stack: each role's boards appear once.
+        for element_id in ("crews-implementers", "crews-reviewers", "crews-pilots", "implementer-crews",
+                           "tiers", "reviewers-provisional", "reviewers-settled", "pilot-crews"):
+            self.assertEqual(doc.count(f'id="{element_id}"'), 1, element_id)
+        self.assertEqual(doc.count('class="tiles takeaways"'), 3)
 
     def test_score_explanation_appears_once_per_board(self):
         doc = build.render_ranking_body(scorecards(), "2026-11-08", rank_board())
@@ -967,6 +1002,7 @@ class RankingPageTest(unittest.TestCase):
         self.assertIn(f'Snapshot <time datetime="{directory.name}">{directory.name}</time>', page)
         for label in ("Overall", "Implementers", "Reviewers", "Pilots"):
             self.assertIn(f'data-tab="{label.lower()}"', page)
+        self.assert_one_role_navigation(page[page.index('<article class="analytics ranking-page">'):page.index("</article>")])
         # No archive: the old agents pages are gone and redirected.
         self.assertFalse((ROOT / "public" / "analytics" / "agents").exists())
         self.assertFalse(any((ROOT / "public" / "ranking").glob("*/")))
