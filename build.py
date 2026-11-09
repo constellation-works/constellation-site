@@ -1870,36 +1870,45 @@ def crew_role_bodies(scorecards):
     }
 
 
-def role_pill_sub(role, shown):
-    if role == "reviewers":
-        return "provisional"
-    ranked = sum(1 for row in shown["rows"] if row["rank"] is not None)
-    return f"{ranked} ranked"
+CREWS_NOTE = ("A crew is a model at one effort setting. Each role is scored against its own fleet rate, "
+              "shown as the marker on each bar.")
 
 
-def crews_by_role_html(bodies, role):
-    e = html.escape
-    pills = "".join(
-        f'<li><a href="#crews-{key}"{" aria-current=" + chr(34) + "true" + chr(34) if key == role else ""}>'
-        f'{ROLE_TITLE[key]} <span class="tab-boards">{e(role_pill_sub(key, bodies[key][0]))}</span></a></li>'
+def crews_by_role_html(bodies, role=None):
+    """The crews-by-role component, without a role toggle of its own (ORB-23665).
+
+    With a role it renders that role's boards under a plain "Crews" heading: the
+    /ranking/ role tabs are the only role navigation. Without one it stacks every
+    role under its own heading, once each, for the weekly crew-ranking note.
+    """
+    if role is not None:
+        return f'''<section class="crews-by-role" id="crews-{role}" aria-labelledby="crews-{role}-title">
+<h2 id="crews-{role}-title">Crews</h2>
+<p class="board-note">{CREWS_NOTE}</p>
+{bodies[role][1]}
+</section>'''
+    roles = "".join(
+        f'''<section class="crew-role" id="crews-{key}" aria-labelledby="crews-{key}-title">
+<h2 id="crews-{key}-title">{ROLE_TITLE[key]}</h2>
+{bodies[key][1]}
+</section>'''
         for key in ROLE_ORDER
     )
-    return f'''<section class="crews-by-role" id="crews-{role}" aria-labelledby="crews-{role}-title">
-<h2 id="crews-{role}-title">Crews by role</h2>
-<p class="board-note">A crew is a model at one effort setting. Each role is scored against its own fleet rate, shown as the marker on each bar.</p>
-<nav class="role-pills" aria-label="Crew roles"><ul>{pills}</ul></nav>
-{bodies[role][1]}
+    return f'''<section class="crews-by-role" id="crews-by-role" aria-label="Crews by role">
+<p class="board-note">{CREWS_NOTE}</p>
+{roles}
 </section>'''
 
 
-def render_crews_by_role(directory, role="implementers"):
-    """The "Crews by role" section for one role, from a scorecard snapshot directory.
+def render_crews_by_role(directory, role=None):
+    """Crews by role from a scorecard snapshot directory: one role, or all stacked.
 
-    One shared component: /ranking/ renders it in each role tab and the weekly
-    crew-ranking note reuses it as its body, so it is never restyled per view
-    (STD-07 §R30). It reads only the directory's scorecards.json.
+    One shared component: /ranking/ renders one role in each role tab and the
+    weekly crew-ranking note reuses it with every role stacked under plain
+    headings, so it is never restyled per view (STD-07 §R30). Neither form draws
+    a role toggle. It reads only the directory's scorecards.json.
     """
-    if role not in ROLE_ORDER:
+    if role is not None and role not in ROLE_ORDER:
         sys.exit(f"crews by role: unknown role {role!r}")
     return crews_by_role_html(crew_role_bodies(load_scorecards(directory)), role)
 
