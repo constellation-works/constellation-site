@@ -263,9 +263,9 @@ def rank_payload(**overrides):
 
 
 class RankProjectionTest(unittest.TestCase):
-    def project(self, payload):
+    def project(self, payload, estimates=None):
         dropped = snapshot.empty_dropped()
-        projected = snapshot.project_rank(payload, dropped, snapshot.forbidden_patterns(HOSTS), [0])
+        projected = snapshot.project_rank(payload, dropped, snapshot.forbidden_patterns(HOSTS), [0], estimates)
         return projected, dropped
 
     def test_projection_keeps_public_fields_and_drops_gaps(self):
@@ -340,6 +340,56 @@ class RankProjectionTest(unittest.TestCase):
             bundle.write_text(snapshot.dump(docs))
             with self.assertRaises(SystemExit):
                 snapshot.replay(str(bundle), str(root / "mixed"))
+
+    def test_system_is_dropped_from_rank_crews_and_counted_with_gaps(self):
+        payload = rank_payload()
+        payload["rows"][0]["crews"] = [
+            {"crew": "sol", "tasks": 800},
+            {"crew": "sol@high", "tasks": 10},
+            {"crew": "sol@xhigh", "tasks": 4},
+            {"crew": "system", "tasks": 2},
+            {"crew": "crew unknown", "tasks": 1},
+        ]
+        rank, dropped = self.project(payload, estimates={"sol": "high"})
+        row = rank["rows"][0]
+        self.assertEqual(row["crews"], [
+            {"crew": "sol", "tasks": 800, "effort_estimate": "high"},
+            {"crew": "sol@high", "tasks": 10},
+            {"crew": "sol@xhigh", "tasks": 4},
+        ])
+        # Model numbers stay Orbit's. system is not folded into them.
+        self.assertEqual(row["units"], 40)
+        self.assertEqual(row["score"], 110.0)
+        self.assertEqual(row["rank"], 1)
+        # model unknown + crew unknown + system
+        self.assertEqual(dropped["rank"], 3)
+        self.assertNotIn('"system"', json.dumps(rank))
+        self.assertNotIn("system", snapshot.GAP_CREWS)
+
+    def test_bare_rank_crew_records_a_null_estimate_when_unconfigured(self):
+        payload = rank_payload()
+        payload["rows"][0]["crews"] = [
+            {"crew": "argon", "tasks": 4},
+            {"crew": "haiku@xhigh", "tasks": 1},
+        ]
+        rank, dropped = self.project(payload, estimates={})
+        self.assertEqual(rank["rows"][0]["crews"], [
+            {"crew": "argon", "tasks": 4, "effort_estimate": None},
+            {"crew": "haiku@xhigh", "tasks": 1},
+        ])
+        self.assertEqual(dropped["rank"], 1)  # the gap model only
+
+    def test_rank_bare_crews_skip_system_and_effort_named_keys(self):
+        payload = rank_payload()
+        payload["rows"][0]["crews"] = [
+            {"crew": "sol", "tasks": 1},
+            {"crew": "sol@high", "tasks": 1},
+            {"crew": "system", "tasks": 1},
+            {"crew": "haiku", "tasks": 1},
+            {"crew": "crew unknown", "tasks": 1},
+        ]
+        self.assertEqual(snapshot.rank_bare_crews(payload), ["haiku", "sol"])
+        self.assertEqual(snapshot.rank_bare_crews(None), [])
 
     def test_guard_rejects_a_leaked_path_in_rank(self):
         docs = minimal_docs()
