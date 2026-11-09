@@ -472,35 +472,51 @@ def display_rows(board, name):
     }
 
 
-def role_board(board, name, title, element_id, label=None, note=None, nav=None):
-    shown = display_rows(board, name)
-    shown.update({
-        "id": element_id,
-        "title": title,
-        "label": label,
-        "note": note,
-        "nav": nav or title,
-    })
-    return shown
+def board_terms(board):
+    """The board's published score terms: key, label and credit or debit group."""
+    terms = []
+    for term in board.get("terms") or []:
+        if not isinstance(term, dict):
+            continue
+        key, label, group = term.get("key"), term.get("label"), term.get("group")
+        if not isinstance(key, str) or not isinstance(label, str) or group not in ("credit", "problem"):
+            continue
+        weight = term.get("weight")
+        terms.append({
+            "key": key,
+            "label": " ".join(label.split()),
+            "group": group,
+            "weight": weight if as_number(weight) else None,
+        })
+    return terms
 
 
-def provisional_note(board):
-    count = board.get("provisional_units")
-    if not as_number(count) or count <= 0:
-        return None
-    return f"{fmt_count(count)} reviews in this window are still provisional."
+def fleet_average(board):
+    value = board.get("fleet_average")
+    return value if as_number(value) else None
 
 
-def tier_rows(block):
-    """One board per complexity tier, ranked as the dashboard's tier control ranks.
+def fmt_score(value):
+    """One decimal with a true minus sign; scores can go below zero."""
+    if not as_number(value):
+        return "—"
+    text = f"{value:.1f}"
+    return text.replace("-", "−") if text.startswith("-") else text
 
-    Support is the sum of that crew's task-type cells. The score is the tier
-    crew score (``crew_mean``), and a row under ``min_support`` stays unranked.
+
+def tier_slots(block):
+    """Implementer tier cells aggregated per (tier, crew, model).
+
+    A crew's tier support is the sum of its task-type cells and its tier score
+    is the tier crew score (``crew_mean``), the same for every type. Crews keep
+    their model in the key, as the overall board does, so a second model run
+    under the same crew name (luna on gpt-6.1-luna) is its own row rather
+    than one task added to the main row. Each tier is ranked separately; a slot
+    under ``min_support`` stays unranked.
     """
     name = "implementers by tier"
-    unit = require_text(block, "unit", name)
+    require_text(block, "unit", name)
     min_support = board_min_support(block, name)
-    window = board_window(block, name)
     cells = block.get("cells")
     if not isinstance(cells, list):
         sys.exit("scorecards.json: implementers by tier cells are missing")
@@ -518,84 +534,120 @@ def tier_rows(block):
         if not as_number(count) or count <= 0:
             continue
         slot = grouped[tier].setdefault(
-            (crew, model), {"crew": crew, "model": model, "units": 0.0, "score": None}
+            (crew, model), {"crew": crew, "model": model, "tier": tier, "units": 0, "score": None, "rank": None}
         )
         slot["units"] += count
         if slot["score"] is None and as_number(cell.get("crew_mean")):
             slot["score"] = cell["crew_mean"]
-    boards = []
-    for tier in TIER_ORDER:
-        prepared = []
-        for slot in grouped[tier].values():
-            if slot["score"] is None:
-                continue
-            prepared.append({
-                "crew": slot["crew"],
-                "model": slot["model"],
-                "units": slot["units"],
-                "score": slot["score"],
-                "rank": None,
-                "below": slot["units"] < min_support,
-            })
+    for tier, slots in grouped.items():
+        for key in [key for key, slot in slots.items() if slot["score"] is None]:
+            del slots[key]
         ranked = sorted(
-            (row for row in prepared if not row["below"]),
-            key=lambda row: (-row["score"], -row["units"], row["crew"], row["model"]),
+            (slot for slot in slots.values() if slot["units"] >= min_support),
+            key=lambda slot: (-slot["score"], -slot["units"], slot["crew"], slot["model"]),
         )
-        for index, row in enumerate(ranked, 1):
-            row["rank"] = index
-        rest = sorted(
-            (row for row in prepared if row["below"]),
-            key=lambda row: (-row["score"], -row["units"], row["crew"], row["model"]),
-        )
-        rows = ranked + rest
-        if not rows:
+        for index, slot in enumerate(ranked, 1):
+            slot["rank"] = index
+    return grouped, min_support
+
+
+def term_extremes(rows, terms):
+    """Best and worst per-100 rate for each term among ranked crews.
+
+    Credit terms are best when high, debit terms when low. A term where every
+    ranked crew has the same rate (or only one is measured) flags nothing.
+    """
+    extremes = {}
+    ranked = [row for row in rows if row["rank"] is not None]
+    for term in terms:
+        values = [row["per_100"].get(term["key"]) for row in ranked]
+        values = [value for value in values if value is not None]
+        if len(set(values)) < 2:
             continue
-        label = TIER_LABELS[tier]
-        boards.append({
-            "id": f"implementers-{tier}",
-            "title": f"Implementers, {label.lower()} tier",
-            "nav": f"{label} tier",
-            "label": None,
-            "note": None,
-            "unit": unit,
-            "min_support": min_support,
-            "rows": rows,
-            "window": window,
-            "score_key": TIER_SCORE_KEY,
-        })
-    return boards
+        high, low = max(values), min(values)
+        if term["group"] == "credit":
+            extremes[term["key"]] = (high, low)
+        else:
+            extremes[term["key"]] = (low, high)
+    return extremes
 
 
-def agents_boards(scorecards):
-    if not isinstance(scorecards, dict):
-        sys.exit("scorecards.json: expected an object")
-    implementers = scorecards.get("implementers")
-    pilots = scorecards.get("pilots")
-    reviewers = scorecards.get("reviewers")
-    if not isinstance(implementers, dict) or not isinstance(pilots, dict) or not isinstance(reviewers, dict):
-        sys.exit("scorecards.json: implementers, reviewers and pilots are required")
-    provisional = reviewers.get("provisional")
-    if not isinstance(provisional, dict):
-        sys.exit("scorecards.json: reviewers.provisional is required")
-    settled = reviewers.get("settled")
-    if settled is not None and not isinstance(settled, dict):
-        sys.exit("scorecards.json: reviewers.settled is not a board")
-    by_tier = scorecards.get("implementers_by_tier")
-    if not isinstance(by_tier, dict):
-        sys.exit("scorecards.json: implementers_by_tier is required")
-    boards = [role_board(implementers, "implementers", "Implementers", "implementers", nav="Implementers")]
-    boards.extend(tier_rows(by_tier))
-    boards.append(role_board(
-        provisional, "reviewers provisional", "Reviewers", "reviewers",
-        label="Provisional", note=provisional_note(provisional), nav="Reviewers",
-    ))
-    if isinstance(settled, dict):
-        boards.append(role_board(
-            settled, "reviewers settled", "Reviewers", "reviewers-settled",
-            label="Settled", nav="Reviewers, settled",
-        ))
-    boards.append(role_board(pilots, "pilots", "Pilots", "pilots", nav="Pilots"))
-    return boards
+def per_100_rates(row, terms):
+    per_100 = row.get("per_100")
+    rates = {}
+    for term in terms:
+        value = per_100.get(term["key"]) if isinstance(per_100, dict) else None
+        rates[term["key"]] = value if as_number(value) else None
+    return rates
+
+
+def role_rows(board, name):
+    """display_rows plus each published row's per-100 term rates."""
+    shown = display_rows(board, name)
+    terms = board_terms(board)
+    by_identity = {}
+    for row in board.get("rows") or []:
+        if isinstance(row, dict) and isinstance(row.get("crew"), str) and isinstance(row.get("model"), str):
+            by_identity.setdefault((row["crew"], row["model"]), row)
+    for row in shown["rows"]:
+        row["per_100"] = per_100_rates(by_identity.get((row["crew"], row["model"]), {}), terms)
+    shown["terms"] = terms
+    shown["fleet"] = fleet_average(board)
+    return shown
+
+
+def bar_scale(rows, fleet):
+    """A round upper bound for the score bars: the next multiple of 20."""
+    values = [row["score"] for row in rows if row["score"] is not None]
+    if fleet is not None:
+        values.append(fleet)
+    top = max(values, default=0)
+    return max(20, math.ceil(top / 20) * 20)
+
+
+def score_bar(score, fleet, scale):
+    """A bar from 0 to the score, coloured against the fleet average, with its marker."""
+    width = 0.0 if score is None else max(0.0, min(100.0, score / scale * 100))
+    if score is None or fleet is None:
+        tone = "is-neutral"
+    else:
+        tone = "is-better" if score >= fleet else "is-worse"
+    marker = (
+        f'<span class="fleet-mark" style="left:{min(100.0, fleet / scale * 100):.1f}%"></span>'
+        if fleet is not None and fleet > 0 else ""
+    )
+    return (
+        f'<span class="score-bar" aria-hidden="true">'
+        f'<span class="score-fill {tone}" style="width:{max(width, 0.5):.1f}%"></span>{marker}</span>'
+    )
+
+
+def score_key_line(unit, fleet, extra=""):
+    e = html.escape
+    parts = [f"Per 100 {e(unit)}"]
+    if fleet is not None:
+        parts.append(
+            f'<span class="k-fleet" aria-hidden="true"></span> fleet average {fmt_score(fleet)}'
+            ' · <span class="is-better">above</span> / <span class="is-worse">below</span> average'
+        )
+    if extra:
+        parts.append(extra)
+    return f'<p class="board-key">{" · ".join(parts)}</p>'
+
+
+def plural(count, word, words=None):
+    return word if count == 1 else (words or word + "s")
+
+
+def lower_first(text):
+    return text[:1].lower() + text[1:]
+
+
+def join_words(items):
+    items = list(items)
+    if len(items) <= 1:
+        return "".join(items)
+    return ", ".join(items[:-1]) + " and " + items[-1]
 
 
 def render_window(since, until):
@@ -606,91 +658,556 @@ def render_window(since, until):
     )
 
 
-def render_table(board):
+def friendly_window(since, until):
+    """`<time>` pair for a window: 9 Oct – 8 Nov 2026, exact stamps in datetime."""
     e = html.escape
-    unit = board["unit"]
-    if not board["rows"]:
-        body = '<p class="empty">No rows in this window.</p>'
-    else:
-        rows = []
-        for row in board["rows"]:
-            if row["rank"] is None:
-                rank_html = '<td data-label="Rank" class="rank unranked"><span class="value">unranked</span></td>'
-                rank_attr = "unranked"
-            else:
-                rank_html = f'<td data-label="Rank" class="rank"><span class="value">{row["rank"]}</span></td>'
-                rank_attr = str(row["rank"])
-            score = fmt_num(row["score"])
-            score_text = e(score) if score is not None else "unjudged"
-            units = e(fmt_num(row["units"]))
-            rows.append(
-                f'<tr data-rank="{rank_attr}">'
-                f"{rank_html}"
-                f'<td data-label="Crew"><span class="value">{e(row["crew"])}</span></td>'
-                f'<td data-label="Model"><span class="value">{e(row["model"])}</span></td>'
-                f'<td data-label="Score" class="num"><span class="value"><span class="num">{score_text}</span> '
-                f'<span class="unit">per 100 {e(unit)}</span></span></td>'
-                f'<td data-label="Units" class="num"><span class="value"><span class="num">{units}</span> '
-                f'<span class="unit">{e(unit)}</span></span></td>'
-                f"</tr>"
-            )
-        def render_rows(part, overflow):
-            caption = (
-                f'<caption class="sr-only">Additional entries for {e(board["title"])}</caption>'
-                if overflow else f'<caption class="sr-only">{e(board["title"])}</caption>'
-            )
-            return f'''<div class="table">
-<table>
-{caption}
-<thead><tr>
-<th class="rank">Rank</th><th>Crew</th><th>Model</th><th class="num">Score</th><th class="num">Units</th>
-</tr></thead>
-<tbody>
-{"".join(part)}
-</tbody>
-</table>
-</div>'''
-        body = analytics_page.with_row_disclosure(rows, render_rows, "entries")
+    try:
+        start, end = analytics_page.parse_time(since), analytics_page.parse_time(until)
+    except ValueError:
+        return f'<time datetime="{e(since)}">{e(since)}</time> – <time datetime="{e(until)}">{e(until)}</time>'
+    first = f"{start.day} {start.strftime('%b')}" + ("" if start.year == end.year else f" {start.year}")
     return (
-        f"{body}\n"
-        f'<p class="support-note">Rows under {board["min_support"]} {e(unit)} stay unranked.</p>'
+        f'<time datetime="{e(since)}">{first}</time> – '
+        f'<time datetime="{e(until)}">{end.day} {end.strftime("%b %Y")}</time> UTC'
     )
 
 
-def render_board(board):
+def board_window_line(since, until, prefix="Window"):
     e = html.escape
-    label = f' <span class="board-label">{e(board["label"])}</span>' if board.get("label") else ""
-    note = f'<p class="board-note">{e(board["note"])}</p>\n' if board.get("note") else ""
-    since, until = board["window"]
-    return f'''<section class="board" id="{e(board["id"])}">
-<h2>{e(board["title"])}{label}</h2>
-{render_window(since, until)}
-<p class="score-key">{e(board["score_key"])}</p>
-{note}{render_table(board)}
+    return (
+        f'<p class="board-window">{e(prefix)} {friendly_window(since, until)}. '
+        f'<span class="window-exact">Exact: <time datetime="{e(since)}">{e(since)}</time>'
+        f' to <time datetime="{e(until)}">{e(until)}</time> UTC.</span></p>'
+    )
+
+
+def implementer_takeaways(slots, rows, terms, unit):
+    """Takeaway cards derived from the tier slots and the overall breakdown.
+
+    One card per run of adjacent tiers led by the same crew (leader and
+    runner-up for a single tier), then a watch card for the weakest tier cell
+    with enough support, with that crew's weakest overall term.
+    """
+    e = html.escape
+    leaders = []
+    for tier in TIER_ORDER:
+        ranked = sorted((s for s in slots[tier].values() if s["rank"] is not None), key=lambda s: s["rank"])
+        if ranked:
+            leaders.append((tier, ranked))
+    groups = []
+    for tier, ranked in leaders:
+        key = (ranked[0]["crew"], ranked[0]["model"])
+        if groups and groups[-1]["key"] == key:
+            groups[-1]["tiers"].append((tier, ranked))
+        else:
+            groups.append({"key": key, "tiers": [(tier, ranked)]})
+    cards = []
+    for group in groups:
+        tiers = group["tiers"]
+        names = [TIER_LABELS[tier] for tier, _ranked in tiers]
+        label = join_words([names[0]] + [lower_first(name) for name in names[1:]])
+        crew = tiers[0][1][0]["crew"]
+        if len(tiers) > 1:
+            count = "both" if len(tiers) == 2 else f"all {len(tiers)}"
+            head = f"{crew} leads {count} tiers"
+            sub = " · ".join(
+                f'{fmt_score(ranked[0]["score"])} on {fmt_count(ranked[0]["units"])}'
+                + (f" {TIER_LABELS[tier].lower()} {unit}" if index == 0 else f" {TIER_LABELS[tier].lower()}")
+                for index, (tier, ranked) in enumerate(tiers)
+            )
+        else:
+            tier, ranked = tiers[0]
+            lead = ranked[0]
+            tier_word = TIER_LABELS[tier].lower()
+            if len(ranked) > 1:
+                second = ranked[1]
+                head = f'{crew} {fmt_score(lead["score"])}, {second["crew"]} {fmt_score(second["score"])}'
+                sub = f'{fmt_count(lead["units"])} vs {fmt_count(second["units"])} {tier_word} {unit}'
+            else:
+                head = f'{crew} {fmt_score(lead["score"])}'
+                sub = f'{fmt_count(lead["units"])} {tier_word} {unit} · the only ranked crew'
+        cards.append((label, head, sub))
+    sizeable = [s for tier in TIER_ORDER for s in slots[tier].values() if s["rank"] is not None]
+    if sizeable:
+        weakest = min(sizeable, key=lambda s: (s["score"], -s["units"], s["crew"]))
+        if weakest["score"] < 100:
+            tier_word = TIER_LABELS[weakest["tier"]].lower()
+            head = f'{weakest["crew"]} {fmt_score(weakest["score"])} on {tier_word}'
+            sub = f'{fmt_count(weakest["units"])} {tier_word} {unit}'
+            note = weakest_term(rows, terms, (weakest["crew"], weakest["model"]))
+            if note:
+                sub += f" · {note}"
+            cards.append(("Watch", head, sub))
+    if not cards:
+        return ""
+    items = "".join(
+        f'<li><div class="tile takeaway"><span class="tile-head">{e(label)}</span>'
+        f'<span class="takeaway-head">{e(head)}</span><span class="tile-sub">{e(sub)}</span></div></li>'
+        for label, head, sub in cards
+    )
+    return f'<ul class="tiles takeaways" aria-label="Takeaways">{items}</ul>'
+
+
+def weakest_term(rows, terms, identity):
+    """The term where this crew is worst among ranked crews, by weighted gap from their mean."""
+    ranked = [row for row in rows if row["rank"] is not None]
+    row = next((r for r in ranked if (r["crew"], r["model"]) == identity), None)
+    if row is None:
+        return ""
+    extremes = term_extremes(rows, terms)
+    best = None
+    for term in terms:
+        value = row["per_100"].get(term["key"])
+        if value is None or term["key"] not in extremes or value != extremes[term["key"]][1]:
+            continue
+        values = [r["per_100"][term["key"]] for r in ranked if r["per_100"].get(term["key"]) is not None]
+        gap = abs(value - sum(values) / len(values)) * abs(term["weight"] if term["weight"] is not None else 1)
+        if best is None or gap > best[0]:
+            best = (gap, term, value)
+    if best is None:
+        return ""
+    _gap, term, value = best
+    return f'{fmt_score(value)} {lower_first(term["label"])} per 100 overall, the {"lowest" if term["group"] == "credit" else "highest"} of ranked crews'
+
+
+def crew_cell(row):
+    e = html.escape
+    return (
+        f'<span class="crew-id"><span class="crew-name">{e(row["crew"])}</span>'
+        f'<span class="crew-model">{e(row["model"])}</span></span>'
+    )
+
+
+def rank_text(rank):
+    if rank is None:
+        return '<span aria-hidden="true">–</span><span class="sr-only">unranked</span>'
+    return f'<span class="sr-only">Rank </span>{rank}'
+
+
+def term_breakdown(row, terms, extremes, unit):
+    e = html.escape
+    tiles = []
+    for term in terms:
+        value = row["per_100"].get(term["key"])
+        kind = "credit" if term["group"] == "credit" else "debit"
+        note, tone = "", ""
+        if value is None:
+            note = "not measured for this crew"
+            tone = " is-missing"
+        elif term["key"] in extremes:
+            best, worst = extremes[term["key"]]
+            if row["rank"] is not None and value == best:
+                note, tone = "best of ranked crews", " is-better"
+            elif row["rank"] is not None and value == worst:
+                note, tone = "worst of ranked crews", " is-worse"
+        shown = "—" if value is None else fmt_score(value)
+        tiles.append(
+            f'<li class="term{tone}" data-term="{e(term["key"])}">'
+            f'<span class="term-label">{e(term["label"])} <span class="term-kind">· {kind}</span></span>'
+            f'<span class="term-value">{e(shown)}</span>'
+            f'<span class="term-note">{e(note)}</span></li>'
+        )
+    if not tiles:
+        return '<p class="term-intro">This snapshot publishes no term rates.</p>'
+    return (
+        f'<p class="term-intro">Rates per 100 {e(unit)}. The score combines these with the published '
+        'weights, then shrinks small samples toward the fleet.</p>'
+        f'<ul class="terms">{"".join(tiles)}</ul>'
+    )
+
+
+def implementers_overall(shown):
+    e = html.escape
+    unit = shown["unit"]
+    fleet = shown["fleet"]
+    ranked = [row for row in shown["rows"] if row["rank"] is not None]
+    unranked = [row for row in shown["rows"] if row["rank"] is None]
+    scale = bar_scale(ranked, fleet)
+    extremes = term_extremes(shown["rows"], shown["terms"])
+    since, until = shown["window"]
+    items = []
+    for row in ranked:
+        items.append(
+            f'<li><details class="crew-row" data-rank="{row["rank"]}">'
+            '<summary class="bar-row">'
+            f'<span class="rank">{rank_text(row["rank"])}</span>'
+            f'{crew_cell(row)}'
+            f'{score_bar(row["score"], fleet, scale)}'
+            f'<span class="score-num">{fmt_score(row["score"])}<span class="sr-only"> per 100 {e(unit)}</span></span>'
+            f'<span class="units-num">{fmt_count(row["units"])}<span class="sr-only"> {e(unit)}</span></span>'
+            '</summary>'
+            f'<div class="crew-detail">{term_breakdown(row, shown["terms"], extremes, unit)}</div>'
+            '</details></li>'
+        )
+    if items:
+        head = (
+            '<div class="bar-row bar-head" aria-hidden="true"><span>Rank</span><span>Crew</span>'
+            '<span>Score</span><span class="num">Score</span><span class="num">Tasks</span></div>'
+        )
+        ranking = f'<div class="rank-list">{head}<ol>{"".join(items)}</ol></div>'
+    else:
+        ranking = '<p class="empty">No ranked crews in this window.</p>'
+    folded = ""
+    if unranked:
+        rows_html = "".join(
+            f'<tr data-rank="unranked"><td data-label="Rank" class="rank unranked">{rank_text(None)}</td>'
+            f'<td data-label="Crew">{e(row["crew"])}</td>'
+            f'<td data-label="Model" class="crew-model">{e(row["model"])}</td>'
+            f'<td data-label="Score" class="num">{fmt_score(row["score"]) if row["score"] is not None else "unjudged"}</td>'
+            f'<td data-label="{e(unit.capitalize())}" class="num">{fmt_count(row["units"])}</td></tr>'
+            for row in unranked
+        )
+        scored = [row["score"] for row in unranked if row["score"] is not None]
+        sizes = [row["units"] for row in unranked]
+        swing = ""
+        if len(scored) > 1:
+            low_n, high_n = fmt_count(min(sizes)), fmt_count(max(sizes))
+            span = low_n if low_n == high_n else f"{low_n}–{high_n}"
+            swing = (
+                f'<p class="board-note">Scores on {span} {e(unit)} swing widely '
+                f'({fmt_score(min(scored))} to {fmt_score(max(scored))}) and say little about the crew.</p>'
+            )
+        count = len(unranked)
+        folded = (
+            f'<details class="more unranked-crews"><summary>{count} {plural(count, "crew")} under '
+            f'{shown["min_support"]} {e(unit)}, not ranked</summary>'
+            '<div class="table"><table><caption class="sr-only">Implementers below minimum support</caption>'
+            '<thead><tr><th class="rank">Rank</th><th>Crew</th><th>Model</th><th class="num">Score</th>'
+            f'<th class="num">{e(unit.capitalize())}</th></tr></thead>'
+            f'<tbody>{rows_html}</tbody></table></div>{swing}</details>'
+        )
+    return f'''<section class="board" id="implementers" aria-labelledby="implementers-title">
+<div class="board-head"><h2 id="implementers-title">Overall ranking</h2>
+{score_key_line(unit, fleet, "select a crew for its breakdown" if items else "")}</div>
+{board_window_line(since, until)}
+<p class="score-key">{e(shown["score_key"])}</p>
+{ranking}
+<p class="support-note">Rows under {shown["min_support"]} {e(unit)} stay unranked.</p>
+{folded}
 </section>'''
 
 
-def _analytics_base(root=None):
-    return (pathlib.Path(root) if root is not None else ROOT) / "data" / "analytics"
+def heat_class(score):
+    """Five shades around the tier's fleet rate of 100."""
+    delta = score - 100
+    if delta >= 25:
+        return "hm-b2"
+    if delta >= 5:
+        return "hm-b1"
+    if delta > -5:
+        return "hm-0"
+    if delta > -25:
+        return "hm-w1"
+    return "hm-w2"
+
+
+def tier_heatmap(block, overall_rows):
+    """One crew × tier table from implementers_by_tier.cells.
+
+    Rows follow the overall ranking; crews with tier cells but no overall row
+    follow by tier support. Crews with no tier slot at or above min_support and
+    no overall rank fold into a disclosure.
+    """
+    e = html.escape
+    slots, min_support = tier_slots(block)
+    unit = require_text(block, "unit", "implementers by tier")
+    since, until = board_window(block, "implementers by tier")
+    identities = {}
+    for tier in TIER_ORDER:
+        for key, slot in slots[tier].items():
+            identities.setdefault(key, {"crew": slot["crew"], "model": slot["model"], "units": 0, "sized": False})
+            identities[key]["units"] += slot["units"]
+            identities[key]["sized"] = identities[key]["sized"] or slot["rank"] is not None
+    order = {(row["crew"], row["model"]): index for index, row in enumerate(overall_rows)}
+    ranked_overall = {(row["crew"], row["model"]) for row in overall_rows if row["rank"] is not None}
+    keys = sorted(
+        identities,
+        key=lambda key: (order.get(key, len(order)), -identities[key]["units"], key[0], key[1]),
+    )
+    main = [key for key in keys if key in ranked_overall or identities[key]["sized"]]
+    rest = [key for key in keys if key not in main]
+    tiers = [tier for tier in TIER_ORDER if slots[tier]]
+
+    def render_row(key):
+        ident = identities[key]
+        cells = []
+        for tier in tiers:
+            label = TIER_LABELS[tier]
+            slot = slots[tier].get(key)
+            if slot is None:
+                cells.append(f'<td data-label="{label}" class="hm hm-none"><span class="hm-score">—</span>'
+                             '<span class="sr-only">no tasks</span></td>')
+                continue
+            thin = slot["rank"] is None
+            star = '<span class="hm-star" aria-hidden="true">★ </span>' if slot["rank"] == 1 else ""
+            star_sr = '<span class="sr-only">, best ranked crew in this tier</span>' if slot["rank"] == 1 else ""
+            sub = f'{fmt_count(slot["units"])} {unit if slot["units"] != 1 else unit.rstrip("s")}'
+            if thin:
+                sub += " · unranked"
+            cells.append(
+                f'<td data-label="{label}" class="hm {heat_class(slot["score"])}{" is-thin" if thin else ""}"'
+                f' data-rank="{slot["rank"] if slot["rank"] is not None else "unranked"}">'
+                f'<span class="hm-v"><span class="hm-score">{star}{fmt_score(slot["score"])}{star_sr}</span>'
+                f'<span class="hm-sub">{e(sub)}</span></span></td>'
+            )
+        return (
+            f'<tr><th scope="row">{crew_cell(ident)}</th>{"".join(cells)}</tr>'
+        )
+
+    def render_table(part, caption, head_ids):
+        heads = "".join(
+            (f'<th scope="col" id="implementers-{tier}">' if head_ids else '<th scope="col">')
+            + f"{TIER_LABELS[tier]}</th>"
+            for tier in tiers
+        )
+        return (
+            f'<div class="table heatmap-wrap"><table class="heatmap"><caption class="sr-only">{e(caption)}</caption>'
+            f'<thead><tr><th scope="col">Crew</th>{heads}</tr></thead>'
+            f'<tbody>{"".join(render_row(key) for key in part)}</tbody></table></div>'
+        )
+
+    if main:
+        body = render_table(main, "Implementer tier scores by crew; 100 is each tier's fleet rate", True)
+    else:
+        body = '<p class="empty">No tier cells in this window.</p>'
+    if rest:
+        count = len(rest)
+        body += (
+            f'<details class="more"><summary>{count} more {plural(count, "crew")} with only small tier samples</summary>'
+            + render_table(rest, "Crews with only small tier samples", False) + "</details>"
+        )
+    legend = (
+        '<div class="hm-legend" aria-hidden="true"><span>Below 100</span>'
+        '<span class="hm-swatches"><i class="hm-w2"></i><i class="hm-w1"></i><i class="hm-0"></i>'
+        '<i class="hm-b1"></i><i class="hm-b2"></i></span><span>Above 100</span></div>'
+    )
+    # Old per-tier board anchors stay valid: a column header when the tier has
+    # a column, otherwise an empty marker at the top of the section.
+    with_column = set(tiers) if main else set()
+    anchors = "".join(f'<span id="implementers-{tier}"></span>' for tier in TIER_ORDER if tier not in with_column)
+    return f'''<section class="board" id="tiers" aria-labelledby="tiers-title">{anchors}
+<div class="board-head"><h2 id="tiers-title">By tier</h2>
+<p class="board-key">Each tier's fleet rate is 100 · ★ best ranked crew in the tier · faded = under {min_support} {e(unit)}</p></div>
+{board_window_line(since, until)}
+<p class="score-key">{e(TIER_SCORE_KEY)}</p>
+{body}
+{legend}
+</section>''', slots
+
+
+def role_bar_board(shown, element_id, title, label=None, note_html="", columns=(), footer=""):
+    """A reviewer or pilot board: score bars, unranked rows faded in place."""
+    e = html.escape
+    unit = shown["unit"]
+    fleet = shown["fleet"]
+    scale = bar_scale(shown["rows"], fleet)
+    since, until = shown["window"]
+    head_extra = "".join(f'<th class="num" scope="col">{e(name)}</th>' for name, _fn in columns)
+    rows = []
+    for row in shown["rows"]:
+        extra = "".join(f'<td class="num" data-label="{e(name)}">{fn(row)}</td>' for name, fn in columns)
+        rank_attr = str(row["rank"]) if row["rank"] is not None else "unranked"
+        score = fmt_score(row["score"]) if row["score"] is not None else "unjudged"
+        dim = ' class="dim"' if row["rank"] is None else ""
+        rows.append(
+            f'<tr data-rank="{rank_attr}"{dim}>'
+            f'<td data-label="Rank" class="rank{" unranked" if row["rank"] is None else ""}">{rank_text(row["rank"])}</td>'
+            f'<th scope="row" data-label="Crew">{crew_cell(row)}</th>'
+            f'<td data-label="Score" class="bar-cell">{score_bar(row["score"], fleet, scale)}'
+            f'<span class="score-num">{score}<span class="sr-only"> per 100 {e(unit)}</span></span></td>'
+            f'{extra}'
+            f'<td data-label="{e(unit.capitalize())}" class="num">{fmt_count(row["units"])}</td></tr>'
+        )
+    if rows:
+        table_html = (
+            f'<div class="table"><table class="bar-table"><caption class="sr-only">{e(title)}'
+            f'{f" ({e(label)})" if label else ""}</caption>'
+            f'<thead><tr><th class="rank" scope="col">Rank</th><th scope="col">Crew</th><th scope="col">Score</th>'
+            f'{head_extra}<th class="num" scope="col">{e(unit.capitalize())}</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody></table></div>'
+        )
+    else:
+        table_html = '<p class="empty">No rows in this window.</p>'
+    label_html = f' <span class="board-label">{e(label)}</span>' if label else ""
+    return f'''<section class="board" id="{e(element_id)}" aria-labelledby="{e(element_id)}-title">
+<div class="board-head"><h2 id="{e(element_id)}-title">{e(title)}{label_html}</h2>
+{score_key_line(unit, fleet)}</div>
+{board_window_line(since, until)}
+{note_html}<p class="score-key">{e(shown["score_key"])}</p>
+{table_html}
+<p class="support-note">Rows under {shown["min_support"]} {e(unit)} stay unranked and are faded.</p>
+{footer}
+</section>'''
+
+
+def terms_sentence(terms):
+    credits = [lower_first(t["label"]) for t in terms if t["group"] == "credit"]
+    debits = [lower_first(t["label"]) for t in terms if t["group"] == "problem"]
+    parts = []
+    if credits:
+        parts.append(f"Credit: {join_words(credits)}.")
+    if debits:
+        parts.append(f"Debits: {join_words(debits)}.")
+    return " ".join(parts)
+
+
+def provisional_note(board):
+    count = board.get("provisional_units")
+    if not as_number(count) or count <= 0:
+        return None
+    return f"{fmt_count(count)} reviews in this window are still provisional."
+
+
+def thin_board_note(shown, what):
+    ranked = [row for row in shown["rows"] if row["rank"] is not None]
+    if len(ranked) >= 3:
+        return None
+    count = len(ranked)
+    text = (
+        f"Only {count} {plural(count, 'crew')} {what} {shown['min_support']} or more {shown['unit']} "
+        "in this window, so this board is thin."
+    )
+    shown_unranked = [row for row in shown["rows"] if row["rank"] is None and row["score"] is not None]
+    if shown_unranked:
+        names = join_words(f'{row["crew"]} ({fmt_score(row["score"])})' for row in shown_unranked)
+        text += f" {names} {'is' if len(shown_unranked) == 1 else 'are'} shown but not ranked."
+    return text
+
+
+def reviewers_group(reviewers):
+    e = html.escape
+    provisional = reviewers.get("provisional")
+    if not isinstance(provisional, dict):
+        sys.exit("scorecards.json: reviewers.provisional is required")
+    settled = reviewers.get("settled")
+    if settled is not None and not isinstance(settled, dict):
+        sys.exit("scorecards.json: reviewers.settled is not a board")
+    prov = role_rows(provisional, "reviewers provisional")
+    footer = f'<p class="board-note">{e(terms_sentence(prov["terms"]))}</p>' if prov["terms"] else ""
+    notes = [text for text in (provisional_note(provisional),) if text]
+    if notes and settled is not None:
+        notes.append("These scores will move as findings are confirmed or rejected; the settled board is the one to trust.")
+    thin = thin_board_note(prov, "reviewed")
+    if thin:
+        notes.append(thin)
+    banner = f'<p class="role-banner">{e(" ".join(notes))}</p>\n' if notes else ""
+    boards = [role_bar_board(prov, "reviewers", "Reviewers", "Provisional", banner, footer=footer)]
+    toggle = ""
+    if isinstance(settled, dict):
+        done = role_rows(settled, "reviewers settled")
+        thin = thin_board_note(done, "reviewed")
+        prev = "previous window" if done["window"][1] < prov["window"][1] else "its own window"
+        settled_banner = f'<p class="role-banner">{e(thin)}</p>\n' if thin else ""
+        settled_footer = f'<p class="board-note">{e(terms_sentence(done["terms"]))}</p>' if done["terms"] else ""
+        boards.append(role_bar_board(done, "reviewers-settled", "Reviewers", "Settled", settled_banner, footer=settled_footer))
+        toggle = (
+            '<div class="board-toggle" role="group" aria-label="Review window" hidden>'
+            '<button type="button" aria-pressed="true" data-board="reviewers">Provisional · this window</button>'
+            f'<button type="button" aria-pressed="false" data-board="reviewers-settled">Settled · {prev}</button></div>'
+        )
+    return toggle + "\n".join(boards), prov
+
+
+def pilots_board(pilots):
+    shown = role_rows(pilots, "pilots")
+    keys = {term["key"] for term in shown["terms"]}
+
+    def rate(key):
+        def cell(row):
+            return fmt_score(row["per_100"].get(key)) if row["per_100"].get(key) is not None else "—"
+        return cell
+
+    columns = []
+    shown_keys = set()
+    if "tier_calibration" in keys:
+        columns.append(("Calibration", rate("tier_calibration")))
+        shown_keys.add("tier_calibration")
+    if "f1_lift" in keys:
+        columns.append(("F1 lift", rate("f1_lift")))
+        shown_keys.add("f1_lift")
+    if "confirmed_warnings" in keys and "dismissed_warnings" in keys:
+        columns.append(("Warnings ✓/✗", lambda row: f'{rate("confirmed_warnings")(row)} / {rate("dismissed_warnings")(row)}'))
+        shown_keys.update(("confirmed_warnings", "dismissed_warnings"))
+    footer = ""
+    rest = [term for term in shown["terms"] if term["key"] not in shown_keys]
+    if columns:
+        text = f'Calibration, F1 lift and warnings are per 100 {shown["unit"]}.'
+        ranked = [row for row in shown["rows"] if row["rank"] is not None]
+        rest_debits = [term for term in rest if term["group"] == "problem"]
+        values = [row["per_100"].get(term["key"]) for term in rest_debits for row in ranked]
+        values = [value for value in values if value is not None]
+        if rest_debits and values:
+            text += (
+                f' Debits also cover {join_words(lower_first(t["label"]) for t in rest_debits)}, '
+                f'all at most {fmt_score(max(values))} per 100 for every ranked pilot.'
+            )
+        footer = f'<p class="board-note">{html.escape(text)}</p>'
+    return role_bar_board(shown, "pilots", "Pilots", columns=columns, footer=footer), shown
+
+
+def agents_sections(scorecards):
+    if not isinstance(scorecards, dict):
+        sys.exit("scorecards.json: expected an object")
+    implementers = scorecards.get("implementers")
+    pilots = scorecards.get("pilots")
+    reviewers = scorecards.get("reviewers")
+    if not isinstance(implementers, dict) or not isinstance(pilots, dict) or not isinstance(reviewers, dict):
+        sys.exit("scorecards.json: implementers, reviewers and pilots are required")
+    by_tier = scorecards.get("implementers_by_tier")
+    if not isinstance(by_tier, dict):
+        sys.exit("scorecards.json: implementers_by_tier is required")
+    impl = role_rows(implementers, "implementers")
+    heatmap, slots = tier_heatmap(by_tier, impl["rows"])
+    takeaways = implementer_takeaways(slots, impl["rows"], impl["terms"], require_text(by_tier, "unit", "implementers by tier"))
+    reviewer_html, prov = reviewers_group(reviewers)
+    pilot_html, pilot = pilots_board(pilots)
+    return {
+        "implementers": (impl, takeaways + implementers_overall(impl) + heatmap),
+        "reviewers": (prov, reviewer_html),
+        "pilots": (pilot, pilot_html),
+    }
 
 
 def render_agents_body(scorecards, snapshot_date, picker="", banner=""):
     if not isinstance(snapshot_date, str) or not DATE_DIR.fullmatch(snapshot_date):
         sys.exit(f"analytics snapshot date must be YYYY-MM-DD, got {snapshot_date!r}")
-    boards = agents_boards(scorecards)
+    groups = agents_sections(scorecards)
     e = html.escape
-    nav = "\n".join(f'<a href="#{e(board["id"])}">{e(board["nav"])}</a>' for board in boards)
-    sections = "\n".join(render_board(board) for board in boards)
-    return f'''<article class="analytics">
+    impl = groups["implementers"][0]
+    since, until = impl["window"]
+    tabs = []
+    panels = []
+    for key, title in (("implementers", "Implementers"), ("reviewers", "Reviewers"), ("pilots", "Pilots")):
+        shown, body = groups[key]
+        ranked = sum(1 for row in shown["rows"] if row["rank"] is not None)
+        sub = "provisional" if key == "reviewers" else f"{ranked} ranked"
+        tabs.append(
+            f'<li><a href="#{key}" data-tab="{key}">{title} <span class="tab-boards">{sub}</span></a></li>'
+        )
+        panels.append(f'<div class="role-group" data-group="{key}">\n{body}\n</div>')
+    fleet = impl["fleet"]
+    overall = f" rather than the overall {fmt_score(fleet)}" if fleet is not None else ""
+    method = f'''<details class="more method" id="method"><summary>Method and windows</summary><ul>
+<li>Implementers: {e(terms_sentence(impl["terms"]) or "see the method note.")}</li>
+<li>Tier scores compare a crew with the fleet's rates on that tier, summed across task types, so 100 is the tier average{e(overall)}. A crew's tier support is the sum of its task-type cells, counted per crew and model.</li>
+<li>Reviewer scores need findings to settle. The settled board uses its own, earlier window; the provisional board moves as findings are confirmed or rejected.</li>
+<li>Rows under each board's minimum support are shown but not ranked. Ranks are the snapshot's own.</li>
+<li>Orchestrators are not scored on this page.</li>
+</ul></details>'''
+    return f'''<article class="analytics agents-page">
 <h1>Agent scorecards</h1>
 {banner}{picker}
-<p class="summary">Implementer, reviewer and pilot crews from the daily public snapshot. Each scorecard shows its own window. How a score is built is <a href="/notes/crew-rankings-method/">how the crew rankings work</a>.</p>
+<p class="summary">How each crew does in its role. 100 is the fleet's own rate; higher is better. Each scorecard shows its own window. How a score is built is <a href="/notes/crew-rankings-method/">how the crew rankings work</a>.</p>
+<p class="window window-statement">Last 30 days · {friendly_window(since, until)}</p>
 <p class="as-of">Snapshot {e(snapshot_date)}.</p>
-<nav class="board-nav" aria-label="Scorecards">
-{nav}
-</nav>
-{sections}
+<nav class="group-nav" aria-label="Roles"><ul>{"".join(tabs)}</ul></nav>
+{"".join(panels)}
+{method}
 </article>'''
+
+
+def _analytics_base(root=None):
+    return (pathlib.Path(root) if root is not None else ROOT) / "data" / "analytics"
 
 
 def render_agents_page(scorecards, snapshot_date, picker=None, banner="", archive_month=None, url=None, root=None):
@@ -702,6 +1219,7 @@ def render_agents_page(scorecards, snapshot_date, picker=None, banner="", archiv
         url or f"{SITE}/analytics/agents/",
         render_agents_body(scorecards, snapshot_date, picker, banner),
         current="analytics",
+        extra_css=("analytics.css",), extra_js=("analytics.js",),
     )
 
 
@@ -806,7 +1324,6 @@ def reliability_table(rows, denominator, caption):
 # page; anything else is dropped before rendering, the same allowlist rule the
 # snapshot applies when it sums by_job across workspaces.
 SAFE_JOB_ID = re.compile(r"^[A-Za-z0-9_@.+-]{1,80}$")
-BY_JOB_PLOT_W = 280
 JOB_LABELS = {
     "task_pr_pipeline": "PR delivery",
     "task_pilot_pipeline": "Pilot delivery",
@@ -847,8 +1364,8 @@ def reliability_by_job(data):
 
     Drops rows whose job id fails SAFE_JOB_ID or whose counts are not exact
     non-negative integers, recomputes each failure rate from counts (never the
-    snapshot's supplied rate), and sorts by failures then total, as the
-    snapshot orders them.
+    snapshot's supplied rate), keeps only the snapshot's boolean low_sample
+    flag, and sorts by failures then total, as the snapshot orders them.
     """
     rows = data.get("by_job") if isinstance(data, dict) else None
     if not isinstance(rows, list):
@@ -875,6 +1392,8 @@ def reliability_by_job(data):
             continue
         denominator = valid["succeeded"] + valid["failed"]
         rate = valid["failed"] / denominator if denominator else None
+        supplied = row.get("failure_rate")
+        low = isinstance(supplied, dict) and supplied.get("low_sample") is True
         jobs.append({
             "job_id": job,
             "label": JOB_LABELS.get(job, job),
@@ -883,69 +1402,251 @@ def reliability_by_job(data):
             "total": valid["total"],
             "denominator": denominator,
             "rate": rate,
+            "low": low,
         })
     jobs.sort(key=lambda job: (-job["failed"], -job["total"], job["job_id"]))
     return jobs
 
 
-def reliability_by_job_section(jobs, window):
-    """Failure rate by job, in the dashboard's bar style with a disclosure."""
-    title = "Failure rate by job"
-    if not jobs:
-        return (
-            f'<section class="board" id="by-job"><h2>{title}</h2>{window}'
-            '<p class="score-key">Each bar is a job\u2019s share of settled deliveries '
-            "that failed. The percentage and counts name the rate, not colour alone.</p>"
-            '<p class="board-note">30-day window; all workspaces combined. '
-            "No job breakdown in this window.</p>"
-            '<p class="empty">No job breakdown in this window.</p></section>'
-        )
-    bars = []
-    for job in jobs:
-        label = html.escape(job["label"])
-        if job["rate"] is None:
-            rate_text = "Unavailable"
-            width = 0.0
-            aria = f'{job["label"]}: unavailable, no settled runs'
+HOT_JOB_RATE = 0.05
+SPIKE_MIN_RATE = 0.05
+SPIKE_FACTOR = 1.5
+MONTH_DAY = "%b"
+
+
+def pct(part, whole, places=2):
+    return f"{part / whole:.{places}%}" if whole else "Unavailable"
+
+
+def short_pct(rate):
+    """Two decimals under 1%, one above: 0.08%, 7.7%."""
+    if rate is None:
+        return "Unavailable"
+    return f"{rate:.2%}" if rate < 0.01 else f"{rate:.1%}"
+
+
+def reliability_recovery(data):
+    """totals.recovery.per_job_run as (numerator, denominator), counts only."""
+    totals = data.get("totals")
+    recovery = totals.get("recovery") if isinstance(totals, dict) else None
+    per_run = recovery.get("per_job_run") if isinstance(recovery, dict) else None
+    if not isinstance(per_run, dict):
+        return None
+    numerator, denominator = per_run.get("numerator"), per_run.get("denominator")
+    if type(numerator) is not int or type(denominator) is not int or numerator < 0 or denominator <= 0:
+        return None
+    if numerator > denominator:
+        return None
+    return numerator, denominator
+
+
+def reliability_days(data, since, until):
+    """Validated daily buckets from over_time, rates recomputed from counts.
+
+    A bucket that starts before the window opens or ends after it closes is a
+    partial day. Rows with a bad stamp or counts are dropped, never guessed.
+    """
+    rows = data.get("over_time") if isinstance(data, dict) else None
+    if not isinstance(rows, list):
+        return []
+    opened = analytics_page.parse_time(since)
+    closed = analytics_page.parse_time(until)
+    days = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        start, end = row.get("bucket_start"), row.get("bucket_end")
+        if not isinstance(start, str) or not isinstance(end, str):
+            continue
+        if not UTC_STAMP.fullmatch(start) or not UTC_STAMP.fullmatch(end):
+            continue
+        try:
+            begins, ends = analytics_page.parse_time(start), analytics_page.parse_time(end)
+        except ValueError:
+            continue
+        if ends <= begins:
+            continue
+        counts = row.get("counts")
+        if not isinstance(counts, dict):
+            continue
+        succeeded, failed = counts.get("succeeded"), counts.get("failed")
+        if type(succeeded) is not int or type(failed) is not int or succeeded < 0 or failed < 0:
+            continue
+        settled = succeeded + failed
+        days.append({
+            "start": start,
+            "begins": begins,
+            "failed": failed,
+            "settled": settled,
+            "rate": failed / settled if settled else None,
+            "partial": begins < opened or ends > closed,
+        })
+    days.sort(key=lambda day: day["begins"])
+    return days
+
+
+def day_label(day):
+    return f"{day['begins'].day} {day['begins'].strftime(MONTH_DAY)}"
+
+
+def daily_chart(days, overall_rate):
+    """Failure rate per UTC day as HTML bars, with a 30-day reference line,
+    a settled-runs strip, spike labels and a per-day text alternative."""
+    e = html.escape
+    rated = [day["rate"] for day in days if day["rate"] is not None]
+    if not rated:
+        return '<p class="empty">No daily buckets in this window.</p>'
+    top = max(rated + ([overall_rate] if overall_rate is not None else []))
+    # Headroom above the tallest bar for its spike label.
+    scale = max(0.02, math.ceil(top * 1.15 * 100 / 2) * 2 / 100)
+    volume_top = max(day["settled"] for day in days) or 1
+    # Rounded to the precision the note prints, so 1.5 x 20% labels a 30% day.
+    threshold = round(max(SPIKE_MIN_RATE, (overall_rate or 0) * SPIKE_FACTOR), 3)
+    bars, volumes, ticks = [], [], []
+    for index, day in enumerate(days):
+        rate = day["rate"]
+        label = day_label(day)
+        partial = " (partial day)" if day["partial"] else ""
+        if rate is None:
+            text = f"{label}: unavailable, no settled runs{partial}"
         else:
-            rate_text = f'{job["rate"]:.2%}'
-            width = max(0.0, min(float(BY_JOB_PLOT_W), BY_JOB_PLOT_W * job["rate"]))
-            aria = f'{job["label"]}: {rate_text} failure rate'
-        counts_text = (
-            f'{job["failed"]:,} failed of {job["denominator"]:,} settled '
-            f'({job["total"]:,} total)'
-        )
-        rect = (
-            f'<rect class="bar s-hard" x="0" y="2" width="{width:.2f}" height="10"></rect>'
-            if width > 0 else ""
-        )
+            text = f"{label}: {rate:.2%} · {day['failed']:,} failed of {day['settled']:,} settled{partial}"
+        spike = rate is not None and rate >= threshold
+        height = 0 if rate is None else max(1.5, rate / scale * 100)
+        state = (" is-partial" if day["partial"] else "") + (" is-spike" if spike else "")
+        spike_label = f'<span class="day-label" aria-hidden="true">{short_pct(rate)}</span>' if spike else ""
         bars.append(
-            '<div class="hbar">'
-            f'<span class="hbar-label">{label}</span>'
-            f'<svg class="hbar-plot" viewBox="0 0 {BY_JOB_PLOT_W} 14" '
-            f'data-plot-w="{BY_JOB_PLOT_W}" data-ymax="1" role="img" '
-            f'aria-label="{html.escape(aria)}">{rect}</svg>'
-            f'<span class="hbar-value"><span class="num">{html.escape(rate_text)}</span> '
-            f'<span class="unit">{html.escape(counts_text)}</span></span>'
-            "</div>"
+            f'<li class="day{state}" title="{e(text)}" style="--h:{height:.1f}%">'
+            f'{spike_label}<span class="day-bar"></span><span class="sr-only">{e(text)}</span></li>'
         )
-
-    def render_hbars(part, overflow):
-        caption = (
-            '<p class="sr-only">Additional jobs</p>' if overflow else ""
+        volume = max(4.0, day["settled"] / volume_top * 100)
+        volumes.append(f'<span class="{state.strip()}"><span style="height:{volume:.1f}%"></span></span>')
+        tick = label if index % 5 == 0 or index == len(days) - 1 else ""
+        ticks.append(f"<span>{e(tick)}</span>")
+    reference = ""
+    if overall_rate is not None:
+        reference = (
+            f'<span class="day-ref" aria-hidden="true" style="bottom:{min(100.0, overall_rate / scale * 100):.1f}%">'
+            f'<span>{overall_rate:.2%}</span></span>'
         )
-        return f'{caption}<div class="hbars" data-ymax="1">{"".join(part)}</div>'
-
-    body = analytics_page.with_row_disclosure(bars, render_hbars, "jobs")
-    return (
-        f'<section class="board" id="by-job"><h2>{title}</h2>{window}'
-        '<p class="score-key">Each bar is a job\u2019s share of settled deliveries '
-        "that failed. The percentage and counts name the rate, not colour alone.</p>"
-        '<p class="board-note">30-day window; all workspaces combined. '
-        "Denominator per job: successes plus direct failures; "
-        "cascaded echoes are excluded, as in Success and failure above.</p>"
-        f"{body}</section>"
+    peak = max(days, key=lambda day: (day["settled"], day["begins"]))
+    partial_days = [day for day in days if day["partial"]]
+    partial_note = (
+        f" Faded: partial days ({join_words(day_label(day) for day in partial_days)}), where the window "
+        "opens or closes mid-day." if partial_days else ""
     )
+    table_rows = "".join(
+        f'<tr><td data-label="Day"><time datetime="{e(day["start"])}">{e(day_label(day))}</time>'
+        f'{" (partial)" if day["partial"] else ""}</td>'
+        f'<td class="num" data-label="Failure rate">{e(pct(day["failed"], day["settled"]))}</td>'
+        f'<td class="num" data-label="Failed">{day["failed"]:,}</td>'
+        f'<td class="num" data-label="Settled runs">{day["settled"]:,}</td></tr>'
+        for day in reversed(days)
+    )
+    table_html = (
+        '<details class="more"><summary>Daily figures as a table</summary><div class="table"><table>'
+        '<caption class="sr-only">Failure rate by UTC day, newest first</caption>'
+        '<thead><tr><th scope="col">Day</th><th scope="col" class="num">Failure rate</th>'
+        '<th scope="col" class="num">Failed</th><th scope="col" class="num">Settled runs</th></tr></thead>'
+        f'<tbody>{table_rows}</tbody></table></div></details>'
+    )
+    return (
+        '<div class="daychart-box"><div class="daychart-grid">'
+        f'<div class="daychart-axis" aria-hidden="true"><span>{scale:.0%}</span><span>0%</span></div>'
+        f'<div class="daychart-plot">{reference}'
+        f'<ol class="daychart" aria-label="Failure rate by UTC day, oldest first">{"".join(bars)}</ol></div>'
+        f'<div class="day-vols" aria-hidden="true">{"".join(volumes)}</div>'
+        f'<div class="day-ticks" aria-hidden="true">{"".join(ticks)}</div></div>'
+        f'<p class="daychart-note">Grey strip: settled runs per day (peak {peak["settled"]:,} on {e(day_label(peak))}). '
+        f'Labelled bars are at least {threshold:.1%}.{e(partial_note)}</p>'
+        f'</div>{table_html}'
+    )
+
+
+def reliability_by_job_section(jobs, total_failed):
+    """Failures by job: bars by count or by rate, small samples marked."""
+    e = html.escape
+    failing = [job for job in jobs if job["failed"] > 0]
+    clean = [job for job in jobs if job["failed"] == 0]
+    head = (
+        '<div class="board-head"><h2 id="by-job-title">Failures by job</h2>'
+        '<div class="board-toggle job-sort" role="group" aria-label="Sort jobs" hidden>'
+        '<button type="button" aria-pressed="true" data-sort="count">Most failures</button>'
+        '<button type="button" aria-pressed="false" data-sort="rate">Highest rate</button></div></div>'
+    )
+    intro = (
+        '<p class="score-key">Rate = direct failures ÷ settled runs (successes plus direct failures) for '
+        "each job, all workspaces combined. The counts and percentages name the rate, not colour alone.</p>"
+    )
+    if not failing:
+        return (
+            f'<section class="board" id="by-job" aria-labelledby="by-job-title">{head}{intro}'
+            '<p class="empty">No job failures in this window.</p>'
+            + clean_jobs(clean) + "</section>"
+        )
+    max_failed = max(job["failed"] for job in failing)
+    sized = [job["rate"] for job in failing if job["rate"] is not None and not job["low"]]
+    max_rate = max(sized, default=None) or max((job["rate"] or 0 for job in failing), default=0) or 1
+    rows = []
+    for order, job in enumerate(failing):
+        rate = job["rate"]
+        hot = rate is not None and rate >= HOT_JOB_RATE and not job["low"]
+        tag = "small sample" if job["low"] else (f"above {HOT_JOB_RATE:.0%}" if hot else "")
+        w_count = max(0.5, job["failed"] / max_failed * 100)
+        w_rate = max(0.5, min(100.0, (rate or 0) / max_rate * 100))
+        tone = "is-low" if job["low"] else ("is-hot" if hot else "")
+        rows.append(
+            f'<tr class="job {tone}" data-order="{order}" data-failed="{job["failed"]}" '
+            f'data-rate="{rate if rate is not None else -1:.6f}" data-low="{1 if job["low"] else 0}">'
+            f'<th scope="row" data-label="Job"><span class="job-name">{e(job["label"])}</span>'
+            f'<span class="job-tag">{e(tag)}</span></th>'
+            f'<td class="bar-cell job-bar-cell" data-label="Bar"><span class="job-bar" aria-hidden="true">'
+            f'<span class="job-fill" style="--w-count:{w_count:.1f}%;--w-rate:{w_rate:.1f}%"></span></span></td>'
+            f'<td class="num job-rate" data-label="Rate">{e(short_pct(rate))}</td>'
+            f'<td class="num" data-label="Failed">{job["failed"]:,}</td>'
+            f'<td class="num" data-label="Settled runs">{job["denominator"]:,}</td></tr>'
+        )
+    top = failing[0]
+    share = f" {e(top['label'])} accounts for {top['failed'] / total_failed:.0%} of all direct failures." if total_failed else ""
+    notes = (
+        f'<p class="board-note sort-note" data-sort-note="count">Sorted by failed runs.{share}</p>'
+        '<p class="board-note sort-note" data-sort-note="rate" hidden>Sorted by failure rate. '
+        "Small samples, as the snapshot flags them, sink to the bottom.</p>"
+    )
+    table_html = (
+        '<div class="table"><table class="bar-table jobs" data-sort="count">'
+        '<caption class="sr-only">Direct failures by job</caption>'
+        '<thead><tr><th scope="col">Job</th><th scope="col"><span class="when-count">Failed runs</span>'
+        '<span class="when-rate">Failure rate</span></th><th scope="col" class="num">Rate</th>'
+        '<th scope="col" class="num">Failed</th><th scope="col" class="num">Settled runs</th></tr></thead>'
+        f'<tbody>{"".join(rows)}</tbody></table></div>'
+    )
+    return (
+        f'<section class="board" id="by-job" aria-labelledby="by-job-title">{head}{intro}{notes}'
+        f"{table_html}{clean_jobs(clean)}</section>"
+    )
+
+
+def clean_jobs(clean):
+    if not clean:
+        return ""
+    count = len(clean)
+    items = " · ".join(
+        f'{html.escape(job["label"])} ({job["denominator"]:,})' for job in clean
+    )
+    return (
+        f'<details class="more"><summary>{count} {plural(count, "job")} with no failures</summary>'
+        f'<p class="board-note">{items}</p><p class="board-note">Settled runs in brackets.</p></details>'
+    )
+
+
+OUTCOME_MIX = (
+    ("succeeded", "Succeeded", "mix-ok", "Counted in the success rate"),
+    ("failed", "Direct failures", "mix-fail", "Counted in the failure rate"),
+    ("cascaded", "Cascaded failures", "mix-echo", "Echoes of a direct failure; not rated"),
+    ("other", "Other outcomes", "mix-other", "Held, cancelled, paused, in flight; not rated"),
+)
+OTHER_KEYS = ("held", "cancelled", "upgrade_paused", "in_flight", "skipped", "unknown")
 
 
 def render_reliability_page(data, snapshot_date, picker=None, banner="", archive_month=None, url=None, root=None):
@@ -953,50 +1654,114 @@ def render_reliability_page(data, snapshot_date, picker=None, banner="", archive
         picker = analytics_page.picker_html(_analytics_base(root), "reliability", "reliability.json", archive_month)
     if not isinstance(snapshot_date, str) or not DATE_DIR.fullmatch(snapshot_date):
         sys.exit("reliability snapshot date must be YYYY-MM-DD")
+    e = html.escape
     counts, (since, until) = reliability_aggregates(data)
+    total = counts["total"]
     settled = counts["succeeded"] + counts["failed"]
-    window = render_window(since, until)
+    other = sum(counts[key] for key in OTHER_KEYS)
+    rate = counts["failed"] / settled if settled else None
     outcomes = dict(RELIABILITY_OUTCOMES)
-    sections = []
-    boards = (
-        ("settled", "Success and failure", ("succeeded", "failed"), settled,
-         "Rates use successes plus direct failures. Cascaded failures are wrapper echoes "
-         "rolled into the originating failure, so they are excluded from this denominator."),
-        ("failures", "Failure categories", ("failed", "cascaded"), counts["total"],
-         "Direct failures and cascaded failures are shown separately. Each rate is a share "
-         "of all recorded runs, including unsettled and other outcomes."),
-        ("other-outcomes", "Other outcomes",
-         ("cancelled", "held", "upgrade_paused", "in_flight", "skipped", "unknown"), counts["total"],
-         "These outcomes are excluded from the success and failure rates above. "
-         "Each rate here is a share of all recorded runs."),
+
+    headline = (
+        '<div class="rel-hero"><span class="tile-head">Settled runs that succeeded</span>'
+        f'<span class="rel-big">{e(pct(counts["succeeded"], settled))}</span>'
+        f'<span class="rel-sub">{counts["succeeded"]:,} of {settled:,} · '
+        f'<span class="is-worse">{counts["failed"]:,}</span> failed directly</span></div>'
     )
-    for element_id, title, keys, denominator, note in boards:
-        rows = [(outcomes[key], counts[key]) for key in keys]
-        sections.append(
-            f'<section class="board" id="{element_id}"><h2>{title}</h2>{window}'
-            f'<p class="score-key">{note}</p>'
-            f'<p class="board-note">Denominator: {denominator:,} runs.</p>'
-            + reliability_table(rows, denominator, title) + '</section>'
+    recovery = reliability_recovery(data)
+    if recovery:
+        recovery_tile = (
+            f'{e(pct(recovery[0], recovery[1], 1))}',
+            f"{recovery[0]:,} of {recovery[1]:,} job runs with steps",
         )
-    jobs = reliability_by_job(data)
-    sections.insert(1, reliability_by_job_section(jobs, window))
-    empty = '<p class="empty">No recorded runs in this window. Rates are unavailable.</p>' if not counts["total"] else ""
-    body = f'''<article class="analytics">
+    else:
+        recovery_tile = ("Unavailable", "no recovery figures in this snapshot")
+    other_parts = [
+        f"{counts['held']:,} held", f"{counts['cancelled']:,} cancelled",
+        f"{counts['upgrade_paused'] + counts['in_flight']:,} paused or in flight",
+    ]
+    if counts["skipped"]:
+        other_parts.append(f"{counts['skipped']:,} skipped")
+    if counts["unknown"]:
+        other_parts.append(f"{counts['unknown']:,} unknown")
+    tiles = (
+        ("recovery", "Needed recovery", *recovery_tile),
+        ("cascaded", "Cascaded echoes", f"{counts['cascaded']:,}", "rolled into their origin, not counted twice"),
+        ("other-outcomes", "Other outcomes", f"{other:,}", " · ".join(other_parts)),
+    )
+    tile_html = "".join(
+        f'<li id="{key}"><div class="tile"><span class="tile-head">{e(label)}</span>'
+        f'<span class="tile-value">{e(value)}</span><span class="tile-sub">{e(sub)}</span></div></li>'
+        for key, label, value, sub in tiles
+    )
+    hero = (
+        f'<section class="rel-top" id="settled" aria-label="Success and failure">{headline}'
+        f'<ul class="tiles rel-tiles">{tile_html}</ul></section>'
+    )
+
+    mix_counts = {"succeeded": counts["succeeded"], "failed": counts["failed"],
+                  "cascaded": counts["cascaded"], "other": other}
+    aria = ", ".join(f"{pct(mix_counts[key], total)} {label.lower()}" for key, label, _cls, _note in OUTCOME_MIX)
+    segments = "".join(
+        f'<span class="mix-seg {cls}" style="flex-grow:{mix_counts[key]}"></span>'
+        for key, _label, cls, _note in OUTCOME_MIX if mix_counts[key]
+    )
+    legend = "".join(
+        f'<li><i class="{cls}" aria-hidden="true"></i><span><strong>{e(label)}</strong> '
+        f'<span class="mix-n">{mix_counts[key]:,} · {e(pct(mix_counts[key], total))}</span>'
+        f'<span class="mix-note">{e(note)}</span></span></li>'
+        for key, label, cls, note in OUTCOME_MIX
+    )
+    every = reliability_table([(outcomes[key], counts[key]) for key, _label in RELIABILITY_OUTCOMES], total,
+                              "Every outcome as a share of all recorded runs")
+    mix = (
+        '<section class="board" id="failures" aria-labelledby="failures-title">'
+        f'<div class="board-head"><h2 id="failures-title">Where every run ended</h2>'
+        f'<p class="board-key">Share of all {total:,} recorded runs</p></div>'
+        + (f'<div class="mix-bar" role="img" aria-label="{e(aria)}">{segments}</div>' if total else "")
+        + f'<ul class="mix-legend">{legend}</ul>'
+        + f'<details class="more"><summary>Every outcome count</summary>{every}</details></section>'
+    )
+
+    days = reliability_days(data, since, until)
+    daily = (
+        '<section class="board" id="daily" aria-labelledby="daily-title">'
+        '<div class="board-head"><h2 id="daily-title">Failure rate by day</h2>'
+        '<p class="board-key">Direct failures ÷ settled runs per UTC day'
+        + (f' · <span class="k-ref" aria-hidden="true"></span> 30-day rate {rate:.2%}' if rate is not None else "")
+        + ' · faded = partial day</p></div>'
+        + daily_chart(days, rate) + "</section>"
+    )
+
+    by_job = reliability_by_job_section(reliability_by_job(data), counts["failed"])
+
+    method = '''<details class="more method" id="method"><summary>How these are counted</summary><ul>
+<li>Settled runs = successes plus direct failures. Failure rates use this denominator, recomputed on this page from the counts.</li>
+<li>A cascaded failure is a wrapper job echoing a failure that started in another job. It is rolled into the original, so it is not counted twice.</li>
+<li>Held, cancelled, paused-for-upgrade, in-flight, skipped and unknown runs are outside the success and failure rates.</li>
+<li>Recovery: a job run where any step needed a recovery attempt, out of runs with a recorded step invocation.</li>
+<li>Days are UTC. The first and last days are partial when the 30-day window opens or closes mid-day.</li>
+<li>Counts are as of the snapshot. Held and in-flight runs can settle in later snapshots. Rates describe observed outcomes, not causes, and are not a comparison of crews.</li>
+</ul></details>'''
+    empty = '<p class="empty">No recorded runs in this window. Rates are unavailable.</p>' if not total else ""
+    body = f'''<article class="analytics reliability-page">
 <h1>Reliability</h1>
 {banner}{picker}
 <p class="summary">Success, failure and other outcomes across the fleet over 30 days, from the daily public snapshot.</p>
-<p class="as-of">Snapshot {snapshot_date}. {counts["total"]:,} recorded runs; {settled:,} settled outcomes.</p>
-<nav class="board-nav" aria-label="Reliability">
-<a href="#settled">Success and failure</a><a href="#by-job">Failure rate by job</a><a href="#failures">Failure categories</a><a href="#other-outcomes">Other outcomes</a>
-</nav>
-{empty}{"".join(sections)}
-<p class="board-note">Counts reflect the snapshot at collection time; in-flight and held outcomes can change in later snapshots. Rates describe observed outcomes, not a causal comparison of crews.</p>
+<p class="window window-statement">Last 30 days · {friendly_window(since, until)}</p>
+<p class="as-of">All workspaces · Snapshot {snapshot_date} · {total:,} recorded runs; {settled:,} settled outcomes.</p>
+<p class="board-window">Exact window: <time datetime="{e(since)}">{e(since)}</time> to <time datetime="{e(until)}">{e(until)}</time> UTC.</p>
+{empty}{hero}
+{mix}
+{daily}
+{by_job}
+{method}
 </article>'''
     return page(
         "Reliability — Constellation Works",
         "Aggregate Orbit success and failure counts and rates over 30 days.",
         url or f"{SITE}/analytics/reliability/", body, current="analytics",
-        extra_css=("analytics.css",),
+        extra_css=("analytics.css",), extra_js=("analytics.js",),
     )
 
 

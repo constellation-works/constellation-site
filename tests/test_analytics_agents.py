@@ -316,23 +316,101 @@ class AgentsPageTest(unittest.TestCase):
             ("reviewers", data["reviewers"]["provisional"]),
             ("reviewers-settled", data["reviewers"]["settled"]),
             ("pilots", data["pilots"]),
-            ("implementers-low", data["implementers_by_tier"]),
+            ("tiers", data["implementers_by_tier"]),
         ):
             block = section(doc, element_id)
             since, until = payload["window"]["since"], payload["window"]["until"]
-            self.assertIn(since, block)
-            self.assertIn(until, block)
+            self.assertIn(f'datetime="{since}"', block)
+            self.assertIn(f'datetime="{until}"', block)
             self.assertIn("UTC.", block)
-            self.assertIn("per 100 ", block)
+            self.assertIn("per 100 ", block.lower())
+        # The old per-tier board anchors still land on the page.
+        for tier in build.TIER_ORDER:
+            self.assertIn(f'id="implementers-{tier}"', doc)
         self.assertIn(">Provisional<", doc)
         self.assertIn(">Settled<", doc)
         self.assertIn(">unranked<", doc)
-        self.assertNotIn("orchestrator", doc.lower())
+        self.assertNotIn("orchestrator-only", doc)
+        self.assertIn("Orchestrators are not scored on this page.", doc)
         for gap in ("model unknown", "crew unknown", "crew unavailable"):
             self.assertNotIn(gap, doc)
         for needle in ("ORB-", "jrun-", "/home/", "ws_"):
             self.assertNotIn(needle, doc)
         self.assertNotIn("dropped", doc)
+        # Progressive enhancement: tabs and toggle come from analytics.js.
+        self.assertIn("/assets/analytics.js?v=", doc)
+        self.assertIn("/assets/analytics.css?v=", doc)
+        self.assertIn('<nav class="group-nav" aria-label="Roles">', doc)
+        self.assertIn('class="board-toggle" role="group" aria-label="Review window" hidden', doc)
+
+    def test_live_snapshot_heatmap_keeps_models_apart(self):
+        # luna on gpt-6-luna and luna on gpt-6.1-luna are separate rows, as on
+        # the overall board: summing every luna cell would read 654 low tasks.
+        directory = build.latest_analytics_dir()
+        data = json.loads((directory / "scorecards.json").read_text(encoding="utf-8"))
+        slots, _min_support = build.tier_slots(data["implementers_by_tier"])
+        low = slots["low"]
+        expected = sum(
+            cell["n"] for cell in data["implementers_by_tier"]["cells"]
+            if cell["tier"] == "low" and cell["crew"] == "luna" and cell["model"] == "gpt-6-luna"
+        )
+        self.assertEqual(low[("luna", "gpt-6-luna")]["units"], expected)
+        self.assertEqual(low[("luna", "gpt-6.1-luna")]["units"], 1)
+        doc = build.render_agents_body(data, directory.name)
+        tiers = section(doc, "tiers")
+        self.assertIn(f"{expected:,} tasks", tiers)
+        self.assertNotIn(f"{expected + 1:,} tasks", tiers)
+
+    def test_takeaways_are_derived_from_the_tiers(self):
+        directory = build.latest_analytics_dir()
+        data = json.loads((directory / "scorecards.json").read_text(encoding="utf-8"))
+        doc = build.render_agents_body(data, directory.name)
+        cards = re.search(r'<ul class="tiles takeaways".*?</ul>', doc).group(0)
+        slots, _ = build.tier_slots(data["implementers_by_tier"])
+        for tier in build.TIER_ORDER:
+            leaders = [slot for slot in slots[tier].values() if slot["rank"] == 1]
+            if leaders:
+                self.assertIn(leaders[0]["crew"], cards)
+        sized = [slot for tier in build.TIER_ORDER for slot in slots[tier].values() if slot["rank"] is not None]
+        weakest = min(sized, key=lambda slot: slot["score"])
+        self.assertIn(f'{weakest["crew"]} {weakest["score"]:.1f}', cards)
+        self.assertIn(">Watch<", cards)
+
+    def test_term_breakdown_flags_best_worst_and_unmeasured(self):
+        data = scorecards()
+        data["implementers"]["terms"] = [
+            {"group": "credit", "key": "landed", "label": "Landed", "weight": 1.0},
+            {"group": "problem", "key": "rework", "label": "Rework", "weight": -1.0},
+        ]
+        data["implementers"]["fleet_average"] = 120
+        data["implementers"]["rows"] = [
+            dict(row("haiku", "claude-haiku-5-5", 30, 1, 146.38), per_100={"landed": 98.0, "rework": 2.0}),
+            dict(row("opus", "claude-opus-5-5", 40, 2, 100.0), per_100={"landed": 90.0, "rework": None}),
+            dict(row("sol", "gpt-sol", 50, 3, 90.0), per_100={"landed": 80.0, "rework": 9.0}),
+            dict(row("tiny", "gpt-tiny", 2, None, 300.0), per_100={"landed": 100.0, "rework": 0.0}),
+        ]
+        doc = build.render_agents_body(data, "2026-11-08")
+        overall = section(doc, "implementers")
+
+        def crew(name):
+            start = overall.index(f'<span class="crew-name">{name}</span>')
+            return overall[start:overall.index("</details>", start)]
+
+        haiku, opus, sol = crew("haiku"), crew("opus"), crew("sol")
+        self.assertRegex(haiku, r'term is-better" data-term="landed".*best of ranked crews')
+        self.assertRegex(haiku, r'term is-better" data-term="rework"')
+        self.assertRegex(sol, r'term is-worse" data-term="landed".*worst of ranked crews')
+        self.assertRegex(sol, r'term is-worse" data-term="rework"')
+        self.assertIn("not measured for this crew", opus)
+        # Bars are coloured against the fleet average, with its marker.
+        self.assertIn('score-fill is-better', haiku)
+        self.assertIn('score-fill is-worse', opus)
+        self.assertIn('class="fleet-mark" style="left:', haiku)
+        # The below-support crew is folded, not ranked or used for best/worst.
+        folded = overall[overall.index('<details class="more unranked-crews">'):]
+        self.assertIn("1 crew under 10 implemented tasks, not ranked", folded)
+        self.assertIn(">tiny<", folded)
+        self.assertNotIn('class="crew-name">tiny<', overall)
 
     def test_filters_gaps_unranked_rows_and_orchestrators(self):
         doc = build.render_agents_body(scorecards(), "2026-11-08")
@@ -352,26 +430,40 @@ class AgentsPageTest(unittest.TestCase):
         self.assertIn("per 100 settled reviews", settled)
         self.assertIn("per 100 assessed tasks", section(doc, "pilots"))
 
-    def test_tier_board_sums_types_and_reranks(self):
-        low = section(build.render_agents_body(scorecards(), "2026-11-08"), "implementers-low")
-        self.assertIn("2026-10-09T09:11:25Z", low)
-        self.assertIn("per 100 tasks", low)
-        self.assertIn("100 is the fleet average.", low)
-        opus = low.index(">opus<")
-        haiku = low.index(">haiku<")
-        thin = low.index(">thin<")
-        self.assertLess(opus, haiku)
-        self.assertLess(haiku, thin)
+    def test_tier_heatmap_sums_types_and_reranks(self):
+        doc = build.render_agents_body(scorecards(), "2026-11-08")
+        tiers = section(doc, "tiers")
+        self.assertIn('datetime="2026-10-09T09:11:25Z"', tiers)
+        self.assertIn("Each tier's fleet rate is 100", tiers)
+        self.assertIn('id="implementers-low"', tiers)
+        slots, min_support = build.tier_slots(scorecards()["implementers_by_tier"])
+        self.assertEqual(min_support, 10)
+        low = slots["low"]
+        self.assertEqual(low[("haiku", "claude-haiku-5-5")]["units"], 12)
+        self.assertEqual(low[("haiku", "claude-haiku-5-5")]["rank"], 2)
+        self.assertEqual(low[("opus", "claude-opus-5-5")]["rank"], 1)
+        self.assertIsNone(low[("thin", "gpt-thin")]["rank"])
+        self.assertNotIn(("gap", "model unknown"), low)
 
-        def ranked(crew_at):
-            start = low.rindex("<tr", 0, crew_at)
-            return low[start:low.index("</tr>", crew_at)]
+        def cell(name):
+            start = tiers.index(f'<span class="crew-name">{name}</span>')
+            return tiers[start:tiers.index("</tr>", start)]
 
-        self.assertIn('data-rank="1"', ranked(opus))
-        self.assertIn('data-rank="2"', ranked(haiku))
-        self.assertIn('data-rank="unranked"', ranked(thin))
-        self.assertIn(">12<", ranked(haiku))
-        self.assertNotIn("gap", low)
+        self.assertIn('data-rank="1"', cell("opus"))
+        self.assertIn("★", cell("opus"))
+        self.assertIn("12 tasks", cell("haiku"))
+        self.assertNotIn("★", cell("haiku"))
+        # A crew with only small samples and no overall rank folds away, faded.
+        folded = tiers[tiers.index("<details"):]
+        self.assertIn("1 more crew with only small tier samples", folded)
+        self.assertIn("is-thin", cell("thin"))
+        self.assertIn("3 tasks · unranked", cell("thin"))
+        self.assertNotIn(">gap<", tiers)
+        self.assertEqual(build.heat_class(130), "hm-b2")
+        self.assertEqual(build.heat_class(110), "hm-b1")
+        self.assertEqual(build.heat_class(100), "hm-0")
+        self.assertEqual(build.heat_class(80), "hm-w1")
+        self.assertEqual(build.heat_class(60), "hm-w2")
 
     def test_settled_board_hidden_when_absent(self):
         data = scorecards()

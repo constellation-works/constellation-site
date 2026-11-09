@@ -1,5 +1,5 @@
 // Progressive enhancement for the analytics pages. Without JavaScript every
-// experiment and every metric group renders stacked, and the picker cards and
+// experiment, metric group, role and reviewer board renders stacked, and the picker cards and
 // group links are plain in-page anchors. Nothing here fetches data.
 (function () {
   function sectionFor(nodes, hash) {
@@ -92,4 +92,54 @@
     });
     window.addEventListener('hashchange', groupFromHash);
   }
+  // Agents: the reviewer boards become a provisional/settled toggle. Without
+  // JavaScript both boards render stacked, each with its own window.
+  document.querySelectorAll('.board-toggle').forEach(function (toggle) {
+    var buttons = Array.prototype.slice.call(toggle.querySelectorAll('button[data-board]'));
+    var boards = buttons.map(function (b) { return document.getElementById(b.getAttribute('data-board')); });
+    if (buttons.length < 2 || boards.some(function (b) { return !b; })) return;
+    var show = function (id) {
+      boards.forEach(function (b) { b.hidden = b.id !== id; });
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-board') === id ? 'true' : 'false'); });
+    };
+    var fromHash = function () {
+      var hit = sectionFor(boards, location.hash);
+      if (hit) { show(hit.section.id); return true; }
+      return false;
+    };
+    if (!fromHash()) show(boards[0].id);
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-board')); });
+    });
+    window.addEventListener('hashchange', fromHash);
+    toggle.hidden = false;
+  });
+
+  // Reliability: sort failing jobs by count (the rendered order) or by rate.
+  // Small samples sink when sorted by rate.
+  document.querySelectorAll('.job-sort').forEach(function (toggle) {
+    var section = toggle.closest('section');
+    var table = section && section.querySelector('table.jobs');
+    if (!table) return;
+    var body = table.tBodies[0];
+    var rows = Array.prototype.slice.call(body.rows);
+    var num = function (row, key) { return parseFloat(row.getAttribute('data-' + key)); };
+    var buttons = Array.prototype.slice.call(toggle.querySelectorAll('button[data-sort]'));
+    var sortBy = function (mode) {
+      var sorted = rows.slice().sort(function (a, b) {
+        if (mode === 'rate') {
+          return (num(a, 'low') - num(b, 'low')) || (num(b, 'rate') - num(a, 'rate')) || (num(a, 'order') - num(b, 'order'));
+        }
+        return num(a, 'order') - num(b, 'order');
+      });
+      sorted.forEach(function (row) { body.appendChild(row); });
+      table.setAttribute('data-sort', mode);
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-sort') === mode ? 'true' : 'false'); });
+      section.querySelectorAll('[data-sort-note]').forEach(function (note) { note.hidden = note.getAttribute('data-sort-note') !== mode; });
+    };
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { sortBy(b.getAttribute('data-sort')); });
+    });
+    toggle.hidden = false;
+  });
 })();

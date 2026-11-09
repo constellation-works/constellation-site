@@ -41,22 +41,40 @@ class ReliabilityTests(unittest.TestCase):
         document = build.render_reliability_page(data, "2026-11-08")
         settled = section(document, "settled")
         failures = section(document, "failures")
-        self.assertIn("80 runs", settled)
-        self.assertIn("20 runs", settled)
-        self.assertIn("80.00%", settled)
-        self.assertIn("20.00%", settled)
-        self.assertIn("Denominator: 100 runs", settled)
-        self.assertIn("16.67%", failures)
-        self.assertIn("8.33%", failures)
-        self.assertIn("Denominator: 120 runs", failures)
+        self.assertIn('<span class="rel-big">80.00%</span>', settled)
+        self.assertIn("80 of 100", settled)
+        self.assertIn("failed directly", settled)
+        self.assertNotIn("99.9", document)
+        # Where every run ended: shares of all 120 recorded runs.
+        self.assertIn("Share of all 120 recorded runs", failures)
+        self.assertIn("80 · 66.67%", failures)
+        self.assertIn("20 · 16.67%", failures)
+        self.assertIn("10 · 8.33%", failures)
+        self.assertIn('class="mix-bar" role="img"', failures)
+        self.assertIn("80 runs", failures)
         self.assertIn("120 recorded runs; 100 settled outcomes", document)
         self.assertIn('href="https://constellation-works.com/analytics/reliability/"', document)
         self.assertNotIn('href="/notes/" aria-current="page"', document)
-        for element_id in ("settled", "failures", "other-outcomes"):
-            board = section(document, element_id)
-            self.assertIn(f'datetime="{SINCE}"', board)
-            self.assertIn(f'datetime="{UNTIL}"', board)
-            self.assertIn("UTC.", board)
+        self.assertIn(f'datetime="{SINCE}"', document)
+        self.assertIn(f'datetime="{UNTIL}"', document)
+        # Old anchors keep landing on the matching content.
+        for element_id in ("settled", "failures", "other-outcomes", "by-job", "daily", "method"):
+            self.assertIn(f'id="{element_id}"', document)
+
+    def test_headline_tiles_use_recovery_counts(self):
+        data = fixture()
+        data["totals"]["recovery"] = {"per_job_run": {"numerator": 5, "denominator": 40, "value": 0.9}}
+        data["totals"]["job_runs"]["counts"].update(cancelled=3, in_flight=2, upgrade_paused=1, held=4)
+        data["totals"]["job_runs"]["counts"]["total"] = 80 + 20 + 10 + 3 + 2 + 1 + 4
+        document = build.render_reliability_page(data, "2026-11-08")
+        settled = section(document, "settled")
+        self.assertIn("12.5%", settled)
+        self.assertIn("5 of 40 job runs with steps", settled)
+        self.assertIn("4 held · 3 cancelled · 3 paused or in flight", settled)
+        for bad in ({"numerator": 5, "denominator": 0}, {"numerator": True, "denominator": 4},
+                    {"numerator": 9, "denominator": 4}, "x"):
+            data["totals"]["recovery"] = {"per_job_run": bad}
+            self.assertIn("Unavailable", section(build.render_reliability_page(data, "2026-11-08"), "settled"))
 
     def test_private_fields_and_arbitrary_labels_have_no_output_route(self):
         data = fixture()
@@ -87,7 +105,7 @@ class ReliabilityTests(unittest.TestCase):
         data["totals"]["job_runs"]["counts"].update(held=10, total=10)
         document = build.render_reliability_page(data, "2026-11-08")
         self.assertIn("Unavailable", section(document, "settled"))
-        self.assertIn("100.00%", section(document, "other-outcomes"))
+        self.assertIn("10 · 100.00%", section(document, "failures"))
 
     def test_refuses_unsafe_or_invalid_required_fields(self):
         changes = (
@@ -162,13 +180,13 @@ class ReliabilityTests(unittest.TestCase):
         self.assertIn(data["window"]["since"], document)
         self.assertIn(data["window"]["until"], document)
 
-    def by_job_row(self, job_id, succeeded, failed, total=None, rate_value=None):
+    def by_job_row(self, job_id, succeeded, failed, total=None, rate_value=None, low=None):
         counts = {"succeeded": succeeded, "failed": failed,
                   "total": succeeded + failed if total is None else total}
         row = {"job_id": job_id, "counts": counts}
-        if rate_value is not None:
+        if rate_value is not None or low is not None:
             row["failure_rate"] = {"value": rate_value, "denominator": 1,
-                                   "numerator": 0, "denominator_label": "x"}
+                                   "numerator": 0, "denominator_label": "x", "low_sample": low}
         return row
 
     def test_by_job_renders_bars_counts_rates_and_sort(self):
@@ -177,41 +195,52 @@ class ReliabilityTests(unittest.TestCase):
             self.by_job_row("task_auto_pipeline", 90, 10, total=110, rate_value=0.99),
             self.by_job_row("task_pr_pipeline", 80, 20, total=120),
             self.by_job_row("task_gate_pipeline", 30, 20, total=60),
+            self.by_job_row("ux_rules_pipeline", 5, 10, low=True),
+            self.by_job_row("store_gc_pipeline", 8, 0, low=True),
+            self.by_job_row("worktree_gc_pipeline", 400, 0),
         ]
         original = copy.deepcopy(data)
         document = build.render_reliability_page(data, "2026-11-08")
         self.assertEqual(data, original)
         by_job = section(document, "by-job")
         # Human-readable labels, not raw ids for known jobs.
-        self.assertIn("Auto delivery", by_job)
-        self.assertIn("PR delivery", by_job)
-        self.assertIn("Task gate", by_job)
+        for label in ("Auto delivery", "PR delivery", "Task gate", "UX rules"):
+            self.assertIn(label, by_job)
         # Rates are recomputed from counts, never the supplied rate.
-        self.assertIn("10.00%", by_job)
-        self.assertIn("20.00%", by_job)
-        self.assertIn("40.00%", by_job)
-        self.assertNotIn("99.00%", by_job)
-        # Failed/settled/total counts are shown.
-        self.assertIn("10 failed of 100 settled (110 total)", by_job)
-        self.assertIn("20 failed of 100 settled (120 total)", by_job)
-        self.assertIn("20 failed of 50 settled (60 total)", by_job)
-        # Sorted by failures then total, as the snapshot orders them.
-        positions = [by_job.index(name) for name in ("PR delivery", "Task gate", "Auto delivery")]
+        self.assertIn(">10.0%<", by_job)
+        self.assertIn(">20.0%<", by_job)
+        self.assertIn(">40.0%<", by_job)
+        self.assertNotIn("99.0", by_job)
+        # Failed and settled counts are shown.
+        self.assertRegex(by_job, r'data-label="Failed">20</td><td class="num" data-label="Settled runs">50<')
+        # Count order as the snapshot orders them; data for the rate sort.
+        positions = [by_job.index(name) for name in ("PR delivery", "Task gate", "Auto delivery", "UX rules")]
         self.assertEqual(positions, sorted(positions))
-        # Bars encode the rate alongside the text, not by colour alone.
-        self.assertIn('class="hbar-plot"', by_job)
-        self.assertIn('class="bar s-hard"', by_job)
-        # Caption states the window scope.
-        self.assertIn("30-day window", by_job)
+        self.assertIn('data-rate="0.400000" data-low="0"', by_job)
+        self.assertIn('data-low="1"', by_job)
+        self.assertIn("small sample", by_job)
+        self.assertIn("PR delivery accounts for", by_job)
+        # Zero-failure jobs fold into one disclosure with their settled runs.
+        folded = by_job[by_job.index("<details"):]
+        self.assertIn("2 jobs with no failures", folded)
+        self.assertIn("Store GC (8)", folded)
+        self.assertIn("Worktree GC (400)", folded)
+        self.assertNotIn("Store GC", by_job[:by_job.index("<details")])
+        # The sort control is progressive enhancement.
+        self.assertIn('class="board-toggle job-sort" role="group" aria-label="Sort jobs" hidden', by_job)
         self.assertIn("all workspaces combined", by_job)
+        jobs = build.reliability_by_job(data)
+        self.assertEqual([job["low"] for job in jobs if job["job_id"] == "ux_rules_pipeline"], [True])
 
     def test_by_job_zero_support_is_unavailable(self):
         data = fixture()
         data["by_job"] = [self.by_job_row("task_auto_pipeline", 0, 0, total=5)]
         document = build.render_reliability_page(data, "2026-11-08")
         by_job = section(document, "by-job")
-        self.assertIn("Unavailable", by_job)
+        self.assertIn("No job failures in this window.", by_job)
         self.assertNotIn("0.00%", by_job)
+        self.assertEqual(build.reliability_by_job(data)[0]["rate"], None)
+        self.assertEqual(build.short_pct(None), "Unavailable")
 
     def test_by_job_fallback_and_unsafe_ids(self):
         data = fixture()
@@ -235,65 +264,90 @@ class ReliabilityTests(unittest.TestCase):
         self.assertNotIn("fetch(", document)
         self.assertNotIn("/api/", document)
 
-    def test_by_job_disclosure_anchors_and_stylesheet(self):
+    def test_daily_series_marks_partial_days_and_recomputes_rates(self):
         data = fixture()
-        rows = [self.by_job_row(f"job_{index:02d}", 100 - index, index, total=100) for index in range(9)]
-        data["by_job"] = rows
-        document = build.render_reliability_page(data, "2026-11-08")
-        by_job = section(document, "by-job")
-        visible, disclosure = by_job.split('<details class="analytics-table-more">', 1)
-        self.assertEqual(len(re.findall(r'class="hbar"', visible)), 7)
-        self.assertIn("<summary>Show 2 more jobs</summary>", disclosure)
-        self.assertEqual(len(re.findall(r'class="hbar"', disclosure)), 2)
-        self.assertNotIn(" open", by_job.split("<details", 1)[0])
-        # Seven or fewer rows keep the existing markup with no disclosure.
-        data["by_job"] = rows[:7]
-        short = build.render_reliability_page(data, "2026-11-08")
-        self.assertNotIn("more jobs", section(short, "by-job"))
-        # Section anchor exists and existing anchors are unchanged, in order.
-        ids = re.findall(r'<section class="board" id="([^"]+)"', document)
-        self.assertEqual(ids, ["settled", "by-job", "failures", "other-outcomes"])
-        self.assertIn('<a href="#by-job">Failure rate by job</a>', document)
-        self.assertIn('<a href="#settled">Success and failure</a>', document)
-        self.assertIn('<a href="#failures">Failure categories</a>', document)
-        self.assertIn('<a href="#other-outcomes">Other outcomes</a>', document)
-        # The bars need the shared analytics stylesheet; no JavaScript is added.
-        self.assertIn("/assets/analytics.css?v=", document)
-        self.assertNotIn("fetch(", document)
-        self.assertNotIn("/api/", document)
 
-    def test_table_value_cells_are_body_text_not_headline(self):
+        def bucket(day, succeeded, failed, rate=0.5):
+            counts = {key: 0 for key, _label in build.RELIABILITY_OUTCOMES}
+            counts.update(succeeded=succeeded, failed=failed, total=succeeded + failed)
+            return {"bucket_start": f"2026-{day}T00:00:00Z", "bucket_end": None, "counts": counts,
+                    "failure_rate": {"value": rate}}
+
+        days = [bucket("10-09", 90, 10), bucket("10-10", 99, 1), bucket("10-11", 0, 0),
+                bucket("11-07", 70, 30), bucket("11-08", 95, 5)]
+        ends = ["2026-10-10", "2026-10-11", "2026-10-12", "2026-11-08", "2026-11-09"]
+        for row, end in zip(days, ends):
+            row["bucket_end"] = f"{end}T00:00:00Z"
+        bad = bucket("10-12", 1, 1)
+        bad["bucket_end"] = "2026-10-13T00:00:00Z"
+        bad["counts"]["failed"] = -1
+        unsafe = bucket("10-13", 1, 1)
+        unsafe["bucket_start"] = "<script>"
+        data["over_time"] = list(reversed(days)) + [bad, unsafe, "x"]
+        series = build.reliability_days(data, SINCE, UNTIL)
+        self.assertEqual([day["start"][:10] for day in series],
+                         ["2026-10-09", "2026-10-10", "2026-10-11", "2026-11-07", "2026-11-08"])
+        self.assertEqual([day["partial"] for day in series], [True, False, False, False, True])
+        self.assertEqual([day["rate"] for day in series], [0.1, 0.01, None, 0.3, 0.05])
+        self.assertEqual([day["settled"] for day in series], [100, 100, 0, 100, 100])
+
+        document = build.render_reliability_page(data, "2026-11-08")
+        daily = section(document, "daily")
+        self.assertNotIn("<script>", document)
+        # One bar per valid day with its own text alternative.
+        self.assertEqual(len(re.findall(r'<li class="day', daily)), 5)
+        self.assertIn('title="9 Oct: 10.00% · 10 failed of 100 settled (partial day)"', daily)
+        self.assertIn("11 Oct: unavailable, no settled runs", daily)
+        self.assertIn('<li class="day is-partial" title="9 Oct', daily)
+        # A spike is at least 1.5x the 30-day rate (and at least 5%).
+        self.assertIn('<li class="day is-spike" title="7 Nov', daily)
+        self.assertIn("Labelled bars are at least 30.0%.", daily)
+        # Reference line at the 30-day rate (20 of 100 settled).
+        self.assertIn('class="day-ref"', daily)
+        self.assertIn("<span>20.00%</span>", daily)
+        self.assertIn("30-day rate 20.00%", daily)
+        # Spike labels sit on days at or above the threshold only.
+        self.assertIn('<span class="day-label" aria-hidden="true">30.0%</span>', daily)
+        self.assertNotIn('<span class="day-label" aria-hidden="true">1.00%</span>', daily)
+        # Volume strip and the table fallback, newest first.
+        self.assertEqual(len(re.findall(r'style="height:', daily.split('class="day-vols"', 1)[1].split("</div>", 1)[0])), 5)
+        table = daily[daily.index("Daily figures as a table"):]
+        self.assertLess(table.index("8 Nov"), table.index("9 Oct"))
+        self.assertIn("Faded: partial days (9 Oct and 8 Nov)", daily)
+
+    def test_daily_series_absent_is_empty_not_an_error(self):
+        document = build.render_reliability_page(fixture(), "2026-11-08")
+        self.assertIn("No daily buckets in this window.", section(document, "daily"))
+
+    def test_committed_snapshot_daily_series(self):
+        directory = build.latest_analytics_dir()
+        data = json.loads((directory / "reliability.json").read_text())
+        since, until = data["window"]["since"], data["window"]["until"]
+        series = build.reliability_days(data, since, until)
+        self.assertEqual(len(series), len(data["over_time"]))
+        self.assertTrue(series[0]["partial"])
+        self.assertTrue(series[-1]["partial"])
+        self.assertFalse(any(day["partial"] for day in series[1:-1]))
+        for day, row in zip(series, data["over_time"]):
+            self.assertEqual(day["settled"], row["failure_rate"]["denominator"])
+            self.assertAlmostEqual(day["rate"], row["failure_rate"]["value"])
+
+    def test_stylesheet_and_value_cells_stay_body_text(self):
         data = fixture()
         data["by_job"] = [self.by_job_row("task_auto_pipeline", 80, 20)]
         document = build.render_reliability_page(data, "2026-11-08")
-        # The by-job bars keep their analytics.css styling.
         self.assertIn("/assets/analytics.css?v=", document)
-        by_job = section(document, "by-job")
-        self.assertIn('class="hbar"', by_job)
-        self.assertIn('class="hbar-plot"', by_job)
-        # The three existing tables keep their value spans, outside score cards.
-        for element_id in ("settled", "failures", "other-outcomes"):
-            board = section(document, element_id)
-            self.assertIn('<span class="value">', board)
-            self.assertIsNone(
-                re.search(r'class="[^"]*(?<![-\w])score(?![-\w])[^"]*"', board),
-                msg=f"table cells in #{element_id} must not sit inside a score card",
-            )
-        # No stylesheet loaded by this page may turn those table .value
-        # cells into headline-size blocks: every rule that sets a
-        # headline-scale font-size on a .value selector must be scoped to
-        # .score, which the table cells above are not inside of.
+        self.assertIn("/assets/analytics.js?v=", document)
+        self.assertNotIn("fetch(", document)
+        self.assertNotIn("/api/", document)
+        failures = section(document, "failures")
+        self.assertIn('<span class="value">', failures)
+        # No stylesheet loaded by this page may turn table .value cells into
+        # headline-size blocks: a headline-scale .value rule must be scoped to .score.
         linked = re.findall(r'href="(/assets/[^"]+\.css)(?:\?[^"]*)?"', document)
         self.assertTrue(linked)
-        stylesheets = {}
         for href in linked:
-            stylesheets[href] = (ROOT / "public" / href.split("?")[0].lstrip("/")).read_text()
-        analytics_hrefs = [href for href in linked if href.endswith("/analytics.css")]
-        self.assertTrue(analytics_hrefs)
-        for href in analytics_hrefs:
-            self.assertIn(".hbar", stylesheets[href],
-                           msg=f"{href} must still style the by-job bars")
-        for href, css in stylesheets.items():
+            css = (ROOT / "public" / href.split("?")[0].lstrip("/")).read_text()
             for match in re.finditer(r"([^{}]+)\{([^{}]*)\}", css):
                 selectors, declarations = match.group(1), match.group(2)
                 if not re.search(r"\.value(?![-\w])", selectors):
@@ -306,10 +360,7 @@ class ReliabilityTests(unittest.TestCase):
                     continue
                 for selector in selectors.split(","):
                     if re.search(r"\.value(?![-\w])", selector):
-                        self.assertIn(
-                            ".score", selector,
-                            msg=f"headline .value rule must be scoped to .score: {selector.strip()}",
-                        )
+                        self.assertIn(".score", selector, msg=selector.strip())
 
 
 if __name__ == "__main__":
