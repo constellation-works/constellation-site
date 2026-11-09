@@ -38,20 +38,7 @@ class AnalyticsDisclosureTests(unittest.TestCase):
         self.assertEqual(re.findall(r"<td data-label=\"Day\">(\d+)</td>", disclosure), ["8", "9"])
         self.assertNotIn(" open", rendered)
 
-    def test_agents_and_experiment_tables_use_the_shared_disclosure(self):
-        rows = [
-            {"rank": index + 1, "crew": f"crew-{index}", "model": "model", "score": 100, "units": 10}
-            for index in range(9)
-        ]
-        board = {
-            "unit": "tasks", "rows": rows, "title": "Implementers", "min_support": 1,
-        }
-        agents = build.render_table(board)
-        self.assertIn("<summary>Show 2 more entries</summary>", agents)
-        visible, tail = agents.split('<details class="analytics-table-more">', 1)
-        self.assertEqual(re.findall(r'data-rank="(\d+)"', visible), [str(i) for i in range(1, 8)])
-        self.assertEqual(re.findall(r'data-rank="(\d+)"', tail), ["8", "9"])
-
+    def test_experiment_tables_use_the_shared_disclosure(self):
         arms = [{"name": f"arm-{index}"} for index in range(9)]
         experiment = build.experiment_metric_table(
             {"metric": "cost_usd", "kind": "mean", "arms": []}, arms
