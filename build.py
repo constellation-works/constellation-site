@@ -168,8 +168,10 @@ def header_html(current="notes"):
     return header
 
 
-def page(title, description, url, body, image=None, draft=False, kind="website", current="notes", extra_css=()):
+def page(title, description, url, body, image=None, draft=False, kind="website", current="notes",
+         extra_css=(), extra_js=()):
     e = html.escape
+    js = "".join(f'\n<script src="{asset(name)}" defer></script>' for name in extra_js)
     img = image or f"{SITE}/brand/png/cw-lockup-light-1520.png"
     robots = '<meta name="robots" content="noindex">\n' if draft else ""
     extra_links = "".join(f'<link rel="stylesheet" href="{asset(name)}">\n' for name in extra_css)
@@ -201,7 +203,7 @@ def page(title, description, url, body, image=None, draft=False, kind="website",
 <main class="wrap">
 {body}
 </main>
-{FOOTER}
+{FOOTER}{js}
 </body>
 </html>
 """
@@ -1233,93 +1235,6 @@ def experiment_difference_interval(value, metric):
     return f"{experiment_difference(value[0], metric)} to {experiment_difference(value[1], metric)}"
 
 
-def _diff_verdict(estimate, better):
-    if estimate == 0:
-        return "same", "same as control"
-    if better == "higher":
-        return ("better", "better than control") if estimate > 0 else ("worse", "worse than control")
-    if better == "lower":
-        return ("better", "better than control") if estimate < 0 else ("worse", "worse than control")
-    return ("higher", "higher than control") if estimate > 0 else ("lower", "lower than control")
-
-
-def experiment_diff_metric(metric, arms, kind_label):
-    """One static chart group for a metric, from its projected differences only."""
-    e = html.escape
-    key = metric.get("metric")
-    label, _ = EXPERIMENT_METRICS[key]
-    better = metric.get("better") if metric.get("better") in ("higher", "lower") else None
-    diffs = {}
-    diff_order = []
-    for diff in metric.get("differences") or []:
-        if isinstance(diff, dict) and isinstance(diff.get("arm"), str) and diff["arm"] not in diffs:
-            diffs[diff["arm"]] = diff
-            diff_order.append(diff["arm"])
-    control_names = {a["name"] for a in arms if a.get("control")} or {"control"}
-    arm_names = [a["name"] for a in arms if a["name"] not in control_names]
-    for name in diff_order:
-        if name not in arm_names and name not in control_names:
-            arm_names.append(name)
-
-    def oriented(v):
-        return -v if better == "lower" else v
-
-    points = []
-    for name in arm_names:
-        diff = diffs.get(name)
-        overall = diff.get("overall") if isinstance(diff, dict) and isinstance(diff.get("overall"), dict) else {}
-        estimate = overall.get("estimate")
-        if as_number(estimate) and math.isfinite(estimate):
-            points.append(oriented(estimate))
-            if _valid_interval(overall.get("interval")):
-                points.extend(oriented(v) for v in overall["interval"])
-    domain = max((abs(p) for p in points), default=0) or 1
-
-    def pct(v):
-        return 50 + (v / domain) * 47
-
-    rows = []
-    for name in arm_names:
-        diff = diffs.get(name)
-        overall = diff.get("overall") if isinstance(diff, dict) and isinstance(diff.get("overall"), dict) else {}
-        estimate = overall.get("estimate")
-        if not as_number(estimate) or not math.isfinite(estimate):
-            rows.append(
-                f'<div class="diff-row is-unmeasured"><span class="diff-arm">{e(name)}</span>'
-                '<span class="diff-track" aria-hidden="true"></span>'
-                '<span class="diff-value">not measured</span>'
-                f'<span class="sr-only">{e(name)}: not measured</span></div>'
-            )
-            continue
-        interval = overall.get("interval") if _valid_interval(overall.get("interval")) else None
-        verdict, verdict_phrase = _diff_verdict(estimate, better)
-        est_text = experiment_difference(estimate, metric)
-        int_text = experiment_difference_interval(interval, metric)
-        value_text = f"{est_text}, {int_text}" if interval else f"{est_text}, interval unavailable"
-        whisker = ""
-        if interval:
-            lo, hi = sorted(oriented(v) for v in interval)
-            whisker = f'<span class="diff-whisker" style="left:{pct(lo):.2f}%;width:{max(pct(hi) - pct(lo), 0.5):.2f}%"></span>'
-        rows.append(
-            f'<div class="diff-row is-{verdict}"><span class="diff-arm">{e(name)}</span>'
-            f'<span class="diff-track" aria-hidden="true">{whisker}'
-            f'<span class="diff-point" style="left:{pct(oriented(estimate)):.2f}%"></span></span>'
-            f'<span class="diff-value">{e(value_text)} <span class="diff-verdict">({e(verdict)})</span></span>'
-            f'<span class="sr-only">{e(name)}: {e(est_text)} difference from control, '
-            f'{e(int_text)}, {e(verdict_phrase)}</span></div>'
-        )
-    if better in ("higher", "lower"):
-        left, right = "← worse", "better →"
-    else:
-        left, right = "← lower", "higher →"
-    return (
-        f'<section class="diff-metric"><h4>{e(label)} '
-        f'<span class="diff-kind">{e(kind_label)}</span></h4>'
-        f'<p class="diff-axis" aria-hidden="true"><span>{left}</span><span>control (0)</span><span>{right}</span></p>'
-        f'<div class="diff-rows">{"".join(rows)}</div></section>'
-    )
-
-
 def experiment_stamp(value):
     # Keep nanosecond precision from the snapshot, while normalizing the UTC suffix.
     if not isinstance(value, str):
@@ -1381,6 +1296,214 @@ def experiment_metric_table(metric, arms):
     return f'<h4>{label}{qualifier}</h4>' + analytics_page.with_row_disclosure(rows, render_rows, "arms")
 
 
+STATUS_LABEL = {
+    "withheld": "Verdict withheld",
+    "inconclusive": "Inconclusive",
+    "collecting": "Collecting",
+}
+
+
+def _join_names(names):
+    names = [name for name in names if name]
+    if len(names) <= 1:
+        return "".join(names)
+    return ", ".join(names[:-1]) + " and " + names[-1]
+
+
+def _lower_first(text):
+    return text[:1].lower() + text[1:] if text else text
+
+
+def _reason_html(reason):
+    """Readout reasons quote arm and metric names in backticks; render them as code."""
+    parts = html.escape(reason).split("`")
+    return "".join(f"<code>{part}</code>" if index % 2 else part for index, part in enumerate(parts))
+
+
+def _finite(value):
+    return as_number(value) and math.isfinite(value)
+
+
+def experiment_short_question(experiment, arms, metrics):
+    """A one-line question assembled from the readout's own fields.
+
+    The full hypothesis stays on the page; this is only the arms, the primary
+    metric and its direction, the population and the guardrails, worded as a question.
+    """
+    treatment = [arm["name"] for arm in arms if not arm.get("control")]
+    key = experiment.get("primary_metric")
+    if not treatment or key not in EXPERIMENT_METRICS:
+        return None
+    metric = next((m for m in metrics if m.get("metric") == key), {})
+    verb = {"lower": "lower", "higher": "raise"}.get(metric.get("better"), "change")
+    label = _lower_first(EXPERIMENT_METRICS[key][0])
+    population = experiment.get("population") if isinstance(experiment.get("population"), dict) else {}
+    tiers = [t for t in population.get("complexity") or [] if isinstance(t, str)]
+    scope = f" on {_join_names(tiers)} tasks" if tiers else ""
+    definition = experiment.get("guardrail_definition")
+    guards = [
+        _lower_first(EXPERIMENT_METRICS[name][0])
+        for name in (definition if isinstance(definition, dict) else {})
+        if name in EXPERIMENT_METRICS
+    ]
+    guard_text = f", within the {_join_names(guards)} guardrails" if guards else ""
+    lead = "Do" if len(treatment) > 1 else "Does"
+    return f"{lead} {_join_names(treatment)} {verb} {label}{scope} compared with control{guard_text}?"
+
+
+def experiment_fidelity(arm, treatment_count, warning_kinds):
+    """(own, n) for a treatment arm: tasks that ran on the arm's own crew.
+
+    The snapshot names no assigned crew, so the own crew is the observed crew
+    named like the arm. A single treatment arm with no crew of its name falls
+    back to enrolled tasks minus the readout's recorded crew mismatches.
+    Returns None when neither rule applies.
+    """
+    n = arm.get("n")
+    if type(n) is not int or n < 0:
+        return None
+    if n == 0:
+        return 0, 0
+    for row in arm.get("crew_mix") or []:
+        if isinstance(row, dict) and row.get("crew") == arm["name"] and type(row.get("tasks")) is int:
+            return row["tasks"], n
+    mismatch = (warning_kinds or {}).get("crew_mismatch") if isinstance(warning_kinds, dict) else None
+    if treatment_count == 1 and type(mismatch) is int and 0 <= mismatch <= n:
+        return n - mismatch, n
+    return None
+
+
+def _experiment_cell(metric, diff, domain_points=None):
+    """Classify one arm's difference from control. Clear only when the interval excludes zero."""
+    better = metric.get("better") if metric.get("better") in ("higher", "lower") else None
+    overall = diff.get("overall") if isinstance(diff, dict) and isinstance(diff.get("overall"), dict) else {}
+    estimate = overall.get("estimate")
+    if not _finite(estimate):
+        return {"measured": False}
+    interval = overall.get("interval") if _valid_interval(overall.get("interval")) else None
+    clear = bool(interval) and (interval[0] > 0 or interval[1] < 0)
+    if estimate == 0:
+        kind, tag = "same", "Same"
+        clear = False
+    elif better is None:
+        kind, tag = "neutral", "Higher" if estimate > 0 else "Lower"
+        clear = False
+    else:
+        good = estimate < 0 if better == "lower" else estimate > 0
+        if clear:
+            kind, tag = ("better", "Better") if good else ("worse", "Worse")
+        else:
+            kind, tag = ("lean-better", "Leans better") if good else ("lean-worse", "Leans worse")
+    sign = -1 if better == "lower" else 1
+    return {
+        "measured": True,
+        "estimate": estimate,
+        "interval": interval,
+        "clear": clear,
+        "kind": kind,
+        "tag": tag,
+        "oriented": [sign * estimate] + ([sign * v for v in interval] if interval else []),
+        "text": experiment_difference(estimate, metric),
+        "interval_text": experiment_difference_interval(interval, metric) if interval else "no interval",
+        "short": _drop_unit(experiment_difference(estimate, metric), metric),
+        "short_interval": _drop_unit(experiment_difference_interval(interval, metric), metric) if interval else "no interval",
+    }
+
+
+def _drop_unit(text, metric):
+    """Scorecard cells sit under a row that names the unit; keep only short unit marks."""
+    _, display = EXPERIMENT_METRICS.get(metric.get("metric"), ("", ""))
+    text = text.replace(" points", " pts")
+    for unit in (" tokens", " lines") + ((" " + display,) if display and display not in ("USD", "%", "hours", "minutes") else ()):
+        text = text.replace(unit, "")
+    return text
+
+
+def experiment_metric_cells(metric, treatment):
+    diffs = {}
+    for diff in metric.get("differences") or []:
+        if isinstance(diff, dict) and isinstance(diff.get("arm"), str) and diff["arm"] not in diffs:
+            diffs[diff["arm"]] = diff
+    return [_experiment_cell(metric, diffs.get(name)) for name in treatment]
+
+
+def _cell_html(cell, arm_name):
+    e = html.escape
+    if not cell["measured"]:
+        return f'<td class="sc-cell is-unmeasured" data-label="{e(arm_name)}"><span class="sc-nm">Not measured</span></td>'
+    return (
+        f'<td class="sc-cell is-{cell["kind"]}" data-label="{e(arm_name)}">'
+        f'<span class="sc-top"><span class="sc-value">{e(cell["short"])}</span>'
+        f'<span class="sc-tag">{e(cell["tag"])}</span></span>'
+        f'{cell["plot"]}'
+        f'<span class="sc-iv">{e(cell["short_interval"])}</span>'
+        f'<span class="sr-only">{e(arm_name)}: {e(cell["text"])} difference from control, {e(cell["interval_text"])}</span></td>'
+    )
+
+
+def _cell_plot(cell, domain):
+    def pct(v):
+        return 50 + (v / domain) * 44
+
+    oriented = cell["oriented"]
+    rng = ""
+    if len(oriented) == 3:
+        lo, hi = sorted(oriented[1:])
+        rng = f'<span class="sc-range" style="left:{pct(lo):.2f}%;width:{max(pct(hi) - pct(lo), 0.5):.2f}%"></span>'
+    return (
+        '<span class="sc-plot" aria-hidden="true"><span class="sc-zero"></span>'
+        f'{rng}<span class="sc-dot" style="left:{pct(oriented[0]):.2f}%"></span></span>'
+    )
+
+
+def experiment_scorecard(metrics, treatment, heads, primary_key, caption):
+    """One metric × arm matrix. Returns (table_html, unmeasured_labels, signals)."""
+    e = html.escape
+    rows, unmeasured, signals = [], [], []
+    for metric in metrics:
+        key = metric["metric"]
+        label, unit = EXPERIMENT_METRICS[key]
+        cells = experiment_metric_cells(metric, treatment)
+        if not any(cell["measured"] for cell in cells):
+            unmeasured.append(label)
+            continue
+        domain = max((abs(v) for cell in cells if cell["measured"] for v in cell["oriented"]), default=0) or 1
+        for cell in cells:
+            if cell["measured"]:
+                cell["plot"] = _cell_plot(cell, domain)
+        for name, cell in zip(treatment, cells):
+            if cell["measured"] and cell["clear"]:
+                signals.append((name, label, unit, cell))
+        is_primary = key == primary_key
+        any_clear = any(cell["measured"] and cell["clear"] for cell in cells)
+        badge = ' <span class="sc-primary">Primary</span>' if is_primary else ""
+        exploratory = ' <span class="sc-sub">exploratory</span>' if metric.get("exploratory") else ""
+        unit_text = "points" if unit == "%" else unit
+        rows.append(
+            f'<tr class="{"is-primary" if is_primary else ""}" data-clear="{1 if any_clear or is_primary else 0}">'
+            f'<th scope="row"><span class="sc-metric">{e(label)}{badge}</span>'
+            f'<span class="sc-sub">{e(unit_text)}{exploratory}</span></th>'
+            + "".join(_cell_html(cell, name) for name, cell in zip(treatment, cells))
+            + "</tr>"
+        )
+    if not rows:
+        return "", unmeasured, signals
+    head = (
+        '<th scope="col"><span class="sc-axis">Metric <span aria-hidden="true">· ← worse · better →</span></span></th>'
+        + "".join(heads)
+    )
+    table_html = (
+        f'<div class="table sc-wrap"><table class="scorecard"><caption class="sr-only">{e(caption)}</caption>'
+        f'<thead><tr>{head}</tr></thead><tbody>{"".join(rows)}</tbody></table></div>'
+    )
+    return table_html, unmeasured, signals
+
+
+def _status_pill(state, label):
+    e = html.escape
+    return f'<span class="status-pill status-{e(state or "unknown")}"><span class="status-dot" aria-hidden="true"></span>{e(label)}</span>'
+
+
 def render_experiments_page(data, snapshot_date, picker=None, banner="", archive_month=None, url=None, root=None):
     if picker is None:
         picker = analytics_page.picker_html(_analytics_base(root), "experiments", "experiments.json", archive_month)
@@ -1389,7 +1512,7 @@ def render_experiments_page(data, snapshot_date, picker=None, banner="", archive
     if not isinstance(data.get("experiments"), list):
         sys.exit("experiments.json: expected experiments array")
     e = html.escape
-    sections, links = [], []
+    sections, cards = [], []
     for experiment in data["experiments"]:
         if not isinstance(experiment, dict) or experiment.get("status") != "concluded":
             continue
@@ -1397,83 +1520,225 @@ def render_experiments_page(data, snapshot_date, picker=None, banner="", archive
         name = experiment.get("name") or "Unnamed experiment"
         question = experiment.get("hypothesis") or "Question unavailable in this snapshot."
         since, until = (experiment_stamp(experiment.get(key)) for key in ("started_at", "as_of"))
-        if datetime.datetime.fromisoformat(since.replace("Z", "+00:00")) > datetime.datetime.fromisoformat(until.replace("Z", "+00:00")):
+        start, end = (datetime.datetime.fromisoformat(v.replace("Z", "+00:00")) for v in (since, until))
+        if start > end:
             sys.exit("experiments.json: observation window ends before it starts")
+        days = round((end - start).total_seconds() / 86400)
         anchor = f"experiment-{len(sections) + 1}"
-        links.append(f'<a href="#{anchor}">{e(name)}</a>')
         arms = [arm for arm in experiment.get("arms", []) if isinstance(arm, dict) and isinstance(arm.get("name"), str)]
         arm_names = {arm["name"] for arm in arms}
-        arm_items = []
-        for arm in arms:
-            mix = ", ".join(
-                f'{e(row["crew"])} ({experiment_count(row.get("tasks"))} tasks)'
-                for row in arm.get("crew_mix", [])
-                if isinstance(row, dict) and isinstance(row.get("crew"), str)
-                and not gap_identity(row["crew"], row.get("model"))
-            )
-            flags = [label for key, label in (("control", "control"), ("drifted", "drifted")) if arm.get(key)]
-            if arm.get("retired_segment") is not None:
-                flags.append("retired")
-            arm_items.append(
-                f'<li><strong>{e(arm["name"])}</strong>'
-                + (f' ({", ".join(flags)})' if flags else "")
-                + f' · {experiment_count(arm.get("n"))} enrolled tasks'
-                + (f' · Observed crews: {mix}' if mix else "") + '</li>'
-            )
+        control_names = {arm["name"] for arm in arms if arm.get("control")} or {"control"}
+        treatment_arms = [arm for arm in arms if arm["name"] not in control_names]
+        treatment = [arm["name"] for arm in treatment_arms]
+        control = next((arm for arm in arms if arm["name"] in control_names), None)
+        enrolled = sum(arm["n"] for arm in arms if type(arm.get("n")) is int and arm["n"] >= 0)
+        warning_kinds = experiment.get("warning_kinds")
+
         verdict = experiment.get("verdict") or {}
-        verdict_text = verdict.get("label") or verdict.get("state") or "Unavailable"
-        state = verdict.get("state")
-        if state and state != verdict_text:
-            verdict_text += f" ({state})"
+        state = verdict.get("state") if isinstance(verdict.get("state"), str) else None
+        verdict_text = verdict.get("label") or state or "Unavailable"
+        status = STATUS_LABEL.get(state, (state or "Concluded").replace("_", " ").capitalize())
         chosen = experiment.get("concluded_arm")
-        choice = e(chosen) if isinstance(chosen, str) and chosen in arm_names else "None recorded"
+        has_choice = isinstance(chosen, str) and chosen in arm_names
+        choice = e(chosen) if has_choice else "None recorded"
         recommended = verdict.get("arm")
-        recommendation = f'<p>Statistical recommendation: {e(recommended)}.</p>' if isinstance(recommended, str) and recommended in arm_names else ""
-        reasons = "".join(f'<li>{e(reason)}</li>' for reason in verdict.get("reasons", []) if isinstance(reason, str))
+        recommendation = (
+            f'<p class="readout-note">Statistical recommendation: {e(recommended)}.</p>'
+            if isinstance(recommended, str) and recommended in arm_names else ""
+        )
+        reasons = [reason for reason in verdict.get("reasons", []) if isinstance(reason, str)]
+
         metrics = [metric for metric in experiment.get("metrics", []) if isinstance(metric, dict) and metric.get("metric") in EXPERIMENT_METRICS]
         primary = [metric for metric in metrics if metric["metric"] == experiment.get("primary_metric")]
         primary_ids = {id(m) for m in primary}
         guardrails = [m for m in metrics if id(m) not in primary_ids and not m.get("exploratory")]
         exploratory = [m for m in metrics if id(m) not in primary_ids and m.get("exploratory")]
-        chart_parts = [experiment_diff_metric(m, arms, "Primary") for m in primary]
-        chart_parts += [experiment_diff_metric(m, arms, "Guardrail") for m in guardrails]
-        if exploratory:
-            chart_parts.append(
-                f'<details class="diff-exploratory"><summary>Other metrics ({len(exploratory)})</summary>'
-                + "".join(experiment_diff_metric(m, arms, "Exploratory") for m in exploratory) + '</details>'
+        primary_key = experiment.get("primary_metric")
+        primary_label = EXPERIMENT_METRICS[primary_key][0] if primary_key in EXPERIMENT_METRICS else "Unavailable"
+
+        heads = []
+        fidelity = {}
+        for arm in treatment_arms:
+            fid = experiment_fidelity(arm, len(treatment_arms), warning_kinds)
+            fidelity[arm["name"]] = fid
+            tags = []
+            if arm.get("retired_segment") is not None:
+                tags.append("retired")
+            if arm.get("drifted"):
+                tags.append("drifted")
+            tag_html = "".join(f' <span class="sc-flag">{t}</span>' for t in tags)
+            sub = f"n={experiment_count(arm.get('n'))}"
+            if fid and fid[1]:
+                sub += f" · {fid[0]:,}/{fid[1]:,} on own crew"
+            heads.append(
+                f'<th scope="col"><span class="sc-arm">{e(arm["name"])}</span>{tag_html}'
+                f'<span class="sc-sub">{e(sub)}</span></th>'
             )
-        chart_html = (
-            '<div class="diff-chart">' + "".join(chart_parts) + '</div>'
-            if chart_parts else '<p class="empty">Difference from control unavailable.</p>'
+        control_note = f"control n={experiment_count(control.get('n'))}" if control else "no control arm"
+
+        decision_table, unmeasured, signals = experiment_scorecard(
+            primary + guardrails, treatment, heads, primary_key,
+            f"{name}: difference from control by metric and arm",
         )
+        explore_table, explore_unmeasured, _ = experiment_scorecard(
+            exploratory, treatment, heads, primary_key,
+            f"{name}: exploratory metrics, difference from control",
+        )
+        better_n = sum(1 for _n, _l, _u, cell in signals if cell["kind"] == "better")
+        worse_n = sum(1 for _n, _l, _u, cell in signals if cell["kind"] == "worse")
+
+        if decision_table:
+            matrix = decision_table
+        else:
+            empty = " ".join(
+                f"{arm['name']} has {experiment_count(arm.get('n'))} enrolled tasks." for arm in treatment_arms
+            )
+            matrix = f'<p class="empty sc-empty">No treatment results yet. {e(empty)}</p>'
+        nm_line = (
+            f'<p class="sc-nm-line">Not measured for any arm: {e(", ".join(unmeasured))}.</p>'
+            if unmeasured and decision_table else ""
+        )
+        if signals:
+            items = "".join(
+                f'<li class="signal is-{cell["kind"]}"><span class="signal-head"><span class="signal-arm">{e(arm)}</span>'
+                f'<span class="signal-tag">{e(cell["tag"])}</span></span>'
+                f'<span class="signal-metric">{e(label)}</span>'
+                f'<span class="signal-value">{e(cell["short"])} <span class="unit">{e("points" if unit == "%" else unit)}</span></span>'
+                f'<span class="signal-iv">{e(cell["short_interval"])}</span>'
+                f'<span class="sr-only">{e(arm)}: {e(cell["text"])} difference from control, {e(cell["interval_text"])}</span></li>'
+                for arm, label, unit, cell in signals
+            )
+            signals_html = f'<ul class="signals">{items}</ul>'
+        else:
+            signals_html = '<p class="empty">No decision metric has an interval that excludes zero yet.</p>'
+
+        other_html = ""
+        if exploratory:
+            explore_nm = (
+                f'<p class="sc-nm-line">Not measured for any arm: {e(", ".join(explore_unmeasured))}.</p>'
+                if explore_unmeasured and explore_table else ""
+            )
+            other_html = (
+                f'<details class="diff-exploratory"><summary>Other metrics ({len(exploratory)})</summary>'
+                '<p class="board-note">Exploratory metrics: recorded for context, not decision metrics.</p>'
+                + (explore_table or '<p class="empty">Not measured for any arm.</p>') + explore_nm + '</details>'
+            )
         raw_html = (
             '<details class="experiment-raw"><summary>Raw per-arm outcomes</summary>'
             + "".join(experiment_metric_table(metric, arms) for metric in metrics) + '</details>'
         ) if metrics else ""
-        sections.append(f'''<section class="board experiment" id="{anchor}">
-<h2>{e(name)} <span class="board-label">Concluded</span></h2>
-<h3>Question</h3><p class="question">{e(question)}</p>
+
+        arm_rows = []
+        for arm in arms:
+            crews = "".join(
+                f'<span class="crew-chip">{e(row["crew"])} <span class="unit">{experiment_count(row.get("tasks"))}</span></span>'
+                for row in arm.get("crew_mix", [])
+                if isinstance(row, dict) and isinstance(row.get("crew"), str)
+                and not gap_identity(row["crew"], row.get("model"))
+            ) or '<span class="unit">None observed</span>'
+            flags = [label for key, label in (("control", "control"), ("drifted", "drifted")) if arm.get(key)]
+            if arm.get("retired_segment") is not None:
+                flags.append("retired")
+            flag_html = "".join(f' <span class="sc-flag">{f}</span>' for f in flags)
+            if arm["name"] in control_names:
+                fid_html = '<span class="unit">Reference arm</span>'
+            else:
+                fid = fidelity.get(arm["name"])
+                if fid is None:
+                    fid_html = '<span class="unit">Not recorded</span>'
+                elif fid[1] == 0:
+                    fid_html = '<span class="unit">No tasks yet</span>'
+                else:
+                    share = fid[0] / fid[1] * 100
+                    fid_html = (
+                        f'<span class="fid"><span class="fid-bar" aria-hidden="true"><span style="width:{share:.0f}%"></span></span>'
+                        f'<span class="fid-text">{fid[0]:,} / {fid[1]:,}</span></span>'
+                    )
+            arm_rows.append(
+                f'<tr><th scope="row"><span class="arm-name">{e(arm["name"])}</span>{flag_html}</th>'
+                f'<td data-label="Enrolled">{experiment_count(arm.get("n"))}</td>'
+                f'<td data-label="Ran on its own crew">{fid_html}</td>'
+                f'<td data-label="Observed crews"><span class="crew-chips">{crews}</span></td></tr>'
+            )
+        arms_table = (
+            '<div class="table"><table class="arms-table"><caption class="sr-only">Arms, enrolment and treatment delivery</caption>'
+            '<thead><tr><th scope="col">Arm</th><th scope="col">Enrolled</th><th scope="col">Ran on its own crew</th>'
+            '<th scope="col">Observed crews</th></tr></thead><tbody>' + "".join(arm_rows) + '</tbody></table></div>'
+        )
+
+        short = experiment_short_question(experiment, arms, metrics)
+        question_html = (
+            f'<p class="question-short">{e(short)}</p>'
+            f'<details class="question-full"><summary>Full question and design</summary><p class="question">{e(question)}</p></details>'
+            if short else f'<p class="question">{e(question)}</p>'
+        )
+        why_title = "Readout notes" if has_choice else "Why no decision"
+        why_body = (
+            "<ul>" + "".join(f"<li>{_reason_html(reason)}</li>" for reason in reasons) + "</ul>"
+            if reasons else '<p class="empty">The readout records no reasons.</p>'
+        )
+        arm_word = "treatment arm" if len(treatment) == 1 else "treatment arms"
+        day_word = "day" if days == 1 else "days"
+        cards.append(
+            f'<li><a class="exp-card" href="#{anchor}" data-exp="{anchor}">'
+            f'<span class="exp-card-head"><span class="exp-card-name">{e(name)}</span>{_status_pill(state, status)}</span>'
+            f'<span class="exp-card-q">{e(short or question)}</span>'
+            f'<span class="exp-card-meta"><span>{len(treatment)} {arm_word}</span><span>{enrolled:,} tasks</span><span>{days} {day_word}</span></span>'
+            f'<span class="exp-card-signals"><span class="is-better">{better_n} clear better</span>'
+            f'<span aria-hidden="true">·</span><span class="is-worse">{worse_n} clear worse</span></span></a></li>'
+        )
+        sections.append(f'''<section class="board experiment" id="{anchor}" data-exp-section>
+<div class="exp-head"><h2>{e(name)}</h2>{_status_pill(state, status)}</div>
 {render_window(since, until)}
-<p class="board-note">Cumulative observations from experiment start to readout, not a rolling 30-day window.</p>
-<div class="experiment-decision"><p><strong>Verdict:</strong> {e(verdict_text)}.</p>
-<p><strong>Chosen arm:</strong> {choice}.</p>{recommendation}
-{f'<ul>{reasons}</ul>' if reasons else ''}</div>
-<h3>Arms</h3><ul>{''.join(arm_items)}</ul>
-<h3>Difference from control</h3>{chart_html}{raw_html}
+<p class="board-note">Cumulative observations from experiment start to readout ({days} {day_word}), not a rolling 30-day window.</p>
+<dl class="readout">
+<div><dt>Verdict</dt><dd>{e(verdict_text)}</dd></div>
+<div><dt>Chosen arm</dt><dd>{choice}</dd></div>
+<div><dt>Primary metric</dt><dd>{e(primary_label)}</dd></div>
+<div><dt>Enrolled</dt><dd>{enrolled:,} tasks</dd></div>
+</dl>
+{recommendation}
+<div class="exp-split">
+<div class="exp-question"><h3>Question</h3>{question_html}</div>
+<div class="exp-why"><h3>{why_title}</h3>{why_body}</div>
+</div>
+<h3>Clear signals <span class="h-note">· interval excludes zero</span></h3>
+{signals_html}
+<div class="sc-head"><h3>Difference from control <span class="h-note">· {e(control_note)}</span></h3>
+<div class="sc-tools"><ul class="sc-legend"><li><i class="k-better"></i>Better</li><li><i class="k-worse"></i>Worse</li><li><i class="k-lean"></i>Leans (interval crosses zero)</li></ul>
+<button type="button" class="sc-filter" aria-pressed="false" hidden>Clear signals only</button></div></div>
+{matrix}
+{nm_line}
+{other_html}{raw_html}
+<h3>Arms and treatment delivery</h3>
+{arms_table}
 </section>''')
+    method = '''<section class="exp-method" id="method"><details><summary>Method and caveats</summary><ul>
+<li>Concluded is a lifecycle state, not proof of a winner. A verdict may be withheld, collecting or inconclusive, and a chosen arm may be absent.</li>
+<li>A cell is shaded only when its interval excludes zero. Every other cell is a direction, not a result. Intervals are copied from the readout; unavailable values are not zero.</li>
+<li>Each cell is the treatment arm minus control. The plot runs worse to the left and better to the right, using each metric's own direction.</li>
+<li>Support is specific to each metric; open regression windows can leave outcomes unsettled.</li>
+<li>Windows are cumulative from experiment start to readout, not a rolling 30-day window.</li>
+<li>"Ran on its own crew" counts tasks on the observed crew named like the arm; for a single treatment arm with no such crew it is enrolled tasks minus the readout's recorded crew mismatches.</li>
+<li>The short question is assembled from the readout's arms, primary metric, population and guardrails; the full question is the experiment's own text.</li>
+<li>These are experiment outcomes, not ranked crew scorecards. See the <a href="/notes/crew-rankings-method/">method note</a>.</li>
+</ul></details></section>'''
+    picker_cards = f'<nav class="exp-picker" aria-label="Choose an experiment"><ul>{"".join(cards)}</ul></nav>' if cards else ""
     body = f'''<article class="analytics experiments">
 <h1>Concluded experiments</h1>
 {banner}{picker}
 <p class="summary">Questions, per-arm outcomes and decisions from Orbit's concluded experiments.</p>
 <p class="as-of">Snapshot {e(snapshot_date)}. Built from the committed daily snapshot; no live Orbit calls.</p>
-<p class="board-note">Concluded is a lifecycle state, not proof of a winner. A verdict may be withheld, collecting or inconclusive, and a chosen arm may be absent. Intervals are copied from the readout; unavailable values are not zero. Support is specific to each metric; open regression windows can leave outcomes unsettled. These are experiment outcomes, not ranked crew scorecards. See the <a href="/notes/crew-rankings-method/">method and caveats</a>.</p>
-<nav class="board-nav" aria-label="Experiments">{' '.join(links)}</nav>
+<p class="board-note">Concluded does not mean a winner. Only shaded cells have an interval that excludes zero; everything else is a direction, not a result. <a href="#method">Method and caveats</a>.</p>
+{picker_cards}
 {''.join(sections) if sections else '<p class="empty">No concluded experiments in this snapshot.</p>'}
+{method if sections else ''}
 </article>'''
     return page(
         "Concluded experiments — Constellation Works",
         "Questions, arms, aggregate outcomes, intervals and decisions from concluded Orbit experiments.",
         url or f"{SITE}/analytics/experiments/", body, current="analytics",
+        extra_css=("analytics.css",), extra_js=("analytics.js",),
     )
 
 
