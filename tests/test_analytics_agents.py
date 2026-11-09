@@ -501,7 +501,7 @@ class RankingPageTest(unittest.TestCase):
         self.assertIn(">unranked<", doc)
         self.assertNotIn("orchestrator-only", doc)
         self.assertIn("Orchestrators are not scored on this page.", doc)
-        for gap in ("model unknown", "crew unknown", "crew unavailable"):
+        for gap in ("model unknown", "crew unknown", "crew unavailable", "system"):
             self.assertNotIn(gap, doc)
         for needle in ("ORB-", "jrun-", "/home/", "ws_"):
             self.assertNotIn(needle, doc)
@@ -950,6 +950,66 @@ class RankingPageTest(unittest.TestCase):
         tied["rows"][2]["rank"], tied["rows"][2]["rank_label"] = 2, "2="
         places = [item["place"] for item in build.podium_from_rank(tied)]
         self.assertEqual(places, ["1st", "2nd=", "2nd="])
+
+    def test_model_rank_crew_lists_label_bare_crews_and_hide_system(self):
+        board = rank_board()
+        board["rows"][0]["crews"] = [
+            {"crew": "haiku", "tasks": 590, "effort_estimate": "xhigh"},
+            {"crew": "haiku@xhigh", "tasks": 1},
+            {"crew": "system", "tasks": 2},
+        ]
+        board["rows"][1]["crews"] = [
+            {"crew": "opus", "tasks": 40, "effort_estimate": "high"},
+            {"crew": "opus@medium", "tasks": 8},
+        ]
+        board["rows"][2]["crews"] = [
+            {"crew": "luna", "tasks": 10, "effort_estimate": None},
+        ]
+        # The model row's own numbers stay the fixture's, not the crew-task sum.
+        self.assertEqual((board["rows"][0]["units"], board["rows"][0]["score"]), (60, 120.0))
+
+        haiku = build.rank_crew_entries(board["rows"][0])
+        self.assertEqual([(item["label"], item["tasks"], item["estimated"]) for item in haiku],
+                         [("haiku@xhigh", 591, False)])
+        opus = build.rank_crew_entries(board["rows"][1])
+        self.assertEqual([(item["label"], item["tasks"], item["estimated"]) for item in opus],
+                         [("opus@high (est.)", 40, True), ("opus@medium", 8, False)])
+        self.assertEqual([item["label"] for item in build.rank_crew_entries(board["rows"][2])],
+                         ["luna · effort unknown"])
+        # A snapshot from before estimates keeps the raw key, and still hides system.
+        legacy = build.rank_crew_entries({"crews": [
+            {"crew": "sol", "tasks": 861}, {"crew": "sol@high", "tasks": 10},
+            {"crew": "sol@xhigh", "tasks": 4}, {"crew": "system", "tasks": 2},
+            {"crew": "crew unknown", "tasks": 1},
+        ]})
+        self.assertEqual([item["label"] for item in legacy], ["sol", "sol@high", "sol@xhigh"])
+        # The recorded label wins wherever it sits, and a repeated guess is one label.
+        recorded_first = build.rank_crew_entries({"crews": [
+            {"crew": "sol@high", "tasks": 10},
+            {"crew": "sol", "tasks": 861, "effort_estimate": "high"},
+        ]})
+        self.assertEqual([(item["label"], item["tasks"]) for item in recorded_first], [("sol@high", 871)])
+        repeated = build.rank_crew_entries({"crews": [
+            {"crew": "sol", "tasks": 3, "effort_estimate": "medium"},
+            {"crew": "sol", "tasks": 2, "effort_estimate": "medium"},
+            {"crew": "sol@high", "tasks": 1},
+        ]})
+        self.assertEqual([(item["label"], item["tasks"]) for item in repeated],
+                         [("sol@medium (est.)", 5), ("sol@high", 1)])
+
+        doc = build.render_ranking_body(scorecards(), "2026-11-08", board)
+        self.assertNotIn("system", doc)
+        overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
+        self.assertIn('<span class="podium-crews">haiku@xhigh</span>', overall)
+        self.assertIn('<span class="podium-crews">opus@high (est.) · opus@medium</span>', overall)
+        self.assertIn('<span class="podium-crews">luna · effort unknown</span>', overall)
+        self.assertIn('<span class="ml-crews">haiku@xhigh</span>', overall)
+        self.assertIn('<span class="ml-crews">opus@high (est.) · opus@medium</span>', overall)
+        self.assertIn("haiku@xhigh 591", overall)
+        self.assertNotIn("haiku@xhigh (est.)", overall)
+        self.assertNotIn("haiku 590", overall)
+        self.assertIn('<span class="ml-units">60</span>', overall)
+        self.assertEqual(overall.count(build.EST_NOTE.replace("'", "&#x27;")), 1)
 
     def test_without_rank_json_overall_shows_a_notice_and_the_index_podium(self):
         data = all_roles_scorecards()

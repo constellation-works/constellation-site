@@ -84,7 +84,13 @@ with four stat cards:
   Orbit's eligibility rule as one sentence (`eligibility_rule`) and each
   non-eligible model's reason, free text sanitized, gap models and crews dropped
   and counted, and paired
-  probabilities and per-effort splits left out.
+  probabilities and per-effort splits left out. The crew `system` is not a
+  configured crew (it is Orbit's attribution for system-run work), so the
+  exporter drops it from those crew lists and counts it with the other dropped
+  gap crews, and the page never shows it. A bare crew key (no recorded effort)
+  is labelled `crew@<configured effort> (est.)` from the same `effort_estimate`
+  the crew boards use; when that guess equals an effort-recorded crew of the
+  same model, the recorded label is shown once.
 - **Implementers** — "Crews by role":
   takeaway callouts, the crew table with the fleet-average marker, and implementers
   by tier. Crews by role is one renderer, `render_crews_by_role(directory, role=None)`,

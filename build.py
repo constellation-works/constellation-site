@@ -388,6 +388,9 @@ def build_feed(notes):
 DATE_DIR = re.compile(r"\d{4}-\d{2}-\d{2}")
 # Same attribution gaps analytics_snapshot.py drops before a row is public.
 GAP_CREWS = {"crew unknown", "crew unavailable", "unknown"}
+# Orbit's attribution for system-run work, not a configured crew. Rank crew
+# lists never show it. It is not a scorecard gap sentinel (those are GAP_CREWS).
+RANK_NON_CREW = "system"
 GAP_MODELS = {"model unknown"}
 TIER_ORDER = ("low", "medium", "hard", "xhard")
 TIER_LABELS = {"low": "Low", "medium": "Medium", "hard": "Hard", "xhard": "Extra hard"}
@@ -1499,19 +1502,86 @@ def ordinal(number):
     return f"{number}{suffix}"
 
 
+def rank_crew_entries(row):
+    """Labels for one model's rank crews, in Orbit's order.
+
+    ``system`` and attribution gaps are omitted. A key that already carries
+    an effort (``sol@high``) is that recorded label. A bare crew with
+    ``effort_estimate`` reads ``crew@effort (est.)``; ``null`` reads
+    ``crew · effort unknown``. A bare key with no estimate field is a
+    snapshot from before estimates and stays the raw key. When the guess
+    equals a recorded label on this model, only the recorded label is kept
+    and the guess's tasks are added to it, so the breakdown still counts them.
+    """
+    raw = []
+    for entry in row.get("crews") or []:
+        if not isinstance(entry, dict):
+            continue
+        crew = entry.get("crew")
+        if not isinstance(crew, str) or not crew or crew == RANK_NON_CREW or crew in GAP_CREWS:
+            continue
+        tasks = entry.get("tasks") if as_number(entry.get("tasks")) else None
+        if "@" in crew:
+            raw.append({"label": crew, "tasks": tasks, "guess": None, "recorded": True})
+            continue
+        estimate = entry.get("effort_estimate")
+        if isinstance(estimate, str) and estimate.strip() and estimate.strip() != "unknown":
+            estimate = estimate.strip()
+            raw.append({
+                "label": f"{crew}@{estimate} (est.)",
+                "tasks": tasks,
+                "guess": f"{crew}@{estimate}",
+                "recorded": False,
+            })
+            continue
+        if "effort_estimate" in entry:
+            raw.append({"label": f"{crew} · effort unknown", "tasks": tasks, "guess": None, "recorded": False})
+            continue
+        raw.append({"label": crew, "tasks": tasks, "guess": None, "recorded": False})
+
+    recorded = {item["label"] for item in raw if item["recorded"]}
+    out = []
+    index = {}
+    pending = {}
+
+    def add_tasks(slot, extra):
+        if extra is None:
+            return
+        slot["tasks"] = extra if slot["tasks"] is None else slot["tasks"] + extra
+
+    for item in raw:
+        label = item["guess"] if item["guess"] and item["guess"] in recorded else item["label"]
+        if label != item["label"] and label not in index:
+            if item["tasks"] is not None:
+                pending[label] = item["tasks"] if label not in pending else pending[label] + item["tasks"]
+            continue
+        if label in index:
+            add_tasks(out[index[label]], item["tasks"])
+            continue
+        slot = {"label": label, "tasks": item["tasks"], "estimated": label.endswith(" (est.)")}
+        if label in pending:
+            add_tasks(slot, pending.pop(label))
+        index[label] = len(out)
+        out.append(slot)
+    return out
+
+
+def rank_crew_line(row):
+    """One model's rank crews on one line (``sol@high · sol@xhigh``)."""
+    return " · ".join(item["label"] for item in rank_crew_entries(row))
+
+
 def podium_from_rank(rank):
     """The podium's top three from Model rank, in Rank's order, with their Rank score."""
     ranked, _rest = rank_rows(rank)
     items = []
     for row in ranked[:3]:
         label = row.get("rank_label") or str(row["rank"])
-        crews = [entry["crew"] for entry in row.get("crews") or []
-                 if isinstance(entry, dict) and isinstance(entry.get("crew"), str) and entry["crew"] not in GAP_CREWS]
         interval = row.get("interval") or {}
         note = (f'p10–p90 {fmt_score(interval["p10"])}–{fmt_score(interval["p90"])}'
                 if as_number(interval.get("p10")) and as_number(interval.get("p90")) else "Model rank score")
         items.append({"place": ordinal(row["rank"]) + ("=" if label.endswith("=") else ""), "model": row["model"],
-                      "crews": " · ".join(crews), "score": row["score"], "note": note})
+                      "crews": rank_crew_line(row), "score": row["score"], "note": note})
     return items
 
 
@@ -1768,8 +1838,7 @@ def model_detail(row, rank):
         if as_number(landed) else percent(row.get("landed_rate"))
     )
     crews = " · ".join(
-        f'{entry["crew"]} {fmt_count(entry["tasks"])}' for entry in row.get("crews") or []
-        if isinstance(entry, dict) and isinstance(entry.get("crew"), str) and as_number(entry.get("tasks"))
+        f'{item["label"]} {fmt_count(item["tasks"])}' for item in rank_crew_entries(row) if item["tasks"] is not None
     ) or "—"
     delivery = (
         '<dl class="facts">'
@@ -1801,6 +1870,7 @@ def models_board(rank):
     band_pct = rules.get("band_probability")
     band_text = f"{band_pct * 100:.0f}% confidence" if as_number(band_pct) else "the board's confidence level"
     items = []
+    est_html = ""
     if ranked:
         low, high, ticks = whisker_axis(ranked)
         tick_html = "".join(
@@ -1828,10 +1898,7 @@ def models_board(rank):
                 f'<span class="cost-ratio {"is-better" if ratio < 1 else "is-worse"}">{ratio:.2f}×</span>'
                 if as_number(ratio) else '<span class="cost-ratio">—</span>'
             )
-            crews = " · ".join(
-                entry["crew"] for entry in row.get("crews") or []
-                if isinstance(entry, dict) and isinstance(entry.get("crew"), str)
-            )
+            crews = rank_crew_line(row)
             interval_sr = (
                 f'p10 {fmt_score(interval["p10"])} to p90 {fmt_score(interval["p90"])}'
                 if as_number(interval.get("p10")) and as_number(interval.get("p90")) else "no interval"
@@ -1863,6 +1930,8 @@ def models_board(rank):
             '<span class="ml-landed">Landed</span></div>'
         )
         board = f'<div class="model-board">{head}<ol>{"".join(items)}</ol></div>'
+        if any(item["estimated"] for row in ranked for item in rank_crew_entries(row)):
+            est_html = estimate_note([{"estimated": True}])
     else:
         need = rules.get("min_eligible_models")
         board = (
@@ -1901,7 +1970,7 @@ def models_board(rank):
 <p class="board-note rank-notice{" is-live" if live else ""}">{e(notice)}</p>
 <p class="board-note score-key">Who implements best: Orbit's implementer rank, crews pooled into their model, eligible models only. Shared ranks such as 2= are one band at {e(band_text)}; cost orders a band and never crosses it. Cost ratio is the model's $ per task against the fleet's on the same tiers. Select a model for its breakdown.</p>
 {window_html}
-{board}
+{est_html}{board}
 {folded}
 </section>'''
 

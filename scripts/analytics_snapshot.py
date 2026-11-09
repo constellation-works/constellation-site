@@ -117,7 +117,13 @@ single-tier flag when Orbit sets one, its sanitized not-eligible reason, its ban
 cost per task with its ratio and coverage, tasks by tier, landed rate,
 per-measure contributions, crews with task counts and per-tier scores.
 Rows whose model is ``model unknown`` and crews that are attribution gaps
-are dropped and counted in ``dropped.rank``. Paired probabilities,
+are dropped and counted in ``dropped.rank``. The crew ``system`` is
+Orbit's attribution for system-run work, not a configured crew, so it is
+dropped from rank crew lists and counted in ``dropped.rank`` the same way.
+A bare crew key (no ``@effort``) also gets ``effort_estimate``, that
+crew's configured effort from the same ``orbit config get
+crews.<crew>.effort`` lookup the scorecards use (``null`` when the crew
+has none). Paired probabilities,
 z-scores, per-effort usage splits and the unattributed crew list are not
 copied. Snapshots written before this key existed have no ``rank.json``,
 and those written before the live board carry a settled one; their bundles
@@ -165,6 +171,11 @@ RANK_RULES = (
 RANK_TIERS = ("low", "medium", "hard", "xhard", "unassessed")
 ROLES = ("implementers", "reviewers", "pilots")
 GAP_CREWS = {"crew unknown", "crew unavailable", "unknown"}
+# Orbit attributes system-run work to this name. It is not a configured crew
+# (`orbit config get crews.system.model` is null). Rank crew lists drop it
+# and count it with the other dropped gap crews. It is not in GAP_CREWS:
+# metrics still records it, and a bundle written before this still replays.
+RANK_NON_CREW = "system"
 GAP_MODELS = {"model unknown"}
 TIER_ORDER = ("low", "medium", "hard", "xhard")
 DEFECT_LINEAGES = ("fix_for_fix", "regression", "unattributed")
@@ -305,6 +316,14 @@ def is_number(value):
 
 def is_gap_crew(crew):
     return isinstance(crew, str) and crew in GAP_CREWS
+
+
+def is_rank_dropped_crew(crew):
+    """A rank crew-list entry that is not a public crew.
+
+    Attribution gaps, plus ``system`` (Orbit's name for system-run work).
+    """
+    return crew == RANK_NON_CREW or is_gap_crew(crew)
 
 
 def is_gap_model(model):
@@ -614,6 +633,26 @@ def crews_needing_estimates(cards):
         for row in (card.get("rows") or []) + (card.get("cells") or []):
             if isinstance(row, dict) and row.get("reasoning_effort") == "unknown" and estimable_crew(row.get("crew")):
                 crews.add(row["crew"])
+    return sorted(crews)
+
+
+def rank_bare_crews(payload):
+    """Plain crew keys on the rank board whose configured effort can be read.
+
+    ``system`` is not a crew, so it is not looked up. A key that already
+    names an effort (``sol@high``) is not looked up either.
+    """
+    if not isinstance(payload, dict):
+        return []
+    crews = set()
+    for row in payload.get("rows") or []:
+        if not isinstance(row, dict):
+            continue
+        for entry in row.get("crews") or []:
+            crew = entry.get("crew") if isinstance(entry, dict) else None
+            if is_rank_dropped_crew(crew) or not estimable_crew(crew):
+                continue
+            crews.add(crew)
     return sorted(crews)
 
 
@@ -1715,7 +1754,7 @@ def project_rank_row_measures(measures, keys, patterns, redactions):
     return out
 
 
-def project_rank_row(row, measure_keys, dropped, patterns, redactions):
+def project_rank_row(row, measure_keys, dropped, patterns, redactions, estimates=None):
     if not isinstance(row, dict):
         return None
     model = row.get("model")
@@ -1773,11 +1812,21 @@ def project_rank_row(row, measure_keys, dropped, patterns, redactions):
         if not isinstance(entry, dict):
             continue
         crew, tasks = entry.get("crew"), entry.get("tasks")
-        if is_gap_crew(crew):
+        if is_rank_dropped_crew(crew):
             dropped["rank"] += 1
             continue
         if isinstance(crew, str) and SAFE_TOKEN.fullmatch(crew) and is_number(tasks):
-            crews.append({"crew": crew, "tasks": tasks})
+            item = {"crew": crew, "tasks": tasks}
+            # A bare key has no recorded effort. Stamp the configured-effort
+            # guess when the caller looked estimates up (None leaves a
+            # snapshot from before this lookup unchanged).
+            if estimates is not None and estimable_crew(crew):
+                estimate = estimates.get(crew)
+                if isinstance(estimate, str) and SAFE_TOKEN.fullmatch(estimate) and estimate != "unknown":
+                    item["effort_estimate"] = estimate
+                else:
+                    item["effort_estimate"] = None
+            crews.append(item)
     projected["crews"] = crews
     tiers = []
     for entry in row.get("tiers") or []:
@@ -1840,7 +1889,7 @@ def eligibility_rule(payload, rules, patterns, redactions):
     return sentence
 
 
-def project_rank(payload, dropped, patterns, redactions):
+def project_rank(payload, dropped, patterns, redactions, estimates=None):
     """The live 30d managed implementer-model rank board, public fields only.
 
     The board is live and provisional: its window ends at the snapshot, so
@@ -1849,9 +1898,11 @@ def project_rank(payload, dropped, patterns, redactions):
     eligibility rule as one sentence, each non-eligible model's reason, each measure's label, weight, status and sanitized definition, the
     not-scored count by reason, and per model its band, score, p10-p90
     interval, cost per task and ratio, tier mix, landed rate, per-measure
-    contributions, crews (with their task counts) and per-tier scores. Not
-    copied: paired probabilities, z-scores, per-effort usage splits, the
-    unattributed crew list and per-row execution splits.
+    contributions, crews (with their task counts and, for a bare crew, its
+    configured ``effort_estimate``) and per-tier scores. The crew ``system``
+    is dropped and counted with the other gap crews. Not copied: paired
+    probabilities, z-scores, per-effort usage splits, the unattributed crew
+    list and per-row execution splits.
     """
     if not isinstance(payload, dict):
         raise SystemExit("rank board did not return an object")
@@ -1869,7 +1920,7 @@ def project_rank(payload, dropped, patterns, redactions):
     keys = [measure["key"] for measure in measures]
     rows = []
     for row in payload.get("rows") or []:
-        projected = project_rank_row(row, keys, dropped, patterns, redactions)
+        projected = project_rank_row(row, keys, dropped, patterns, redactions, estimates)
         if projected is not None:
             rows.append(projected)
     rules_in = payload.get("rules") if isinstance(payload.get("rules"), dict) else {}
@@ -2008,7 +2059,8 @@ def collect(workspace, dashboard, generated_at, version):
             ["agents", "scorecard", "--role", "reviewers", "--window", WINDOW, "--until", SETTLED_UNTIL],
             workspace,
         )
-    estimates = crew_effort_estimates(crews_needing_estimates(cards), workspace)
+    needing = crews_needing_estimates(cards)
+    estimates = crew_effort_estimates(needing, workspace)
     print("metrics", file=sys.stderr)
     scope = {"workspace": ident}
     durations = http_json(dashboard, "/api/diagnostics/implement_one", {"since": WINDOW, "outcome": "succeeded", **scope})
@@ -2034,6 +2086,9 @@ def collect(workspace, dashboard, generated_at, version):
     rank = http_json(
         dashboard, "/api/agents/rank", {"window": WINDOW, "execution": RANK_EXECUTION, "live": "true", **scope}
     )
+    extra = [crew for crew in rank_bare_crews(rank) if crew not in set(needing)]
+    if extra:
+        estimates.update(crew_effort_estimates(extra, workspace))
     print("experiments", file=sys.stderr)
     listed = orbit_json(["experiment", "list"], workspace)
     experiments = listed.get("experiments") if isinstance(listed, dict) else None
@@ -2107,7 +2162,7 @@ def project_all(cards, until_supported, durations, completions, defects, tokens,
         "scorecards": scorecards,
     }
     if rank is not None:
-        docs["rank"] = project_rank(rank, dropped, patterns, redactions)
+        docs["rank"] = project_rank(rank, dropped, patterns, redactions, effort_estimates)
     docs["meta"] = assemble_meta(docs, generated_at, version, workspace, until_supported, dropped, redactions[0])
     return docs
 
