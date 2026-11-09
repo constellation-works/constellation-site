@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRATCH = ROOT / ".orbit" / "tmp"
 REAL = ROOT / "data" / "analytics" / "2026-11-08"
 SNAPSHOT_FILES = ("scorecards.json", "metrics.json", "reliability.json", "experiments.json", "meta.json")
-PAGES = ("agents", "metrics", "reliability", "experiments")
+PAGES = ("metrics", "reliability", "experiments")
 
 
 def make_root(tmp, days):
@@ -39,7 +39,7 @@ def picker_html(document):
 def build_all(root):
     with patch.object(build, "ROOT", root):
         build.build_analytics_index()
-        build.build_agents()
+        build.build_ranking(root)
         analytics_page.build(root)
         build.build_reliability()
         build.build_experiments()
@@ -109,16 +109,22 @@ class ArchiveBuildTest(unittest.TestCase):
                 self.assertFalse((out / slug / "2026-10").exists(), slug)
                 self.assertFalse((out / slug / "2026-12").exists(), slug)
 
-            agents_archive = (out / "agents" / "2026-11" / "index.html").read_text(encoding="utf-8")
-            self.assertIn("Snapshot 2026-11-30.", agents_archive)
+            # /ranking/ replaced the agents page: newest snapshot only, no archive.
+            self.assertFalse((out / "agents").exists())
+            ranking_dir = root / "public" / "ranking"
+            self.assertEqual(sorted(path.name for path in ranking_dir.iterdir()), ["index.html"])
+            ranking = (ranking_dir / "index.html").read_text(encoding="utf-8")
+            self.assertIn('Snapshot <time datetime="2026-12-15">2026-12-15</time>', ranking)
+            self.assertNotIn("snapshot-picker", ranking)
             for gap in ("model unknown", "crew unknown", "crew unavailable", "ORB-", "/home/"):
-                self.assertNotIn(gap, agents_archive)
+                self.assertNotIn(gap, ranking)
 
             index = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn("Available months", index)
             self.assertIn("2026-11", index)
             for slug in PAGES:
                 self.assertIn(f'href="/analytics/{slug}/2026-11/"', index, slug)
+            self.assertNotIn("/analytics/agents/", index)
 
     def test_picker_and_banner_use_page_windows_or_label_fleet_reference(self):
         # Differing windows: reliability (2026-10-09..), a distinct metrics
@@ -151,10 +157,6 @@ class ArchiveBuildTest(unittest.TestCase):
                 analytics_page._window_stamps(latest_dir, "experiments"),
                 (reliability_since, reliability_until),
             )
-            self.assertEqual(
-                analytics_page._window_stamps(latest_dir, "agents"),
-                (reliability_since, reliability_until),
-            )
 
             build_all(root)
             out = root / "public" / "analytics"
@@ -167,8 +169,6 @@ class ArchiveBuildTest(unittest.TestCase):
             expectations = {
                 "experiments": ("fleet reliability reference window", reliability_since,
                                 "each experiment shows its cumulative observation window"),
-                "agents": ("fleet reliability reference window", reliability_since,
-                           "each board shows its own observation window"),
                 "metrics": ("metrics window", metrics_since,
                             "a board prints its own window only where it differs"),
                 "reliability": ("fleet reliability window", reliability_since, None),
@@ -205,8 +205,8 @@ class ArchiveBuildTest(unittest.TestCase):
                 self.assertIn("Historical snapshot", banner(archive), slug)
 
             # Each board's own period is preserved on the page body.
-            agents = (out / "agents" / "index.html").read_text(encoding="utf-8")
-            self.assertIn('datetime="2026-09-09T17:22:19Z"', agents)
+            ranking = (root / "public" / "ranking" / "index.html").read_text(encoding="utf-8")
+            self.assertIn('datetime="2026-09-09T17:22:19Z"', ranking)
             experiments = (out / "experiments" / "index.html").read_text(encoding="utf-8")
             self.assertIn('datetime="2026-10-31T18:36:15.786740Z"', experiments)
             self.assertIn("Cumulative observations from experiment start", experiments)
@@ -314,7 +314,7 @@ class WrongTypeWindowCandidatesTest(unittest.TestCase):
                 with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
                     directory = self._make_snapshot(
                         tmp, meta_reliability=bad, reliability_window=self.valid_reliability)
-                    for page in ("agents", "reliability", "experiments", None):
+                    for page in ("reliability", "experiments", None):
                         self.assertEqual(
                             analytics_page._window_stamps(directory, page),
                             (self.RELIABILITY_SINCE, self.RELIABILITY_UNTIL),
@@ -327,7 +327,7 @@ class WrongTypeWindowCandidatesTest(unittest.TestCase):
                 with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
                     directory = self._make_snapshot(
                         tmp, meta_reliability=self.valid_reliability, reliability_window=bad)
-                    for page in ("agents", "reliability", "experiments", None):
+                    for page in ("reliability", "experiments", None):
                         self.assertEqual(
                             analytics_page._window_stamps(directory, page),
                             (self.RELIABILITY_SINCE, self.RELIABILITY_UNTIL),
@@ -367,7 +367,7 @@ class WrongTypeWindowCandidatesTest(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
             directory = self._make_snapshot(
                 tmp, meta_reliability=["unexpected"], reliability_window="unexpected")
-            for page in ("agents", "reliability", "experiments", None):
+            for page in ("reliability", "experiments", None):
                 self.assertEqual(analytics_page._window_stamps(directory, page), (None, None), page)
                 entry = analytics_page.snapshot_entry(directory, page)
                 self.assertIsNone(entry["since"], page)
@@ -394,10 +394,10 @@ class WrongTypeWindowCandidatesTest(unittest.TestCase):
             out = root / "public" / "analytics"
             for slug in PAGES:
                 self.assertTrue((out / slug / "2026-11" / "index.html").is_file(), slug)
-            live_agents = (out / "agents" / "index.html").read_text(encoding="utf-8")
-            self.assertIn("fleet reliability reference window", picker_html(live_agents))
+            live_experiments = (out / "experiments" / "index.html").read_text(encoding="utf-8")
+            self.assertIn("fleet reliability reference window", picker_html(live_experiments))
 
-    def test_agents_archive_omits_window_when_all_candidates_malformed(self):
+    def test_experiments_archive_omits_window_when_all_candidates_malformed(self):
         with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
             root = make_root(tmp, ("2026-10-31", "2026-11-08", "2026-11-30", "2026-12-15"))
             archived = root / "data" / "analytics" / "2026-11-30"
@@ -409,19 +409,19 @@ class WrongTypeWindowCandidatesTest(unittest.TestCase):
             reliability = json.loads(reliability_path.read_text(encoding="utf-8"))
             reliability["window"] = "unexpected"
             reliability_path.write_text(json.dumps(reliability), encoding="utf-8")
-            entry = analytics_page.snapshot_entry(archived, "agents")
+            entry = analytics_page.snapshot_entry(archived, "experiments")
             self.assertEqual((entry["since"], entry["until"]), (None, None))
             with patch.object(build, "ROOT", root):
                 build.build_analytics_index()
-                build.build_agents()
-            archive = (root / "public" / "analytics" / "agents" / "2026-11" / "index.html").read_text(
+                build.build_experiments()
+            archive = (root / "public" / "analytics" / "experiments" / "2026-11" / "index.html").read_text(
                 encoding="utf-8")
             self.assertIn("Historical snapshot", archive)
             banner = re.search(r'<p class="archive-banner">.*?</p>', archive, re.S).group(0)
             self.assertNotIn("fleet reliability reference window", banner)
             self.assertNotIn(f'datetime="{self.RELIABILITY_SINCE}"', banner)
             picker = picker_html(archive)
-            item = picker.split('href="/analytics/agents/2026-11/"')[1].split("</li>")[0]
+            item = picker.split('href="/analytics/experiments/2026-11/"')[1].split("</li>")[0]
             self.assertNotIn("fleet reliability reference window", item)
             self.assertNotIn(f'datetime="{self.RELIABILITY_SINCE}"', item)
 
