@@ -551,7 +551,7 @@
 .rank-list ol { list-style: none; margin: 0; padding: 0 !important; }
 .rank-list li { margin: 0; border-top: 1px solid var(--rule); }
 .bar-row {
-  display: grid; grid-template-columns: 2.5rem minmax(0, 1.3fr) minmax(0, 3fr) 4.5rem 5.5rem;
+  display: grid; grid-template-columns: 2.5rem minmax(12.5rem, 1.3fr) minmax(4rem, 3fr) 4.5rem 5.5rem;
   gap: 12px; align-items: center; padding: 10px 16px; min-height: 48px; font-size: 15px;
 }
 .bar-head { background: var(--card); color: var(--muted); font-size: 12px; min-height: 0; }
@@ -686,22 +686,12 @@
   .rel-top { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
-  .bar-row { grid-template-columns: 2.25rem minmax(0, 1fr) auto auto; gap: 4px 10px; padding: 10px 12px; }
-  .bar-row .score-bar { grid-column: 2 / -1; grid-row: 2; }
-  .bar-head { display: none; }
-  .crew-detail { padding: 6px 12px 16px; }
   .rel-tiles { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; }
   .rel-tiles li:first-child { grid-column: 1 / -1; }
   .daychart { gap: 1px; }
   .day-vols, .day-ticks { gap: 1px; }
   .day-label { writing-mode: vertical-rl; transform: translateX(-50%) rotate(180deg); font-size: 9px; }
   .daychart-box { padding: 14px 10px 10px; }
-  /* Stacked tables (notes.css): the heatmap keeps one labelled block per crew. */
-  .analytics .heatmap-wrap { border: 0; padding: 0; width: auto; }
-  .analytics table.heatmap { border-spacing: 0; width: 100%; }
-  .analytics .heatmap td.hm { padding: 6px 10px; margin: 3px 0; border-radius: 6px; align-items: center; }
-  .analytics .heatmap td.hm .hm-v { align-items: flex-end; }
-  .analytics .heatmap tbody th { padding: 0 0 4px; }
   .analytics .bar-table td.bar-cell { width: auto; min-width: 0; }
   .analytics .bar-table .bar-cell .score-bar { width: auto; flex: 1 1 auto; margin-left: auto; max-width: 12rem; }
   .analytics .bar-table td.bar-cell { gap: 10px; }
@@ -931,13 +921,7 @@
 .how p { font-size: 14px; line-height: 1.55; color: var(--lede); margin: 0; }
 .analytics .method-links { margin-top: 24px; max-width: 100%; }
 
-@media (max-width: 900px) {
-  .model-detail { grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
-  .model-line { grid-template-columns: 2.6rem minmax(0, 1fr) 4rem 7rem 4rem; row-gap: 6px; }
-  .model-line .ml-whisker { grid-column: 2 / -1; grid-row: 2; }
-  .model-line .ml-tasks { grid-column: 2 / -1; grid-row: 3; }
-  .model-head .ml-tasks { display: none; }
-}
+
 @media (max-width: 560px) {
   .ranking-page .group-nav ul { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; }
   .ranking-page .group-nav a { display: flex; justify-content: center; }
@@ -945,11 +929,70 @@
   .stat-value { font-size: 22px; }
   .podium { margin-top: 32px; }
   .podium-value { font-size: 28px; }
-  .analytics .overall-table td.bar-cell { width: auto; }
-  .analytics .overall-table .bar-cell .score-bar { width: auto; flex: 1 1 auto; margin-left: auto; max-width: 12rem; display: inline-block; }
-  .analytics .overall-table td.bar-cell { gap: 10px; }
-  .overall-table .crew-model { padding-left: 0; }
-  .overall-table .role-v { align-items: flex-end; text-align: right; }
+  .model-detail { padding: 14px 12px 16px; }
+  .analytics .contribs li { grid-template-columns: minmax(0, 1fr) 1.4rem 4rem 3.4rem; gap: 6px; }
+  .analytics .gate-list li { grid-template-columns: 8px minmax(0, 1fr) auto; }
+  .gate-progress { grid-column: 2 / -1; }
+  .role-pills ul { gap: 6px; }
+  .role-pills a { padding: 6px 12px; font-size: 13px; }
+  .role-pills .tab-boards { display: none; }
+}
+/* Collapse points, by measurement rather than the phone breakpoint (STD-07 §R4, §R30).
+   Each board collapses when its own box (container `ranking`: a tab panel, or the
+   Crews-by-role component wherever it is placed) can no longer hold its columns with every
+   model and crew name on one line. Widths measured on the 2026-11 snapshot with Geist:
+   - the role tables (Overall, Reviewers, Pilots) and the tier heatmap stack below 860px:
+     the Overall table needs 841px with its names unbroken, and the others follow it so
+     the tabs read alike;
+   - the Models board drops to two rows below 960px (its name column falls under ~185px
+     and the breakdown's middle column under its 228px mini-table) and stacks below 580px;
+   - the Crews-by-role crew list keeps a 12.5rem name column and stacks below 560px.
+   Above a collapse point names never wrap; inside a stacked block a name has the full
+   width and may break only as a last resort. */
+.ranking-page .role-group, .crews-by-role { container: ranking / inline-size; }
+.analytics .bar-table .crew-name, .analytics .bar-table .crew-model,
+.rank-list .crew-name, .rank-list .crew-model { white-space: nowrap; overflow-wrap: normal; }
+@container ranking (max-width: 860px) {
+  .analytics .bar-table, .analytics table.heatmap { display: block; width: 100%; max-width: 100%; }
+  .analytics :is(.bar-table, .heatmap) thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  .analytics :is(.bar-table, .heatmap) :is(tbody, tr) { display: block; }
+  .analytics :is(.bar-table, .heatmap) tr { padding: 12px 0 14px; border-bottom: 1px solid var(--rule); }
+  .analytics :is(.bar-table, .heatmap) tbody tr:last-child { border-bottom: 0; }
+  .analytics :is(.bar-table, .heatmap) tbody :is(th, td) {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    width: auto; min-width: 0; white-space: normal; overflow-wrap: anywhere; text-align: right;
+    border-bottom: 0; padding: 2px 0;
+  }
+  .analytics :is(.bar-table, .heatmap) td::before {
+    content: attr(data-label); color: var(--muted); flex: 0 0 8rem; text-align: left;
+  }
+  .analytics :is(.bar-table, .heatmap) td > * { min-width: 0; }
+  .analytics :is(.bar-table, .heatmap) tbody th[scope="row"] {
+    display: block; text-align: left; font-weight: 600; padding: 0 0 4px;
+  }
+  .analytics .bar-table :is(.crew-name, .crew-model) { white-space: normal; overflow-wrap: anywhere; }
+  .analytics .bar-table td.bar-cell { width: auto; min-width: 0; gap: 10px; }
+  .analytics .bar-table .bar-cell .score-bar { width: auto; flex: 1 1 auto; margin-left: auto; max-width: 12rem; display: inline-block; }
+  .analytics .overall-table .crew-model { padding-left: 0; }
+  .analytics .overall-table .role-v { align-items: flex-end; text-align: right; }
+  /* The heatmap keeps one labelled block per crew. */
+  .analytics .heatmap-wrap { border: 0; padding: 0; width: auto; }
+  .analytics table.heatmap { border-spacing: 0; }
+  .analytics .heatmap td.hm { padding: 6px 10px; margin: 3px 0; border-radius: 6px; align-items: center; }
+  .analytics .heatmap td.hm .hm-v { align-items: flex-end; }
+  .analytics .heatmap tbody th { padding: 0 0 4px; }
+}
+@container ranking (max-width: 960px) {
+  .model-detail { grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .model-line { grid-template-columns: 2.6rem minmax(0, 1fr) 4rem 7rem 4rem; row-gap: 6px; }
+  .model-line .ml-whisker { grid-column: 2 / -1; grid-row: 2; }
+  .model-line .ml-tasks { grid-column: 2 / -1; grid-row: 3; }
+  .model-head .ml-tasks { display: none; }
+}
+@container ranking (max-width: 580px) {
   .model-head { display: none; }
   .model-line {
     grid-template-columns: 2.4rem minmax(0, 1fr) auto;
@@ -963,13 +1006,17 @@
     content: attr(data-label); font-family: var(--sans); font-size: 12px; color: var(--muted);
   }
   .model-line .ml-landed::before { margin-right: 6px; }
-  .model-detail { padding: 14px 12px 16px; }
-  .analytics .contribs li { grid-template-columns: minmax(0, 1fr) 1.4rem 4rem 3.4rem; gap: 6px; }
-  .analytics .gate-list li { grid-template-columns: 8px minmax(0, 1fr) auto; }
-  .gate-progress { grid-column: 2 / -1; }
-  .role-pills ul { gap: 6px; }
-  .role-pills a { padding: 6px 12px; font-size: 13px; }
-  .role-pills .tab-boards { display: none; }
+}
+@container ranking (max-width: 560px) {
+  /* The name takes the whole first line; the bar, score and count share the second. */
+  .bar-row { grid-template-columns: 2.25rem minmax(0, 1fr) auto auto; gap: 4px 10px; padding: 10px 12px; }
+  .bar-row .crew-id { grid-column: 2 / -1; }
+  .bar-row .score-bar { grid-column: 2; grid-row: 2; }
+  .bar-row .score-num { grid-column: 3; grid-row: 2; }
+  .bar-row .units-num { grid-column: 4; grid-row: 2; }
+  .rank-list .crew-name, .rank-list .crew-model { white-space: normal; overflow-wrap: anywhere; }
+  .bar-head { display: none; }
+  .crew-detail { padding: 6px 12px 16px; }
 }
 @media (forced-colors: active) {
   .whisker, .whisker-point, .contrib-bar, .mix-track span, .gate-track span, .weight-bar span, .prov-dot { forced-color-adjust: none; background: CanvasText; }

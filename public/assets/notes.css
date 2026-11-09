@@ -266,14 +266,18 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
   .notes li { display: block; }
   .notes .when { margin: 0 0 6px; }
 }
+/* The full header needs about 730px: below that it drops the wordmark's second word and
+   the Orbit link, so the theme toggle stays on screen and the page never scrolls sideways. */
+@media (max-width: 760px) {
+  .brand b span { display: none; }
+  nav { gap: 14px; font-size: 14px; }
+  nav .nav-orbit { display: none; }
+}
 @media (max-width: 560px) {
   .wrap { padding-left: 16px; padding-right: 16px; }
   .brand b { font-size: 15px; }
-  .brand b span { display: none; }
   .brand svg { width: 26px; height: 26px; }
   .bar { height: 60px; }
-  nav { gap: 14px; font-size: 14px; }
-  nav .nav-orbit { display: none; }
   .theme { width: 44px; height: 44px; margin-left: 0; }
   main.wrap { padding-top: 44px; padding-bottom: 64px; }
   .summary { font-size: 18px; margin-bottom: 36px; }
@@ -388,6 +392,7 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
   .analytics td .value { min-width: 0; overflow-wrap: anywhere; }
 }
 
-@media (max-width: 400px) {
+/* The phone header (mark, four links, toggle) needs about 450px with the wordmark. */
+@media (max-width: 460px) {
   .brand b { display: none; }
 }
