@@ -2,6 +2,7 @@
 
 import json
 import re
+import tempfile
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
@@ -307,6 +308,40 @@ class MetricsPageTest(unittest.TestCase):
         self.assertEqual(analytics_page.format_ms(average), local_ms(average))
         self.assertIn(f">{analytics_page.format_ms(average)}<", self.html)
 
+    def test_format_stamp_and_day_use_fixed_inputs(self):
+        # Fixed inputs pin the formatting so integration tests can derive
+        # expectations from whichever snapshot/window is selected.
+        for value, expected in (
+            ("2026-10-09T00:00:00+00:00", "9 Oct 2026, 00:00 UTC"),
+            ("2026-10-10T00:00:00+00:00", "10 Oct 2026, 00:00 UTC"),
+            ("2026-11-09T17:22:30+00:00", "9 Nov 2026, 17:22 UTC"),
+        ):
+            self.assertEqual(analytics_page.format_stamp(value), expected)
+        self.assertEqual(analytics_page.format_day("2026-11-09T00:00:00+00:00"), "9 Nov")
+
+    def test_newest_metrics_selects_the_later_isolated_snapshot(self):
+        fixtures = (
+            ("2026-11-08", "2026-10-09T00:00:00+00:00", "2026-11-08T00:00:00+00:00"),
+            ("2026-11-09", "2026-10-10T00:00:00+00:00", "2026-11-09T00:00:00+00:00"),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for day, since, until in fixtures:
+                directory = root / "data" / "analytics" / day
+                directory.mkdir(parents=True)
+                payload = {
+                    "schema_version": 1,
+                    "durations": {"window": {"since": since, "until": until}},
+                }
+                (directory / "metrics.json").write_text(json.dumps(payload), encoding="utf-8")
+            day, metrics = analytics_page.newest_metrics(root)
+        self.assertEqual(day, "2026-11-09")
+        self.assertEqual(metrics["durations"]["window"]["since"], "2026-10-10T00:00:00+00:00")
+        self.assertEqual(
+            analytics_page.format_stamp(metrics["durations"]["window"]["since"]),
+            "10 Oct 2026, 00:00 UTC",
+        )
+
     def test_windowed_sections_show_utc_bounds_and_outcomes_show_scope(self):
         # One window statement up top; a board repeats a window only when its own differs.
         page_window = self.metrics["durations"]["window"]
@@ -388,7 +423,7 @@ class MetricsPageTest(unittest.TestCase):
         self.assertEqual(outcome_bounds, [])
 
         window = self.metrics["durations"]["window"]
-        self.assertIn("9 Oct 2026, 00:00 UTC", self.html)
+        self.assertIn(analytics_page.format_stamp(window["since"]), self.html)
         self.assertIn(f">{window['key']}<", self.html)
         self.assertEqual(self.metrics["outcome"], "succeeded")
         self.assertEqual(self.metrics["durations"]["outcome"], "succeeded")
@@ -523,7 +558,14 @@ class MetricsPageTest(unittest.TestCase):
         text = page.read_text(encoding="utf-8")
         self.assertIn(self.metrics["durations"]["window"]["since"], text)
         self.assertIn('href="https://constellation-works.com/analytics/metrics/"', text)
-        self.assertEqual(self.day, "2026-11-08")
+        expected_day = max(
+            path.name
+            for path in (ROOT / "data" / "analytics").iterdir()
+            if path.is_dir()
+            and re.fullmatch(r"\d{4}-\d{2}-\d{2}", path.name)
+            and (path / "metrics.json").is_file()
+        )
+        self.assertEqual(self.day, expected_day)
 
     def test_every_table_cell_names_its_column_for_the_stacked_phone_layout(self):
         # At <=560px the header row is hidden and each row stacks, so a cell without
