@@ -267,6 +267,7 @@
 .exp-card-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
 .exp-card-name { font-family: var(--mono); font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
 .exp-card-q { font-size: 14px; line-height: 1.45; color: var(--lede); }
+.exp-card-reason { font-size: 13px; line-height: 1.45; color: var(--lede); }
 .exp-card-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--muted); }
 .exp-card-signals { display: flex; flex-wrap: wrap; gap: 6px; font-size: 13px; color: var(--muted); }
 .exp-card-signals .is-better { color: var(--sig-better); }
@@ -280,6 +281,8 @@
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
 .status-withheld .status-dot { background: var(--proposed); }
 .status-collecting .status-dot { background: var(--link); }
+.status-stopped-early { color: var(--fg); border-style: dashed; }
+.status-stop { width: 7px; height: 7px; background: currentColor; }
 
 .experiments .exp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin: 0 0 6px; }
 .experiments .exp-head h2 { font-family: var(--mono); font-weight: 500; margin: 0; overflow-wrap: anywhere; }
