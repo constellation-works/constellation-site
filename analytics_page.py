@@ -303,19 +303,31 @@ def snapshot_picker(page, latest, archives, current=None):
             ' aria-current="page" class="is-current"', ' <span class="snapshot-current">(current)</span>'
         ) if is_current else ("", "")
 
+    def window_title(entry):
+        if not entry.get("since") or not entry.get("until"):
+            return ""
+        label, note = _window_label(page)
+        pointer = f" ({note})" if note else ""
+        return f', {label} {entry["since"][:10]} to {entry["until"][:10]}{pointer}'
+
     attrs, suffix = mark(current is None)
+    latest_date_text = latest["date"]
+    latest_date = e(latest_date_text)
+    latest_title = e(f"Latest snapshot {latest_date_text}{window_title(latest)}")
     items = [
-        f'<li><a href="/analytics/{e(page)}/"{attrs}>Latest</a>'
-        f' <span class="snapshot-detail">snapshot <time datetime="{e(latest["date"])}">{e(latest["date"])}</time>'
-        f'{_window_html(latest, page)}</span>{suffix}</li>'
+        f'<li><a href="/analytics/{e(page)}/"{attrs}'
+        f' title="{latest_title}">'
+        f'Latest · <time datetime="{latest_date}">{latest_date}</time></a>{suffix}</li>'
     ]
     for entry in archives:
         attrs, suffix = mark(current == entry["month"])
+        month_text = month_label(entry["month"])
+        month = e(month_text)
+        archive_title = e(f"{month_text} snapshot {entry['date']}{window_title(entry)}")
         items.append(
-            f'<li><a href="/analytics/{e(page)}/{e(entry["month"])}/"{attrs}>'
-            f'<time datetime="{e(entry["month"])}">{e(month_label(entry["month"]))}</time></a>'
-            f' <span class="snapshot-detail">(<time datetime="{e(entry["month"])}">{e(entry["month"])}</time>)'
-            f' snapshot <time datetime="{e(entry["date"])}">{e(entry["date"])}</time>{_window_html(entry, page)}</span>{suffix}</li>'
+            f'<li><a href="/analytics/{e(page)}/{e(entry["month"])}/"{attrs}'
+            f' title="{archive_title}">'
+            f'{month}</a>{suffix}</li>'
         )
     return (
         '<nav class="snapshot-picker" aria-label="Snapshot months">'

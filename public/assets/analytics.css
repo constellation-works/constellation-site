@@ -48,7 +48,7 @@
 .analytics .summary { margin-bottom: 18px; }
 .analytics .lede,
 .analytics .detail,
-.analytics .window { color: var(--muted); font-size: 15px; line-height: 1.5; max-width: 42em; }
+.analytics .window { color: var(--muted); font-size: 15px; line-height: 1.5; max-width: 100%; }
 .analytics .window { font-variant-numeric: tabular-nums; }
 .analytics .eyebrow {
   font-family: var(--mono);
@@ -306,7 +306,7 @@
 .experiments .exp-why h3 { margin-top: 12px; }
 .experiments .exp-why ul { margin: 0; padding-left: 1.1em; font-size: 15px; }
 .experiments .exp-why code { font-family: var(--mono); font-size: .92em; }
-.experiments .question-short { font-size: 18px; line-height: 1.5; margin: 0 0 4px; max-width: 40em; }
+.experiments .question-short { font-size: 18px; line-height: 1.5; margin: 0 0 4px; max-width: 100%; }
 .experiments .question-full { margin-top: 6px; }
 .experiments .question-full .question { color: var(--lede); font-size: 15px; margin: 8px 0 0; }
 .experiments h3 .h-note { font-weight: 400; color: var(--muted); font-size: 14px; }
@@ -406,7 +406,7 @@
 }
 .experiments .exp-method { border-top: 1px solid var(--rule); padding-top: 8px; margin: 0 0 32px; }
 .experiments .exp-method summary { font-weight: 600; color: var(--fg); }
-.experiments .exp-method ul { max-width: 46em; color: var(--lede); font-size: 15px; margin-top: 12px; }
+.experiments .exp-method ul { max-width: 100%; color: var(--lede); font-size: 15px; margin-top: 12px; }
 
 @media (max-width: 560px) {
   /* The scorecard keeps one metric per block: the metric names itself, each
@@ -481,7 +481,7 @@
 }
 .metrics-page .score { border: 1px solid var(--rule-strong); border-radius: 12px; padding: 12px 14px; background: var(--card); }
 .analytics .warn {
-  display: flex; flex-wrap: wrap; gap: 4px 12px; max-width: 46em;
+  display: flex; flex-wrap: wrap; gap: 4px 12px; max-width: 100%;
   border: 1px solid var(--sig-worse-edge); background: var(--sig-worse-tint);
   border-radius: 10px; padding: 10px 14px; font-size: 15px; margin: 8px 0 14px;
 }
@@ -517,7 +517,7 @@
 .analytics .is-worse { color: var(--sig-worse); }
 .analytics .board-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin: 0 0 6px; }
 .analytics .board-head h2 { margin: 0; }
-.analytics .board-key { color: var(--muted); font-size: 14px; margin: 0; max-width: 46em; }
+.analytics .board-key { flex: 1 1 auto; color: var(--muted); font-size: 14px; margin: 0; max-width: 100%; }
 .analytics .window-exact { display: block; font-size: 13px; }
 .k-fleet, .k-ref { display: inline-block; vertical-align: -2px; }
 .k-fleet { width: 2px; height: 14px; background: var(--fg); }
@@ -583,7 +583,7 @@
 .bar-table .bar-cell .score-num { display: inline-block; width: 4rem; }
 .bar-table tr.dim { opacity: .55; }
 .analytics .role-banner {
-  max-width: 46em; border: 1px solid var(--sig-worse-edge); background: var(--sig-worse-tint);
+  max-width: 100%; border: 1px solid var(--sig-worse-edge); background: var(--sig-worse-tint);
   border-radius: 10px; padding: 12px 16px; font-size: 15px; margin: 8px 0 14px;
 }
 .board-toggle { display: inline-flex; flex-wrap: wrap; gap: 2px; border: 1px solid var(--rule-strong); border-radius: 999px; padding: 3px; margin: 16px 0 0; }
@@ -616,7 +616,7 @@
 .hm-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; font-size: 12px; color: var(--muted); }
 .hm-swatches { display: inline-flex; gap: 2px; }
 .hm-swatches i { width: 22px; height: 10px; border-radius: 2px; display: inline-block; }
-.analytics details.method ul { max-width: 46em; color: var(--lede); font-size: 15px; margin-top: 12px; }
+.analytics details.method ul { max-width: 100%; color: var(--lede); font-size: 15px; margin-top: 12px; }
 .analytics details.method { margin-top: 48px; }
 
 /* ---------- Reliability ---------- */

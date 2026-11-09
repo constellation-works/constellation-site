@@ -184,7 +184,16 @@ class ArchiveBuildTest(unittest.TestCase):
                         if fragment is None:
                             continue
                         self.assertIn(label, fragment, (slug, kind))
-                        self.assertIn(f'datetime="{since}"', fragment, (slug, kind))
+                        if fragment == picker:
+                            if slug == "metrics":
+                                since_date = since[:10]
+                                until_date = metrics_until[:10]
+                            else:
+                                since_date = since[:10]
+                                until_date = reliability_until[:10]
+                            self.assertIn(f"{since_date} to {until_date}", fragment, (slug, kind))
+                        else:
+                            self.assertIn(f'datetime="{since}"', fragment, (slug, kind))
                         self.assertNotIn(", window <time", fragment, (slug, kind))
                         if pointer:
                             self.assertIn(pointer, fragment, (slug, kind))
@@ -219,6 +228,26 @@ class ArchiveBuildTest(unittest.TestCase):
             index = (out / "index.html").read_text(encoding="utf-8")
             self.assertIn("No archived months yet", index)
 
+    def test_analytics_explanatory_blocks_use_their_full_container_width(self):
+        def rule(css, selector):
+            start = css.index(selector)
+            return css[start:css.index("}", start) + 1]
+
+        analytics_css = (ROOT / "public" / "assets" / "analytics.css").read_text(encoding="utf-8")
+        notes_css = (ROOT / "public" / "assets" / "notes.css").read_text(encoding="utf-8")
+        for css, selector in (
+            (analytics_css, ".analytics .lede,"),
+            (analytics_css, ".experiments .question-short {"),
+            (analytics_css, ".experiments .exp-method ul {"),
+            (analytics_css, ".analytics .warn {"),
+            (analytics_css, ".analytics .role-banner {"),
+            (analytics_css, ".analytics details.method ul {"),
+            (notes_css, ".analytics .as-of,"),
+            (notes_css, ".experiments .question {"),
+        ):
+            with self.subTest(selector=selector):
+                self.assertIn("max-width: 100%", rule(css, selector))
+
     def test_picker_css_wraps_without_horizontal_scroll(self):
         css = (ROOT / "public" / "assets" / "notes.css").read_text(encoding="utf-8")
         self.assertIn(".snapshot-picker", css)
@@ -230,7 +259,8 @@ class ArchiveBuildTest(unittest.TestCase):
         self.assertIn("overflow-wrap: anywhere", css[css.index(".snapshot-picker li"):])
         phone = css[css.rindex("@media (max-width: 560px) {"):]
         self.assertIn(".snapshot-picker", phone)
-        self.assertIn("flex-direction: column", phone)
+        self.assertIn(".snapshot-picker, .snapshot-picker ul { gap: 4px; }", phone)
+        self.assertNotIn("flex-direction: column", phone)
         # Theme tokens only, so the picker reads in light and dark alike.
         self.assertIn("var(--fg)", css[css.index(".snapshot-picker-label"):])
 
