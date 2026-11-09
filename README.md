@@ -62,19 +62,30 @@ chips, no earlier-snapshot links and no monthly archive. It replaced
 `/analytics/agents/<YYYY-MM>/` to `/ranking/` with a 301. Four tabs, each opening
 with four stat cards:
 
-- **Overall** — a podium and a model table. A model's role index is its role score
-  divided by that role's fleet average × 100, with crews pooled into their model
-  weighted by units; Overall weighs implementer, reviewer and pilot indexes 60/25/15,
-  and a role with no ranked crew counts as 100. The weights and that default live in
-  one constant, `OVERALL_RULE` in `build.py`, and the page states the rule from it.
-- **Implementers** — the Models rank board from the snapshot's `rank.json` (the
-  settled 30-day managed board, `GET /api/agents/rank`): band-grouped rows with
-  p10–p90 whiskers on a shared axis, $ per task and cost ratio, tier mix, landed %,
-  an expandable per-model breakdown and a folded "Not ranked yet" list. A snapshot
-  without `rank.json` renders without the Models section. `scripts/analytics_snapshot.py`
-  writes `rank.json` under the snapshot's `rank` key: settled, managed and 30-day only,
-  free text sanitized, gap models and crews dropped and counted, and paired
-  probabilities and per-effort splits left out. Then "Crews by role":
+- **Overall** — a podium and two labelled boards, two methodologies. First **Model
+  rank** ("who implements best"): the snapshot's `rank.json`, Orbit's live 30-day
+  managed model rank (`GET /api/agents/rank?window=30d&execution=managed&live=true`),
+  band-grouped rows with p10–p90 whiskers on a shared axis, $ per task and cost
+  ratio, tier mix, landed %, an expandable per-model breakdown, one line saying the
+  board is live and provisional, and a folded "Not ranked yet" list whose rule and
+  per-model reasons are Orbit's text from `rank.json`. The podium is its top three
+  in Rank's order. Then the **All-roles index** ("who contributes most across
+  implementing, reviewing and piloting"): a model's role index is its role score
+  divided by that role's fleet average × 100, crews pooled into their model by
+  units, weighed 60/25/15 over the roles the model holds with the weights rescaled
+  to sum to 1. A model needs a ranked crew in at least two roles; one-role models
+  are listed, not ranked, and no missing role is imputed. The weights and the
+  minimum live in one constant, `OVERALL_RULE` in `build.py`, and the page states
+  the rule from it. A snapshot without `rank.json` shows one line in place of
+  Model rank and the podium follows the All-roles index, saying so; a `rank.json`
+  from before the live board (settled) still renders, labelled settled.
+  `scripts/analytics_snapshot.py` writes `rank.json` under the snapshot's `rank`
+  key: live and provisional, managed and 30-day only, with the exact window,
+  Orbit's eligibility rule as one sentence (`eligibility_rule`) and each
+  non-eligible model's reason, free text sanitized, gap models and crews dropped
+  and counted, and paired
+  probabilities and per-effort splits left out.
+- **Implementers** — "Crews by role":
   takeaway callouts, the crew table with the fleet-average marker, and implementers
   by tier. Crews by role is one renderer, `render_crews_by_role(directory, role=None)`,
   which takes a snapshot directory so a weekly note can reuse it. It never draws a role
