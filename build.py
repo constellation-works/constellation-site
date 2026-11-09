@@ -1290,14 +1290,16 @@ def _analytics_base(root=None):
 
 # ---------- /ranking/: model rank, overall index and crews by role ----------
 
-# How the Overall tab combines the roles. Each role's score is divided by its
+# The All-roles index on the Overall tab. Each role's score is divided by its
 # fleet average (100 = average), crews pooled into their model by units, and
-# the indexes are averaged with these weights. A role with no ranked crew for
-# a model counts as `missing_role_index`. These are Daniel's mock defaults
-# (ORB-23594); change them here and the page and its stated rule follow.
+# the indexes are averaged with these weights (Daniel's defaults, ORB-23594).
+# A missing role is never imputed (ORB-23668): a model needs a ranked crew in
+# at least `min_roles` roles, and its index is the weighted mean over the roles
+# it holds, the weights rescaled to sum to 1. Change them here and the page and
+# its stated rule follow.
 OVERALL_RULE = {
     "weights": (("implementers", 60), ("reviewers", 25), ("pilots", 15)),
-    "missing_role_index": 100,
+    "min_roles": 2,
 }
 ROLE_ORDER = ("implementers", "reviewers", "pilots")
 ROLE_NOUN = {"implementers": "implementer", "reviewers": "reviewer", "pilots": "pilot"}
@@ -1329,8 +1331,11 @@ def load_rank(directory):
         sys.exit(f"{path}: invalid JSON ({exc})")
     if not isinstance(data, dict) or not isinstance(data.get("rows"), list):
         sys.exit(f"{path}: expected an object with rows")
-    if data.get("live") is not False or data.get("provisional") is not False or data.get("execution") != "managed":
-        sys.exit(f"{path}: the public rank board must be the settled, managed board")
+    # Snapshots carry the live board since ORB-23668 and the settled one before;
+    # either way live and provisional agree.
+    live = data.get("live")
+    if not isinstance(live, bool) or data.get("provisional") is not live or data.get("execution") != "managed":
+        sys.exit(f"{path}: the public rank board must be the managed board, live and provisional or settled")
     window = data.get("window")
     if not isinstance(window, dict) or window.get("key") != "30d":
         sys.exit(f"{path}: the rank board must be a 30d window")
@@ -1402,14 +1407,15 @@ def role_boards(scorecards):
     }
 
 
-def overall_models(scorecards, rank=None, rule=None):
-    """Model-level Overall ranking across roles.
+def overall_models(scorecards, rule=None):
+    """The All-roles index: models ranked across implementing, reviewing and piloting.
 
-    The field is the ranked implementer models: from the rank board when the
-    snapshot has one (its score is already indexed to 100), otherwise the
-    models with a ranked implementer crew in the scorecards. Reviewer and
-    pilot crews are pooled into their model, units-weighted, and indexed by
-    their board's fleet average.
+    Each role's crews are pooled into their model, units-weighted, and indexed
+    by that board's fleet average. A model enters the index only with a ranked
+    crew in at least ``rule["min_roles"]`` roles; its index is the weighted
+    mean over the roles it holds, the weights rescaled to sum to 1. Nothing is
+    imputed for a missing role. Models ranked in fewer roles are returned in
+    ``one_role`` as (model, role), not ranked.
     """
     rule = rule or OVERALL_RULE
     boards = role_boards(scorecards)
@@ -1423,64 +1429,57 @@ def overall_models(scorecards, rank=None, rule=None):
             slot["place"] = places[model]
             slot["index"] = slot["score"] / fleet * 100 if fleet else None
         roles[role] = {"models": pooled, "of": len(pooled), "fleet": fleet}
-    source = "scorecards"
-    gated = 0
-    if rank is not None:
-        ranked, rest = rank_rows(rank)
-        if ranked:
-            source = "rank"
-            gated = len(rest)
-            models = {}
-            for row in ranked:
-                crews = [entry["crew"] for entry in row.get("crews") or []
-                         if isinstance(entry, dict) and isinstance(entry.get("crew"), str) and entry["crew"] not in GAP_CREWS]
-                models[row["model"]] = {"score": row["score"], "units": row["units"], "crews": crews,
-                                        "index": row["score"], "rank_label": row.get("rank_label")}
-            places = place_models(models)
-            for model, slot in models.items():
-                slot["place"] = places[model]
-            roles["implementers"] = {"models": models, "of": len(models), "fleet": 100}
     weights = rule["weights"]
-    total = sum(weight for _role, weight in weights) or 1
-    missing = rule["missing_role_index"]
+    min_roles = rule["min_roles"]
+    models = []
+    for role in ROLE_ORDER:
+        models.extend(model for model in roles[role]["models"] if model not in models)
     rows = []
-    for model, impl in roles["implementers"]["models"].items():
+    one_role = []
+    for model in models:
         cells = {}
-        overall = 0.0
+        weighted = held = 0.0
         units = 0
         crews = []
         labelled = estimated = False
         for role, weight in weights:
             slot = roles[role]["models"].get(model)
-            if slot is not None and slot.get("index") is not None:
-                cells[role] = {"index": slot["index"], "score": slot["score"], "place": slot["place"],
-                               "of": roles[role]["of"], "units": slot["units"]}
-                overall += weight * slot["index"]
-                units += slot["units"]
-                crews.extend(crew for crew in slot["crews"] if crew not in crews)
-                labelled = labelled or bool(slot.get("labelled"))
-                estimated = estimated or bool(slot.get("estimated"))
-            else:
+            if slot is None or slot.get("index") is None:
                 cells[role] = None
-                overall += weight * missing
-        rows.append({"model": model, "overall": overall / total, "cells": cells, "units": units, "crews": crews,
-                     "labelled": labelled, "estimated": estimated})
+                continue
+            cells[role] = {"index": slot["index"], "score": slot["score"], "place": slot["place"],
+                           "of": roles[role]["of"], "units": slot["units"]}
+            weighted += weight * slot["index"]
+            held += weight
+            units += slot["units"]
+            crews.extend(crew for crew in slot["crews"] if crew not in crews)
+            labelled = labelled or bool(slot.get("labelled"))
+            estimated = estimated or bool(slot.get("estimated"))
+        present = [role for role, _weight in weights if cells[role] is not None]
+        if len(present) < min_roles or not held:
+            if present:
+                one_role.append((model, present[0]))
+            continue
+        rows.append({"model": model, "overall": weighted / held, "cells": cells, "units": units, "crews": crews,
+                     "labelled": labelled, "estimated": estimated, "roles": present})
     rows.sort(key=lambda row: (-row["overall"], row["model"]))
     for index, row in enumerate(rows, 1):
         row["place"] = index
-    field = {row["model"] for row in rows}
-    outside = sorted({model for role in ("reviewers", "pilots") for model in roles[role]["models"]} - field)
-    return {"rows": rows, "source": source, "gated": gated, "outside": outside, "roles": roles}
+    one_role.sort()
+    return {"rows": rows, "one_role": one_role, "roles": roles}
 
 
 def overall_rule_text(rule=None):
     rule = rule or OVERALL_RULE
     total = sum(weight for _role, weight in rule["weights"]) or 1
     parts = " + ".join(f"{round(weight / total * 100)}% {ROLE_NOUN[role]}" for role, weight in rule["weights"])
+    words = {1: "one", 2: "two", 3: "three"}
+    need = words.get(rule["min_roles"], str(rule["min_roles"]))
     return (
-        "Each role's score divided by its fleet average, so 100 is average everywhere. "
-        f"Overall = {parts}; a role with no ranked crew counts as {rule['missing_role_index']}. "
-        "Crews are pooled into their model, weighted by their units of work."
+        "Each role's score divided by its fleet average, so 100 is average everywhere, "
+        f"with crews pooled into their model by units of work. Index = {parts}, over the roles a model holds: "
+        f"it needs a ranked crew in at least {need} roles, and the weights of the roles it holds are rescaled "
+        "to sum to 1. A missing role is never filled in."
     )
 
 
@@ -1495,24 +1494,51 @@ def stat_cards(items, label):
     return f'<ul class="stat-cards" aria-label="{e(label)}">{cells}</ul>'
 
 
-def podium_html(overall):
-    e = html.escape
-    places = ("1st", "2nd", "3rd")
+def ordinal(number):
+    suffix = "th" if 10 <= number % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(number % 10, "th")
+    return f"{number}{suffix}"
+
+
+def podium_from_rank(rank):
+    """The podium's top three from Model rank, in Rank's order, with their Rank score."""
+    ranked, _rest = rank_rows(rank)
     items = []
-    for row, place in zip(overall["rows"][:3], places):
+    for row in ranked[:3]:
+        label = row.get("rank_label") or str(row["rank"])
+        crews = [entry["crew"] for entry in row.get("crews") or []
+                 if isinstance(entry, dict) and isinstance(entry.get("crew"), str) and entry["crew"] not in GAP_CREWS]
+        interval = row.get("interval") or {}
+        note = (f'p10–p90 {fmt_score(interval["p10"])}–{fmt_score(interval["p90"])}'
+                if as_number(interval.get("p10")) and as_number(interval.get("p90")) else "Model rank score")
+        items.append({"place": ordinal(row["rank"]) + ("=" if label.endswith("=") else ""), "model": row["model"],
+                      "crews": " · ".join(crews), "score": row["score"], "note": note})
+    return items
+
+
+def podium_from_index(overall):
+    """The podium's top three from the All-roles index (a snapshot without Model rank)."""
+    items = []
+    for row in overall["rows"][:3]:
         present = [(role, cell["index"]) for role, cell in row["cells"].items() if cell is not None]
         strongest = max(present, key=lambda item: item[1])[0] if present else None
-        strength = f"strongest as {ROLE_NOUN[strongest]}" if strongest else ""
-        items.append(
-            f'<li class="podium-card"><span class="podium-place">{place}</span>'
-            f'<span class="podium-model">{model_dot(row["model"])}<span>{e(row["model"])}</span></span>'
-            f'<span class="podium-crews">{e(" · ".join(row["crews"]))}</span>'
-            f'<span class="podium-score"><span class="podium-value">{fmt_score(row["overall"])}</span>'
-            f'<span class="podium-note">{e(strength)}</span></span></li>'
-        )
-    if not items:
+        items.append({"place": ordinal(row["place"]), "model": row["model"], "crews": crews_text(row),
+                      "score": row["overall"], "note": f"strongest as {ROLE_NOUN[strongest]}" if strongest else ""})
+    return items
+
+
+def podium_html(items, label):
+    e = html.escape
+    cards = [
+        f'<li class="podium-card"><span class="podium-place">{e(item["place"])}</span>'
+        f'<span class="podium-model">{model_dot(item["model"])}<span>{e(item["model"])}</span></span>'
+        f'<span class="podium-crews">{e(item["crews"])}</span>'
+        f'<span class="podium-score"><span class="podium-value">{fmt_score(item["score"])}</span>'
+        f'<span class="podium-note">{e(item["note"])}</span></span></li>'
+        for item in items
+    ]
+    if not cards:
         return ""
-    return f'<ol class="podium" aria-label="Top three models overall">{"".join(items)}</ol>'
+    return f'<ol class="podium" aria-label="{e(label)}">{"".join(cards)}</ol>'
 
 
 def role_cell(cell, role):
@@ -1536,6 +1562,7 @@ def crews_text(row):
 
 
 def overall_board(overall, rule=None):
+    """The All-roles index board: the Overall table design over models ranked in two or more roles."""
     e = html.escape
     rule = rule or OVERALL_RULE
     rows = overall["rows"]
@@ -1546,7 +1573,7 @@ def overall_board(overall, rule=None):
             f'<tr data-rank="{row["place"]}"><td class="rank" data-label="Rank">{rank_text(row["place"])}</td>'
             f'<th scope="row" data-label="Model"><span class="crew-id"><span class="crew-name">{model_dot(row["model"])}'
             f'{e(row["model"])}</span><span class="crew-model">{e(crews_text(row))}</span></span></th>'
-            f'<td class="bar-cell" data-label="Overall">{score_bar(row["overall"], 100, scale)}'
+            f'<td class="bar-cell" data-label="Index">{score_bar(row["overall"], 100, scale)}'
             f'<span class="score-num">{fmt_score(row["overall"])}</span></td>'
             + "".join(role_cell(row["cells"][role], role) for role in ROLE_ORDER)
             + f'<td class="num units-num" data-label="Work units">{fmt_count(row["units"])}</td></tr>'
@@ -1558,32 +1585,25 @@ def overall_board(overall, rule=None):
     if body:
         table = (
             '<div class="table"><table class="bar-table overall-table"><caption class="sr-only">Models ranked by the '
-            'weighted index of their role scores</caption><thead><tr><th class="rank" scope="col">#</th>'
-            '<th scope="col">Model</th><th scope="col">Overall</th><th class="num" scope="col">Implementer</th>'
+            'weighted index of the role scores they hold</caption><thead><tr><th class="rank" scope="col">#</th>'
+            '<th scope="col">Model</th><th scope="col">Index</th><th class="num" scope="col">Implementer</th>'
             '<th class="num" scope="col">Reviewer</th><th class="num" scope="col">Pilot</th>'
             f'<th class="num" scope="col">Work units</th></tr></thead><tbody>{"".join(body)}</tbody></table></div>'
         )
     else:
-        table = '<p class="empty">No ranked implementer models in this snapshot.</p>'
-    if overall["source"] == "rank":
-        field = f"The field is the {len(rows)} ranked implementer {plural(len(rows), 'model')} from the model rank."
-    else:
-        field = (
-            f"This snapshot has no model rank, so the field is the {len(rows)} {plural(len(rows), 'model')} "
-            "with a ranked implementer crew, pooled from the crew scorecards."
+        table = '<p class="empty">No model is ranked in two or more roles in this snapshot.</p>'
+    one_role = ""
+    if overall["one_role"]:
+        names = [f"{model} ({ROLE_NOUN[role]})" for model, role in overall["one_role"]]
+        one_role = (
+            f'<p class="board-note one-role">In one role only, not ranked: {e(join_words(names))}.</p>'
         )
-    left = []
-    if overall["outside"]:
-        left.append(f'{join_words(overall["outside"])} (reviewer or pilot only)')
-    if overall["gated"]:
-        left.append(f'the {overall["gated"]} {plural(overall["gated"], "model")} under the implementer evidence gate')
-    if left:
-        field += f" Not in it yet: {join_words(left)}."
     weights_label = ", ".join(
         f"{ROLE_NOUN[role]} {round(weight / total * 100)}%" for role, weight in rule["weights"]
     )
-    return f'''<section class="board overall-board" aria-labelledby="overall-title">
-<h2 id="overall-title">Overall</h2>
+    return f'''<section class="board overall-board" id="all-roles" aria-labelledby="all-roles-title">
+<h2 id="all-roles-title">All-roles index</h2>
+<p class="board-note differs">Who contributes most across implementing, reviewing and piloting. Unlike Model rank, which judges implementation alone from Orbit's rank board, it weighs each model's crew scores in every role it holds.</p>
 <p class="board-note score-key">{e(overall_rule_text(rule))}</p>
 <div class="weight-bar" role="img" aria-label="Weights: {e(weights_label)}">{segments}</div>
 {estimate_note(rows)}{table}
@@ -1591,12 +1611,22 @@ def overall_board(overall, rule=None):
 <li><i class="k-below" aria-hidden="true"></i>below average</li>
 <li><span class="k-fleet" aria-hidden="true"></span> fleet average, 100</li>
 <li>Role cells: index, then the role score and the model's place in that role.</li></ul>
-<p class="board-note">{e(field)}</p>
+{one_role}
 </section>'''
 
 
 def gate_progress(row, rules):
-    """(fraction, text) toward the rank board's evidence gate."""
+    """(fraction, text) toward the rank board's evidence gate.
+
+    The text is Orbit's own not-eligible reason from rank.json; only a row
+    without one falls back to the progress the board's rules imply.
+    """
+    fraction, text = gate_fraction(row, rules)
+    reason = row.get("ineligible_reason")
+    return fraction, reason if isinstance(reason, str) and reason else text
+
+
+def gate_fraction(row, rules):
     min_tasks = rules.get("min_tasks") if as_number(rules.get("min_tasks")) else None
     min_tiers = rules.get("min_tiers") if as_number(rules.get("min_tiers")) else None
     min_tier_tasks = rules.get("min_tier_tasks") if as_number(rules.get("min_tier_tasks")) else None
@@ -1608,8 +1638,29 @@ def gate_progress(row, rules):
         tiers = sum(1 for tier in RANK_TIERS if as_number(by_tier.get(tier)) and by_tier[tier] >= min_tier_tasks)
         if tiers < min_tiers:
             return tiers / min_tiers, f"{tiers} of {fmt_count(min_tiers)} tiers with {fmt_count(min_tier_tasks)}+ tasks"
-    reason = row.get("ineligible_reason")
-    return 1.0, reason if isinstance(reason, str) and reason else "not ranked"
+    return 1.0, "not ranked"
+
+
+def eligibility_rule(rank):
+    """Orbit's eligibility rule as rank.json states it.
+
+    Snapshots before ORB-23668 carry only the numeric rules; the sentence is
+    then stated from those numbers, so it follows Orbit's rule either way.
+    """
+    stated = rank.get("eligibility_rule")
+    if isinstance(stated, str) and stated.strip():
+        return stated.strip()
+    rules = rank.get("rules") or {}
+    if not as_number(rules.get("min_tasks")):
+        return None
+    sentence = f'At least {fmt_count(rules["min_tasks"])} implemented tasks'
+    tiers, per_tier = rules.get("min_tiers"), rules.get("min_tier_tasks")
+    if as_number(tiers) and as_number(per_tier):
+        if tiers == 1:
+            sentence += f", with at least {fmt_count(per_tier)} in one assessed tier"
+        else:
+            sentence += f" spanning at least {fmt_count(tiers)} assessed tiers with at least {fmt_count(per_tier)} tasks each"
+    return sentence + "."
 
 
 def money(value):
@@ -1739,10 +1790,11 @@ def model_detail(row, rank):
 
 
 def models_board(rank):
-    """The Models rank board: band-grouped rows with whiskers, cost, tier mix and landed rate."""
+    """The Model rank board: band-grouped rows with whiskers, cost, tier mix and landed rate."""
     e = html.escape
     ranked, rest = rank_rows(rank)
     window = rank["window"]
+    live = rank.get("live") is True
     lag = rank.get("settle_lag") or "14d"
     lag_text = f"{lag[:-1]} days" if lag.endswith("d") and lag[:-1].isdigit() else lag
     rules = rank.get("rules") or {}
@@ -1784,12 +1836,17 @@ def models_board(rank):
                 f'p10 {fmt_score(interval["p10"])} to p90 {fmt_score(interval["p90"])}'
                 if as_number(interval.get("p10")) and as_number(interval.get("p90")) else "no interval"
             )
+            single = row.get("single_tier")
+            single_html = (
+                f'<span class="ml-flag">single tier{": " + e(TIER_LABELS[single].lower()) if single in TIER_LABELS else ""}</span>'
+                if single else ""
+            )
             items.append(
                 f'<li class="{"band-start" if band_start else "band-cont"}" data-rank="{row["rank"]}">'
                 '<details class="model-row"><summary class="model-line">'
                 f'<span class="ml-rank">{e(label) if band_start else ""}<span class="sr-only">{"" if band_start else "rank " + e(label)}</span></span>'
                 f'<span class="ml-model">{model_dot(row["model"])}<span class="ml-name">{e(row["model"])}</span>'
-                f'<span class="ml-crews">{e(crews)}</span></span>'
+                f'<span class="ml-crews">{e(crews)}</span>{single_html}</span>'
                 f'<span class="ml-score">{fmt_score(row["score"])}</span>'
                 f'<span class="ml-whisker"><span class="whisker-grid" aria-hidden="true">{grid_html}</span>'
                 f'<span aria-hidden="true">{whisker}{point}</span><span class="sr-only">{e(interval_sr)}</span></span>'
@@ -1815,11 +1872,7 @@ def models_board(rank):
         )
     folded = ""
     if rest:
-        gate = []
-        if as_number(rules.get("min_tasks")):
-            gate.append(f'{fmt_count(rules["min_tasks"])} tasks')
-        if as_number(rules.get("min_tiers")) and as_number(rules.get("min_tier_tasks")):
-            gate.append(f'across {fmt_count(rules["min_tiers"])} tiers with {fmt_count(rules["min_tier_tasks"])} or more each')
+        rule = eligibility_rule(rank)
         rows_html = []
         for row in rest:
             fraction, reason = gate_progress(row, rules)
@@ -1829,18 +1882,25 @@ def models_board(rank):
                 f'<span class="gate-progress"><span class="gate-track" aria-hidden="true"><span style="width:{min(fraction, 1) * 100:.0f}%"></span></span>'
                 f'<span class="gate-reason">{e(reason)}</span></span></li>'
             )
-        gate_text = f' · a model needs {" ".join(gate)}' if gate else ""
         folded = (
             f'<details class="more not-ranked"><summary><span class="nr-title">Not ranked yet</span> '
-            f'<span class="nr-sub">{len(rest)} {plural(len(rest), "model")}{e(gate_text)}</span></summary>'
-            f'<ul class="gate-list">{"".join(rows_html)}</ul></details>'
+            f'<span class="nr-sub">{len(rest)} {plural(len(rest), "model")}</span></summary>'
+            + (f'<p class="board-note nr-rule">Orbit\'s rule: {e(rule)}</p>' if rule else "")
+            + f'<ul class="gate-list">{"".join(rows_html)}</ul></details>'
         )
+    if live:
+        window_html = board_window_line(window["since"], window["until"], prefix="Live window")
+        notice = ("This is Orbit's live model rank: provisional, because late escaped regressions "
+                  "may still arrive.")
+    else:
+        window_html = board_window_line(window["since"], window["until"], prefix="Settled window")
+        notice = f"The ranked 30 days end {lag_text} before the snapshot, so late escaped regressions have arrived."
     return f'''<section class="board models-board" id="models" aria-labelledby="models-title">
-<div class="board-head"><h2 id="models-title">Models</h2>
+<div class="board-head"><h2 id="models-title">Model rank</h2>
 <p class="board-key">p10–p90 whisker on a shared score axis · <span class="k-fleet" aria-hidden="true"></span> 100 is the fleet</p></div>
-<p class="board-note score-key">Implementer rank, crews pooled into their model. Shared ranks such as 2= are one band at {e(band_text)}; cost orders a band and never crosses it. Cost ratio is the model's $ per task against the fleet's on the same tiers. Select a model for its breakdown.</p>
-{board_window_line(window["since"], window["until"], prefix="Settled window")}
-<p class="board-note">The ranked 30 days end {e(lag_text)} before the snapshot, so late escaped regressions have arrived.</p>
+<p class="board-note rank-notice{" is-live" if live else ""}">{e(notice)}</p>
+<p class="board-note score-key">Who implements best: Orbit's implementer rank, crews pooled into their model, eligible models only. Shared ranks such as 2= are one band at {e(band_text)}; cost orders a band and never crosses it. Cost ratio is the model's $ per task against the fleet's on the same tiers. Select a model for its breakdown.</p>
+{window_html}
 {board}
 {folded}
 </section>'''
@@ -1991,9 +2051,16 @@ def method_section(scorecards, rank, snapshot_date, weekly):
         if as_number(rules.get("band_probability")):
             parts.append(f"and models within {rules['band_probability'] * 100:.0f}% confidence share a band")
         text = parts[0] + (" " + ", ".join(parts[1:]) + "." if len(parts) > 1 else "")
-        cards.append(("Model rank", text + f" The window is settled: it ends {rank.get('settle_lag') or '14d'} before the snapshot."))
+        text += " Cost orders models inside a band and never moves one across bands. Only eligible models are ranked"
+        rule = eligibility_rule(rank)
+        text += f"; Orbit's rule: {lower_first(rule)}" if rule else "."
+        if rank.get("live") is True:
+            text += " The window is live: it ends at the snapshot, so the board is provisional while late escaped regressions may still arrive."
+        else:
+            text += f" The window is settled: it ends {rank.get('settle_lag') or '14d'} before the snapshot."
+        cards.append(("Model rank", text))
     else:
-        cards.append(("Model rank", "This snapshot predates the model rank, so the Models board is absent and the Overall implementer index pools the crew scorecards instead."))
+        cards.append(("Model rank", "This snapshot predates the model rank, so the Overall tab has no Model rank board and its podium follows the All-roles index."))
     crew_text = (
         "Per 100 units of the role's work against that role's fleet rate. "
         + (terms_sentence(impl["terms"]) + " " if impl["terms"] else "")
@@ -2001,7 +2068,7 @@ def method_section(scorecards, rank, snapshot_date, weekly):
         "settled reviewer board uses its own earlier window. Orchestrators are not scored on this page."
     )
     cards.append(("Crew scorecards", crew_text))
-    cards.append(("Overall", overall_rule_text()))
+    cards.append(("All-roles index", overall_rule_text()))
     cards.append(("What this is not", "The strongest observed contribution under the fleet's actual assignments, on Orbit's own repository. Not a verdict on a model's general capability."))
     items = "".join(f'<div class="how"><h3>{e(title)}</h3><p>{e(text)}</p></div>' for title, text in cards)
     weekly_link = (
@@ -2041,7 +2108,7 @@ def render_ranking_body(scorecards, snapshot_date, rank=None, weekly=()):
     bodies = crew_role_bodies(scorecards)
     impl = bodies["implementers"][0]
     since, until = impl["window"]
-    overall = overall_models(scorecards, rank)
+    overall = overall_models(scorecards)
     rev, pil = bodies["reviewers"][0], bodies["pilots"][0]
 
     def ranked(shown):
@@ -2050,33 +2117,42 @@ def render_ranking_body(scorecards, snapshot_date, rank=None, weekly=()):
     def units(rows):
         return sum(row["units"] for row in rows)
 
-    field = overall["rows"]
-    impl_units = sum((row["cells"]["implementers"] or {}).get("units", 0) for row in field)
-    overall_stats = [
-        ("Models in the field", str(len(field)), "ranked implementers" if overall["source"] == "rank" else "with ranked implementer crews"),
-        ("Implemented tasks", fmt_count(impl_units) or "0", "scored"),
-        ("Settled reviews", fmt_count(units(rev["rows"])) or "0", "provisional board"),
-        ("Pilot assessments", fmt_count(units(pil["rows"])) or "0", f'{len(ranked(pil))} ranked {plural(len(ranked(pil)), "crew")}'),
-    ]
+    index_rows = overall["rows"]
     if rank is not None:
         model_ranked, model_rest = rank_rows(rank)
-        measures = [m for m in rank.get("measures") or [] if isinstance(m, dict)]
-        measured = sum(m["weight"] for m in measures if m.get("status") == "measured" and as_number(m.get("weight")))
-        not_scored = (rank.get("not_scored") or {}).get("count")
-        impl_stats = [
-            ("Ranked models", str(len(model_ranked)), f"of {len(model_ranked) + len(model_rest)}"),
-            ("Tasks scored", fmt_count(units(model_ranked)) or "0", f"{fmt_count(not_scored)} not scored" if as_number(not_scored) else "ranked models"),
-            ("Ranked crews", str(len(ranked(impl))), f'of {len(impl["rows"])}'),
-            ("Measures live", fmt_num(measured) or "0", f'of {fmt_num(rank.get("weights_total")) or "—"} weight'),
+        leader = model_ranked[0] if model_ranked else None
+        overall_stats = [
+            ("Model rank", str(len(model_ranked)), f"ranked of {len(model_ranked) + len(model_rest)} models"),
+            ("Top model", leader["model"] if leader else "—", fmt_score(leader["score"]) if leader else "not qualified"),
+            ("All-roles index", str(len(index_rows)), "models in two or more roles"),
+            ("Tasks scored", fmt_count(units(model_ranked)) or "0", "ranked models, live" if rank.get("live") is True else "ranked models"),
         ]
+        podium = podium_from_rank(rank)
+        podium_label = "Top three models by Model rank"
+        podium_note = ""
+        model_html = models_board(rank)
+        overall_sub = f'{len(model_ranked)} {plural(len(model_ranked), "model")} · {len(index_rows)} indexed'
     else:
-        top = ranked(impl)[0] if ranked(impl) else None
-        impl_stats = [
-            ("Ranked crews", str(len(ranked(impl))), f'of {len(impl["rows"])}'),
-            ("Implemented tasks", fmt_count(units(impl["rows"])) or "0", "30 days"),
-            ("Fleet average", fmt_score(impl["fleet"]), f'per 100 {impl["unit"]}'),
-            ("Top crew", crew_label(top) if top else "—", fmt_score(top["score"]) if top else ""),
+        overall_stats = [
+            ("Model rank", "—", "not in this snapshot"),
+            ("All-roles index", str(len(index_rows)), "models in two or more roles"),
+            ("Settled reviews", fmt_count(units(rev["rows"])) or "0", "provisional board"),
+            ("Pilot assessments", fmt_count(units(pil["rows"])) or "0", f'{len(ranked(pil))} ranked {plural(len(ranked(pil)), "crew")}'),
         ]
+        podium = podium_from_index(overall)
+        podium_label = "Top three models by the All-roles index"
+        podium_note = ('<p class="board-note podium-fallback">This snapshot has no Model rank, so the podium '
+                       'follows the All-roles index.</p>' if podium else "")
+        model_html = ('<p class="board-note rank-missing" id="models">Model rank: this snapshot has no rank board; '
+                      'it appears with the next snapshot.</p>')
+        overall_sub = f'{len(index_rows)} indexed'
+    top = ranked(impl)[0] if ranked(impl) else None
+    impl_stats = [
+        ("Ranked crews", str(len(ranked(impl))), f'of {len(impl["rows"])}'),
+        ("Implemented tasks", fmt_count(units(impl["rows"])) or "0", "30 days"),
+        ("Fleet average", fmt_score(impl["fleet"]), f'per 100 {impl["unit"]}'),
+        ("Top crew", crew_label(top) if top else "—", fmt_score(top["score"]) if top else ""),
+    ]
 
     def role_stats(shown, volume, volume_sub):
         top = ranked(shown)[0] if ranked(shown) else None
@@ -2089,14 +2165,13 @@ def render_ranking_body(scorecards, snapshot_date, rank=None, weekly=()):
 
     panels = {
         "overall": (
-            f'{len(field)} {plural(len(field), "model")}',
-            stat_cards(overall_stats, "Overall at a glance") + podium_html(overall) + overall_board(overall),
+            overall_sub,
+            stat_cards(overall_stats, "Overall at a glance") + podium_html(podium, podium_label) + podium_note
+            + model_html + overall_board(overall),
         ),
         "implementers": (
-            (f'{len(rank_rows(rank)[0])} models · ' if rank is not None else "") + f'{len(ranked(impl))} crews',
-            stat_cards(impl_stats, "Implementers at a glance")
-            + (models_board(rank) if rank is not None else "")
-            + crews_by_role_html(bodies, "implementers"),
+            f'{len(ranked(impl))} crews',
+            stat_cards(impl_stats, "Implementers at a glance") + crews_by_role_html(bodies, "implementers"),
         ),
         "reviewers": (
             "provisional",

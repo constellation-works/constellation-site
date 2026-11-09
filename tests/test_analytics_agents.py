@@ -198,10 +198,12 @@ def rank_row(model, rank, label, score, units, crews, eligible=True, reason=None
 
 
 def rank_board():
+    """A live rank.json, as the snapshot writes it since ORB-23668."""
     return {
         "computed_at": "2026-11-08T06:00:00Z", "eligible_models": 3, "execution": "managed",
-        "live": False, "provisional": False,
-        "window": window("2026-09-25T06:00:00Z", "2026-10-25T06:00:00Z"),
+        "live": True, "provisional": True,
+        "eligibility_rule": "Orbit fixture rule: 30 tasks in one tier of 5+.",
+        "window": window("2026-10-09T06:00:00Z", "2026-11-08T06:00:00Z"),
         "measures": [
             {"key": "escaped_regressions", "label": "Escaped regressions", "pillar": "quality", "reason": None,
              "sign": -1.0, "status": "measured", "units": "implemented tasks", "weight": 30.0,
@@ -218,10 +220,35 @@ def rank_board():
             rank_row("claude-haiku-5-5", 1, "1", 120.0, 60, ["haiku"]),
             rank_row("claude-opus-5-5", 2, "2", 104.0, 50, ["opus"]),
             rank_row("gpt-6-luna", 3, "3", 90.0, 40, ["luna"]),
-            rank_row("gpt-tiny", None, None, 130.0, 9, ["tiny"], eligible=False, reason="9 implemented tasks; 30 needed"),
+            rank_row("gpt-tiny", None, None, 130.0, 9, ["tiny"], eligible=False, reason="Orbit says: 9 of 30 tasks so far"),
             rank_row("model unknown", None, None, 100.0, 50, ["gap"], eligible=False, reason="gap"),
         ],
     }
+
+
+def all_roles_scorecards():
+    """Models across the three roles, fleet average 100 on every board.
+
+    model-ir: implementer 120, reviewer 80. model-ip: implementer 90, pilot 150.
+    model-rp: reviewer 110, pilot 50. model-all: 100 in every role.
+    model-i and model-r hold one role each.
+    """
+    data = scorecards()
+    data["implementers"]["rows"] = [
+        row("ir", "model-ir", 30, 1, 120.0), row("ip", "model-ip", 20, 2, 90.0),
+        row("all", "model-all", 15, 3, 100.0), row("i", "model-i", 40, 4, 200.0),
+    ]
+    data["implementers"]["fleet_average"] = 100.0
+    data["reviewers"]["provisional"]["rows"] = [
+        row("ir", "model-ir", 12, 1, 80.0), row("rp", "model-rp", 14, 2, 110.0),
+        row("all", "model-all", 11, 3, 100.0), row("r", "model-r", 30, 4, 300.0),
+    ]
+    data["reviewers"]["provisional"]["fleet_average"] = 100.0
+    data["pilots"]["rows"] = [
+        row("ip", "model-ip", 12, 1, 150.0), row("rp", "model-rp", 13, 2, 50.0), row("all", "model-all", 10, 3, 100.0),
+    ]
+    data["pilots"]["fleet_average"] = 100.0
+    return data
 
 
 def section(doc, element_id):
@@ -708,34 +735,48 @@ class RankingPageTest(unittest.TestCase):
         self.assertIn("Weekly write-ups", method)
         self.assertIn("data/analytics/2026-11-08", method)
 
-    def test_overall_index_follows_the_single_rule_constant(self):
+    def test_all_roles_index_rescales_weights_over_held_roles_with_a_two_role_minimum(self):
         rule = build.OVERALL_RULE
         self.assertEqual(rule["weights"], (("implementers", 60), ("reviewers", 25), ("pilots", 15)))
-        self.assertEqual(rule["missing_role_index"], 100)
-        data = scorecards()
-        data["pilots"]["fleet_average"] = 40.0
-        overall = build.overall_models(data, rank_board())
-        self.assertEqual(overall["source"], "rank")
+        self.assertEqual(rule["min_roles"], 2)
+        self.assertNotIn("missing_role_index", rule)
+        data = all_roles_scorecards()
+        overall = build.overall_models(data)
         rows = {row["model"]: row for row in overall["rows"]}
-        # The field is the ranked models: gaps and gated models stay out.
-        self.assertEqual(set(rows), {"claude-haiku-5-5", "claude-opus-5-5", "gpt-6-luna"})
-        self.assertEqual(overall["gated"], 1)
-        # haiku: implementer index 120 from the rank board, pilots 47.94 against
-        # a fleet of 40, no reviewer crew -> 100.
-        self.assertEqual(overall["roles"]["pilots"]["fleet"], 40.0)
-        pilot_index = 47.94 / 40.0 * 100
-        expected = (60 * 120.0 + 25 * 100 + 15 * pilot_index) / 100
-        self.assertAlmostEqual(rows["claude-haiku-5-5"]["overall"], expected)
-        self.assertIsNone(rows["claude-haiku-5-5"]["cells"]["reviewers"])
-        self.assertEqual(rows["claude-haiku-5-5"]["cells"]["implementers"]["place"], 1)
+        # Ranked in at least two roles; one-role models are listed, not ranked.
+        self.assertEqual(set(rows), {"model-ir", "model-ip", "model-rp", "model-all"})
+        self.assertEqual(overall["one_role"], [("model-i", "implementers"), ("model-r", "reviewers")])
+        # implementer + reviewer: 60/85 and 25/85, nothing imputed for the pilot role.
+        self.assertAlmostEqual(rows["model-ir"]["overall"], (60 * 120 + 25 * 80) / 85)
+        self.assertIsNone(rows["model-ir"]["cells"]["pilots"])
+        self.assertEqual(rows["model-ir"]["roles"], ["implementers", "reviewers"])
+        # implementer + pilot: 60/75 and 15/75.
+        self.assertAlmostEqual(rows["model-ip"]["overall"], (60 * 90 + 15 * 150) / 75)
+        # reviewer + pilot: 25/40 and 15/40.
+        self.assertAlmostEqual(rows["model-rp"]["overall"], (25 * 110 + 15 * 50) / 40)
+        # All three roles: the plain 60/25/15 mean.
+        self.assertAlmostEqual(rows["model-all"]["overall"], (60 * 100 + 25 * 100 + 15 * 100) / 100)
+        # The old rule would have imputed 100 for model-ir's pilot role.
+        self.assertNotAlmostEqual(rows["model-ir"]["overall"], (60 * 120 + 25 * 80 + 15 * 100) / 100)
+        self.assertEqual([row["model"] for row in overall["rows"]], ["model-ir", "model-ip", "model-all", "model-rp"])
         # Changing the constant changes the result and the stated rule.
-        heavy = {"weights": (("implementers", 100), ("reviewers", 0), ("pilots", 0)), "missing_role_index": 100}
-        reweighted = {row["model"]: row for row in build.overall_models(data, rank_board(), heavy)["rows"]}
-        self.assertAlmostEqual(reweighted["claude-opus-5-5"]["overall"], 104.0)
-        self.assertIn("60% implementer + 25% reviewer + 15% pilot", build.overall_rule_text())
-        self.assertIn("counts as 100", build.overall_rule_text())
+        three = {"weights": rule["weights"], "min_roles": 3}
+        self.assertEqual([row["model"] for row in build.overall_models(data, three)["rows"]], ["model-all"])
+        text = build.overall_rule_text()
+        self.assertIn("60% implementer + 25% reviewer + 15% pilot", text)
+        self.assertIn("at least two roles", text)
+        self.assertIn("rescaled", text)
+        self.assertNotIn("counts as 100", text)
         doc = build.render_ranking_body(data, "2026-11-08", rank_board())
-        self.assertIn("60% implementer + 25% reviewer + 15% pilot", doc)
+        board_html = doc[doc.index('id="all-roles"'):]
+        board_html = board_html[:board_html.index("</section>")]
+        self.assertIn("All-roles index", board_html)
+        self.assertIn("Unlike Model rank", board_html)
+        self.assertIn("In one role only, not ranked: model-i (implementer) and model-r (reviewer).", plain(board_html))
+        self.assertNotIn('class="crew-name">' + build.model_dot("model-i") + "model-i<", board_html)
+        method = doc[doc.index('id="method"'):]
+        self.assertIn("<h3>All-roles index</h3>", method)
+        self.assertIn("at least two roles", method)
 
     def test_overall_pools_crews_into_their_model_by_units(self):
         data = scorecards()
@@ -745,8 +786,9 @@ class RankingPageTest(unittest.TestCase):
             row("opus", "claude-opus-5-5", 20, 3, 100.0),
         ]
         data["implementers"]["fleet_average"] = 125.0
+        data["reviewers"]["provisional"]["fleet_average"] = 200.0
+        data["pilots"]["fleet_average"] = 40.0
         overall = build.overall_models(data)
-        self.assertEqual(overall["source"], "scorecards")
         cells = {row["model"]: row["cells"]["implementers"] for row in overall["rows"]}
         self.assertAlmostEqual(cells["claude-haiku-5-5"]["score"], (150 * 30 + 110 * 10) / 40)
         self.assertEqual(cells["claude-haiku-5-5"]["units"], 40)
@@ -837,7 +879,7 @@ class RankingPageTest(unittest.TestCase):
         self.assertEqual(row_["crews"], ["sol@high (est.)", "sol@high"])
         doc = build.render_ranking_body(data, "2026-11-09")
         self.assertIn('<span class="crew-model">sol@high (est.), sol@high</span>', doc)
-        overall_html = doc[doc.index('aria-labelledby="overall-title"'):]
+        overall_html = doc[doc.index('aria-labelledby="all-roles-title"'):]
         overall_html = overall_html[:overall_html.index("</section>")]
         self.assertEqual(overall_html.count('class="board-note est-note"'), 1)
 
@@ -853,32 +895,119 @@ class RankingPageTest(unittest.TestCase):
             row("haiku@high", "claude-haiku-5-5", 10, 2, 110.0),
         ]
         data["implementers"]["fleet_average"] = 125.0
+        data["pilots"]["fleet_average"] = 40.0
         overall = build.overall_models(data)
         haiku = next(item for item in overall["rows"] if item["model"] == "claude-haiku-5-5")
         self.assertEqual(haiku["crews"][:2], ["haiku", "haiku@high"])
         self.assertIn('<span class="crew-model">haiku · haiku@high</span>', build.render_ranking_body(data, "2026-11-08"))
 
-    def test_models_board_from_rank_and_omitted_without_it(self):
-        with_rank = build.render_ranking_body(scorecards(), "2026-11-08", rank_board())
-        models = with_rank[with_rank.index('id="models"'):with_rank.index('id="crews-implementers"')]
-        for needle in ("claude-haiku-5-5", "claude-opus-5-5", "gpt-6-luna", "Not ranked yet", "gpt-tiny",
-                       "9 of 30 tasks", "p10", "0.75×", "$1.50", "97.0%", "<details"):
+    def test_overall_shows_model_rank_then_all_roles_index(self):
+        data = all_roles_scorecards()
+        doc = build.render_ranking_body(data, "2026-11-08", rank_board())
+        overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
+        # In order: Model rank, then the All-roles index.
+        self.assertLess(overall.index('<h2 id="models-title">Model rank</h2>'),
+                        overall.index('<h2 id="all-roles-title">All-roles index</h2>'))
+        models = overall[overall.index('id="models"'):overall.index('id="all-roles"')]
+        # Eligible models only, in Rank's order, with band labels, interval, cost ratio and breakdown.
+        self.assertEqual(re.findall(r'<span class="ml-name">([^<]+)</span>', models),
+                         ["claude-haiku-5-5", "claude-opus-5-5", "gpt-6-luna"])
+        for needle in ("p10", "0.75×", "$1.50", "97.0%", '<details class="model-row">', "Score contributions"):
             self.assertIn(needle, models)
-        self.assertNotIn("model unknown", with_rank)
-        self.assertIn('datetime="2026-09-25T06:00:00Z"', models)
-        without = build.render_ranking_body(scorecards(), "2026-11-08")
-        self.assertNotIn('id="models"', without)
-        self.assertNotIn("Not ranked yet", without)
-        self.assertIn('id="crews-implementers"', without)
-        self.assertIn('id="tiers"', without)
+        # One live/provisional line, and the live window.
+        self.assertEqual(models.count("This is Orbit&#x27;s live model rank: provisional, because late escaped "
+                                      "regressions may still arrive."), 1)
+        self.assertIn("Live window", models)
+        self.assertIn('datetime="2026-10-09T06:00:00Z"', models)
+        self.assertNotIn("Settled window", models)
+        # Not ranked yet: the rule and the reasons are rank.json's own text.
+        folded = models[models.index('<details class="more not-ranked">'):]
+        self.assertIn("Orbit fixture rule: 30 tasks in one tier of 5+.", folded)
+        self.assertIn("Orbit says: 9 of 30 tasks so far", folded)
+        self.assertNotIn("across 2 tiers", folded)
+        self.assertNotIn("model unknown", doc)
+        # The Implementers tab no longer shows the Models board.
+        implementers = doc[doc.index('data-group="implementers"'):doc.index('data-group="reviewers"')]
+        self.assertNotIn('class="model-board"', implementers)
+        self.assertNotIn("models-title", implementers)
+        self.assertIn('id="crews-implementers"', implementers)
+        self.assertEqual(doc.count('id="models"'), 1)
 
-    def test_rank_board_must_be_settled_managed_30d(self):
+    def test_podium_follows_model_rank(self):
+        data = all_roles_scorecards()
+        doc = build.render_ranking_body(data, "2026-11-08", rank_board())
+        podium = re.search(r'<ol class="podium" aria-label="Top three models by Model rank">.*?</ol>', doc, re.S)
+        self.assertIsNotNone(podium)
+        cards = re.findall(r'<span class="podium-place">([^<]+)</span>.*?<span>([^<]+)</span></span>.*?'
+                           r'<span class="podium-value">([^<]+)</span>', podium.group(0), re.S)
+        self.assertEqual(cards, [("1st", "claude-haiku-5-5", "120.0"), ("2nd", "claude-opus-5-5", "104.0"),
+                                 ("3rd", "gpt-6-luna", "90.0")])
+        # The leader card agrees with Model rank.
+        self.assertIn('<span class="stat-value">claude-haiku-5-5</span>', doc)
+        # A shared band keeps Rank's order and marks the tie.
+        tied = rank_board()
+        tied["rows"][1]["rank"], tied["rows"][1]["rank_label"] = 2, "2="
+        tied["rows"][2]["rank"], tied["rows"][2]["rank_label"] = 2, "2="
+        places = [item["place"] for item in build.podium_from_rank(tied)]
+        self.assertEqual(places, ["1st", "2nd=", "2nd="])
+
+    def test_without_rank_json_overall_shows_a_notice_and_the_index_podium(self):
+        data = all_roles_scorecards()
+        doc = build.render_ranking_body(data, "2026-11-08")
+        overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
+        notice = re.findall(r'<p class="board-note rank-missing"[^>]*>(.*?)</p>', overall)
+        self.assertEqual(notice, ["Model rank: this snapshot has no rank board; it appears with the next snapshot."])
+        self.assertNotIn('class="model-board"', doc)
+        self.assertNotIn("Not ranked yet", doc)
+        self.assertIn("This snapshot has no Model rank, so the podium follows the All-roles index.", overall)
+        podium = re.search(r'<ol class="podium" aria-label="Top three models by the All-roles index">.*?</ol>', overall, re.S)
+        self.assertEqual(re.findall(r'<span class="podium-model">.*?<span>([^<]+)</span>', podium.group(0)),
+                         ["model-ir", "model-ip", "model-all"])
+        self.assertIn('id="all-roles"', overall)
+        self.assertIn('id="crews-implementers"', doc)
+        self.assertIn('id="tiers"', doc)
+
+    def test_method_and_windows_describes_both_methodologies(self):
+        doc = build.render_ranking_body(all_roles_scorecards(), "2026-11-08", rank_board())
+        method = plain(doc[doc.index('id="method"'):])
+        self.assertIn("Model rank", method)
+        for needle in ("80% confidence share a band", "Cost orders models inside a band",
+                       "Only eligible models are ranked; Orbit's rule: orbit fixture rule", "live: it ends at the snapshot",
+                       "provisional"):
+            self.assertIn(needle, method.replace("&#x27;", "'"))
+        self.assertIn("All-roles index", method)
+        self.assertIn("rescaled", method)
+        self.assertNotIn("counts as 100", doc)
+
+    def test_eligibility_rule_falls_back_to_the_board_numbers(self):
+        board_data = rank_board()
+        del board_data["eligibility_rule"]
+        self.assertEqual(build.eligibility_rule(board_data),
+                         "At least 30 implemented tasks spanning at least 2 assessed tiers with at least 5 tasks each.")
+        board_data["rules"]["min_tiers"] = 1
+        self.assertEqual(build.eligibility_rule(board_data), "At least 30 implemented tasks, with at least 5 in one assessed tier.")
+        # A row without Orbit's reason falls back to the progress the rules imply.
+        board_data["rows"][3]["ineligible_reason"] = None
+        self.assertEqual(build.gate_progress(board_data["rows"][3], board_data["rules"])[1], "9 of 30 tasks")
+        # Orbit's single-tier flag shows beside the model.
+        board_data["rows"][0]["single_tier"] = "hard"
+        self.assertIn('<span class="ml-flag">single tier: hard</span>', build.models_board(board_data))
+
+    def test_rank_board_must_be_managed_30d_with_agreeing_live_flags(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
             self.assertIsNone(build.load_rank(directory))
             (directory / "rank.json").write_text(json.dumps(rank_board()), encoding="utf-8")
-            self.assertEqual(build.load_rank(directory)["eligible_models"], 3)
-            for key, value in (("live", True), ("provisional", True), ("execution", "all")):
+            self.assertIs(build.load_rank(directory)["live"], True)
+            # A snapshot written before the live board carries a settled one.
+            settled = rank_board()
+            settled["live"] = settled["provisional"] = False
+            (directory / "rank.json").write_text(json.dumps(settled), encoding="utf-8")
+            self.assertIs(build.load_rank(directory)["live"], False)
+            settled_doc = build.render_ranking_body(scorecards(), "2026-11-08", settled)
+            self.assertIn("Settled window", settled_doc)
+            self.assertNotIn("live model rank", settled_doc)
+            for key, value in (("live", False), ("provisional", False), ("execution", "all")):
                 board_data = rank_board()
                 board_data[key] = value
                 (directory / "rank.json").write_text(json.dumps(board_data), encoding="utf-8")
@@ -973,7 +1102,7 @@ class RankingPageTest(unittest.TestCase):
         # Above a collapse point names stay whole.
         self.assertRegex(css, r"\.analytics \.bar-table \.crew-name, \.analytics \.bar-table \.crew-model,\n"
                               r"\.rank-list \.crew-name, \.rank-list \.crew-model \{ white-space: nowrap;")
-        doc = build.render_ranking_body(scorecards(), "2026-11-08", rank_board())
+        doc = build.render_ranking_body(all_roles_scorecards(), "2026-11-08", rank_board())
         overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
         self.assertIn('<div class="table"><table class="bar-table overall-table">', overall)
         self.assertIn('class="crews-by-role"', doc)

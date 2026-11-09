@@ -231,13 +231,13 @@ class ExperimentOmitTest(unittest.TestCase):
 
 def rank_payload(**overrides):
     payload = {
-        "window": "30d", "since": "2026-09-25T00:00:00Z", "until": "2026-10-25T00:00:00Z",
-        "settle_lag": "14d", "execution": "managed", "live": False, "provisional": False, "status": "ok",
+        "window": "30d", "since": "2026-10-10T07:34:21Z", "until": "2026-11-09T07:34:21Z",
+        "settle_lag": "14d", "execution": "managed", "live": True, "provisional": True, "status": "ok",
         "measures": [{"key": "escaped_regressions", "label": "Escaped regressions", "weight": 30.0, "sign": -1.0,
                       "pillar": "quality", "status": "measured", "units": "implemented tasks",
                       "definition": "Escaped regressions, see /home/daniel/rank.rs", "reason": None}],
         "weights_total": 30.0,
-        "rules": {"shrinkage_k": 30.0, "min_tasks": 30, "min_tiers": 2, "min_tier_tasks": 5},
+        "rules": {"shrinkage_k": 30.0, "min_tasks": 30, "min_tiers": 2, "min_tier_tasks": 5, "min_eligible_models": 3},
         "unattributed": {"tasks": 3, "crews": [{"crew": "secret-crew", "tasks": 3}]},
         "paired_probabilities": {"gpt-a": {"gpt-b": 0.9}},
         "rows": [
@@ -274,16 +274,43 @@ class RankProjectionTest(unittest.TestCase):
         self.assertEqual(rank["rows"][0]["crews"], [{"crew": "sol", "tasks": 38}])
         self.assertEqual(dropped["rank"], 2)
         self.assertEqual(rank["source"], snapshot.RANK_SOURCE)
-        self.assertEqual(rank["window"]["key"], "30d")
-        self.assertFalse(rank["live"])
-        self.assertFalse(rank["provisional"])
+        # ORB-23668: the live board, its exact window, and Orbit's rule and reasons.
+        self.assertIn("live=true", rank["source"])
+        self.assertEqual(rank["window"], {"key": "30d", "since": "2026-10-10T07:34:21Z", "until": "2026-11-09T07:34:21Z"})
+        self.assertIs(rank["live"], True)
+        self.assertIs(rank["provisional"], True)
         self.assertEqual(rank["execution"], "managed")
+        self.assertEqual(rank["rows"][1]["ineligible_reason"], "8 implemented tasks; 30 needed")
+        self.assertIsNone(rank["rows"][0]["ineligible_reason"])
+        self.assertEqual(rank["eligibility_rule"], "At least 30 implemented tasks spanning at least 2 assessed tiers "
+                                                   "with at least 5 tasks each. The board needs 3 such models.")
         blob = json.dumps(rank)
         for private in ("paired_probabilities", "effort_split", '"z"', "secret-crew", "/home/daniel"):
             self.assertNotIn(private, blob)
 
-    def test_projection_refuses_live_unmanaged_or_other_windows(self):
-        for overrides in ({"live": True}, {"provisional": True}, {"execution": "all"}, {"window": "7d"}):
+    def test_eligibility_rule_follows_orbits_rule(self):
+        # ORB-23672 moves Orbit to one assessed tier; the sentence follows the numbers.
+        rules = {"shrinkage_k": 30.0, "min_tasks": 30, "min_tiers": 1, "min_tier_tasks": 5}
+        rank, _ = self.project(rank_payload(rules=rules))
+        self.assertEqual(rank["eligibility_rule"], "At least 30 implemented tasks, with at least 5 in one assessed tier.")
+        # Orbit's own sentence wins, sanitized.
+        rank, _ = self.project(rank_payload(eligibility_rule="30 tasks; one tier of 5+, see /home/daniel/rank.rs"))
+        self.assertTrue(rank["eligibility_rule"].startswith("30 tasks; one tier of 5+"))
+        self.assertNotIn("/home/daniel", rank["eligibility_rule"])
+        rank, _ = self.project(rank_payload(rules={}))
+        self.assertIsNone(rank["eligibility_rule"])
+
+    def test_single_tier_flag_is_kept_only_as_a_tier_or_true(self):
+        for value, expected in (("hard", "hard"), (True, True), ({"tier": "low"}, "low"), ("<b>", None), (1, None)):
+            with self.subTest(value=value):
+                payload = rank_payload()
+                payload["rows"][0]["single_tier"] = value
+                rank, _ = self.project(payload)
+                self.assertEqual(rank["rows"][0].get("single_tier"), expected)
+
+    def test_projection_refuses_settled_unmanaged_or_other_windows(self):
+        for overrides in ({"live": False}, {"provisional": False}, {"live": False, "provisional": False},
+                          {"execution": "all"}, {"window": "7d"}):
             with self.subTest(overrides=overrides):
                 with self.assertRaises(SystemExit):
                     self.project(rank_payload(**overrides))
@@ -302,6 +329,17 @@ class RankProjectionTest(unittest.TestCase):
             snapshot.replay(str(bundle), str(root / "with"))
             written = json.loads((root / "with" / "rank.json").read_text())
             self.assertEqual(written["rows"][0]["model"], "gpt-a")
+            self.assertIs(written["live"], True)
+            # A bundle written before the live board carries a settled one and still replays.
+            docs["rank"]["live"] = docs["rank"]["provisional"] = False
+            bundle.write_text(snapshot.dump(docs))
+            snapshot.replay(str(bundle), str(root / "settled"))
+            self.assertIs(json.loads((root / "settled" / "rank.json").read_text())["live"], False)
+            # Live without provisional (or the reverse) is refused.
+            docs["rank"]["live"] = True
+            bundle.write_text(snapshot.dump(docs))
+            with self.assertRaises(SystemExit):
+                snapshot.replay(str(bundle), str(root / "mixed"))
 
     def test_guard_rejects_a_leaked_path_in_rank(self):
         docs = minimal_docs()
