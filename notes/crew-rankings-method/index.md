@@ -50,10 +50,9 @@ Scorecard rows before and after 2026-11-10 may regroup by effort, so the same cr
 different on either side of that date. An effort-unknown row is never estimated.
 
 The rank also changed. The owner froze its first calibrated season, season 0, calibrated on
-2026-09-27 to 2026-10-27, and the model rank now reads from it. Before the first
-calibration the scales were a window estimate, and the Ranking page showed scores and
-intervals without ranks or a podium. The [2026-11-08 note](../crew-rankings-2026-11-08/)
-was written before both changes and is not regenerated here.
+2026-09-27 to 2026-10-27, and the model rank now reads from it. The
+[2026-11-08 note](../crew-rankings-2026-11-08/) was written before both changes and is
+not regenerated here.
 
 ## How the ranking works
 
