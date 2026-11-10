@@ -26,8 +26,11 @@ Front matter is `key: value` lines between `---` fences:
     updated:  optional YYYY-MM-DD of the last material change; defaults to date
     image:    optional file in the note's directory for og:image (1200x630)
     author:   optional comma-separated authors; defaults to Constellation Works. A weekly
-              crew-ranking byline, `<crew@effort> (<model>), MVP of the week, <score>`
-              (the crew labelled as on the boards, e.g. `opus · effort unknown`), is one author.
+              crew-ranking byline, `<crew label> (<model>), MVP of the week, <score>` (the crew
+              labelled as on the boards, e.g. `opus · effort unknown`), is one author; a weekly
+              note with no MVP names its writer as `<crew> (fallback writer), no MVP this week`.
+              A weekly note's title is `[Crew Ranking - <date>]: MVP <model>`, `co-MVPs <models>`
+              or `no MVP`.
     tags:     optional comma-separated topics
 
 Author, created and updated dates and tags are shown under the page title.
@@ -66,9 +69,15 @@ OUT = ROOT / "public" / "notes"
 SITE = "https://constellation-works.com"
 
 FIELDS = {"title", "summary", "status", "date", "updated", "image", "author", "tags"}
-# A weekly crew-ranking byline is one author, though it has commas. Notes published
-# before ORB-23846 name an estimated effort as `haiku@xhigh (est.)`; that mark stays valid.
+# A weekly crew-ranking byline is one author, though it has commas: the writer's crew label,
+# its model in brackets, and the score it writes under (`sol · effort unknown (gpt-6.1-sol),
+# MVP of the week, 114.6`). Notes published before ORB-23846 name an estimated effort as
+# `haiku@xhigh (est.)`; that mark stays valid. A note with no MVP names its fallback writer.
 MVP_BYLINE = re.compile(r"[^,()]+(?: \(est\.\))? \([^()]+\), MVP of the week, [^,]+")
+FALLBACK_BYLINE = re.compile(r"[^,()]+ \(fallback writer\), no MVP this week")
+WEEKLY_SLUG = re.compile(r"crew-rankings-\d{4}-\d{2}-\d{2}")
+# A weekly note's title names its MVP model or models (co-MVPs when a band is shared), or says there is none.
+WEEKLY_TITLE = re.compile(r"\[Crew Ranking - \d{4}-\d{2}-\d{2}\]: (?:MVP|co-MVPs|no MVP)\b.*")
 VICTORY_PLACEHOLDER = "{{victory-address}}"
 CREWS_EMBED = re.compile(r"<!-- crews-by-role: (\S+) -->")
 CREWS_DATA = re.compile(r"data/crew-rankings/\d{4}-\d{2}-\d{2}")
@@ -109,10 +118,17 @@ def parse(path):
         sys.exit(f"{path}: updated is before date")
     meta["tags"] = [t.strip() for t in meta.get("tags", "").split(",") if t.strip()]
     author = meta.get("author", "")
+    weekly_byline = bool(MVP_BYLINE.fullmatch(author) or FALLBACK_BYLINE.fullmatch(author))
     meta["authors"] = (
-        [author] if MVP_BYLINE.fullmatch(author)
+        [author] if weekly_byline
         else [a.strip() for a in author.split(",") if a.strip()]
     ) or ["Constellation Works"]
+    if WEEKLY_SLUG.fullmatch(path.parent.name):
+        if not WEEKLY_TITLE.fullmatch(meta["title"]):
+            sys.exit(f"{path}: a weekly crew-ranking title names its MVP, co-MVPs or no MVP, got {meta['title']!r}")
+        if not weekly_byline:
+            sys.exit(f"{path}: a weekly crew-ranking author is `<crew> (<model>), MVP of the week, <score>` "
+                     f"or `<crew> (fallback writer), no MVP this week`, got {author!r}")
     if meta.get("image") and not (path.parent / meta["image"]).is_file():
         sys.exit(f"{path}: image {meta['image']} not found")
     meta["slug"] = path.parent.name

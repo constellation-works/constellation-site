@@ -87,11 +87,13 @@ Reviewer and pilot rows need the scorecard's minimum support, 10 units.
 
 ### The MVP of the week
 
-The **MVP** is the rank-1 crew of the all-tiers implementer board for the note's 30 days:
-the top row of the Implementers crew table, named with its crew label as the boards show
-it (`crew@effort`, or `crew · effort unknown` when the effort was not recorded), its
-model and its score. There is no other step. Reviewer and pilot boards are shown for the record and
-earn no points toward it.
+The **MVP** is the top tie band of Orbit's settled model rank for the note's date, the same
+board the Ranking page's podium follows. The note freezes that board beside its scorecards,
+in `rank.json`, read with `orbit agents rank --until <date>`, so its ranked 30 days end 14
+days before the note's date and no live board is read. The MVP is the models whose rank is
+the lowest on that board (`1=` when the band is shared), each named with its score and
+p10–p90 interval as the board gives them. A shared band is published as co-MVPs. Reviewer
+and pilot boards are shown for the record and earn nothing toward it.
 
 The Ranking page's model rank is Orbit's settled board, not its live one. The ranked
 30 days end 14 days before the snapshot, so the work is two to six weeks old: the newest
@@ -102,15 +104,21 @@ Ranks, bands and the podium are published only when a calibrated season's scales
 force and the board has qualified. When the scales are a window estimate (the fallback
 before the first calibration), or the board has not qualified, the page shows each model's
 score and p10–p90 interval without ranks or a podium, and says which of those is the
-reason. The weekly MVP comes from the crew board instead, so the two can name different
-winners. The model rank pools crews into their model.
+reason. The MVP is that same top band, so the note and the podium always name the same
+models. The model rank pools crews into their model.
 
-The MVP crew writes the note. The script generates everything but a short *victory
-address*: two to four first-person sentences from the MVP crew, every number taken from
-the note's CSVs. The site's build refuses to publish a note whose address is still the
-placeholder. The MVP means the strongest observed implementer contribution under the
-fleet's actual assignments in those 30 days, not a verdict on a model's general
-capability.
+No MVP is named when the model board has not qualified, or when its noise scales are a
+window estimate rather than a calibrated season's. The note then says why, names no MVP,
+and the configured fallback crew writes it.
+
+The band's first model, in Orbit's own band order (cheapest first), writes the note's
+victory address, through its crew with the most implemented tasks in the window. The note
+says which crew wrote the address and the rule that picked it. The script generates
+everything but a short *victory address*: two to four first-person sentences, every number
+taken from the note's CSVs and its frozen `rank.json`. The site's build refuses to publish
+a note whose address is still the placeholder. The MVP means the top band of the model
+rank under the fleet's actual assignments in those 30 days, not a verdict on a model's
+general capability.
 
 Each note's boards are drawn by the Ranking page's own Crews by role component from a
 frozen copy of its input, `data/crew-rankings/<date>/scorecards.json` in the site's

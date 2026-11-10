@@ -1,4 +1,4 @@
-"""The weekly crew-ranking note: scripts/crew_rankings.py and its build.py support (ORB-23608)."""
+"""The weekly crew-ranking note: scripts/crew_rankings.py and its build.py support (ORB-23608, ORB-23847)."""
 
 import csv
 import importlib.util
@@ -25,10 +25,48 @@ def load(name, path):
 
 build = load("site_build", ROOT / "build.py")
 fixtures = load("ranking_fixtures", ROOT / "tests" / "test_analytics_agents.py")
+crew_rankings = load("crew_rankings_script", SCRIPT)
 
 
 def run(*args):
     return subprocess.run([sys.executable, str(SCRIPT), *args], capture_output=True, text=True, check=False)
+
+
+def front_matter(text):
+    return dict(re.findall(r"^(\w+): (.*)$", text.split("---")[1], re.M))
+
+
+def model_row(model, rank, label, score, crews, eligible=True):
+    """One model row of the settled rank board; each crew carries its own implemented-task count."""
+    row = fixtures.rank_row(model, rank, label, score, sum(tasks for _crew, tasks in crews),
+                            [crew for crew, _tasks in crews], eligible=eligible)
+    row["crews"] = [{"crew": crew, "tasks": tasks} for crew, tasks in crews]
+    if not eligible:
+        row["rank"], row["rank_label"], row["band_size"], row["interval"] = None, None, None, None
+    return row
+
+
+def rank_board(*rows, scales="season", qualified=True):
+    """A settled rank.json: live and provisional false, as the snapshot freezes it, with Orbit's band order."""
+    return {
+        "role": "implementers", "execution": "managed", "status": "ok",
+        "live": False, "provisional": False, "qualified": qualified, "scales_source": scales,
+        "settle_lag": "14d", "eligible_models": sum(1 for row in rows if row["eligible"]),
+        "window": {"key": "30d", "since": "2026-09-25T00:00:00Z", "until": "2026-10-25T00:00:00Z"},
+        "measures": [], "not_scored": {"count": 0, "reasons": {}}, "rules": {"min_tasks": 30},
+        "rows": list(rows),
+    }
+
+
+# A shared top band, cheapest first: the first model writes the address through its only crew.
+TIED_BAND = [
+    model_row("gpt-6.1-sol", 1, "1=", 114.6, [("sol", 825)]),
+    model_row("gpt-6-sol", 1, "1=", 119.1, [("sol", 104)]),
+    model_row("claude-haiku-5-5", 2, "2=", 103.1, [("haiku@high", 40), ("haiku@xhigh", 200)]),
+    model_row("gpt-tiny", None, None, 130.0, [("tiny", 9)], eligible=False),
+]
+HAIKU_ROW = model_row("claude-haiku-5-5", 1, "1", 103.0, [("haiku@high", 40), ("haiku@xhigh", 200)])
+LUNA_ROW = model_row("gpt-6-luna", 2, "2", 99.0, [("luna", 50)])
 
 
 class CrewRankingScript(unittest.TestCase):
@@ -39,65 +77,117 @@ class CrewRankingScript(unittest.TestCase):
         self.frozen = base / "frozen"
         self.frozen.mkdir()
         (self.frozen / "scorecards.json").write_text(json.dumps(fixtures.effort_scorecards()), encoding="utf-8")
+        self.freeze(rank_board(*TIED_BAND))
         self.notes, self.data = base / "notes", base / "data"
         self.args = ["2026-11-09", "--from", str(self.frozen), "--notes-dir", str(self.notes), "--data-dir", str(self.data)]
+
+    def freeze(self, board):
+        (self.frozen / "rank.json").write_text(json.dumps(board), encoding="utf-8")
 
     def generate(self, *extra):
         proc = run(*self.args, *extra)
         self.assertEqual(proc.returncode, 0, proc.stderr)
         return self.notes / "crew-rankings-2026-11-09"
 
-    def test_writer_only_returns_the_rank_1_all_tiers_crew_and_writes_nothing(self):
+    def test_writer_only_names_the_band_writer_and_writes_nothing(self):
         proc = run(*self.args, "--writer-only")
         self.assertEqual(proc.returncode, 0, proc.stderr)
         writer = json.loads(proc.stdout)
         self.assertEqual((writer["crew"], writer["source"], writer["model"], writer["score"]),
-                         ("sol", "mvp", "gpt-6.1-sol", 132.6))
-        self.assertEqual(writer["effort"], "unknown")
-        self.assertNotIn("effort_estimate", writer)  # an older snapshot's estimate is never read
+                         ("sol", "mvp", "gpt-6.1-sol", 114.6))
+        self.assertEqual(writer["mvp_crew"], "sol")
         self.assertFalse(self.notes.exists() or self.data.exists())
-        self.assertEqual(json.loads(run(*self.args, "--writer-only", "--crews", "opus").stdout)["crew"], "opus")
+        self.assertEqual(json.loads(run(*self.args, "--writer-only", "--crews", "opus").stdout),
+                         {"crew": "opus", "source": "fallback", "mvp_crew": "sol", "model": "gpt-6.1-sol",
+                          "effort": None, "score": 114.6, "units": 825})
 
-    def test_note_title_byline_and_body_order(self):
+    def test_a_writing_crew_named_for_its_effort_routes_to_its_plain_crew(self):
+        self.freeze(rank_board(HAIKU_ROW, LUNA_ROW))
+        writer = json.loads(run(*self.args, "--writer-only", "--crews", "haiku").stdout)
+        self.assertEqual((writer["crew"], writer["source"], writer["mvp_crew"], writer["effort"]),
+                         ("haiku", "mvp", "haiku@xhigh", "xhigh"))
+
+    def test_a_shared_top_band_is_published_as_co_mvps_and_the_first_models_crew_writes(self):
         note = self.generate()
         text = (note / "index.md").read_text(encoding="utf-8")
-        meta = dict(re.findall(r"^(\w+): (.*)$", text.split("---")[1], re.M))
-        self.assertEqual(meta["title"], "[Crew Ranking - 2026-11-09]: MVP sol")
-        # The MVP is named with the boards' own crew@effort label; the title keeps the plain crew.
-        self.assertEqual(meta["author"], "sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6")
-        self.assertIn("MVP: sol · effort unknown, gpt-6.1-sol, 132.6.", meta["summary"])
+        meta = front_matter(text)
+        self.assertEqual(meta["title"], "[Crew Ranking - 2026-11-09]: co-MVPs gpt-6.1-sol and gpt-6-sol")
+        self.assertEqual(meta["author"], "sol · effort unknown (gpt-6.1-sol), MVP of the week, 114.6")
         self.assertEqual(meta["status"], "draft")
+        self.assertIn("Co-MVPs: gpt-6.1-sol at 114.6 (p10–p90 110.6–118.6); "
+                      "gpt-6-sol at 119.1 (p10–p90 115.1–123.1).", meta["summary"])
         body = text.split("---", 2)[2]
-        order = [body.index(marker) for marker in (
-            "](../crew-rankings-method/)", "**MVP: sol · effort unknown, gpt-6.1-sol, 132.6**",
-            "## Victory address", "{{victory-address}}", "## Crews by role",
-            f"<!-- crews-by-role: {self.data / '2026-11-09'} -->", "Limits:")]
-        self.assertEqual(order, sorted(order))
-        for gone in ("crown", "Crown", "pooled", "shrink", "K = "):
-            self.assertNotIn(gone, text)
+        self.assertIn("**Co-MVPs, rank 1=: gpt-6.1-sol at 114.6 (p10–p90 110.6–118.6); "
+                      "gpt-6-sol at 119.1 (p10–p90 115.1–123.1).**", body)
+        self.assertIn("its first model, gpt-6.1-sol, writes the address, through its crew sol · effort unknown", body)
+        self.assertIn("{{victory-address}} sol replaces this line", body)
+        self.assertIn("Limits:", body)
         self.assertEqual(sorted(p.name for p in note.iterdir()),
                          ["all-tiers.csv", "by-tier.csv", "index.md", "pilots.csv", "reviewers.csv"])
         with open(note / "all-tiers.csv", newline="") as f:
             first = next(csv.DictReader(f))
-        self.assertEqual((first["rank"], first["crew"], first["effort"], first["score"]), ("1", "sol", "unknown", "132.6"))
-        # The frozen input is the renderer's scorecards.json, and the facts name the MVP.
+        self.assertEqual((first["rank"], first["crew"]), ("1", "sol"))
         frozen = self.data / "2026-11-09"
         self.assertEqual(json.loads((frozen / "scorecards.json").read_text()), fixtures.effort_scorecards())
-        mvp = json.loads((frozen / "facts.json").read_text())["mvp"]
-        self.assertEqual((mvp["crew"], mvp["label"]), ("sol", "sol · effort unknown"))
-        self.assertNotIn("effort_estimate", mvp)
+        self.assertEqual(json.loads((frozen / "rank.json").read_text()), rank_board(*TIED_BAND))
+        facts = json.loads((frozen / "facts.json").read_text())
+        self.assertEqual([m["model"] for m in facts["mvp"]["models"]], ["gpt-6.1-sol", "gpt-6-sol"])
+        self.assertEqual((facts["writer"]["crew"], facts["writer"]["source"]), ("sol", "mvp"))
+        self.assertIsNone(facts["reason"])
+        build.parse(note / "index.md")  # a draft with its placeholder builds
 
-    def test_a_recorded_mvp_effort_is_named_without_an_unknown_mark(self):
-        cards = fixtures.effort_scorecards()
-        top = cards["implementers"]["rows"][0]
-        top["reasoning_effort"], top["effort_label"] = "medium", "medium"
-        top.pop("effort_estimate", None)
-        (self.frozen / "scorecards.json").write_text(json.dumps(cards), encoding="utf-8")
+    def test_a_single_mvp_quotes_score_and_interval_and_its_top_crew_writes(self):
+        self.freeze(rank_board(HAIKU_ROW, LUNA_ROW))
         text = (self.generate() / "index.md").read_text(encoding="utf-8")
-        self.assertIn("author: sol@medium (gpt-6.1-sol), MVP of the week, 132.6", text)
-        self.assertIn("**MVP: sol@medium, gpt-6.1-sol, 132.6**", text)
-        self.assertNotIn("(est.)", text.split("## Crews by role")[0])
-        self.assertIn("title: [Crew Ranking - 2026-11-09]: MVP sol\n", text)
+        meta = front_matter(text)
+        self.assertEqual(meta["title"], "[Crew Ranking - 2026-11-09]: MVP claude-haiku-5-5")
+        self.assertEqual(meta["author"], "haiku@xhigh (claude-haiku-5-5), MVP of the week, 103.0")
+        self.assertIn("MVP: claude-haiku-5-5 at 103.0 (p10–p90 99.0–107.0).", meta["summary"])
+        body = text.split("---", 2)[2]
+        self.assertIn("**MVP: claude-haiku-5-5, rank 1, 103.0 (p10–p90 99.0–107.0)** on 240 implemented tasks.", body)
+        self.assertIn("is the only model in the top band, so its crew haiku@xhigh writes the address", body)
+        self.assertIn("{{victory-address}} haiku@xhigh replaces this line", body)
+
+    def test_an_unqualified_or_uncalibrated_board_names_no_mvp_and_the_fallback_writes(self):
+        cases = [
+            (rank_board(*TIED_BAND, scales="window_estimate"),
+             "the noise scales are estimated from this window, not frozen for a calibrated season"),
+            (rank_board(*TIED_BAND, qualified=False), "the model board has not qualified"),
+        ]
+        for board, why in cases:
+            with self.subTest(why=why):
+                self.freeze(board)
+                text = (self.generate("--force") / "index.md").read_text(encoding="utf-8")
+                meta = front_matter(text)
+                self.assertEqual(meta["title"], "[Crew Ranking - 2026-11-09]: no MVP")
+                self.assertEqual(meta["author"], "opus (fallback writer), no MVP this week")
+                self.assertIn(f"No MVP: {why}.", meta["summary"])
+                body = text.split("---", 2)[2]
+                self.assertIn(f"**No MVP this week:** {why}.", body)
+                self.assertIn("{{victory-address}} opus replaces this line", body)
+                self.assertNotIn("**MVP:", body)
+                writer = json.loads(run(*self.args, "--writer-only").stdout)
+                self.assertEqual((writer["crew"], writer["source"]), ("opus", "fallback"))
+                facts = json.loads((self.data / "2026-11-09" / "facts.json").read_text())
+                self.assertIsNone(facts["mvp"])
+                self.assertEqual(facts["reason"], why)
+                build.parse(self.notes / "crew-rankings-2026-11-09" / "index.md")
+
+    def test_an_mvp_with_no_recorded_crew_hands_the_address_to_the_fallback(self):
+        self.freeze(rank_board(model_row("claude-haiku-5-5", 1, "1", 103.0, []), LUNA_ROW))
+        text = (self.generate() / "index.md").read_text(encoding="utf-8")
+        self.assertEqual(front_matter(text)["author"], "opus (fallback writer), MVP of the week, 103.0")
+        body = text.split("---", 2)[2]
+        self.assertIn("The MVP is claude-haiku-5-5, but no crew is recorded for it, so the fallback crew, opus, "
+                      "writes this note's victory address.", body)
+        self.assertIn("{{victory-address}} opus replaces this line", body)
+
+    def test_a_frozen_day_without_a_model_rank_names_no_mvp(self):
+        (self.frozen / "rank.json").unlink()
+        text = (self.generate() / "index.md").read_text(encoding="utf-8")
+        self.assertEqual(front_matter(text)["title"], "[Crew Ranking - 2026-11-09]: no MVP")
+        self.assertIn("**No MVP this week:** the note froze no settled model rank for its date.", text)
+        self.assertFalse((self.data / "2026-11-09" / "rank.json").exists())
 
     def test_an_existing_note_is_not_overwritten_without_force(self):
         note = self.generate()
@@ -107,33 +197,53 @@ class CrewRankingScript(unittest.TestCase):
         self.assertEqual((note / "index.md").read_text(encoding="utf-8"), "written address")
         self.generate("--force")
 
-    def test_script_has_no_crown_method_left(self):
+    def test_script_has_no_crown_or_live_request_left(self):
         source = SCRIPT.read_text(encoding="utf-8")
-        for gone in ("crown", "pool_models", "shrink", "K_SENSITIVITY", "CROWN_K"):
+        for gone in ("crown", "pool_models", "shrink", "K_SENSITIVITY", "CROWN_K", "--live"):
             self.assertNotIn(gone, source)
         self.assertIn('"--until"', source)
 
 
-NOTE = """---
-title: [Crew Ranking - 2026-11-09]: MVP sol
+class FetchRank(unittest.TestCase):
+    def raw(self, **overrides):
+        return {**rank_board(HAIKU_ROW, LUNA_ROW), "window": "30d", "since": "2026-09-25T00:00:00Z",
+                "until": "2026-10-25T00:00:00Z", "computed_at": "2026-11-09T00:00:00Z", **overrides}
+
+    def test_fetch_asks_orbit_for_the_settled_board_at_the_note_date(self):
+        with mock.patch.object(crew_rankings.snap, "orbit_json", return_value=self.raw()) as orbit:
+            rank = crew_rankings.fetch_rank("orbit", "2026-11-09T00:00:00Z")
+        self.assertEqual(orbit.call_args.args[0], ["agents", "rank", "--window", "30d", "--until", "2026-11-09T00:00:00Z"])
+        self.assertEqual(orbit.call_args.args[1], "orbit")
+        self.assertEqual((rank["live"], rank["provisional"], rank["qualified"], rank["scales_source"]),
+                         (False, False, True, "season"))
+        self.assertEqual(rank["rows"][0]["rank"], 1)
+
+    def test_fetch_refuses_a_live_board(self):
+        with mock.patch.object(crew_rankings.snap, "orbit_json", return_value=self.raw(live=True, provisional=True)):
+            with self.assertRaises(SystemExit):
+                crew_rankings.fetch_rank("orbit", "2026-11-09T00:00:00Z")
+
+
+class CrewRankingBuild(unittest.TestCase):
+    NOTE = """---
+title: {title}
 summary: The crew boards.
 status: {status}
 date: 2026-11-09
-author: sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6
+author: {author}
 tags: rankings, weekly
 ---
 
 {address}
 """
 
-
-class CrewRankingBuild(unittest.TestCase):
-    def note(self, status, address):
+    def note(self, status, address, title="[Crew Ranking - 2026-11-09]: MVP sol",
+             author="sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6", slug="crew-rankings-2026-11-09"):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
-        path = Path(tmp.name) / "crew-rankings-2026-11-09" / "index.md"
+        path = Path(tmp.name) / slug / "index.md"
         path.parent.mkdir()
-        path.write_text(NOTE.format(status=status, address=address), encoding="utf-8")
+        path.write_text(self.NOTE.format(title=title, status=status, author=author, address=address), encoding="utf-8")
         return path
 
     def test_published_note_with_the_placeholder_fails_and_a_draft_builds(self):
@@ -146,19 +256,36 @@ class CrewRankingBuild(unittest.TestCase):
         self.assertEqual(published["authors"], ["sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6"])
 
     def test_a_published_byline_with_an_old_estimate_mark_still_builds(self):
-        # Notes published before ORB-23846 name an estimated effort; their bylines stay valid.
         old = "sol@high (est.) (gpt-6.1-sol), MVP of the week, 132.6"
-        published = build.parse(self.note("published", "I landed the most."))
-        self.assertEqual(published["authors"], ["sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6"])
-        path = self.note("published", "I landed the most.")
-        path.write_text(path.read_text().replace("sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6", old))
+        self.assertEqual(build.parse(self.note("published", "I landed the most."))["authors"],
+                         ["sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6"])
+        path = self.note("published", "I landed the most.", author=old)
         self.assertEqual(build.parse(path)["authors"], [old])
 
-    def test_plain_comma_separated_authors_still_split(self):
-        path = self.note("draft", "Text.")
-        path.write_text(path.read_text().replace(
-            "author: sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6", "author: Ann, Bo"))
+    def test_the_co_mvp_fallback_and_no_mvp_bylines_build(self):
+        co_mvp = "sol · effort unknown (gpt-6.1-sol), MVP of the week, 114.6"
+        self.assertEqual(build.parse(self.note("published", "Text.", "[Crew Ranking - 2026-11-09]: co-MVPs a and b", co_mvp))["authors"], [co_mvp])
+        fallback = "opus (fallback writer), no MVP this week"
+        self.assertEqual(build.parse(self.note("published", "Text.", "[Crew Ranking - 2026-11-09]: no MVP", fallback))["authors"], [fallback])
+        writes_for_mvp = "opus (fallback writer), MVP of the week, 114.6"
+        self.assertEqual(build.parse(self.note("published", "Text.", "[Crew Ranking - 2026-11-09]: MVP a", writes_for_mvp))["authors"], [writes_for_mvp])
+
+    def test_a_weekly_note_must_name_its_mvp_or_no_mvp_in_its_title_and_its_writer_in_its_byline(self):
+        with self.assertRaises(SystemExit) as caught:
+            build.parse(self.note("draft", "Text.", title="[Crew Ranking - 2026-11-09]: Weekly"))
+        self.assertIn("MVP, co-MVPs or no MVP", str(caught.exception))
+        with self.assertRaises(SystemExit) as caught:
+            build.parse(self.note("draft", "Text.", author="Ann, Bo"))
+        self.assertIn("fallback writer", str(caught.exception))
+
+    def test_a_plain_note_keeps_its_comma_separated_authors(self):
+        path = self.note("draft", "Text.", title="Plain note", author="Ann, Bo", slug="plain-note")
         self.assertEqual(build.parse(path)["authors"], ["Ann", "Bo"])
+
+    def test_published_weekly_notes_still_build(self):
+        for slug in ("crew-rankings-2026-11-03", "crew-rankings-2026-11-08"):
+            with self.subTest(slug=slug):
+                self.assertEqual(build.parse(ROOT / "notes" / slug / "index.md")["status"], "published")
 
     def test_embed_is_the_ranking_pages_stacked_crews_by_role(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -175,6 +302,13 @@ class CrewRankingBuild(unittest.TestCase):
                 for bad in ("data/analytics/2026-11-09", "data/crew-rankings/2026-11-10", "../x"):
                     with self.assertRaises(SystemExit):
                         build.embed_crews_by_role(f"<!-- crews-by-role: {bad} -->", "note")
+
+    def test_method_note_states_the_top_band_rule_and_no_longer_splits_podium_and_mvp(self):
+        text = (ROOT / "notes" / "crew-rankings-method" / "index.md").read_text(encoding="utf-8")
+        self.assertIn("top tie band", text)
+        self.assertIn("co-MVPs", text)
+        self.assertNotIn("can name different", text)
+        self.assertNotIn("rank-1 crew", text)
 
 
 if __name__ == "__main__":
