@@ -51,8 +51,8 @@ different on either side of that date. An effort-unknown row is never estimated.
 
 The rank also changed. The owner froze its first calibrated season, season 0, calibrated on
 2026-09-27 to 2026-10-27, and the model rank now reads from it. The
-[2026-11-08 note](../crew-rankings-2026-11-08/) was written before both changes and is
-not regenerated here.
+[2026-11-08 note](../crew-rankings-2026-11-08/) was written before both changes. It was
+re-issued on 2026-11-10 with a dated correction line that gives its new MVP and both causes.
 
 ## How the ranking works
 
