@@ -42,15 +42,19 @@ A weekly note is the frozen record of the `/ranking/` crew boards for the 30 day
 on its date (00:00 UTC). On the Orbit owner host,
 `python3 scripts/crew_rankings.py <YYYY-MM-DD>` reads the scorecards with `--until`,
 freezes them in `data/crew-rankings/<date>/scorecards.json` (projected as the analytics
-snapshot projects them) and writes a draft `notes/crew-rankings-<date>/` with its CSVs.
-The note is titled `[Crew Ranking - <date>]: MVP <crew>`; the MVP is the rank-1 row of the
-all-tiers implementer board. The MVP line, summary and byline name it with the boards' own
-`crew_label` (`haiku@xhigh (claude-haiku-5-5), MVP of the week, 146.2`; an MVP whose effort is
-unknown reads `opus · effort unknown (claude-opus-5-5), MVP of the week, 146.2`), so writing a
-note needs `markdown` (`uv run --with markdown==3.8.2`); the title and `--writer-only` use
-the plain crew, and the crew `--writer-only` prints writes the note.
+snapshot projects them), freezes the settled model rank for the same date in
+`data/crew-rankings/<date>/rank.json` (`orbit agents rank --until <date>`, never the live
+board), and writes a draft `notes/crew-rankings-<date>/` with its CSVs.
+The MVP is the top tie band of that frozen model rank. The note is titled
+`[Crew Ranking - <date>]: MVP <model>`, `co-MVPs <models>` for a shared band, or `no MVP`.
+The MVP line and summary quote each model's score and p10–p90 interval from `rank.json`;
+the byline names the writer, e.g. `sol · effort unknown (gpt-6.1-sol), MVP of the week, 114.6`.
+With no qualified, calibrated board the note names no MVP, says why, and its byline reads
+`<fallback> (fallback writer), no MVP this week`.
+The band's first model in Orbit's order writes the note, through its crew with the most
+implemented tasks in the window; `--writer-only` prints that writer.
 Its body's `<!-- crews-by-role: data/crew-rankings/<date> -->` marker is replaced at build
-time by the Ranking page's own `render_crews_by_role`, every role stacked. The MVP crew
+time by the Ranking page's own `render_crews_by_role`, every role stacked. The writer
 replaces the `{{victory-address}}` placeholder; `build.py` refuses a published note that
 still has it. The method is [notes/crew-rankings-method](notes/crew-rankings-method/index.md).
 

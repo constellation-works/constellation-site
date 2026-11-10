@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a weekly crew-ranking note: the frozen record of the /ranking/ crew boards.
+"""Build a weekly crew-ranking note: the frozen record of the /ranking/ crew boards and its MVP.
 
 The Ranking page keeps no history (its newest snapshot's 30 days only), so each
 weekly note freezes that page's Crews by role boards for the 30 days ending on
@@ -14,26 +14,33 @@ It writes:
   (gap rows dropped, crew, model and recorded effort per row), so the note's
   Crews by role section is drawn by the page's own renderer
   (build.render_crews_by_role) from this directory;
-- data/crew-rankings/<date>/facts.json: the window, the MVP and the writer;
+- data/crew-rankings/<date>/rank.json: the settled model rank for the note's date,
+  projected as the analytics snapshot projects rank.json. The MVP is read from it;
+- data/crew-rankings/<date>/facts.json: the windows, the MVP band and the writer;
 - notes/crew-rankings-<date>/: a draft index.md and the CSVs it publishes
   (all-tiers.csv, by-tier.csv, reviewers.csv, pilots.csv).
 
-The MVP is the rank-1 row of the all-tiers implementer board, nothing else: a
-row is one crew, model and recorded effort. The MVP line, summary and byline
-name it with the boards' own crew@effort label (build.crew_label; a row whose
-effort is unknown reads ``effort unknown``) and its model; the title and
-``--writer-only`` use the plain crew. The MVP crew writes the note: it replaces the victory-address
-placeholder with two to four first-person sentences. build.py refuses to
-publish a note while the placeholder remains.
+The MVP is the top tie band of the settled model rank, never the live board: the
+models whose rank is the lowest in the board (``1=`` when shared). A shared band
+gives co-MVPs. The rank is read with ``orbit agents rank --until <D>``, so its
+ranked window ends at the settle lag (14 days) before the note's date. Only a
+qualified board whose noise scales are a calibrated season (``scales_source``
+``season``) names an MVP. Otherwise the note names none, says why, and the
+fallback crew writes it.
+
+The band's first model, in Orbit's own band order (cheapest first), writes the
+victory address, through its crew with the most implemented tasks in the window.
+The crew boards stay in the note for the record and earn nothing. build.py
+refuses to publish a note while the placeholder remains.
 
 Usage, on the Orbit owner host:
 
     python3 scripts/crew_rankings.py [<date>] [--workspace orbit]
         # <date> is YYYY-MM-DD, default today (UTC)
     python3 scripts/crew_rankings.py <date> --from data/crew-rankings/<date>
-        # regenerate from the frozen scorecards.json, without calling orbit
+        # regenerate from the frozen scorecards.json and rank.json, without calling orbit
     python3 scripts/crew_rankings.py <date> --writer-only [--crews a,b,...]
-        # print only the writer JSON (the MVP's crew); write no files
+        # print only the writer JSON (the MVP band's writer); write no files
 
 --force overwrites an existing note's index.md (the writer's address is lost).
 """
@@ -47,16 +54,22 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-import analytics_snapshot as snap  # noqa: E402  (shared scorecard projection)
+import analytics_snapshot as snap  # noqa: E402  (shared scorecard and rank projection)
 
 WINDOW = "30d"
 PLACEHOLDER = "{{victory-address}}"
 METHOD = "../crew-rankings-method/"
 TAGS = "operating data, crew selection, rankings, weekly"
+RULE = ("the MVP is the top tie band of the settled model rank for the note's date; "
+        "a shared band gives co-MVPs, and the band's first model in Orbit's order writes the address")
 
 
 def day_start(day):
     return f"{day.isoformat()}T00:00:00Z"
+
+
+def number(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
 def fetch(workspace, until, settled_until):
@@ -79,51 +92,76 @@ def fetch(workspace, until, settled_until):
     return scorecards
 
 
-def effort_of(row):
-    """A row's raw effort identity (recorded effort or label), or None."""
-    return row.get("reasoning_effort") or row.get("effort_label") or None
+def fetch_rank(workspace, until):
+    """The settled 30d model rank ending at the settle lag before `until`, projected like the snapshot's rank.json.
 
-
-def board_label(row):
-    """The MVP's name as the boards show it: ``opus@medium``, ``opus · effort unknown``.
-
-    Taken from build.py's own crew_label/crew_view, the function that names
-    every crew row on the boards, so the MVP line, summary and byline never
-    disagree with the tables. Imported here, not at module load, so
-    ``--writer-only`` keeps working without build.py's ``markdown`` dependency.
+    Not a live board: the request has no live flag, and the projection refuses a provisional board, so the MVP never comes from one.
     """
-    if str(ROOT) not in sys.path:
-        sys.path.insert(0, str(ROOT))
-    import build  # noqa: E402  (the site build: the boards' label function)
-    return build.crew_label({"crew": row["crew"], **build.crew_view(row)})
+    patterns = snap.forbidden_patterns(snap.host_names())
+    payload = snap.orbit_json(["agents", "rank", "--window", WINDOW, "--until", until], workspace)
+    rank = snap.project_rank(payload, snap.empty_dropped(), patterns, [0])
+    snap.scan(rank, patterns)
+    return rank
 
 
-def ranked(board):
-    rows = [r for r in board.get("rows") or [] if r.get("rank") is not None and r.get("score") is not None]
-    return sorted(rows, key=lambda r: (r["rank"], -r["score"], r["crew"], r["model"], effort_of(r) or ""))
+def mvp_band(rank):
+    """(band, why): the MVP's top band in Orbit's band order, or ([], why) when no board names one.
+
+    The band is the rows with the lowest rank among eligible, scored rows. Rows keep the
+    order the rank board gave them, so a shared band is listed cheapest first.
+    """
+    if rank is None:
+        return [], "the note froze no settled model rank for its date"
+    if rank.get("qualified") is not True:
+        return [], "the model board has not qualified"
+    scales = rank.get("scales_source")
+    if scales == "window_estimate":
+        return [], "the noise scales are estimated from this window, not frozen for a calibrated season"
+    if scales != "season":
+        return [], "no calibrated season's noise scales are in force"
+    ranked = [
+        row for row in rank.get("rows") or []
+        if row.get("eligible") is True and isinstance(row.get("rank"), int)
+        and not isinstance(row.get("rank"), bool) and number(row.get("score"))
+    ]
+    if not ranked:
+        return [], "no model is ranked"
+    top = min(row["rank"] for row in ranked)
+    return [row for row in ranked if row["rank"] == top], None
 
 
-def mvp_row(scorecards):
-    """The rank-1 row of the all-tiers implementer board, or None when nothing is ranked."""
-    rows = ranked(scorecards["implementers"])
-    return rows[0] if rows else None
+def crew_key_label(key):
+    """A rank crew key as the boards name it: ``crew@effort``, or ``crew · effort unknown`` when no effort was recorded."""
+    return key if "@" in key else f"{key} · effort unknown"
 
 
-def writer(mvp, crews, fallback):
-    """The crew that writes the note: the MVP's crew (``--writer-only``)."""
-    crew = mvp["crew"] if mvp else None
-    if crew and crews is not None and crew not in crews and crew.split("@", 1)[0] in crews:
-        crew = crew.split("@", 1)[0]  # a crew named for its effort routes to its plain crew
-    ok = crew is not None and (crews is None or crew in crews)
+def choose_writer(band, crews, fallback):
+    """The writer of a band: the first model's crew with the most implemented tasks (``--writer-only``).
+
+    A crew named for its effort routes to its plain crew when only that is configured. When the
+    writing crew is not configured, the fallback writes the note.
+    """
+    model = band[0]
+    crew_rows = model.get("crews") or []
+    key = max(crew_rows, key=lambda entry: entry.get("tasks") or 0)["crew"] if crew_rows else None
+    name = key
+    if name and crews is not None and name not in crews and name.split("@", 1)[0] in crews:
+        name = name.split("@", 1)[0]
+    ok = name is not None and (crews is None or name in crews)
     return {
-        "crew": crew if ok else fallback,
+        "crew": name if ok else fallback,
         "source": "mvp" if ok else "fallback",
-        "mvp_crew": mvp["crew"] if mvp else None,
-        "model": mvp["model"] if mvp else None,
-        "effort": effort_of(mvp) if mvp else None,
-        "score": round(mvp["score"], 1) if mvp else None,
-        "units": mvp["units"] if mvp else None,
+        "mvp_crew": key,
+        "model": model["model"],
+        "effort": key.split("@", 1)[1] if key and "@" in key else None,
+        "score": round(model["score"], 1),
+        "units": model["units"],
     }
+
+
+def no_writer(fallback):
+    return {"crew": fallback, "source": "fallback", "mvp_crew": None, "model": None,
+            "effort": None, "score": None, "units": None}
 
 
 def effort_cells(row):
@@ -171,47 +209,114 @@ def score_text(value):
     return f"{value:.1f}"
 
 
-def note_text(day, scorecards, mvp, data_rel):
+def names(items):
+    """``a``, ``a and b``, ``a, b and c``."""
+    items = list(items)
+    if len(items) <= 1:
+        return "".join(items)
+    return ", ".join(items[:-1]) + " and " + items[-1]
+
+
+def interval_text(row):
+    interval = row.get("interval")
+    if isinstance(interval, dict) and number(interval.get("p10")) and number(interval.get("p90")):
+        return f"p10–p90 {score_text(interval['p10'])}–{score_text(interval['p90'])}"
+    return "interval not published"
+
+
+def band_phrase(row):
+    """One band member as the note quotes it: model, score and interval from the frozen rank."""
+    return f"{row['model']} at {score_text(row['score'])} ({interval_text(row)})"
+
+
+def title_text(day, band):
+    if not band:
+        return f"[Crew Ranking - {day.isoformat()}]: no MVP"
+    if len(band) == 1:
+        return f"[Crew Ranking - {day.isoformat()}]: MVP {band[0]['model']}"
+    return f"[Crew Ranking - {day.isoformat()}]: co-MVPs {names(row['model'] for row in band)}"
+
+
+def byline_text(who, band):
+    """The byline names the writer: its crew label, its model, and the MVP's score it writes under."""
+    if who["source"] == "mvp":
+        return f"{crew_key_label(who['mvp_crew'])} ({who['model']}), MVP of the week, {score_text(who['score'])}"
+    if band:
+        return f"{who['crew']} (fallback writer), MVP of the week, {score_text(band[0]['score'])}"
+    return f"{who['crew']} (fallback writer), no MVP this week"
+
+
+def rule_text(band, who, why, fallback):
+    """The paragraph that says who writes the address and the rule that picked the writer."""
+    if not band:
+        return f"No MVP is named this week, so the configured fallback crew, {fallback}, writes this note's victory address."
+    first = band[0]
+    crew_rows = first.get("crews") or []
+    tasks = max((entry.get("tasks") or 0 for entry in crew_rows), default=0)
+    if who["source"] != "mvp" and who["mvp_crew"] is None:
+        return (f"The MVP is {first['model']}, but no crew is recorded for it, so the fallback crew, {fallback}, "
+                "writes this note's victory address.")
+    if who["source"] != "mvp":
+        return (f"The MVP is {first['model']}, but its crew {crew_key_label(who['mvp_crew'])} is not configured "
+                f"here, so the fallback crew, {fallback}, writes this note's victory address.")
+    if len(band) == 1:
+        return (f"{first['model']} is the only model in the top band, so its crew {crew_key_label(who['mvp_crew'])} "
+                f"writes the address: the crew with the most implemented tasks in the window ({tasks:,}).")
+    return (f"The top band is shared, so it is published as co-MVPs. Orbit lists a band cheapest first, so its "
+            f"first model, {first['model']}, writes the address, through its crew {crew_key_label(who['mvp_crew'])}: "
+            f"the crew with the most implemented tasks in the window ({tasks:,}).")
+
+
+def mvp_line(band, why):
+    if not band:
+        return f"**No MVP this week:** {why}."
+    if len(band) == 1:
+        row = band[0]
+        return (f"**MVP: {row['model']}, rank {row.get('rank_label') or row['rank']}, {score_text(row['score'])} "
+                f"({interval_text(row)})** on {row['units']:,} implemented tasks.")
+    return (f"**Co-MVPs, rank {band[0].get('rank_label') or band[0]['rank']}: "
+            + "; ".join(band_phrase(row) for row in band) + ".**")
+
+
+def note_text(day, scorecards, band, why, who, data_rel, fallback):
     impl = scorecards["implementers"]
     since, until = impl["window"]["since"], impl["window"]["until"]
-    crew = mvp["crew"] if mvp else "none"
-    if mvp:
-        label, model = board_label(mvp), mvp["model"]
-        score = score_text(mvp["score"])
-        mvp_line = f"**MVP: {label}, {model}, {score}** on {mvp['units']:,} {impl['unit']}."
-        byline = f"{label} ({model}), MVP of the week, {score}"
-        summary = (f"The crew boards for the 30 days ending {day.isoformat()}: implementers, reviewers and "
-                   f"pilots. MVP: {label}, {model}, {score}.")
+    if band:
+        head = "MVP" if len(band) == 1 else "Co-MVPs"
+        summary = (f"The crew boards for the 30 days ending {day.isoformat()}: implementers, reviewers and pilots. "
+                   f"{head}: " + "; ".join(band_phrase(row) for row in band) + ".")
     else:
-        mvp_line = "**No MVP this week:** no implementer crew reached the board's minimum support."
-        byline = "Constellation Works"
-        summary = f"The crew boards for the 30 days ending {day.isoformat()}: implementers, reviewers and pilots."
+        summary = (f"The crew boards for the 30 days ending {day.isoformat()}: implementers, reviewers and pilots. "
+                   f"No MVP: {why}.")
     intro = (
         f"This is the weekly crew ranking for the 30 days from {since} to {until} (UTC), a frozen copy "
         "of the crew boards on the [Ranking page](/ranking/), which shows only the latest 30 days. "
         f"Each crew is scored in its role against the fleet's own rate, and [how the crew rankings work]({METHOD}) "
-        "explains the scores. The MVP is the rank-1 crew of the all-tiers implementer board."
+        "explains the scores. The MVP comes from the settled model rank for the note's date, frozen beside the "
+        "boards in rank.json. The crew boards are shown for the record and earn nothing toward it."
     )
-    address = (f"{PLACEHOLDER} {crew} replaces this line with a victory address: two to four short "
-               "first-person sentences, every number taken from this note's CSVs, no em dashes, "
-               "and nothing that restates or reframes the boards.")
+    address = (f"{PLACEHOLDER} {who['crew']} replaces this line with a victory address: two to four short "
+               "first-person sentences, every number taken from this note's CSVs and its frozen rank.json, "
+               "no em dashes, and nothing that restates or reframes the boards.")
     limits = ("Limits: these are 30 days of one repository's managed tasks, not a controlled comparison; "
               "reviewer scores stay provisional until their findings settle; and implementer, reviewer "
               "and pilot scores are on different scales.")
     return f"""---
-title: [Crew Ranking - {day.isoformat()}]: MVP {crew}
+title: {title_text(day, band)}
 summary: {summary}
 status: draft
 date: {day.isoformat()}
-author: {byline}
+author: {byline_text(who, band)}
 tags: {TAGS}
 ---
 
 {intro}
 
-{mvp_line}
+{mvp_line(band, why)}
 
 ## Victory address
+
+{rule_text(band, who, why, fallback)}
 
 {address}
 
@@ -231,7 +336,7 @@ def main():
     ap.add_argument("--notes-dir", default=str(ROOT / "notes"))
     ap.add_argument("--data-dir", default=str(ROOT / "data" / "crew-rankings"))
     ap.add_argument("--fallback-crew", default="opus",
-                    help="crew that writes the note when no implementer crew is ranked (default opus)")
+                    help="crew that writes the note when no MVP is named, or the MVP's crew is not configured (default opus)")
     ap.add_argument("--crews", help="comma list of crews configured in the workspace; "
                     "an MVP crew outside it hands the note to --fallback-crew")
     ap.add_argument("--writer-only", action="store_true",
@@ -246,11 +351,15 @@ def main():
     crews = {c.strip() for c in a.crews.split(",") if c.strip()} if a.crews else None
 
     if a.source:
-        scorecards = json.loads((pathlib.Path(a.source) / "scorecards.json").read_text(encoding="utf-8"))
+        source = pathlib.Path(a.source)
+        scorecards = json.loads((source / "scorecards.json").read_text(encoding="utf-8"))
+        rank_file = source / "rank.json"
+        rank = json.loads(rank_file.read_text(encoding="utf-8")) if rank_file.is_file() else None
     else:
         scorecards = fetch(a.workspace, day_start(day), day_start(day - datetime.timedelta(days=30)))
-    mvp = mvp_row(scorecards)
-    who = writer(mvp, crews, a.fallback_crew)
+        rank = fetch_rank(a.workspace, day_start(day))
+    band, why = mvp_band(rank)
+    who = choose_writer(band, crews, a.fallback_crew) if band else no_writer(a.fallback_crew)
     if a.writer_only:
         print(json.dumps(who))
         return
@@ -263,6 +372,8 @@ def main():
     data.mkdir(parents=True, exist_ok=True)
     note.mkdir(parents=True, exist_ok=True)
     (data / "scorecards.json").write_text(json.dumps(scorecards, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    if rank is not None:
+        (data / "rank.json").write_text(json.dumps(rank, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     impl, rev = scorecards["implementers"], scorecards["reviewers"]
     facts = {
         "date": day.isoformat(),
@@ -270,9 +381,16 @@ def main():
         "windows": {"implementers": impl["window"], "implementers_by_tier": scorecards["implementers_by_tier"]["window"],
                     "reviewers_provisional": rev["provisional"]["window"],
                     "reviewers_settled": (rev.get("settled") or {}).get("window"),
-                    "pilots": scorecards["pilots"]["window"]},
-        "mvp": {"crew": mvp["crew"], "label": board_label(mvp), "model": mvp["model"], "effort": effort_of(mvp),
-                "score": mvp["score"], "units": mvp["units"], "rank": mvp["rank"]} if mvp else None,
+                    "pilots": scorecards["pilots"]["window"],
+                    "model_rank": rank["window"] if rank is not None else None},
+        "model_rank": {"file": "rank.json", "settle_lag": rank.get("settle_lag"),
+                       "qualified": rank.get("qualified"), "scales_source": rank.get("scales_source"),
+                       "window": rank.get("window")} if rank is not None else None,
+        "mvp": {"rule": RULE, "models": [
+            {"model": row["model"], "rank": row["rank"], "rank_label": row.get("rank_label"),
+             "score": row["score"], "interval": row.get("interval"), "units": row["units"],
+             "crews": row.get("crews") or []} for row in band]} if band else None,
+        "reason": None if band else why,
         "writer": who,
     }
     (data / "facts.json").write_text(json.dumps(facts, indent=2) + "\n", encoding="utf-8")
@@ -287,9 +405,9 @@ def main():
         data_rel = data.resolve().relative_to(ROOT).as_posix()
     except ValueError:
         data_rel = data.as_posix()
-    index.write_text(note_text(day, scorecards, mvp, data_rel), encoding="utf-8")
-    print(f"wrote {index} (draft) and {data}; MVP {board_label(mvp) if mvp else 'none'}; writer {who['crew']}",
-          file=sys.stderr)
+    index.write_text(note_text(day, scorecards, band, why, who, data_rel, a.fallback_crew), encoding="utf-8")
+    named = names(row["model"] for row in band) if band else "none"
+    print(f"wrote {index} (draft) and {data}; MVP {named}; writer {who['crew']}", file=sys.stderr)
 
 
 if __name__ == "__main__":
