@@ -1319,8 +1319,9 @@ def load_rank(directory):
         sys.exit(f"{path}: invalid JSON ({exc})")
     if not isinstance(data, dict) or not isinstance(data.get("rows"), list):
         sys.exit(f"{path}: expected an object with rows")
-    # Snapshots carry the live board since ORB-23668 and the settled one before;
-    # either way live and provisional agree.
+    # A new snapshot is the settled board. One published while the live board
+    # was current, and one from before that, still load. Either way live and
+    # provisional agree.
     live = data.get("live")
     if not isinstance(live, bool) or data.get("provisional") is not live or data.get("execution") != "managed":
         sys.exit(f"{path}: the public rank board must be the managed board, live and provisional or settled")
@@ -1805,14 +1806,70 @@ def model_detail(row, rank):
     )
 
 
+def rank_publishes_places(rank):
+    """Whether this snapshot may show rank numbers, bands and a podium.
+
+    A live snapshot keeps the places it was published with and is labelled
+    provisional. A settled board from before scales were recorded keeps its
+    places unless it is unqualified. A settled board publishes places only
+    from a calibrated season (``scales_source`` ``season``) that has qualified.
+    """
+    if not isinstance(rank, dict):
+        return False
+    if rank.get("live") is True:
+        return True
+    source = rank.get("scales_source")
+    if source is None:
+        return rank.get("qualified") is not False
+    return source == "season" and rank.get("qualified") is True
+
+
+def rank_withheld_reason(rank):
+    """Why a settled board shows scores and intervals without ranks or a podium."""
+    parts = []
+    if rank.get("scales_source") == "window_estimate":
+        parts.append("the noise scales are estimated from this window, not frozen for a calibrated season")
+    if rank.get("qualified") is False:
+        parts.append("the board has not qualified")
+    if not parts:
+        return None
+    because = parts[0] if len(parts) == 1 else f"{parts[0]}, and {parts[1]}"
+    return (
+        "No ranking is published: "
+        + because
+        + ", so scores and intervals are shown without ranks or a podium."
+    )
+
+
+def settle_lag_text(rank):
+    lag = rank.get("settle_lag") if isinstance(rank.get("settle_lag"), str) else "14d"
+    if lag.endswith("d") and lag[:-1].isdigit():
+        count = int(lag[:-1])
+        return "1 day" if count == 1 else f"{count} days"
+    return lag
+
+
 def models_board(rank):
-    """The Model rank board: band-grouped rows with whiskers, cost, tier mix and landed rate."""
+    """The Model rank board: scores and intervals, and bands when the board is published.
+
+    A settled board whose scales are a window estimate, or that has not
+    qualified, shows Orbit's scores and intervals with no rank numbers and
+    no bands. A calibrated, qualified board is band-grouped. A live snapshot
+    keeps the banded board it was published with.
+    """
     e = html.escape
+    publish = rank_publishes_places(rank)
     ranked, rest = rank_rows(rank)
+    if not publish:
+        rows = [
+            row for row in rank.get("rows") or []
+            if isinstance(row, dict) and isinstance(row.get("model"), str)
+            and row["model"] not in GAP_MODELS and as_number(row.get("units"))
+        ]
+        ranked = [row for row in rows if row.get("eligible") is True and as_number(row.get("score"))]
+        rest = [row for row in rows if row not in ranked]
     window = rank["window"]
     live = rank.get("live") is True
-    lag = rank.get("settle_lag") or "14d"
-    lag_text = f"{lag[:-1]} days" if lag.endswith("d") and lag[:-1].isdigit() else lag
     rules = rank.get("rules") or {}
     band_pct = rules.get("band_probability")
     band_text = f"{band_pct * 100:.0f}% confidence" if as_number(band_pct) else "the board's confidence level"
@@ -1828,9 +1885,21 @@ def models_board(rank):
         )
         previous = None
         for row in ranked:
-            band_start = row["rank"] != previous
-            previous = row["rank"]
-            label = row.get("rank_label") or str(row["rank"])
+            if publish:
+                band_start = row["rank"] != previous
+                previous = row["rank"]
+                label = row.get("rank_label") or str(row["rank"])
+                rank_cell = (
+                    f'<span class="ml-rank">{e(label) if band_start else ""}'
+                    f'<span class="sr-only">{"" if band_start else "rank " + e(label)}</span></span>'
+                )
+                item_class = "band-start" if band_start else "band-cont"
+                rank_attr = f' data-rank="{row["rank"]}"'
+            else:
+                # Orbit's order, with no rank number and no band.
+                rank_cell = '<span class="ml-rank"><span class="sr-only">Breakdown</span></span>'
+                item_class = "band-cont"
+                rank_attr = ""
             interval = row.get("interval") or {}
             whisker = ""
             if as_number(interval.get("p10")) and as_number(interval.get("p90")):
@@ -1855,9 +1924,9 @@ def models_board(rank):
                 if single else ""
             )
             items.append(
-                f'<li class="{"band-start" if band_start else "band-cont"}" data-rank="{row["rank"]}">'
+                f'<li class="{item_class}"{rank_attr}>'
                 '<details class="model-row"><summary class="model-line">'
-                f'<span class="ml-rank">{e(label) if band_start else ""}<span class="sr-only">{"" if band_start else "rank " + e(label)}</span></span>'
+                f'{rank_cell}'
                 f'<span class="ml-model">{model_dot(row["model"])}<span class="ml-name">{e(row["model"])}</span>'
                 f'<span class="ml-crews">{e(crews)}</span>{single_html}</span>'
                 f'<span class="ml-score">{fmt_score(row["score"])}</span>'
@@ -1869,7 +1938,8 @@ def models_board(rank):
                 f'</summary>{model_detail(row, rank)}</details></li>'
             )
         head = (
-            '<div class="model-line model-head" aria-hidden="true"><span class="ml-rank">Rank</span>'
+            '<div class="model-line model-head" aria-hidden="true">'
+            f'<span class="ml-rank">{"Rank" if publish else ""}</span>'
             '<span class="ml-model">Model</span><span class="ml-score">Score</span>'
             f'<span class="ml-whisker"><span>p10–p90 interval</span><span class="whisker-ticks">{tick_html}</span></span>'
             '<span class="ml-cost">Cost / task</span><span class="ml-tasks">Tasks · tier mix</span>'
@@ -1905,14 +1975,36 @@ def models_board(rank):
         window_html = board_window_line(window["since"], window["until"], prefix="Live window")
         notice = ("This is Orbit's live model rank: provisional, because late escaped regressions "
                   "may still arrive.")
+        notice_class = " is-live"
+    elif publish:
+        window_html = board_window_line(window["since"], window["until"], prefix="Settled window")
+        notice = (
+            f"The ranked 30 days end {settle_lag_text(rank)} before the snapshot, so late escaped "
+            "regressions have arrived and the work is two to six weeks old."
+        )
+        notice_class = ""
     else:
         window_html = board_window_line(window["since"], window["until"], prefix="Settled window")
-        notice = f"The ranked 30 days end {lag_text} before the snapshot, so late escaped regressions have arrived."
+        notice = rank_withheld_reason(rank) or (
+            "No ranking is published, so scores and intervals are shown without ranks or a podium."
+        )
+        notice_class = " is-unranked"
+    if publish:
+        score_key = (
+            "Who implements best: Orbit's implementer rank, crews pooled into their model, eligible models only. "
+            f"Shared ranks such as 2= are one band at {band_text}; cost orders a band and never crosses it. "
+            "Cost ratio is the model's $ per task against the fleet's on the same tiers. Select a model for its breakdown."
+        )
+    else:
+        score_key = (
+            "Scores and p10–p90 intervals, crews pooled into their model. "
+            "This board publishes no ranks and no bands. Select a model for its breakdown."
+        )
     return f'''<section class="board models-board" id="models" aria-labelledby="models-title">
 <div class="board-head"><h2 id="models-title">Model rank</h2>
 <p class="board-key">p10–p90 whisker on a shared score axis · <span class="k-fleet" aria-hidden="true"></span> 100 is the fleet</p></div>
-<p class="board-note rank-notice{" is-live" if live else ""}">{e(notice)}</p>
-<p class="board-note score-key">Who implements best: Orbit's implementer rank, crews pooled into their model, eligible models only. Shared ranks such as 2= are one band at {e(band_text)}; cost orders a band and never crosses it. Cost ratio is the model's $ per task against the fleet's on the same tiers. Select a model for its breakdown.</p>
+<p class="board-note rank-notice{notice_class}">{e(notice)}</p>
+<p class="board-note score-key">{e(score_key)}</p>
 {window_html}
 {board}
 {folded}
@@ -2069,8 +2161,19 @@ def method_section(scorecards, rank, snapshot_date, weekly):
         text += f"; Orbit's rule: {lower_first(rule)}" if rule else "."
         if rank.get("live") is True:
             text += " The window is live: it ends at the snapshot, so the board is provisional while late escaped regressions may still arrive."
+            text += (
+                " The published board is the settled window, ending its settle lag before the snapshot,"
+                " so that work is two to six weeks old."
+            )
         else:
-            text += f" The window is settled: it ends {rank.get('settle_lag') or '14d'} before the snapshot."
+            text += (
+                f" The window is settled: it ends {rank.get('settle_lag') or '14d'} before the snapshot,"
+                " so the work is two to six weeks old."
+            )
+        text += (
+            " When the scales are a window estimate, or the board has not qualified,"
+            " the page shows scores and intervals without ranks or a podium and says why."
+        )
         cards.append(("Model rank", text))
     else:
         cards.append(("Model rank", "This snapshot predates the model rank, so the Overall tab has no Model rank board and its podium follows the All-roles index."))
@@ -2132,19 +2235,36 @@ def render_ranking_body(scorecards, snapshot_date, rank=None, weekly=()):
 
     index_rows = overall["rows"]
     if rank is not None:
+        publish = rank_publishes_places(rank)
         model_ranked, model_rest = rank_rows(rank)
-        leader = model_ranked[0] if model_ranked else None
-        overall_stats = [
-            ("Model rank", str(len(model_ranked)), f"ranked of {len(model_ranked) + len(model_rest)} models"),
-            ("Top model", leader["model"] if leader else "—", fmt_score(leader["score"]) if leader else "not qualified"),
-            ("All-roles index", str(len(index_rows)), "models in two or more roles"),
-            ("Tasks scored", fmt_count(units(model_ranked)) or "0", "ranked models, live" if rank.get("live") is True else "ranked models"),
-        ]
-        podium = podium_from_rank(rank)
-        podium_label = "Top three models by Model rank"
+        if publish:
+            leader = model_ranked[0] if model_ranked else None
+            overall_stats = [
+                ("Model rank", str(len(model_ranked)), f"ranked of {len(model_ranked) + len(model_rest)} models"),
+                ("Top model", leader["model"] if leader else "—", fmt_score(leader["score"]) if leader else "not qualified"),
+                ("All-roles index", str(len(index_rows)), "models in two or more roles"),
+                ("Tasks scored", fmt_count(units(model_ranked)) or "0", "ranked models, live" if rank.get("live") is True else "ranked models"),
+            ]
+            podium = podium_from_rank(rank)
+            podium_label = "Top three models by Model rank"
+            overall_sub = f'{len(model_ranked)} {plural(len(model_ranked), "model")} · {len(index_rows)} indexed'
+        else:
+            scored = [
+                row for row in rank.get("rows") or []
+                if isinstance(row, dict) and row.get("eligible") is True and as_number(row.get("score"))
+                and isinstance(row.get("model"), str) and row["model"] not in GAP_MODELS and as_number(row.get("units"))
+            ]
+            overall_stats = [
+                ("Model rank", "—", "not published"),
+                ("Top model", "—", "no ranks on this board"),
+                ("All-roles index", str(len(index_rows)), "models in two or more roles"),
+                ("Tasks scored", fmt_count(units(scored)) or "0", "models with a score"),
+            ]
+            podium = []
+            podium_label = "Model rank"
+            overall_sub = f'not ranked · {len(index_rows)} indexed'
         podium_note = ""
         model_html = models_board(rank)
-        overall_sub = f'{len(model_ranked)} {plural(len(model_ranked), "model")} · {len(index_rows)} indexed'
     else:
         overall_stats = [
             ("Model rank", "—", "not in this snapshot"),

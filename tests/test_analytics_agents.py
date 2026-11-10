@@ -993,6 +993,95 @@ class RankingPageTest(unittest.TestCase):
         places = [item["place"] for item in build.podium_from_rank(tied)]
         self.assertEqual(places, ["1st", "2nd=", "2nd="])
 
+    def settled_board(self, **overrides):
+        board = rank_board()
+        board["live"] = board["provisional"] = False
+        board["settle_lag"] = "14d"
+        board["scales_source"] = "season"
+        board["qualified"] = True
+        board.update(overrides)
+        return board
+
+    def assert_no_model_rank_places(self, doc, reason):
+        overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
+        models = overall[overall.index('id="models"'):overall.index('id="all-roles"')]
+        self.assertNotIn('class="podium"', overall)
+        self.assertNotIn("podium-place", overall)
+        self.assertNotIn("data-rank=", models)
+        self.assertNotRegex(models, r'class="ml-rank">[^<]*\d')
+        self.assertNotIn(">Rank</span>", models)
+        self.assertNotIn("Top three models by Model rank", overall)
+        self.assertIn("not published", overall)
+        self.assertIn("no ranks on this board", overall)
+        self.assertIn(reason, models)
+        self.assertIn("120.0", models)
+        self.assertIn("p10", models)
+        self.assertIn("Settled window", models)
+
+    def test_window_estimate_renders_scores_without_ranks_or_a_podium(self):
+        board = self.settled_board(scales_source="window_estimate", qualified=True)
+        doc = build.render_ranking_body(all_roles_scorecards(), "2026-11-08", board)
+        self.assert_no_model_rank_places(
+            doc,
+            "No ranking is published: the noise scales are estimated from this window, "
+            "not frozen for a calibrated season, so scores and intervals are shown without ranks or a podium.",
+        )
+        self.assertNotIn("the board has not qualified", doc[doc.index('id="models"'):doc.index('id="all-roles"')])
+
+    def test_unqualified_board_renders_scores_without_ranks_or_a_podium(self):
+        board = self.settled_board(scales_source="season", qualified=False)
+        # Orbit awards no bands on an unqualified board; the scores stay.
+        for row in board["rows"]:
+            if row["eligible"]:
+                row["rank"] = None
+                row["rank_label"] = None
+        doc = build.render_ranking_body(all_roles_scorecards(), "2026-11-08", board)
+        self.assert_no_model_rank_places(
+            doc,
+            "No ranking is published: the board has not qualified, "
+            "so scores and intervals are shown without ranks or a podium.",
+        )
+
+    def test_window_estimate_and_unqualified_names_both_reasons(self):
+        board = self.settled_board(scales_source="window_estimate", qualified=False)
+        doc = build.render_ranking_body(scorecards(), "2026-11-08", board)
+        self.assertIn(
+            "the noise scales are estimated from this window, not frozen for a calibrated season, "
+            "and the board has not qualified",
+            doc,
+        )
+        self.assertNotIn('class="podium"', doc)
+
+    def test_calibrated_qualified_settled_board_renders_podium_and_bands(self):
+        board = self.settled_board()
+        doc = build.render_ranking_body(all_roles_scorecards(), "2026-11-08", board)
+        overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
+        podium = re.search(r'<ol class="podium" aria-label="Top three models by Model rank">.*?</ol>', overall, re.S)
+        self.assertIsNotNone(podium)
+        self.assertIn('class="ml-rank">1', overall)
+        self.assertIn('class="band-start"', overall)
+        self.assertIn("Settled window", overall)
+        self.assertIn("two to six weeks old", overall)
+        self.assertNotIn("live model rank", overall)
+        self.assertNotIn("No ranking is published", overall)
+        self.assertIn('<span class="stat-value">claude-haiku-5-5</span>', overall)
+
+    def test_live_snapshot_keeps_its_places_and_is_labelled_provisional(self):
+        # The stored 2026-11-09 board is live and a window estimate. It still
+        # renders as published, labelled provisional, rather than being rewritten.
+        board = rank_board()
+        board["scales_source"] = "window_estimate"
+        board["qualified"] = True
+        board["settle_lag"] = "14d"
+        doc = build.render_ranking_body(all_roles_scorecards(), "2026-11-09", board)
+        overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
+        self.assertIn("This is Orbit&#x27;s live model rank: provisional, because late escaped regressions "
+                      "may still arrive.", overall)
+        self.assertIn("Live window", overall)
+        self.assertIn('class="podium"', overall)
+        self.assertIn('class="ml-rank">1', overall)
+        self.assertNotIn("No ranking is published", overall)
+
     def test_model_rank_crew_lists_label_bare_crews_and_hide_system(self):
         board = rank_board()
         board["rows"][0]["crews"] = [
@@ -1072,7 +1161,8 @@ class RankingPageTest(unittest.TestCase):
         self.assertIn("Model rank", method)
         for needle in ("80% confidence share a band", "Cost orders models inside a band",
                        "Only eligible models are ranked; Orbit's rule: orbit fixture rule", "live: it ends at the snapshot",
-                       "provisional"):
+                       "provisional", "two to six weeks old", "window estimate",
+                       "without ranks or a podium"):
             self.assertIn(needle, method.replace("&#x27;", "'"))
         self.assertIn("All-roles index", method)
         self.assertIn("rescaled", method)

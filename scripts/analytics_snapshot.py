@@ -103,28 +103,30 @@ A relative path with no extension that descends fewer than two
 directories (``src/Makefile``) is left as it is by design. Public API source
 labels (``GET /api/…``) are not file paths and are preserved.
 
-Rank (``rank.json``): ``GET /api/agents/rank?window=30d&execution=managed&live=true``
-of the named workspace, the live implementer-model rank board (the 30 days
-ending at the snapshot; ``live`` and ``provisional`` must both be true, since
-late escaped regressions may still arrive). Copied: the exact window, settle
-lag, qualification rules, Orbit's eligibility rule as one sentence
-(``eligibility_rule``: Orbit's own text when the board carries one, else
-stated from its numeric rules), measures (label, weight, status and
-sanitized definition), the not-scored count by reason and, per model, its
-single-tier flag when Orbit sets one, its sanitized not-eligible reason, its band
-(rank, ``rank_label`` and band size), score, raw score, p10-p90 interval,
-cost per task with its ratio and coverage, tasks by tier, landed rate,
-per-measure contributions, crews with task counts and per-tier scores.
-Rows whose model is ``model unknown`` and crews that are attribution gaps
-are dropped and counted in ``dropped.rank``. The crew ``system`` is
-Orbit's attribution for system-run work, not a configured crew, so it is
-dropped from rank crew lists and counted in ``dropped.rank`` the same way.
-A bare crew key (no ``@effort``) carries no effort: its effort was not
-recorded, and it is shown as effort unknown. Paired probabilities,
-z-scores, per-effort usage splits and the unattributed crew list are not
-copied. Snapshots written before this key existed have no ``rank.json``,
-and those written before the live board carry a settled one; their bundles
-replay unchanged.
+Rank (``rank.json``): ``GET /api/agents/rank?window=30d&execution=managed``
+of the named workspace, the settled implementer-model rank board. The
+ranked 30 days end at the settled cutoff (``until`` minus ``settle_lag``,
+14 days by default), so ``live`` and ``provisional`` are both false. The
+live view is never requested: it is provisional and is not published.
+Copied: the settled window, settle lag, qualification rules, Orbit's
+eligibility rule as one sentence (``eligibility_rule``: Orbit's own text
+when the board carries one, else stated from its numeric rules), measures
+(label, weight, status and sanitized definition), the not-scored count by
+reason, ``scales_source`` and ``qualified``, and, per model, its
+single-tier flag when Orbit sets one, its sanitized not-eligible reason,
+its band (rank, ``rank_label`` and band size), score, raw score, p10-p90
+interval, cost per task with its ratio and coverage, tasks by tier, landed
+rate, per-measure contributions, crews with task counts and per-tier
+scores. Rows whose model is ``model unknown`` and crews that are
+attribution gaps are dropped and counted in ``dropped.rank``. The crew
+``system`` is Orbit's attribution for system-run work, not a configured
+crew, so it is dropped from rank crew lists and counted in
+``dropped.rank`` the same way. A bare crew key (no ``@effort``) carries no
+effort: its effort was not recorded, and it is shown as effort unknown.
+Paired probabilities, z-scores, per-effort usage splits and the
+unattributed crew list are not copied. Snapshots written before this key
+existed have no ``rank.json``. Bundles written while the live board was
+published, and those written before it, replay unchanged.
 
 ``meta.json`` records ``schema_version``, ``generated_at``, ``orbit_version``,
 the workspace name, each board's UTC window, and ``dropped``.
@@ -153,7 +155,7 @@ PUBLIC_KEYS = ("scorecards", "metrics", "reliability", "experiments", "rank", "m
 # of such a bundle stays valid and the site renders /ranking/ without Model rank.
 OPTIONAL_KEYS = ("rank",)
 RANK_EXECUTION = "managed"
-RANK_SOURCE = "GET /api/agents/rank?window=30d&execution=managed&live=true"
+RANK_SOURCE = "GET /api/agents/rank?window=30d&execution=managed"
 RANK_MEASURE_FIELDS = ("weight", "units", "actual", "expected", "residual", "contribution")
 RANK_RULES = (
     "shrinkage_k",
@@ -1814,24 +1816,26 @@ def eligibility_rule(payload, rules, patterns, redactions):
 
 
 def project_rank(payload, dropped, patterns, redactions):
-    """The live 30d managed implementer-model rank board, public fields only.
+    """The settled 30d managed implementer-model rank board, public fields only.
 
-    The board is live and provisional: its window ends at the snapshot, so
-    late escaped regressions may still arrive. Copied: the exact window,
-    settle lag and execution scope, the qualification rules, Orbit's
-    eligibility rule as one sentence, each non-eligible model's reason, each measure's label, weight, status and sanitized definition, the
-    not-scored count by reason, and per model its band, score, p10-p90
-    interval, cost per task and ratio, tier mix, landed rate, per-measure
-    contributions, crews (with their task counts; a bare crew's effort is
-    unknown) and per-tier scores. The crew ``system`` is dropped and counted
-    with the other gap crews. Not copied: paired
-    probabilities, z-scores, per-effort usage splits, the unattributed crew
-    list and per-row execution splits.
+    The ranked window ends at the settled cutoff, ``settle_lag`` before the
+    snapshot, so ``live`` and ``provisional`` are both false. A live board is
+    refused: it is provisional and is never published. Copied: the settled
+    window, settle lag and execution scope, the qualification rules,
+    ``scales_source`` and ``qualified``, Orbit's eligibility rule as one
+    sentence, each non-eligible model's reason, each measure's label, weight,
+    status and sanitized definition, the not-scored count by reason, and per
+    model its band, score, p10-p90 interval, cost per task and ratio, tier
+    mix, landed rate, per-measure contributions, crews (with their task
+    counts; a bare crew's effort is unknown) and per-tier scores. The crew
+    ``system`` is dropped and counted with the other gap crews. Not copied:
+    paired probabilities, z-scores, per-effort usage splits, the unattributed
+    crew list and per-row execution splits.
     """
     if not isinstance(payload, dict):
         raise SystemExit("rank board did not return an object")
-    if payload.get("live") is not True or payload.get("provisional") is not True:
-        raise SystemExit("rank board must be the live board (live and provisional true)")
+    if payload.get("live") is not False or payload.get("provisional") is not False:
+        raise SystemExit("rank board must be the settled board (live and provisional false)")
     if payload.get("execution") != RANK_EXECUTION:
         raise SystemExit("rank board must count managed tasks")
     if payload.get("window") != WINDOW:
@@ -1863,13 +1867,13 @@ def project_rank(payload, dropped, patterns, redactions):
         "eligible_models": whole(payload.get("eligible_models")),
         "eligibility_rule": eligibility_rule(payload, rules, patterns, redactions),
         "execution": RANK_EXECUTION,
-        "live": True,
+        "live": False,
         "measures": measures,
         "not_scored": {
             "count": whole(not_scored.get("count")),
             "reasons": numeric_map(not_scored.get("reasons")) or {},
         },
-        "provisional": True,
+        "provisional": False,
         "qualified": payload.get("qualified") is True,
         "role": "implementers",
         "rows": rows,
@@ -2004,7 +2008,7 @@ def collect(workspace, dashboard, generated_at, version):
     reliability = http_json(dashboard, "/api/metrics/reliability", {"window": WINDOW})
     print("rank", file=sys.stderr)
     rank = http_json(
-        dashboard, "/api/agents/rank", {"window": WINDOW, "execution": RANK_EXECUTION, "live": "true", **scope}
+        dashboard, "/api/agents/rank", {"window": WINDOW, "execution": RANK_EXECUTION, **scope}
     )
     print("experiments", file=sys.stderr)
     listed = orbit_json(["experiment", "list"], workspace)
@@ -2133,8 +2137,9 @@ def guard(docs, hosts=None):
     if rank is not None:
         if not isinstance(rank, dict):
             raise SystemExit("rank must be an object")
-        # New snapshots carry the live board; bundles written before it carry
-        # the settled one. Either way live and provisional agree.
+        # New snapshots carry the settled board. A bundle written while the
+        # live board was published carries that live board, and one written
+        # before it carries a settled board. Either way live and provisional agree.
         if not isinstance(rank.get("live"), bool) or rank.get("provisional") is not rank.get("live"):
             raise SystemExit("the rank board must be live and provisional, or settled and neither")
         if rank.get("execution") != RANK_EXECUTION:
@@ -2452,7 +2457,8 @@ def self_test():
     }
     docs["rank"] = project_rank({
         "window": "30d", "since": "2026-09-25T00:00:00Z", "until": "2026-10-25T00:00:00Z",
-        "settle_lag": "14d", "execution": "managed", "live": True, "provisional": True, "status": "ok",
+        "settle_lag": "14d", "execution": "managed", "live": False, "provisional": False, "status": "ok",
+        "qualified": True, "scales_source": "season",
         "measures": [{"key": "escaped_regressions", "label": "Escaped regressions", "weight": 30.0, "sign": -1.0,
                       "pillar": "quality", "status": "measured", "units": "implemented tasks",
                       "definition": "See ORB-1 at /home/daniel/rank.rs", "reason": None}],
@@ -2481,15 +2487,19 @@ def self_test():
     assert "paired_probabilities" not in docs["rank"] and "effort_split" not in docs["rank"]["rows"][0]
     assert "ORB-1" not in docs["rank"]["measures"][0]["definition"]
     assert dropped["rank"] == 2
-    assert docs["rank"]["live"] is True and docs["rank"]["provisional"] is True
+    assert docs["rank"]["live"] is False and docs["rank"]["provisional"] is False
+    assert docs["rank"]["settle_lag"] == "14d"
+    assert docs["rank"]["window"] == {"key": "30d", "since": "2026-09-25T00:00:00Z", "until": "2026-10-25T00:00:00Z"}
+    assert docs["rank"]["scales_source"] == "season" and docs["rank"]["qualified"] is True
+    assert "live=" not in docs["rank"]["source"]
     assert docs["rank"]["rows"][1]["ineligible_reason"] == "8 implemented tasks; 30 needed"
     assert docs["rank"]["eligibility_rule"].startswith("At least 30 implemented tasks")
     try:
-        project_rank({"window": "30d", "execution": "managed", "live": False, "provisional": False}, empty_dropped(), patterns, [0])
+        project_rank({"window": "30d", "execution": "managed", "live": True, "provisional": True}, empty_dropped(), patterns, [0])
     except SystemExit:
         pass
     else:
-        raise SystemExit("project_rank accepted a settled board")
+        raise SystemExit("project_rank accepted a live board")
     docs["meta"] = assemble_meta(docs, "2026-11-08T00:00:00Z", "0.47.0", "orbit", False, dropped, redactions[0])
     assert docs["meta"]["windows"]["rank"]["key"] == "30d"
     assert "reviewers_settled" not in docs["meta"]["dropped"]

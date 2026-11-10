@@ -64,13 +64,17 @@ chips, no earlier-snapshot links and no monthly archive. It replaced
 with four stat cards:
 
 - **Overall** — a podium and two labelled boards, two methodologies. First **Model
-  rank** ("who implements best"): the snapshot's `rank.json`, Orbit's live 30-day
-  managed model rank (`GET /api/agents/rank?window=30d&execution=managed&live=true`),
-  band-grouped rows with p10–p90 whiskers on a shared axis, $ per task and cost
-  ratio, tier mix, landed %, an expandable per-model breakdown, one line saying the
-  board is live and provisional, and a folded "Not ranked yet" list whose rule and
-  per-model reasons are Orbit's text from `rank.json`. The podium is its top three
-  in Rank's order. Then the **All-roles index** ("who contributes most across
+  rank** ("who implements best"): the snapshot's `rank.json`, Orbit's settled 30-day
+  managed model rank (`GET /api/agents/rank?window=30d&execution=managed`). The ranked
+  30 days end the settle lag (14 days) before the snapshot, so the work is two to six
+  weeks old. A calibrated, qualified board (`scales_source` `season` and `qualified`
+  true) is band-grouped rows with p10–p90 whiskers on a shared axis, $ per task and
+  cost ratio, tier mix, landed %, an expandable per-model breakdown, and a folded
+  "Not ranked yet" list whose rule and per-model reasons are Orbit's text from
+  `rank.json`. The podium is its top three in Rank's order. When `scales_source` is
+  `window_estimate`, or `qualified` is false, the page shows those scores and
+  intervals without ranks, bands or a podium, and states which reason applies. Then
+  the **All-roles index** ("who contributes most across
   implementing, reviewing and piloting"): a model's role index is its role score
   divided by that role's fleet average × 100, crews pooled into their model by
   units, weighed 60/25/15 over the roles the model holds with the weights rescaled
@@ -78,10 +82,13 @@ with four stat cards:
   are listed, not ranked, and no missing role is imputed. The weights and the
   minimum live in one constant, `OVERALL_RULE` in `build.py`, and the page states
   the rule from it. A snapshot without `rank.json` shows one line in place of
-  Model rank and the podium follows the All-roles index, saying so; a `rank.json`
-  from before the live board (settled) still renders, labelled settled.
+  Model rank and the podium follows the All-roles index, saying so. A `rank.json`
+  that carries a live board still renders as it was published, labelled provisional;
+  one from before the live board (settled, with no scales source recorded) still
+  renders, labelled settled.
   `scripts/analytics_snapshot.py` writes `rank.json` under the snapshot's `rank`
-  key: live and provisional, managed and 30-day only, with the exact window,
+  key: settled (`live` false), managed and 30-day only, with the settled window
+  and settle lag,
   Orbit's eligibility rule as one sentence (`eligibility_rule`) and each
   non-eligible model's reason, free text sanitized, gap models and crews dropped
   and counted, and paired

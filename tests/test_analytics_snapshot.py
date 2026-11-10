@@ -232,7 +232,8 @@ class ExperimentOmitTest(unittest.TestCase):
 def rank_payload(**overrides):
     payload = {
         "window": "30d", "since": "2026-10-10T07:34:21Z", "until": "2026-11-09T07:34:21Z",
-        "settle_lag": "14d", "execution": "managed", "live": True, "provisional": True, "status": "ok",
+        "settle_lag": "14d", "execution": "managed", "live": False, "provisional": False, "status": "ok",
+        "qualified": True, "scales_source": "season",
         "measures": [{"key": "escaped_regressions", "label": "Escaped regressions", "weight": 30.0, "sign": -1.0,
                       "pillar": "quality", "status": "measured", "units": "implemented tasks",
                       "definition": "Escaped regressions, see /home/daniel/rank.rs", "reason": None}],
@@ -274,11 +275,17 @@ class RankProjectionTest(unittest.TestCase):
         self.assertEqual(rank["rows"][0]["crews"], [{"crew": "sol", "tasks": 38}])
         self.assertEqual(dropped["rank"], 2)
         self.assertEqual(rank["source"], snapshot.RANK_SOURCE)
-        # ORB-23668: the live board, its exact window, and Orbit's rule and reasons.
-        self.assertIn("live=true", rank["source"])
+        # The settled board: no live query, with the settled window and settle lag.
+        self.assertNotIn("live=", rank["source"])
+        source = Path(snapshot.__file__).read_text(encoding="utf-8")
+        self.assertNotIn("live=true", source)
+        self.assertNotIn('"live": "true"', source)
         self.assertEqual(rank["window"], {"key": "30d", "since": "2026-10-10T07:34:21Z", "until": "2026-11-09T07:34:21Z"})
-        self.assertIs(rank["live"], True)
-        self.assertIs(rank["provisional"], True)
+        self.assertIs(rank["live"], False)
+        self.assertIs(rank["provisional"], False)
+        self.assertEqual(rank["settle_lag"], "14d")
+        self.assertEqual(rank["scales_source"], "season")
+        self.assertIs(rank["qualified"], True)
         self.assertEqual(rank["execution"], "managed")
         self.assertEqual(rank["rows"][1]["ineligible_reason"], "8 implemented tasks; 30 needed")
         self.assertIsNone(rank["rows"][0]["ineligible_reason"])
@@ -308,8 +315,8 @@ class RankProjectionTest(unittest.TestCase):
                 rank, _ = self.project(payload)
                 self.assertEqual(rank["rows"][0].get("single_tier"), expected)
 
-    def test_projection_refuses_settled_unmanaged_or_other_windows(self):
-        for overrides in ({"live": False}, {"provisional": False}, {"live": False, "provisional": False},
+    def test_projection_refuses_live_unmanaged_or_other_windows(self):
+        for overrides in ({"live": True}, {"provisional": True}, {"live": True, "provisional": True},
                           {"execution": "all"}, {"window": "7d"}):
             with self.subTest(overrides=overrides):
                 with self.assertRaises(SystemExit):
@@ -329,14 +336,16 @@ class RankProjectionTest(unittest.TestCase):
             snapshot.replay(str(bundle), str(root / "with"))
             written = json.loads((root / "with" / "rank.json").read_text())
             self.assertEqual(written["rows"][0]["model"], "gpt-a")
-            self.assertIs(written["live"], True)
-            # A bundle written before the live board carries a settled one and still replays.
-            docs["rank"]["live"] = docs["rank"]["provisional"] = False
+            self.assertIs(written["live"], False)
+            self.assertEqual(written["settle_lag"], "14d")
+            self.assertEqual(written["window"]["until"], "2026-11-09T07:34:21Z")
+            # A bundle published while the live board was current still replays.
+            docs["rank"]["live"] = docs["rank"]["provisional"] = True
             bundle.write_text(snapshot.dump(docs))
-            snapshot.replay(str(bundle), str(root / "settled"))
-            self.assertIs(json.loads((root / "settled" / "rank.json").read_text())["live"], False)
+            snapshot.replay(str(bundle), str(root / "live"))
+            self.assertIs(json.loads((root / "live" / "rank.json").read_text())["live"], True)
             # Live without provisional (or the reverse) is refused.
-            docs["rank"]["live"] = True
+            docs["rank"]["provisional"] = False
             bundle.write_text(snapshot.dump(docs))
             with self.assertRaises(SystemExit):
                 snapshot.replay(str(bundle), str(root / "mixed"))
