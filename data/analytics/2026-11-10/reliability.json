@@ -2,26 +2,32 @@
   "activities": [
     {
       "activity_id": "implement_one",
-      "invocation_count": 7077,
-      "job_run_count": 7035,
+      "invocation_count": 7103,
+      "job_run_count": 7063,
       "role": "step"
     },
     {
       "activity_id": "pilot",
-      "invocation_count": 4765,
-      "job_run_count": 4357,
+      "invocation_count": 4796,
+      "job_run_count": 4379,
       "role": "step"
     },
     {
       "activity_id": "step_failure_recovery",
-      "invocation_count": 543,
-      "job_run_count": 498,
+      "invocation_count": 544,
+      "job_run_count": 500,
       "role": "recovery"
     },
     {
       "activity_id": "final_recovery",
-      "invocation_count": 409,
-      "job_run_count": 409,
+      "invocation_count": 411,
+      "job_run_count": 411,
+      "role": "step"
+    },
+    {
+      "activity_id": "repair_pilot",
+      "invocation_count": 276,
+      "job_run_count": 260,
       "role": "step"
     },
     {
@@ -31,21 +37,15 @@
       "role": "step"
     },
     {
-      "activity_id": "repair_pilot",
-      "invocation_count": 271,
-      "job_run_count": 256,
-      "role": "step"
-    },
-    {
       "activity_id": "pr_conflict_recovery",
-      "invocation_count": 226,
-      "job_run_count": 201,
+      "invocation_count": 227,
+      "job_run_count": 202,
       "role": "recovery"
     },
     {
       "activity_id": "landing_review",
-      "invocation_count": 79,
-      "job_run_count": 77,
+      "invocation_count": 89,
+      "job_run_count": 87,
       "role": "step"
     },
     {
@@ -120,21 +120,21 @@
       "counts": {
         "cancelled": 28,
         "cascaded": 0,
-        "failed": 559,
-        "held": 135,
-        "in_flight": 9,
+        "failed": 561,
+        "held": 138,
+        "in_flight": 10,
         "skipped": 0,
-        "succeeded": 6731,
-        "total": 7464,
+        "succeeded": 6744,
+        "total": 7483,
         "unknown": 0,
         "upgrade_paused": 2
       },
       "failure_rate": {
-        "denominator": 7290,
+        "denominator": 7305,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
-        "numerator": 559,
-        "value": 0.0766803840877915
+        "numerator": 561,
+        "value": 0.07679671457905544
       },
       "job_id": "task_pr_pipeline"
     },
@@ -144,19 +144,19 @@
         "cascaded": 0,
         "failed": 160,
         "held": 0,
-        "in_flight": 0,
+        "in_flight": 2,
         "skipped": 0,
-        "succeeded": 4501,
-        "total": 4669,
+        "succeeded": 4523,
+        "total": 4693,
         "unknown": 0,
         "upgrade_paused": 1
       },
       "failure_rate": {
-        "denominator": 4661,
+        "denominator": 4683,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
         "numerator": 160,
-        "value": 0.034327397554172925
+        "value": 0.03416613282084134
       },
       "job_id": "task_pilot_pipeline"
     },
@@ -168,39 +168,39 @@
         "held": 0,
         "in_flight": 0,
         "skipped": 0,
-        "succeeded": 3068,
-        "total": 3194,
+        "succeeded": 3084,
+        "total": 3210,
         "unknown": 0,
         "upgrade_paused": 0
       },
       "failure_rate": {
-        "denominator": 3190,
+        "denominator": 3206,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
         "numerator": 122,
-        "value": 0.03824451410658307
+        "value": 0.038053649407361195
       },
       "job_id": "ci_failure_sweep_pipeline"
     },
     {
       "counts": {
         "cancelled": 29,
-        "cascaded": 534,
+        "cascaded": 536,
         "failed": 90,
         "held": 0,
-        "in_flight": 9,
+        "in_flight": 10,
         "skipped": 0,
-        "succeeded": 6829,
-        "total": 7494,
+        "succeeded": 6844,
+        "total": 7512,
         "unknown": 0,
         "upgrade_paused": 3
       },
       "failure_rate": {
-        "denominator": 6919,
+        "denominator": 6934,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
         "numerator": 90,
-        "value": 0.013007660066483595
+        "value": 0.012979521199884627
       },
       "job_id": "task_auto_pipeline"
     },
@@ -210,19 +210,19 @@
         "cascaded": 0,
         "failed": 76,
         "held": 19,
-        "in_flight": 1,
+        "in_flight": 0,
         "skipped": 0,
-        "succeeded": 671,
-        "total": 768,
+        "succeeded": 670,
+        "total": 766,
         "unknown": 0,
         "upgrade_paused": 0
       },
       "failure_rate": {
-        "denominator": 747,
+        "denominator": 746,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
         "numerator": 76,
-        "value": 0.10174029451137885
+        "value": 0.10187667560321716
       },
       "job_id": "task_landing_pipeline"
     },
@@ -278,17 +278,17 @@
         "held": 0,
         "in_flight": 3,
         "skipped": 0,
-        "succeeded": 269,
-        "total": 292,
+        "succeeded": 275,
+        "total": 298,
         "unknown": 0,
         "upgrade_paused": 4
       },
       "failure_rate": {
-        "denominator": 279,
+        "denominator": 285,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
         "numerator": 10,
-        "value": 0.035842293906810034
+        "value": 0.03508771929824561
       },
       "job_id": "workspace_auto_pipeline"
     },
@@ -366,39 +366,39 @@
         "held": 0,
         "in_flight": 0,
         "skipped": 0,
-        "succeeded": 5007,
-        "total": 5011,
+        "succeeded": 5010,
+        "total": 5014,
         "unknown": 0,
         "upgrade_paused": 0
       },
       "failure_rate": {
-        "denominator": 5011,
+        "denominator": 5014,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
         "numerator": 4,
-        "value": 0.0007982438635002994
+        "value": 0.0007977662544874351
       },
       "job_id": "worktree_gc_pipeline"
     },
     {
       "counts": {
         "cancelled": 31,
-        "cascaded": 533,
+        "cascaded": 535,
         "failed": 3,
         "held": 0,
-        "in_flight": 9,
+        "in_flight": 10,
         "skipped": 0,
-        "succeeded": 6837,
-        "total": 7416,
+        "succeeded": 6852,
+        "total": 7434,
         "unknown": 0,
         "upgrade_paused": 3
       },
       "failure_rate": {
-        "denominator": 6840,
+        "denominator": 6855,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
         "numerator": 3,
-        "value": 0.0004385964912280702
+        "value": 0.000437636761487965
       },
       "job_id": "task_gate_pipeline"
     },
@@ -735,34 +735,34 @@
   ],
   "observed_states": {
     "cancelled": 104,
-    "failed": 2107,
-    "held": 154,
+    "failed": 2113,
+    "held": 157,
     "interrupted": 68,
-    "running": 31,
-    "success": 36004
+    "running": 35,
+    "success": 36093
   },
   "over_time": [
     {
       "bucket_end": "2026-10-12T00:00:00Z",
       "bucket_start": "2026-10-11T00:00:00Z",
       "counts": {
-        "cancelled": 3,
-        "cascaded": 15,
-        "failed": 9,
+        "cancelled": 0,
+        "cascaded": 11,
+        "failed": 6,
         "held": 0,
         "in_flight": 0,
         "skipped": 0,
-        "succeeded": 904,
-        "total": 931,
+        "succeeded": 774,
+        "total": 791,
         "unknown": 0,
         "upgrade_paused": 0
       },
       "failure_rate": {
-        "denominator": 913,
+        "denominator": 780,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
-        "numerator": 9,
-        "value": 0.009857612267250822
+        "numerator": 6,
+        "value": 0.007692307692307693
       }
     },
     {
@@ -1436,23 +1436,23 @@
       "bucket_end": "2026-11-11T00:00:00Z",
       "bucket_start": "2026-11-10T00:00:00Z",
       "counts": {
-        "cancelled": 3,
-        "cascaded": 42,
-        "failed": 23,
-        "held": 2,
-        "in_flight": 31,
+        "cancelled": 6,
+        "cascaded": 50,
+        "failed": 28,
+        "held": 5,
+        "in_flight": 35,
         "skipped": 0,
-        "succeeded": 314,
-        "total": 415,
+        "succeeded": 533,
+        "total": 657,
         "unknown": 0,
         "upgrade_paused": 0
       },
       "failure_rate": {
-        "denominator": 337,
+        "denominator": 561,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
-        "numerator": 23,
-        "value": 0.06824925816023739
+        "numerator": 28,
+        "value": 0.049910873440285206
       }
     }
   ],
@@ -1463,39 +1463,39 @@
     "job_runs": {
       "counts": {
         "cancelled": 104,
-        "cascaded": 1070,
-        "failed": 1092,
-        "held": 154,
-        "in_flight": 31,
+        "cascaded": 1074,
+        "failed": 1094,
+        "held": 157,
+        "in_flight": 35,
         "skipped": 0,
-        "succeeded": 36004,
-        "total": 38468,
+        "succeeded": 36093,
+        "total": 38570,
         "unknown": 0,
         "upgrade_paused": 13
       },
       "failure_rate": {
-        "denominator": 37096,
+        "denominator": 37187,
         "denominator_label": "settled deliveries (success + one count per failed delivery; wrapper echoes rolled into the leaf)",
         "low_sample": false,
-        "numerator": 1092,
-        "value": 0.029437136079361655
+        "numerator": 1094,
+        "value": 0.02941888294296394
       },
       "truncated": false
     },
     "recovery": {
       "per_job_run": {
-        "denominator": 12022,
+        "denominator": 12074,
         "denominator_label": "job runs with any recorded invocation",
         "low_sample": false,
-        "numerator": 660,
-        "value": 0.05489935118948594
+        "numerator": 662,
+        "value": 0.05482855723041246
       },
       "per_step_invocation": {
-        "denominator": 13003,
+        "denominator": 13077,
         "denominator_label": "step-activity invocations",
         "low_sample": false,
-        "numerator": 769,
-        "value": 0.05914019841575021
+        "numerator": 771,
+        "value": 0.058958476714842854
       }
     }
   },
@@ -1503,7 +1503,7 @@
   "window": {
     "bucket": "day",
     "label": "30d",
-    "since": "2026-10-11T05:08:54.401306679Z",
-    "until": "2026-11-10T05:08:54.401306679Z"
+    "since": "2026-10-11T08:22:09.612178127Z",
+    "until": "2026-11-10T08:22:09.612178127Z"
   }
 }

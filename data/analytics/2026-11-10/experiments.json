@@ -6,6 +6,2438 @@
           "control": true,
           "crew_mix": [
             {
+              "crew": "muse-wonder",
+              "tasks": 11
+            },
+            {
+              "crew": "opus@medium",
+              "tasks": 11
+            },
+            {
+              "crew": "haiku@high",
+              "tasks": 8
+            },
+            {
+              "crew": "grok@high",
+              "tasks": 7
+            },
+            {
+              "crew": "muse-spark",
+              "tasks": 6
+            },
+            {
+              "crew": "muse-spark@xhigh",
+              "tasks": 6
+            },
+            {
+              "crew": "grok",
+              "tasks": 5
+            },
+            {
+              "crew": "luna",
+              "tasks": 5
+            },
+            {
+              "crew": "muse-wonder-full",
+              "tasks": 5
+            },
+            {
+              "crew": "sol@xhigh",
+              "tasks": 5
+            },
+            {
+              "crew": "terra",
+              "tasks": 5
+            },
+            {
+              "crew": "haiku",
+              "tasks": 3
+            },
+            {
+              "crew": "luna@xhigh",
+              "tasks": 3
+            },
+            {
+              "crew": "muse-wonder@high",
+              "tasks": 3
+            },
+            {
+              "crew": "sol",
+              "tasks": 3
+            },
+            {
+              "crew": "astra@medium",
+              "tasks": 2
+            },
+            {
+              "crew": "sonnet@high",
+              "tasks": 2
+            },
+            {
+              "crew": "terra@high",
+              "tasks": 2
+            },
+            {
+              "crew": "gemini-flash@high",
+              "tasks": 1
+            },
+            {
+              "crew": "haiku@xhigh",
+              "tasks": 1
+            },
+            {
+              "crew": "opus@high",
+              "tasks": 1
+            }
+          ],
+          "drifted": false,
+          "n": 95,
+          "name": "control",
+          "retired_segment": null,
+          "segments": [
+            {
+              "n": 95,
+              "segment": 1
+            }
+          ],
+          "tasks_explorer_unobserved": 40,
+          "tasks_with_explorer_call": 0,
+          "usage": {
+            "duration_ms": 138251813,
+            "efforts": "high, xhigh, medium",
+            "input_tokens": 158089177,
+            "invocations": 119,
+            "output_tokens": 3560457,
+            "provider_cost_count": 50,
+            "provider_cost_usd": 181.81790125999999
+          },
+          "weight": 1
+        },
+        {
+          "control": false,
+          "crew_mix": [
+            {
+              "crew": "opus@medium",
+              "tasks": 12
+            },
+            {
+              "crew": "muse-wonder",
+              "tasks": 11
+            },
+            {
+              "crew": "sonnet@high",
+              "tasks": 7
+            },
+            {
+              "crew": "grok@high",
+              "tasks": 6
+            },
+            {
+              "crew": "muse-spark",
+              "tasks": 6
+            },
+            {
+              "crew": "muse-wonder@high",
+              "tasks": 6
+            },
+            {
+              "crew": "haiku",
+              "tasks": 5
+            },
+            {
+              "crew": "muse-wonder-full",
+              "tasks": 5
+            },
+            {
+              "crew": "sol@xhigh",
+              "tasks": 5
+            },
+            {
+              "crew": "grok",
+              "tasks": 4
+            },
+            {
+              "crew": "haiku@xhigh",
+              "tasks": 3
+            },
+            {
+              "crew": "luna@xhigh",
+              "tasks": 3
+            },
+            {
+              "crew": "astra@medium",
+              "tasks": 2
+            },
+            {
+              "crew": "haiku@high",
+              "tasks": 2
+            },
+            {
+              "crew": "luna",
+              "tasks": 2
+            },
+            {
+              "crew": "sol",
+              "tasks": 2
+            },
+            {
+              "crew": "sonnet",
+              "tasks": 2
+            },
+            {
+              "crew": "muse-spark@xhigh",
+              "tasks": 1
+            },
+            {
+              "crew": "opus",
+              "tasks": 1
+            },
+            {
+              "crew": "sol@high",
+              "tasks": 1
+            },
+            {
+              "crew": "terra",
+              "tasks": 1
+            }
+          ],
+          "drifted": false,
+          "n": 87,
+          "name": "memory",
+          "retired_segment": null,
+          "segments": [
+            {
+              "n": 87,
+              "segment": 1
+            }
+          ],
+          "tasks_explorer_unobserved": 38,
+          "tasks_with_explorer_call": 0,
+          "usage": {
+            "duration_ms": 118382090,
+            "efforts": "xhigh, high, medium",
+            "input_tokens": 288479691,
+            "invocations": 108,
+            "output_tokens": 3338902,
+            "provider_cost_count": 48,
+            "provider_cost_usd": 139.52925755000004
+          },
+          "weight": 1
+        }
+      ],
+      "as_of": "2026-11-10T08:22:19.642870816+00:00",
+      "concluded_arm": null,
+      "enrollment": {
+        "analysed": 182,
+        "explicit_crew_excluded": 0,
+        "forced_excluded": 0,
+        "interactive_excluded": 0,
+        "surface_conflict_excluded": 0,
+        "unreadable": 0
+      },
+      "guardrail_definition": {
+        "cost_usd": "+25%",
+        "escaped_regressions": "+0pt",
+        "lead_time": "+25%",
+        "lines_changed": "-10%"
+      },
+      "guardrails": [
+        {
+          "arms": [
+            {
+              "arm": "memory",
+              "estimate": 0.11957300275361682,
+              "interval": [
+                -1.4987540219178286,
+                1.738931256297155
+              ],
+              "limit": 0.6244428584036146,
+              "status": "straddles"
+            }
+          ],
+          "metric": "cost_usd",
+          "threshold": "+25%"
+        },
+        {
+          "arms": [
+            {
+              "arm": "memory",
+              "estimate": null,
+              "limit": 0.0,
+              "status": "unknown"
+            }
+          ],
+          "metric": "escaped_regressions",
+          "threshold": "+0pt"
+        },
+        {
+          "arms": [
+            {
+              "arm": "memory",
+              "estimate": 0.5363972601572686,
+              "interval": [
+                -0.2093075836156356,
+                1.4161107151711458
+              ],
+              "limit": 0.35255451015531647,
+              "status": "breached"
+            }
+          ],
+          "metric": "lead_time",
+          "threshold": "+25%"
+        },
+        {
+          "arms": [
+            {
+              "arm": "memory",
+              "estimate": -82.75914769453331,
+              "interval": [
+                -267.71568051417853,
+                75.71200460970726
+              ],
+              "limit": -40.7904761904762,
+              "status": "breached"
+            }
+          ],
+          "metric": "lines_changed",
+          "threshold": "-10%"
+        }
+      ],
+      "horizon_at": "2026-12-20T16:28:23.600337+00:00",
+      "hypothesis": "Delivering the drawn crew model's own memory plus the reviewed global memory to implementers raises first-pass acceptance without more escaped regressions, smaller diffs or higher cost (crew-memory design 2_design.md section 7, [redacted]).",
+      "id": "exp-57f1ef67",
+      "lagging": {
+        "open_regression_windows": 176,
+        "open_tasks": 3,
+        "regression_window_days": 14
+      },
+      "max_days": 42,
+      "metrics": [
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 6595746.666666667,
+              "mean_interval": [
+                4691796.956410256,
+                8905922.539743591
+              ],
+              "median": 3649854.0,
+              "median_interval": [
+                1790379.0,
+                5637056.5
+              ],
+              "n": 78,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 6595746.666666667,
+                  "mean_interval": [
+                    4675241.94551282,
+                    8765199.188461537
+                  ],
+                  "median": 3649854.0,
+                  "median_interval": [
+                    1945488.0,
+                    5243662.0
+                  ],
+                  "n": 78,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 16
+            },
+            {
+              "arm": "memory",
+              "mean": 7513648.444444444,
+              "mean_interval": [
+                5454806.060763889,
+                9708480.834027776
+              ],
+              "median": 5275050.5,
+              "median_interval": [
+                2547659.0,
+                7042667.5
+              ],
+              "n": 72,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 7513648.444444444,
+                  "mean_interval": [
+                    5445560.394097222,
+                    9599714.760416664
+                  ],
+                  "median": 5275050.5,
+                  "median_interval": [
+                    2583864.5,
+                    7042667.5
+                  ],
+                  "n": 72,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 13
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 1905313.4126984123,
+                  "interval": [
+                    -3798147.9960317444,
+                    7786484.224603173
+                  ],
+                  "n_arm": 18,
+                  "n_control": 14
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 1620733.011111111,
+                  "interval": [
+                    -579475.8153333332,
+                    3814744.5211111093
+                  ],
+                  "n_arm": 18,
+                  "n_control": 25
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -1514981.8523391811,
+                  "interval": [
+                    -6560468.705994152,
+                    2995251.83578216
+                  ],
+                  "n_arm": 36,
+                  "n_control": 38
+                },
+                {
+                  "complexity": "xhard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "xhard"
+                ],
+                "estimate": 124516.0510807219,
+                "interval": [
+                  -2715496.7006036704,
+                  2847268.671017944
+                ]
+              }
+            }
+          ],
+          "exploratory": true,
+          "kind": "mean",
+          "measured": true,
+          "metric": "implement_tokens",
+          "unit": null
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 7286039.710843373,
+              "mean_interval": [
+                5287023.854819277,
+                9578349.924698792
+              ],
+              "median": 4170335.0,
+              "median_interval": [
+                1840492.0,
+                5121555.0
+              ],
+              "n": 83,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 7286039.710843373,
+                  "mean_interval": [
+                    5247752.611746987,
+                    9819835.610843373
+                  ],
+                  "median": 4170335.0,
+                  "median_interval": [
+                    2050574.0,
+                    5559677.0
+                  ],
+                  "n": 83,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 11
+            },
+            {
+              "arm": "memory",
+              "mean": 8082178.3125,
+              "mean_interval": [
+                5969354.7296875,
+                10481539.882187497
+              ],
+              "median": 4621394.0,
+              "median_interval": [
+                2273782.775,
+                7057949.0
+              ],
+              "n": 80,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 8082178.3125,
+                  "mean_interval": [
+                    6126727.0409375,
+                    10426062.683437495
+                  ],
+                  "median": 4621394.0,
+                  "median_interval": [
+                    2226404.1125,
+                    7181655.0
+                  ],
+                  "n": 80,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 5
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 3399393.975232197,
+                  "interval": [
+                    -2943159.652089784,
+                    9847500.481733741
+                  ],
+                  "n_arm": 19,
+                  "n_control": 17
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 2120835.988095238,
+                  "interval": [
+                    -310649.3985119045,
+                    4777241.442857141
+                  ],
+                  "n_arm": 21,
+                  "n_control": 28
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -2319984.343421053,
+                  "interval": [
+                    -7444498.900394737,
+                    2586185.8111513113
+                  ],
+                  "n_arm": 40,
+                  "n_control": 38
+                }
+              ],
+              "overall": {
+                "cells_dropped": [],
+                "estimate": 278161.76526492997,
+                "interval": [
+                  -2804406.258156352,
+                  3029865.45148204
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "total_tokens",
+          "unit": null
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 2.4977714336144583,
+              "mean_interval": [
+                1.5056084273493977,
+                3.7830458349126497
+              ],
+              "median": 0.26510711000000003,
+              "median_interval": [
+                0.1019353,
+                0.65204514
+              ],
+              "n": 83,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 2.4977714336144583,
+                  "mean_interval": [
+                    1.5160685831867464,
+                    3.6514053365602406
+                  ],
+                  "median": 0.26510711000000003,
+                  "median_interval": [
+                    0.1019353,
+                    0.65204514
+                  ],
+                  "n": 83,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 11
+            },
+            {
+              "arm": "memory",
+              "mean": 2.9102002767500013,
+              "mean_interval": [
+                1.811043382828125,
+                4.33649857074375
+              ],
+              "median": 0.6931388543750001,
+              "median_interval": [
+                0.247770899375,
+                1.323505489375
+              ],
+              "n": 80,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 2.9102002767500013,
+                  "mean_interval": [
+                    1.79130049094375,
+                    4.314516256868748
+                  ],
+                  "median": 0.6931388543750001,
+                  "median_interval": [
+                    0.22869822437499998,
+                    1.302410459375
+                  ],
+                  "n": 80,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 5
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 3.4568487454121506,
+                  "interval": [
+                    -0.43847046290054187,
+                    8.76482484910565
+                  ],
+                  "n_arm": 19,
+                  "n_control": 17
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 0.11437360318452379,
+                  "interval": [
+                    0.014831411422618963,
+                    0.21390252275297614
+                  ],
+                  "n_arm": 21,
+                  "n_control": 28
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -1.4174418197697376,
+                  "interval": [
+                    -4.041551955338155,
+                    0.77928764263092
+                  ],
+                  "n_arm": 40,
+                  "n_control": 38
+                }
+              ],
+              "overall": {
+                "cells_dropped": [],
+                "estimate": 0.11957300275361682,
+                "interval": [
+                  -1.4987540219178286,
+                  1.738931256297155
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "cost_usd",
+          "unit": "usd"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 1.4102180406212659,
+              "mean_interval": [
+                1.030501941457586,
+                1.8545731780167265
+              ],
+              "median": 0.6813888888888889,
+              "median_interval": [
+                0.5922222222222222,
+                0.8202777777777778
+              ],
+              "n": 93,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 1.4102180406212659,
+                  "mean_interval": [
+                    1.0284459378733573,
+                    1.8981164874551983
+                  ],
+                  "median": 0.6813888888888889,
+                  "median_interval": [
+                    0.5922222222222222,
+                    0.9069444444444444
+                  ],
+                  "n": 93,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 1
+            },
+            {
+              "arm": "memory",
+              "mean": 1.91567938420348,
+              "mean_interval": [
+                1.2599903781793842,
+                2.706547690763051
+              ],
+              "median": 0.8052777777777778,
+              "median_interval": [
+                0.6969444444444445,
+                1.0002777777777778
+              ],
+              "n": 83,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 1.91567938420348,
+                  "mean_interval": [
+                    1.2023640394912989,
+                    2.705825217536813
+                  ],
+                  "median": 0.8052777777777778,
+                  "median_interval": [
+                    0.6969444444444445,
+                    1.0002777777777778
+                  ],
+                  "n": 83,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 2
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": -0.004896794027228424,
+                  "interval": [
+                    -1.0805365475406232,
+                    1.130989583333333
+                  ],
+                  "n_arm": 23,
+                  "n_control": 22
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 1.3959912101041136,
+                  "interval": [
+                    0.2328083717357913,
+                    3.0782292413381107
+                  ],
+                  "n_arm": 21,
+                  "n_control": 31
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": 0.2756196581196586,
+                  "interval": [
+                    -1.195108084045583,
+                    1.9025058760683737
+                  ],
+                  "n_arm": 39,
+                  "n_control": 39
+                },
+                {
+                  "complexity": "xhard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "xhard"
+                ],
+                "estimate": 0.5363972601572686,
+                "interval": [
+                  -0.2093075836156356,
+                  1.4161107151711458
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "lead_time",
+          "unit": "hours"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 26.17522489959839,
+              "mean_interval": [
+                20.22351745481928,
+                33.335143709839336
+              ],
+              "median": 17.541483333333332,
+              "median_interval": [
+                13.017666666666667,
+                20.865866666666665
+              ],
+              "n": 83,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 26.17522489959839,
+                  "mean_interval": [
+                    20.52654330321285,
+                    33.07053331827311
+                  ],
+                  "median": 17.541483333333332,
+                  "median_interval": [
+                    13.017666666666667,
+                    21.0672
+                  ],
+                  "n": 83,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 11
+            },
+            {
+              "arm": "memory",
+              "mean": 22.846273111111117,
+              "mean_interval": [
+                18.619512105555547,
+                27.87097849444444
+              ],
+              "median": 18.078633333333332,
+              "median_interval": [
+                16.083466666666666,
+                24.143083333333333
+              ],
+              "n": 75,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 22.846273111111117,
+                  "mean_interval": [
+                    18.672470688888886,
+                    28.16854036666668
+                  ],
+                  "median": 18.078633333333332,
+                  "median_interval": [
+                    16.278683333333333,
+                    25.230483333333332
+                  ],
+                  "n": 75,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 10
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 3.346857870370364,
+                  "interval": [
+                    -10.520330543981487,
+                    20.56220268055556
+                  ],
+                  "n_arm": 20,
+                  "n_control": 18
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 1.120772150997153,
+                  "interval": [
+                    -4.489544111467236,
+                    6.815631360398856
+                  ],
+                  "n_arm": 18,
+                  "n_control": 26
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -8.201851066856324,
+                  "interval": [
+                    -19.633531039888577,
+                    2.008762085407767
+                  ],
+                  "n_arm": 37,
+                  "n_control": 38
+                },
+                {
+                  "complexity": "xhard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "xhard"
+                ],
+                "estimate": -2.7939124604858327,
+                "interval": [
+                  -9.367302717777148,
+                  3.745858562264476
+                ]
+              }
+            }
+          ],
+          "exploratory": true,
+          "kind": "mean",
+          "measured": true,
+          "metric": "implement_duration",
+          "unit": "minutes"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 16.05,
+              "mean_interval": [
+                12.7,
+                19.55
+              ],
+              "median": 14.0,
+              "median_interval": [
+                12.5,
+                19.5
+              ],
+              "n": 20,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 16.05,
+                  "mean_interval": [
+                    12.75,
+                    19.50124999999999
+                  ],
+                  "median": 14.0,
+                  "median_interval": [
+                    12.5,
+                    19.5
+                  ],
+                  "n": 20,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 74
+            },
+            {
+              "arm": "memory",
+              "mean": 23.0625,
+              "mean_interval": [
+                17.9984375,
+                28.18906249999999
+              ],
+              "median": 23.5,
+              "median_interval": [
+                17.0,
+                28.5
+              ],
+              "n": 16,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 23.0625,
+                  "mean_interval": [
+                    18.25,
+                    28.43906249999999
+                  ],
+                  "median": 23.5,
+                  "median_interval": [
+                    17.0,
+                    27.024999999999864
+                  ],
+                  "n": 16,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 69
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 8.25,
+                  "interval": [
+                    -4.083333333333332,
+                    20.085416666666656
+                  ],
+                  "n_arm": 6,
+                  "n_control": 4
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 3.1269841269841283,
+                  "interval": [
+                    -4.620238095238094,
+                    11.112698412698403
+                  ],
+                  "n_arm": 7,
+                  "n_control": 9
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": 5.380952380952381,
+                  "interval": [
+                    -2.761904761904761,
+                    13.19166666666666
+                  ],
+                  "n_arm": 3,
+                  "n_control": 7
+                }
+              ],
+              "overall": {
+                "cells_dropped": [],
+                "estimate": 5.176146384479718,
+                "interval": [
+                  -0.22657076719576652,
+                  10.17805886243386
+                ]
+              }
+            }
+          ],
+          "exploratory": true,
+          "kind": "mean",
+          "measured": true,
+          "metric": "turns_before_first_edit",
+          "unit": "turns"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 139021.9,
+              "mean_interval": [
+                90805.3275,
+                199699.96749999985
+              ],
+              "median": 91561.5,
+              "median_interval": [
+                74767.0,
+                129294.0
+              ],
+              "n": 20,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 139021.9,
+                  "mean_interval": [
+                    91870.5825,
+                    199077.94249999995
+                  ],
+                  "median": 91561.5,
+                  "median_interval": [
+                    74767.0,
+                    129344.47499999973
+                  ],
+                  "n": 20,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 74
+            },
+            {
+              "arm": "memory",
+              "mean": 166558.625,
+              "mean_interval": [
+                113270.934375,
+                236520.32656249998
+              ],
+              "median": 124172.0,
+              "median_interval": [
+                102514.0,
+                184611.0
+              ],
+              "n": 16,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 166558.625,
+                  "mean_interval": [
+                    113527.7171875,
+                    235273.67656249998
+                  ],
+                  "median": 124172.0,
+                  "median_interval": [
+                    102514.0,
+                    184611.0
+                  ],
+                  "n": 16,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 69
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": -11300.416666666657,
+                  "interval": [
+                    -242651.40833333333,
+                    162794.73333333328
+                  ],
+                  "n_arm": 6,
+                  "n_control": 4
+                },
+                {
+                  "complexity": "low",
+                  "estimate": -60995.634920634926,
+                  "interval": [
+                    -144783.15317460318,
+                    8891.769841269837
+                  ],
+                  "n_arm": 7,
+                  "n_control": 9
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": 208183.85714285716,
+                  "interval": [
+                    78850.55476190477,
+                    422915.38214285707
+                  ],
+                  "n_arm": 3,
+                  "n_control": 7
+                }
+              ],
+              "overall": {
+                "cells_dropped": [],
+                "estimate": 27580.673500881843,
+                "interval": [
+                  -56514.757049162254,
+                  109859.8642085538
+                ]
+              }
+            }
+          ],
+          "exploratory": true,
+          "kind": "mean",
+          "measured": true,
+          "metric": "result_bytes_before_first_edit",
+          "unit": "bytes"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.5,
+              "mean_interval": [
+                0.09453120573423074,
+                0.9054687942657693
+              ],
+              "n": 2,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.5,
+                  "mean_interval": [
+                    0.09453120573423074,
+                    0.9054687942657693
+                  ],
+                  "n": 2,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 92
+            },
+            {
+              "arm": "memory",
+              "mean": 0.0,
+              "mean_interval": [
+                0.0,
+                0.7934506856227626
+              ],
+              "n": 1,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 0.0,
+                  "mean_interval": [
+                    0.0,
+                    0.7934506856227626
+                  ],
+                  "n": 1,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 84
+            }
+          ],
+          "better": "higher",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                },
+                {
+                  "complexity": "low",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": null,
+                  "n_arm": 1,
+                  "n_control": 0
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "hard",
+                  "low",
+                  "medium"
+                ],
+                "estimate": null
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "rate",
+          "measured": true,
+          "metric": "first_pass_acceptance",
+          "unit": "rate"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.5,
+              "mean_interval": [
+                0.0,
+                1.0
+              ],
+              "median": 0.5,
+              "median_interval": [
+                0.0,
+                1.0
+              ],
+              "n": 2,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.5,
+                  "mean_interval": [
+                    0.0,
+                    1.0
+                  ],
+                  "median": 0.5,
+                  "median_interval": [
+                    0.0,
+                    1.0
+                  ],
+                  "n": 2,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 92
+            },
+            {
+              "arm": "memory",
+              "mean": 1.0,
+              "median": 1.0,
+              "n": 1,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 1.0,
+                  "median": 1.0,
+                  "n": 1,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 84
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                },
+                {
+                  "complexity": "low",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": null,
+                  "n_arm": 1,
+                  "n_control": 0
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "hard",
+                  "low",
+                  "medium"
+                ],
+                "estimate": null
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "review_repairs",
+          "unit": "count"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.18085106382978725,
+              "mean_interval": [
+                0.09547872340425534,
+                0.2765957446808511
+              ],
+              "median": 0.0,
+              "median_interval": [
+                0.0,
+                0.0
+              ],
+              "n": 94,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.18085106382978725,
+                  "mean_interval": [
+                    0.09574468085106383,
+                    0.2872340425531915
+                  ],
+                  "median": 0.0,
+                  "median_interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n": 94,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            },
+            {
+              "arm": "memory",
+              "mean": 0.18823529411764706,
+              "mean_interval": [
+                0.09411764705882353,
+                0.29411764705882354
+              ],
+              "median": 0.0,
+              "median_interval": [
+                0.0,
+                0.0
+              ],
+              "n": 85,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 0.18823529411764706,
+                  "mean_interval": [
+                    0.09411764705882353,
+                    0.2823529411764706
+                  ],
+                  "median": 0.0,
+                  "median_interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n": 85,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 0.03557312252964426,
+                  "interval": [
+                    -0.22727272727272727,
+                    0.30237154150197626
+                  ],
+                  "n_arm": 23,
+                  "n_control": 22
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 0.046082949308755755,
+                  "interval": [
+                    -0.130568356374808,
+                    0.23655913978494622
+                  ],
+                  "n_arm": 21,
+                  "n_control": 31
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -0.029878048780487804,
+                  "interval": [
+                    -0.2555030487804878,
+                    0.1695121951219512
+                  ],
+                  "n_arm": 41,
+                  "n_control": 40
+                },
+                {
+                  "complexity": "xhard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "xhard"
+                ],
+                "estimate": 0.008859449026234714,
+                "interval": [
+                  -0.12525768301567267,
+                  0.1368044888677036
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "step_recoveries",
+          "unit": "count"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.10638297872340426,
+              "mean_interval": [
+                0.05319148936170213,
+                0.1702127659574468
+              ],
+              "median": 0.0,
+              "median_interval": [
+                0.0,
+                0.0
+              ],
+              "n": 94,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.10638297872340426,
+                  "mean_interval": [
+                    0.05319148936170213,
+                    0.1702127659574468
+                  ],
+                  "median": 0.0,
+                  "median_interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n": 94,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            },
+            {
+              "arm": "memory",
+              "mean": 0.03529411764705882,
+              "mean_interval": [
+                0.0,
+                0.08235294117647059
+              ],
+              "median": 0.0,
+              "median_interval": [
+                0.0,
+                0.0
+              ],
+              "n": 85,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 0.03529411764705882,
+                  "mean_interval": [
+                    0.0,
+                    0.07058823529411765
+                  ],
+                  "median": 0.0,
+                  "median_interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n": 85,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": -0.09288537549407114,
+                  "interval": [
+                    -0.2727272727272727,
+                    0.043478260869565216
+                  ],
+                  "n_arm": 23,
+                  "n_control": 22
+                },
+                {
+                  "complexity": "low",
+                  "estimate": -0.0967741935483871,
+                  "interval": [
+                    -0.22580645161290322,
+                    0.0
+                  ],
+                  "n_arm": 21,
+                  "n_control": 31
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -0.026219512195121947,
+                  "interval": [
+                    -0.12560975609756098,
+                    0.0725609756097561
+                  ],
+                  "n_arm": 41,
+                  "n_control": 40
+                },
+                {
+                  "complexity": "xhard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "xhard"
+                ],
+                "estimate": -0.06368472162670903,
+                "interval": [
+                  -0.13675162278823025,
+                  0.002468803009821362
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "final_recoveries",
+          "unit": "count"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.09574468085106383,
+              "mean_interval": [
+                0.02127659574468085,
+                0.1811170212765943
+              ],
+              "median": 0.0,
+              "median_interval": [
+                0.0,
+                0.0
+              ],
+              "n": 94,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.09574468085106383,
+                  "mean_interval": [
+                    0.02127659574468085,
+                    0.19148936170212766
+                  ],
+                  "median": 0.0,
+                  "median_interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n": 94,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            },
+            {
+              "arm": "memory",
+              "mean": 0.17647058823529413,
+              "mean_interval": [
+                0.08235294117647059,
+                0.2823529411764706
+              ],
+              "median": 0.0,
+              "median_interval": [
+                0.0,
+                0.0
+              ],
+              "n": 85,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 0.17647058823529413,
+                  "mean_interval": [
+                    0.08235294117647059,
+                    0.27058823529411763
+                  ],
+                  "median": 0.0,
+                  "median_interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n": 85,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 0.12648221343873517,
+                  "interval": [
+                    -0.0949110671936759,
+                    0.3874011857707507
+                  ],
+                  "n_arm": 23,
+                  "n_control": 22
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 0.14285714285714285,
+                  "interval": [
+                    0.0,
+                    0.2857142857142857
+                  ],
+                  "n_arm": 21,
+                  "n_control": 31
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -0.004268292682926805,
+                  "interval": [
+                    -0.22865853658536586,
+                    0.19390243902439025
+                  ],
+                  "n_arm": 41,
+                  "n_control": 40
+                },
+                {
+                  "complexity": "xhard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "xhard"
+                ],
+                "estimate": 0.07176707486515416,
+                "interval": [
+                  -0.05317400046613382,
+                  0.19692078362640647
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "failed_checks",
+          "unit": "count"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.0425531914893617,
+              "mean_interval": [
+                0.0,
+                0.09574468085106383
+              ],
+              "median": 0.0,
+              "median_interval": [
+                0.0,
+                0.0
+              ],
+              "n": 94,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.0425531914893617,
+                  "mean_interval": [
+                    0.0,
+                    0.09574468085106383
+                  ],
+                  "median": 0.0,
+                  "median_interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n": 94,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            },
+            {
+              "arm": "memory",
+              "mean": 0.058823529411764705,
+              "mean_interval": [
+                0.011764705882352941,
+                0.12941176470588237
+              ],
+              "median": 0.0,
+              "median_interval": [
+                0.0,
+                0.0
+              ],
+              "n": 85,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 0.058823529411764705,
+                  "mean_interval": [
+                    0.011764705882352941,
+                    0.12941176470588237
+                  ],
+                  "median": 0.0,
+                  "median_interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n": 85,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 0.04150197628458498,
+                  "interval": [
+                    -0.09288537549407114,
+                    0.17391304347826086
+                  ],
+                  "n_arm": 23,
+                  "n_control": 22
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 0.047619047619047616,
+                  "interval": [
+                    0.0,
+                    0.14285714285714285
+                  ],
+                  "n_arm": 21,
+                  "n_control": 31
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -0.026219512195121947,
+                  "interval": [
+                    -0.17621951219512194,
+                    0.0975609756097561
+                  ],
+                  "n_arm": 41,
+                  "n_control": 40
+                },
+                {
+                  "complexity": "xhard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "xhard"
+                ],
+                "estimate": 0.01247190405164001,
+                "interval": [
+                  -0.06876092230314872,
+                  0.09382213255624074
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "merge_conflicts",
+          "unit": "count"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.9893617021276596,
+              "mean_interval": [
+                0.9421770870372144,
+                0.998119604251912
+              ],
+              "n": 94,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.9893617021276596,
+                  "mean_interval": [
+                    0.9421770870372144,
+                    0.998119604251912
+                  ],
+                  "n": 94,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            },
+            {
+              "arm": "memory",
+              "mean": 0.9764705882352941,
+              "mean_interval": [
+                0.9182130031207928,
+                0.9935234887740522
+              ],
+              "n": 85,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 0.9764705882352941,
+                  "mean_interval": [
+                    0.9182130031207928,
+                    0.9935234887740522
+                  ],
+                  "n": 85,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 0
+            }
+          ],
+          "better": "higher",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 0.0,
+                  "interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n_arm": 23,
+                  "n_control": 22
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 0.0,
+                  "interval": [
+                    0.0,
+                    0.0
+                  ],
+                  "n_arm": 21,
+                  "n_control": 31
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -0.02378048780487807,
+                  "interval": [
+                    -0.12134146341463414,
+                    0.05060975609756091
+                  ],
+                  "n_arm": 41,
+                  "n_control": 40
+                },
+                {
+                  "complexity": "xhard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "xhard"
+                ],
+                "estimate": -0.01082145793368047,
+                "interval": [
+                  -0.04439572485612495,
+                  0.023030282269114796
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "rate",
+          "measured": true,
+          "metric": "delivery_done_rate",
+          "unit": "rate"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": null,
+              "n": 0,
+              "open": 94,
+              "segments": [
+                {
+                  "n": 0,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 1
+            },
+            {
+              "arm": "memory",
+              "mean": null,
+              "n": 0,
+              "open": 85,
+              "segments": [
+                {
+                  "n": 0,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 2
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [],
+              "overall": {
+                "cells_dropped": [],
+                "estimate": null
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "escaped_regressions",
+          "unit": "count"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 407.9047619047619,
+              "mean_interval": [
+                263.1139880952381,
+                592.5389880952381
+              ],
+              "median": 190.5,
+              "median_interval": [
+                128.5,
+                254.0
+              ],
+              "n": 84,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 407.9047619047619,
+                  "mean_interval": [
+                    261.30892857142857,
+                    594.0398809523808
+                  ],
+                  "median": 190.5,
+                  "median_interval": [
+                    129.0,
+                    261.51249999999993
+                  ],
+                  "n": 84,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 10
+            },
+            {
+              "arm": "memory",
+              "mean": 351.8,
+              "mean_interval": [
+                277.077,
+                428.35166666666646
+              ],
+              "median": 200.0,
+              "median_interval": [
+                142.0,
+                383.0
+              ],
+              "n": 75,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 351.8,
+                  "mean_interval": [
+                    275.689,
+                    431.61699999999996
+                  ],
+                  "median": 200.0,
+                  "median_interval": [
+                    142.0,
+                    383.0
+                  ],
+                  "n": 75,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 10
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": -57.778947368421086,
+                  "interval": [
+                    -390.108947368421,
+                    227.29447368421046
+                  ],
+                  "n_arm": 19,
+                  "n_control": 20
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 49.797270955165686,
+                  "interval": [
+                    -37.735233918128664,
+                    172.82129629629625
+                  ],
+                  "n_arm": 19,
+                  "n_control": 27
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -178.32432432432427,
+                  "interval": [
+                    -557.9074324324325,
+                    107.8986486486485
+                  ],
+                  "n_arm": 37,
+                  "n_control": 37
+                }
+              ],
+              "overall": {
+                "cells_dropped": [],
+                "estimate": -82.75914769453331,
+                "interval": [
+                  -267.71568051417853,
+                  75.71200460970726
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "mean",
+          "measured": true,
+          "metric": "lines_changed",
+          "unit": "lines"
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.0063474348539411226,
+              "mean_interval": [
+                0.004368116957004731,
+                0.008996258118346161
+              ],
+              "n": 60,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.0063474348539411226,
+                  "mean_interval": [
+                    0.004337559572081968,
+                    0.009118590180086207
+                  ],
+                  "n": 60,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 20
+            },
+            {
+              "arm": "memory",
+              "mean": 0.007959398050660923,
+              "mean_interval": [
+                0.004586510803552621,
+                0.013367510685653533
+              ],
+              "n": 57,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 0.007959398050660923,
+                  "mean_interval": [
+                    0.004546816064151623,
+                    0.013411689137312648
+                  ],
+                  "n": 57,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 14
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 0.006293432672006418,
+                  "interval": [
+                    -0.002399880941433304,
+                    0.020931993177858856
+                  ],
+                  "n_arm": 14,
+                  "n_control": 13
+                },
+                {
+                  "complexity": "low",
+                  "estimate": 0.00020200691332385103,
+                  "interval": [
+                    -0.0027019230087660605,
+                    0.0046602704469111906
+                  ],
+                  "n_arm": 15,
+                  "n_control": 22
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": -0.0014541959088992867,
+                  "interval": [
+                    -0.006415919507466905,
+                    0.003675085703006395
+                  ],
+                  "n_arm": 28,
+                  "n_control": 25
+                }
+              ],
+              "overall": {
+                "cells_dropped": [],
+                "estimate": 0.0016119631967198003,
+                "interval": [
+                  -0.0028678578212432597,
+                  0.00797633740595179
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "ratio",
+          "measured": true,
+          "metric": "cost_per_line",
+          "unit": null
+        },
+        {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.002840790061602244,
+              "mean_interval": [
+                0.0019130487041926357,
+                0.0046583585901818665
+              ],
+              "n": 70,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.002840790061602244,
+                  "mean_interval": [
+                    0.0018630166003617374,
+                    0.004636655208747202
+                  ],
+                  "n": 70,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 10
+            },
+            {
+              "arm": "memory",
+              "mean": 0.003627616298455705,
+              "mean_interval": [
+                0.0022796282078418294,
+                0.005888241254905097
+              ],
+              "n": 61,
+              "open": 2,
+              "segments": [
+                {
+                  "mean": 0.003627616298455705,
+                  "mean_interval": [
+                    0.0022727686321990367,
+                    0.005848435266518291
+                  ],
+                  "n": 61,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 10
+            }
+          ],
+          "better": "lower",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": 0.00010108197161678208,
+                  "interval": [
+                    -0.0020834033720599165,
+                    0.0020281404404961546
+                  ],
+                  "n_arm": 18,
+                  "n_control": 18
+                },
+                {
+                  "complexity": "low",
+                  "estimate": -0.0017952322495853011,
+                  "interval": [
+                    -0.012779324339242372,
+                    0.016598278802523157
+                  ],
+                  "n_arm": 15,
+                  "n_control": 25
+                },
+                {
+                  "complexity": "medium",
+                  "estimate": 0.0015305624547614911,
+                  "interval": [
+                    -0.002520351284235758,
+                    0.006161376231851417
+                  ],
+                  "n_arm": 28,
+                  "n_control": 27
+                }
+              ],
+              "overall": {
+                "cells_dropped": [],
+                "estimate": 0.0007868262368534613,
+                "interval": [
+                  -0.0017400529225769124,
+                  0.003181402911610118
+                ]
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "ratio",
+          "measured": true,
+          "metric": "lead_time_per_line",
+          "unit": null
+        }
+      ],
+      "min_delivered_rate": 0.9,
+      "min_sample": 40,
+      "mode": "shadow",
+      "name": "crew-memory-implementers",
+      "per_protocol": {
+        "label": "per-protocol (delivered runs only)",
+        "metric": {
+          "arms": [
+            {
+              "arm": "control",
+              "mean": 0.5,
+              "mean_interval": [
+                0.09453120573423074,
+                0.9054687942657693
+              ],
+              "n": 2,
+              "open": 1,
+              "segments": [
+                {
+                  "mean": 0.5,
+                  "mean_interval": [
+                    0.09453120573423074,
+                    0.9054687942657693
+                  ],
+                  "n": 2,
+                  "segment": 1
+                }
+              ],
+              "unmeasured": 92
+            },
+            {
+              "arm": "memory",
+              "mean": null,
+              "n": 0,
+              "open": 0,
+              "unmeasured": 0
+            }
+          ],
+          "better": "higher",
+          "differences": [
+            {
+              "arm": "memory",
+              "by_complexity": [
+                {
+                  "complexity": "hard",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                },
+                {
+                  "complexity": "low",
+                  "estimate": null,
+                  "n_arm": 0,
+                  "n_control": 1
+                }
+              ],
+              "overall": {
+                "cells_dropped": [
+                  "hard",
+                  "low"
+                ],
+                "estimate": null
+              }
+            }
+          ],
+          "exploratory": false,
+          "kind": "rate",
+          "measured": true,
+          "metric": "first_pass_acceptance",
+          "unit": "rate"
+        }
+      },
+      "population": {
+        "complexity": []
+      },
+      "primary_metric": "first_pass_acceptance",
+      "sample_ratio": {
+        "alpha": 0.001,
+        "chi_square": 0.3516483516483517,
+        "df": 1,
+        "mismatch": false,
+        "p_value": 0.5531815181083106
+      },
+      "schema_version": 1,
+      "segment": 1,
+      "started_at": "2026-11-08T16:28:23.600337+00:00",
+      "status": "concluded",
+      "updated_at": "2026-11-10T08:19:14.247939+00:00",
+      "verdict": {
+        "arm": null,
+        "horizon_reached": false,
+        "label": "no verdict",
+        "reasons": [
+          "arm `memory` treatment delivered on 0/85 runs"
+        ],
+        "state": "withheld"
+      },
+      "warning_kinds": {
+        "dreaming_cost_unpriced": 1,
+        "explorer_trace_incomplete": 1,
+        "lagging": 1,
+        "tool_trace_incomplete": 1,
+        "undelivered": 1
+      }
+    },
+    {
+      "arms": [
+        {
+          "control": true,
+          "crew_mix": [
+            {
               "crew": "opus@medium",
               "tasks": 12
             },
@@ -186,7 +2618,7 @@
           "weight": 1
         }
       ],
-      "as_of": "2026-11-10T05:09:01.506090920+00:00",
+      "as_of": "2026-11-10T08:22:17.363513190+00:00",
       "concluded_arm": null,
       "enrollment": {
         "analysed": 40,
@@ -329,43 +2761,27 @@
           "arms": [
             {
               "arm": "sonnet",
-              "estimate": 0.0,
-              "interval": [
-                0.0,
-                0.0
-              ],
+              "estimate": null,
               "limit": 0.5,
-              "status": "ok"
+              "status": "unknown"
             },
             {
               "arm": "grok",
-              "estimate": 0.0,
-              "interval": [
-                0.0,
-                0.0
-              ],
+              "estimate": null,
               "limit": 0.5,
-              "status": "ok"
+              "status": "unknown"
             },
             {
               "arm": "terra",
-              "estimate": 0.0,
-              "interval": [
-                0.0,
-                0.0
-              ],
+              "estimate": null,
               "limit": 0.5,
-              "status": "ok"
+              "status": "unknown"
             },
             {
               "arm": "muse-wonder",
-              "estimate": 0.0,
-              "interval": [
-                0.0,
-                0.0
-              ],
+              "estimate": null,
               "limit": 0.5,
-              "status": "ok"
+              "status": "unknown"
             }
           ],
           "metric": "review_repairs",
@@ -2273,275 +4689,114 @@
           "arms": [
             {
               "arm": "control",
-              "mean": 0.0,
-              "mean_interval": [
-                0.0,
-                0.0
-              ],
-              "median": 0.0,
-              "median_interval": [
-                0.0,
-                0.0
-              ],
-              "n": 19,
+              "mean": null,
+              "n": 0,
               "open": 0,
               "segments": [
                 {
-                  "mean": 0.0,
-                  "mean_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "median": 0.0,
-                  "median_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n": 18,
+                  "n": 0,
                   "segment": 1
                 },
                 {
-                  "mean": 0.0,
-                  "median": 0.0,
-                  "n": 1,
+                  "n": 0,
                   "segment": 2
                 }
               ],
-              "unmeasured": 0
+              "unmeasured": 19
             },
             {
               "arm": "sonnet",
-              "mean": 0.0,
-              "mean_interval": [
-                0.0,
-                0.0
-              ],
-              "median": 0.0,
-              "median_interval": [
-                0.0,
-                0.0
-              ],
-              "n": 7,
+              "mean": null,
+              "n": 0,
               "open": 0,
               "segments": [
                 {
-                  "mean": 0.0,
-                  "mean_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "median": 0.0,
-                  "median_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n": 6,
+                  "n": 0,
                   "segment": 1
                 },
                 {
-                  "mean": 0.0,
-                  "median": 0.0,
-                  "n": 1,
+                  "n": 0,
                   "segment": 2
                 }
               ],
-              "unmeasured": 0
+              "unmeasured": 7
             },
             {
               "arm": "grok",
-              "mean": 0.0,
-              "mean_interval": [
-                0.0,
-                0.0
-              ],
-              "median": 0.0,
-              "median_interval": [
-                0.0,
-                0.0
-              ],
-              "n": 5,
+              "mean": null,
+              "n": 0,
               "open": 0,
               "segments": [
                 {
-                  "mean": 0.0,
-                  "mean_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "median": 0.0,
-                  "median_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n": 5,
+                  "n": 0,
                   "segment": 1
                 }
               ],
-              "unmeasured": 0
+              "unmeasured": 5
             },
             {
               "arm": "terra",
-              "mean": 0.0,
-              "mean_interval": [
-                0.0,
-                0.0
-              ],
-              "median": 0.0,
-              "median_interval": [
-                0.0,
-                0.0
-              ],
-              "n": 5,
+              "mean": null,
+              "n": 0,
               "open": 0,
               "segments": [
                 {
-                  "mean": 0.0,
-                  "mean_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "median": 0.0,
-                  "median_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n": 5,
+                  "n": 0,
                   "segment": 1
                 }
               ],
-              "unmeasured": 0
+              "unmeasured": 5
             },
             {
               "arm": "muse-wonder",
-              "mean": 0.0,
-              "mean_interval": [
-                0.0,
-                0.0
-              ],
-              "median": 0.0,
-              "median_interval": [
-                0.0,
-                0.0
-              ],
-              "n": 4,
+              "mean": null,
+              "n": 0,
               "open": 0,
               "segments": [
                 {
-                  "mean": 0.0,
-                  "mean_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "median": 0.0,
-                  "median_interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n": 3,
+                  "n": 0,
                   "segment": 1
                 },
                 {
-                  "mean": 0.0,
-                  "median": 0.0,
-                  "n": 1,
+                  "n": 0,
                   "segment": 2
                 }
               ],
-              "unmeasured": 0
+              "unmeasured": 4
             }
           ],
           "better": "lower",
           "differences": [
             {
               "arm": "sonnet",
-              "by_complexity": [
-                {
-                  "complexity": "hard",
-                  "estimate": 0.0,
-                  "interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n_arm": 7,
-                  "n_control": 19
-                }
-              ],
+              "by_complexity": [],
               "overall": {
                 "cells_dropped": [],
-                "estimate": 0.0,
-                "interval": [
-                  0.0,
-                  0.0
-                ]
+                "estimate": null
               }
             },
             {
               "arm": "grok",
-              "by_complexity": [
-                {
-                  "complexity": "hard",
-                  "estimate": 0.0,
-                  "interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n_arm": 5,
-                  "n_control": 19
-                }
-              ],
+              "by_complexity": [],
               "overall": {
                 "cells_dropped": [],
-                "estimate": 0.0,
-                "interval": [
-                  0.0,
-                  0.0
-                ]
+                "estimate": null
               }
             },
             {
               "arm": "terra",
-              "by_complexity": [
-                {
-                  "complexity": "hard",
-                  "estimate": 0.0,
-                  "interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n_arm": 5,
-                  "n_control": 19
-                }
-              ],
+              "by_complexity": [],
               "overall": {
                 "cells_dropped": [],
-                "estimate": 0.0,
-                "interval": [
-                  0.0,
-                  0.0
-                ]
+                "estimate": null
               }
             },
             {
               "arm": "muse-wonder",
-              "by_complexity": [
-                {
-                  "complexity": "hard",
-                  "estimate": 0.0,
-                  "interval": [
-                    0.0,
-                    0.0
-                  ],
-                  "n_arm": 4,
-                  "n_control": 19
-                }
-              ],
+              "by_complexity": [],
               "overall": {
                 "cells_dropped": [],
-                "estimate": 0.0,
-                "interval": [
-                  0.0,
-                  0.0
-                ]
+                "estimate": null
               }
             }
           ],
@@ -5216,12 +7471,12 @@
             "invocations": 132,
             "output_tokens": 5455684,
             "provider_cost_count": 43,
-            "provider_cost_usd": 39.87900326
+            "provider_cost_usd": 39.87900325999999
           },
           "weight": 1
         }
       ],
-      "as_of": "2026-11-10T05:08:54.944664323+00:00",
+      "as_of": "2026-11-10T08:22:10.399420911+00:00",
       "concluded_arm": null,
       "enrollment": {
         "analysed": 230,
@@ -5286,13 +7541,13 @@
           "arms": [
             {
               "arm": "cheap-pool",
-              "estimate": -0.001144688644688644,
+              "estimate": 0.26666666666666666,
               "interval": [
-                -0.04502442002442002,
-                0.042353479853479856
+                -0.2444444444444444,
+                0.7777777777777778
               ],
               "limit": 0.5,
-              "status": "ok"
+              "status": "straddles"
             }
           ],
           "metric": "review_repairs",
@@ -6125,67 +8380,67 @@
           "arms": [
             {
               "arm": "control",
-              "mean": 0.026785714285714284,
+              "mean": 0.3333333333333333,
               "mean_interval": [
-                0.0,
-                0.0625
+                0.1111111111111111,
+                0.6666666666666666
               ],
               "median": 0.0,
               "median_interval": [
                 0.0,
-                0.0
+                1.0
               ],
-              "n": 112,
+              "n": 9,
               "open": 0,
               "segments": [
                 {
-                  "mean": 0.026785714285714284,
+                  "mean": 0.3333333333333333,
                   "mean_interval": [
                     0.0,
-                    0.0625
+                    0.6666666666666666
                   ],
                   "median": 0.0,
                   "median_interval": [
                     0.0,
-                    0.0
+                    1.0
                   ],
-                  "n": 112,
+                  "n": 9,
                   "segment": 1
                 }
               ],
-              "unmeasured": 0
+              "unmeasured": 103
             },
             {
               "arm": "cheap-pool",
-              "mean": 0.025423728813559324,
+              "mean": 0.6,
               "mean_interval": [
-                0.0,
-                0.059322033898305086
+                0.2,
+                1.0
               ],
-              "median": 0.0,
+              "median": 1.0,
               "median_interval": [
                 0.0,
-                0.0
+                1.0
               ],
-              "n": 118,
+              "n": 5,
               "open": 0,
               "segments": [
                 {
-                  "mean": 0.025423728813559324,
+                  "mean": 0.6,
                   "mean_interval": [
-                    0.0,
-                    0.059322033898305086
+                    0.2,
+                    1.0
                   ],
-                  "median": 0.0,
+                  "median": 1.0,
                   "median_interval": [
                     0.0,
-                    0.0
+                    1.0
                   ],
-                  "n": 118,
+                  "n": 5,
                   "segment": 1
                 }
               ],
-              "unmeasured": 0
+              "unmeasured": 113
             }
           ],
           "better": "lower",
@@ -6194,30 +8449,22 @@
               "arm": "cheap-pool",
               "by_complexity": [
                 {
-                  "complexity": "hard",
-                  "estimate": null,
-                  "n_arm": 1,
-                  "n_control": 0
-                },
-                {
                   "complexity": "medium",
-                  "estimate": -0.001144688644688644,
+                  "estimate": 0.26666666666666666,
                   "interval": [
-                    -0.04502442002442002,
-                    0.041971916971916975
+                    -0.2666666666666666,
+                    0.7777777777777778
                   ],
-                  "n_arm": 117,
-                  "n_control": 112
+                  "n_arm": 5,
+                  "n_control": 9
                 }
               ],
               "overall": {
-                "cells_dropped": [
-                  "hard"
-                ],
-                "estimate": -0.001144688644688644,
+                "cells_dropped": [],
+                "estimate": 0.26666666666666666,
                 "interval": [
-                  -0.04502442002442002,
-                  0.042353479853479856
+                  -0.2444444444444444,
+                  0.7777777777777778
                 ]
               }
             }
