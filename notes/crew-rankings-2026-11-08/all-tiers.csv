@@ -1,27 +1,35 @@
-rank,crew,model,effort,effort_estimate,units,score,fleet_average,landed_pct
-1,haiku,claude-haiku-5-5,unknown,xhigh,394,144.3,107.06,98.2
-2,sol,gpt-6.1-sol,unknown,high,762,131.1,107.06,93.4
-3,opus,claude-opus-5-5,medium,,106,125.7,107.06,99.1
-4,luna,gpt-6-luna,unknown,xhigh,524,122.0,107.06,98.3
-5,sol,gpt-6.1-sol,high,,111,121.0,107.06,99.1
-6,opus,claude-opus-5-5,unknown,medium,393,112.7,107.06,95.7
-7,sonnet,claude-sonnet-5-5,unknown,high,131,111.8,107.06,95.4
-8,grok,grok-4.7,unknown,high,148,110.5,107.06,95.9
-9,haiku,claude-haiku-5-5,xhigh,,188,107.9,107.06,99.5
-10,terra,gpt-6.1-terra,high,,116,106.7,107.06,97.4
-11,luna,gpt-6-luna,xhigh,,168,105.9,107.06,98.2
-12,sonnet,claude-sonnet-5-5,high,,82,105.8,107.06,97.6
-13,muse-spark,muse-spark-1.3-contributor,xhigh,,143,105.2,107.06,99.3
-14,muse-wonder,muse-wonder-1.0,high,,138,98.7,107.06,98.6
-15,grok,grok-4.7,high,,63,91.9,107.06,98.4
-16,gemini-flash,gemini-3.8-flash-high,unknown,,98,79.2,107.06,94.9
-17,muse-wonder,muse-wonder-1.0,unknown,high,161,78.3,107.06,98.8
-18,muse-spark,muse-spark-1.3-contributor,unknown,xhigh,230,78.3,107.06,98.7
-20,muse-wonder-full,muse-wonder-full-1.0,unknown,high,37,7.5,107.06,100.0
-21,terra,gpt-6.1-terra,unknown,high,72,-20.7,107.06,84.7
-,argon,gemini-4-argon-high,unknown,,3,114.4,107.06,66.7
-,opus,claude-opus-5-5,high,,8,71.8,107.06,100.0
-,astra,gpt-6-astra,unknown,medium,3,69.5,107.06,66.7
-,muse-wonder-full,muse-wonder-full-1.0,high,,2,60.6,107.06,100.0
-,argon,gemini-4-argon-high,provider default,,4,-31.0,107.06,50.0
-,luna,gpt-6.1-luna,unknown,xhigh,1,-191.5,107.06,0.0
+rank,crew,model,effort,units,score,fleet_average,landed_pct
+1,opus,claude-opus-5-5,medium,107,123.8,98.53,99.1
+2,sol,gpt-6.1-sol,high,554,118.9,98.53,94.9
+3,sol,gpt-6.1-sol,xhigh,222,112.8,98.53,99.1
+4,haiku,claude-haiku-5-5,xhigh,492,106.2,98.53,98.6
+5,grok,grok-4.7,provider default,12,104.6,98.53,100.0
+6,muse-spark,muse-spark-1.3-contributor,xhigh,315,104.6,98.53,99.0
+7,sonnet,claude-sonnet-5-5,high,195,102.6,98.53,96.4
+8,luna,gpt-6-luna,xhigh,646,102.4,98.53,98.0
+9,terra,gpt-6.1-terra,high,160,102.0,98.53,96.2
+10,muse-wonder,muse-wonder-1.0,provider default,17,100.6,98.53,100.0
+11,opus,claude-opus-5-5,high,369,100.1,98.53,97.0
+12,grok,grok-4.7,high,192,99.5,98.53,95.8
+13,muse-spark,muse-spark-1.3-contributor,provider default,11,99.1,98.53,100.0
+14,muse-wonder,muse-wonder-1.0,unknown,25,98.6,98.53,92.0
+15,gemini-flash,gemini-3.8-flash-high,provider default,89,97.5,98.53,96.6
+16,muse-spark,muse-spark-1.3-contributor,unknown,48,96.0,98.53,95.8
+17,haiku,claude-haiku-5-5,high,43,94.5,98.53,93.0
+18,sol,gpt-6.1-sol,unknown,128,94.2,98.53,59.4
+19,haiku,claude-haiku-5-5,unknown,57,94.1,98.53,86.0
+20,terra,gpt-6.1-terra,unknown,23,90.4,98.53,87.0
+21,muse-wonder,muse-wonder-1.0,high,260,86.9,98.53,98.1
+22,sonnet,claude-sonnet-5-5,unknown,20,79.7,98.53,85.0
+23,luna,gpt-6-luna,unknown,58,75.5,98.53,81.0
+24,opus,claude-opus-5-5,unknown,36,64.4,98.53,69.4
+26,gemini-flash,gemini-3.8-flash-high,unknown,10,39.7,98.53,70.0
+27,muse-wonder-full,muse-wonder-full-1.0,high,34,-8.4,98.53,100.0
+,muse-wonder-full,muse-wonder-full-1.0,unknown,4,102.7,98.53,100.0
+,astra,gpt-6-astra,medium,1,100.5,98.53,100.0
+,astra,gpt-6-astra,unknown,2,99.0,98.53,50.0
+,grok,grok-4.7,unknown,9,65.7,98.53,88.9
+,muse-wonder-full,muse-wonder-full-1.0,provider default,1,58.6,98.53,100.0
+,argon,gemini-4-argon-high,provider default,6,30.7,98.53,66.7
+,luna,gpt-6.1-luna,unknown,1,7.7,98.53,0.0
+,argon,gemini-4-argon-high,unknown,1,-41.2,98.53,0.0

@@ -1,9 +1,7 @@
-rank,crew,model,effort,effort_estimate,units,score,fleet_average
-1,haiku@high,claude-haiku-5-5,high,,364,46.0,42.82
-2,luna,gpt-6-luna,unknown,xhigh,960,44.7,42.82
-3,haiku,claude-haiku-5-5,unknown,xhigh,1134,43.9,42.82
-4,muse-spark@high,muse-spark-1.3-contributor,high,,193,36.4,42.82
-5,luna@high,gpt-6-luna,high,,390,36.4,42.82
-6,haiku,claude-haiku-5-5,xhigh,,14,27.4,42.82
-7,luna,gpt-6-luna,xhigh,,10,18.7,42.82
-,muse-spark,muse-spark-1.3-contributor,unknown,xhigh,8,18.9,42.82
+rank,crew,model,effort,units,score,fleet_average
+1,luna,gpt-6-luna,xhigh,970,43.0,40.9
+2,haiku@high,claude-haiku-5-5,high,542,42.8,40.9
+3,haiku,claude-haiku-5-5,xhigh,970,41.8,40.9
+4,luna@high,gpt-6-luna,high,390,35.2,40.9
+5,muse-spark@high,muse-spark-1.3-contributor,high,193,32.2,40.9
+,muse-spark,muse-spark-1.3-contributor,xhigh,8,18.9,40.9
