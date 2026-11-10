@@ -28,6 +28,33 @@ each with `--window 30d --until <date>`, so a past week regenerates the same win
 A scorecard row is one crew, model and recorded effort. Rows with no recorded model or
 crew are dropped.
 
+## Effort on scorecard rows, from 2026-11-10
+
+On 2026-11-10 Orbit ran a one-time backfill of the reasoning effort on older agent
+invocations. It recorded the effort for 12,109 of 13,925 invocations that predated dispatch
+identity, read from their audited launch commands. The other 1,816 had no matching launch,
+so no effort could be read for them, and they stay unknown.
+
+The effort-unknown units in the 30-day scorecards changed as follows:
+
+- implementers: 2,997 of 4,557 before the backfill, 824 of 4,619 after;
+- reviewers: 898 of 1,338 before, 302 of 1,348 after;
+- pilots: 1,874 of 3,210 before, 0 of 3,221 after.
+
+The remaining unknown rows are still under investigation. The known causes so far are
+invocations from before 2026-09-10, when launch arguments started being audited; cancelled
+runs with no completed invocation; and attempts run on follower hosts before the followers
+reported their effort.
+
+Scorecard rows before and after 2026-11-10 may regroup by effort, so the same crew can look
+different on either side of that date. An effort-unknown row is never estimated.
+
+The rank also changed. The owner froze its first calibrated season, season 0, calibrated on
+2026-09-27 to 2026-10-27, and the model rank now reads from it. Before the first
+calibration the scales were a window estimate, and the Ranking page showed scores and
+intervals without ranks or a podium. The [2026-11-08 note](../crew-rankings-2026-11-08/)
+was written before both changes and is not regenerated here.
+
 ## How the ranking works
 
 ### Implementers, all tiers
