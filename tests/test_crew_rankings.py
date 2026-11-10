@@ -53,7 +53,8 @@ class CrewRankingScript(unittest.TestCase):
         writer = json.loads(proc.stdout)
         self.assertEqual((writer["crew"], writer["source"], writer["model"], writer["score"]),
                          ("sol", "mvp", "gpt-6.1-sol", 132.6))
-        self.assertEqual((writer["effort"], writer["effort_estimate"]), ("unknown", "high"))
+        self.assertEqual(writer["effort"], "unknown")
+        self.assertNotIn("effort_estimate", writer)  # an older snapshot's estimate is never read
         self.assertFalse(self.notes.exists() or self.data.exists())
         self.assertEqual(json.loads(run(*self.args, "--writer-only", "--crews", "opus").stdout)["crew"], "opus")
 
@@ -63,12 +64,12 @@ class CrewRankingScript(unittest.TestCase):
         meta = dict(re.findall(r"^(\w+): (.*)$", text.split("---")[1], re.M))
         self.assertEqual(meta["title"], "[Crew Ranking - 2026-11-09]: MVP sol")
         # The MVP is named with the boards' own crew@effort label; the title keeps the plain crew.
-        self.assertEqual(meta["author"], "sol@high (est.) (gpt-6.1-sol), MVP of the week, 132.6")
-        self.assertIn("MVP: sol@high (est.), gpt-6.1-sol, 132.6.", meta["summary"])
+        self.assertEqual(meta["author"], "sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6")
+        self.assertIn("MVP: sol · effort unknown, gpt-6.1-sol, 132.6.", meta["summary"])
         self.assertEqual(meta["status"], "draft")
         body = text.split("---", 2)[2]
         order = [body.index(marker) for marker in (
-            "](../crew-rankings-method/)", "**MVP: sol@high (est.), gpt-6.1-sol, 132.6**",
+            "](../crew-rankings-method/)", "**MVP: sol · effort unknown, gpt-6.1-sol, 132.6**",
             "## Victory address", "{{victory-address}}", "## Crews by role",
             f"<!-- crews-by-role: {self.data / '2026-11-09'} -->", "Limits:")]
         self.assertEqual(order, sorted(order))
@@ -83,9 +84,10 @@ class CrewRankingScript(unittest.TestCase):
         frozen = self.data / "2026-11-09"
         self.assertEqual(json.loads((frozen / "scorecards.json").read_text()), fixtures.effort_scorecards())
         mvp = json.loads((frozen / "facts.json").read_text())["mvp"]
-        self.assertEqual((mvp["crew"], mvp["label"]), ("sol", "sol@high (est.)"))
+        self.assertEqual((mvp["crew"], mvp["label"]), ("sol", "sol · effort unknown"))
+        self.assertNotIn("effort_estimate", mvp)
 
-    def test_a_recorded_mvp_effort_drops_the_estimate_mark(self):
+    def test_a_recorded_mvp_effort_is_named_without_an_unknown_mark(self):
         cards = fixtures.effort_scorecards()
         top = cards["implementers"]["rows"][0]
         top["reasoning_effort"], top["effort_label"] = "medium", "medium"
@@ -117,7 +119,7 @@ title: [Crew Ranking - 2026-11-09]: MVP sol
 summary: The crew boards.
 status: {status}
 date: 2026-11-09
-author: sol@high (est.) (gpt-6.1-sol), MVP of the week, 132.6
+author: sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6
 tags: rankings, weekly
 ---
 
@@ -141,12 +143,21 @@ class CrewRankingBuild(unittest.TestCase):
         draft = build.parse(self.note("draft", "{{victory-address}} sol writes here."))
         self.assertEqual(draft["status"], "draft")
         published = build.parse(self.note("published", "I landed the most."))
-        self.assertEqual(published["authors"], ["sol@high (est.) (gpt-6.1-sol), MVP of the week, 132.6"])
+        self.assertEqual(published["authors"], ["sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6"])
+
+    def test_a_published_byline_with_an_old_estimate_mark_still_builds(self):
+        # Notes published before ORB-23846 name an estimated effort; their bylines stay valid.
+        old = "sol@high (est.) (gpt-6.1-sol), MVP of the week, 132.6"
+        published = build.parse(self.note("published", "I landed the most."))
+        self.assertEqual(published["authors"], ["sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6"])
+        path = self.note("published", "I landed the most.")
+        path.write_text(path.read_text().replace("sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6", old))
+        self.assertEqual(build.parse(path)["authors"], [old])
 
     def test_plain_comma_separated_authors_still_split(self):
         path = self.note("draft", "Text.")
         path.write_text(path.read_text().replace(
-            "author: sol@high (est.) (gpt-6.1-sol), MVP of the week, 132.6", "author: Ann, Bo"))
+            "author: sol · effort unknown (gpt-6.1-sol), MVP of the week, 132.6", "author: Ann, Bo"))
         self.assertEqual(build.parse(path)["authors"], ["Ann", "Bo"])
 
     def test_embed_is_the_ranking_pages_stacked_crews_by_role(self):

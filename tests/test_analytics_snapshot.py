@@ -263,9 +263,9 @@ def rank_payload(**overrides):
 
 
 class RankProjectionTest(unittest.TestCase):
-    def project(self, payload, estimates=None):
+    def project(self, payload):
         dropped = snapshot.empty_dropped()
-        projected = snapshot.project_rank(payload, dropped, snapshot.forbidden_patterns(HOSTS), [0], estimates)
+        projected = snapshot.project_rank(payload, dropped, snapshot.forbidden_patterns(HOSTS), [0])
         return projected, dropped
 
     def test_projection_keeps_public_fields_and_drops_gaps(self):
@@ -350,10 +350,10 @@ class RankProjectionTest(unittest.TestCase):
             {"crew": "system", "tasks": 2},
             {"crew": "crew unknown", "tasks": 1},
         ]
-        rank, dropped = self.project(payload, estimates={"sol": "high"})
+        rank, dropped = self.project(payload)
         row = rank["rows"][0]
         self.assertEqual(row["crews"], [
-            {"crew": "sol", "tasks": 800, "effort_estimate": "high"},
+            {"crew": "sol", "tasks": 800},
             {"crew": "sol@high", "tasks": 10},
             {"crew": "sol@xhigh", "tasks": 4},
         ])
@@ -366,30 +366,19 @@ class RankProjectionTest(unittest.TestCase):
         self.assertNotIn('"system"', json.dumps(rank))
         self.assertNotIn("system", snapshot.GAP_CREWS)
 
-    def test_bare_rank_crew_records_a_null_estimate_when_unconfigured(self):
+    def test_bare_rank_crew_carries_no_effort_and_no_estimate(self):
         payload = rank_payload()
         payload["rows"][0]["crews"] = [
-            {"crew": "argon", "tasks": 4},
+            {"crew": "argon", "tasks": 4, "effort_estimate": "high"},
             {"crew": "haiku@xhigh", "tasks": 1},
         ]
-        rank, dropped = self.project(payload, estimates={})
+        rank, dropped = self.project(payload)
+        # A configured effort in the payload is never copied: effort is read from recorded invocations only.
         self.assertEqual(rank["rows"][0]["crews"], [
-            {"crew": "argon", "tasks": 4, "effort_estimate": None},
+            {"crew": "argon", "tasks": 4},
             {"crew": "haiku@xhigh", "tasks": 1},
         ])
         self.assertEqual(dropped["rank"], 1)  # the gap model only
-
-    def test_rank_bare_crews_skip_system_and_effort_named_keys(self):
-        payload = rank_payload()
-        payload["rows"][0]["crews"] = [
-            {"crew": "sol", "tasks": 1},
-            {"crew": "sol@high", "tasks": 1},
-            {"crew": "system", "tasks": 1},
-            {"crew": "haiku", "tasks": 1},
-            {"crew": "crew unknown", "tasks": 1},
-        ]
-        self.assertEqual(snapshot.rank_bare_crews(payload), ["haiku", "sol"])
-        self.assertEqual(snapshot.rank_bare_crews(None), [])
 
     def test_guard_rejects_a_leaked_path_in_rank(self):
         docs = minimal_docs()
@@ -503,62 +492,33 @@ class EffortIdentityTest(unittest.TestCase):
                 snapshot.replay(str(bundle), str(Path(directory) / "out"))
             self.assertFalse((Path(directory) / "out" / "scorecards.json").exists())
 
-    def test_unrecorded_effort_carries_the_crews_configured_effort_as_an_estimate(self):
-        estimates = {"sol": "high", "opus": "medium"}
+    def test_new_snapshots_carry_no_effort_estimate(self):
+        # A row or cell that arrives with an effort_estimate (an older snapshot) is not copied.
         dropped = snapshot.empty_dropped()
         board = snapshot.project_board(self.card([
-            scorecard_row("sol", "gpt-6.1-sol", "unknown", "effort unknown", score=132.6),
+            dict(scorecard_row("sol", "gpt-6.1-sol", "unknown", "effort unknown", score=132.6),
+                 effort_estimate="high"),
             scorecard_row("sol", "gpt-6.1-sol", "high", "high", rank=2, score=115.5),
             scorecard_row("argon", "gemini-4-argon-high", "unknown", "effort unknown", rank=3, score=90.0),
             scorecard_row("argon", "gemini-4-argon-high", None, "provider default", rank=4, score=80.0),
-        ]), False, dropped, "implementers", estimates=estimates)
-        rows = [(row["crew"], row.get("reasoning_effort"), row.get("effort_estimate")) for row in board["rows"]]
-        # Recorded and estimated efforts stay distinguishable: the estimate is its own field,
-        # set only where the effort was not recorded and the crew has a configured effort.
-        self.assertEqual(rows, [("sol", "unknown", "high"), ("sol", "high", None),
-                                ("argon", "unknown", None), ("argon", None, None)])
+        ]), False, dropped, "implementers")
+        rows = [(row["crew"], row.get("reasoning_effort")) for row in board["rows"]]
+        self.assertEqual(rows, [("sol", "unknown"), ("sol", "high"),
+                                ("argon", "unknown"), ("argon", None)])
+        self.assertTrue(all("effort_estimate" not in row for row in board["rows"]))
         cells = snapshot.project_cells({
             "min_support": 10, "window": "30d",
             "cells": [{"tier": "low", "type": "ui", "crew": "sol", "model": "gpt-6.1-sol", "n": 12,
-                       "crew_mean": 120, "reasoning_effort": "unknown", "effort_label": "effort unknown"}],
-        }, dropped, estimates)["cells"]
-        self.assertEqual(cells[0]["effort_estimate"], "high")
+                       "crew_mean": 120, "reasoning_effort": "unknown", "effort_label": "effort unknown",
+                       "effort_estimate": "high"}],
+        }, dropped)["cells"]
+        self.assertNotIn("effort_estimate", cells[0])
+        self.assertEqual(cells[0]["effort_label"], "effort unknown")
 
-    def test_estimates_read_only_each_plain_crews_effort_key(self):
-        cards = {
-            "implementers": {"rows": [
-                {"crew": "sol", "reasoning_effort": "unknown"},
-                {"crew": "sol", "reasoning_effort": "high"},
-                {"crew": "opus", "reasoning_effort": "high"},
-                {"crew": "haiku@high", "reasoning_effort": "unknown"},
-                {"crew": "argon", "reasoning_effort": None},
-            ]},
-            "implementers_by_type": {"cells": [{"crew": "grok", "reasoning_effort": "unknown"}]},
-            "pilots": {"rows": [{"crew": "bad crew", "reasoning_effort": "unknown"}]},
-        }
-        crews = snapshot.crews_needing_estimates(cards)
-        self.assertEqual(crews, ["grok", "sol"])
-        calls = []
-        answers = {"sol": "high", "grok": "<b>", "luna": None}
-
-        def fake(args, workspace=None, timeout=600):
-            calls.append((tuple(args), workspace))
-            crew = args[2].split(".")[1]
-            if crew == "gone":
-                raise SystemExit("orbit config get failed")
-            return {"key": args[2], "scope": "effective", "value": answers.get(crew)}
-
-        original = snapshot.orbit_json
-        snapshot.orbit_json = fake
-        try:
-            estimates = snapshot.crew_effort_estimates(crews + ["luna", "gone", "haiku@high"], "orbit")
-        finally:
-            snapshot.orbit_json = original
-        self.assertEqual(estimates, {"sol": "high"})
-        self.assertEqual([call[0] for call in calls], [
-            ("config", "get", f"crews.{crew}.effort") for crew in ("grok", "sol", "luna", "gone")
-        ])
-        self.assertTrue(all(call[1] == "orbit" for call in calls))
+    def test_no_crew_configuration_is_read_for_effort(self):
+        self.assertFalse(hasattr(snapshot, "crew_effort_estimates"))
+        self.assertFalse(hasattr(snapshot, "crews_needing_estimates"))
+        self.assertFalse(hasattr(snapshot, "rank_bare_crews"))
 
 
 if __name__ == "__main__":
