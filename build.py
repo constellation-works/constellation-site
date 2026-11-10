@@ -27,7 +27,7 @@ Front matter is `key: value` lines between `---` fences:
     image:    optional file in the note's directory for og:image (1200x630)
     author:   optional comma-separated authors; defaults to Constellation Works. A weekly
               crew-ranking byline, `<crew@effort> (<model>), MVP of the week, <score>`
-              (the crew labelled as on the boards, `(est.)` included), is one author.
+              (the crew labelled as on the boards, e.g. `opus · effort unknown`), is one author.
     tags:     optional comma-separated topics
 
 Author, created and updated dates and tags are shown under the page title.
@@ -66,7 +66,8 @@ OUT = ROOT / "public" / "notes"
 SITE = "https://constellation-works.com"
 
 FIELDS = {"title", "summary", "status", "date", "updated", "image", "author", "tags"}
-# A weekly crew-ranking byline is one author, though it has commas.
+# A weekly crew-ranking byline is one author, though it has commas. Notes published
+# before ORB-23846 name an estimated effort as `haiku@xhigh (est.)`; that mark stays valid.
 MVP_BYLINE = re.compile(r"[^,()]+(?: \(est\.\))? \([^()]+\), MVP of the week, [^,]+")
 VICTORY_PLACEHOLDER = "{{victory-address}}"
 CREWS_EMBED = re.compile(r"<!-- crews-by-role: (\S+) -->")
@@ -477,9 +478,6 @@ def board_window(board, name):
     return since, until
 
 
-EST_NOTE = "(est.): effort not recorded on those runs; shown is the crew's configured effort."
-
-
 def effort_text(row):
     """A row's effort identity: its effort label, or None.
 
@@ -502,16 +500,16 @@ def crew_view(row):
 
     - a crew name that already carries its effort (``haiku@high``) is shown as is;
     - a plain crew gets its recorded effort appended (``sol@high``);
-    - an unrecorded effort shows the crew's configured effort, the snapshot's
-      ``effort_estimate``, marked ``(est.)``; without one it reads
-      ``effort unknown``.
+    - an unrecorded effort reads ``effort unknown`` after the crew name.
 
-    Returns the identity effort plus (base, suffix, estimated); a snapshot
-    without effort fields keeps the bare crew name, as before.
+    Effort is never read from crew configuration, so a snapshot's
+    ``effort_estimate`` (written before ORB-23846) is ignored. Returns the
+    identity effort plus (base, suffix); a snapshot without effort fields
+    keeps the bare crew name, as before.
     """
     crew = row["crew"]
     effort = effort_text(row)
-    view = {"effort": effort, "base": crew, "suffix": "", "estimated": False}
+    view = {"effort": effort, "base": crew, "suffix": ""}
     if effort is None:
         return view
     if "@" in crew:
@@ -521,14 +519,8 @@ def crew_view(row):
     recorded = row.get("reasoning_effort")
     if isinstance(recorded, str) and recorded.strip() and recorded != "unknown":
         view["suffix"] = f"@{recorded}"
-    elif effort != "effort unknown":
-        view["suffix"] = f" · {effort}"  # recorded as something other than an effort, e.g. provider default
     else:
-        estimate = row.get("effort_estimate")
-        if isinstance(estimate, str) and estimate.strip() and estimate != "unknown":
-            view.update(suffix=f"@{estimate} (est.)", estimated=True)
-        else:
-            view["suffix"] = " · effort unknown"
+        view["suffix"] = f" · {effort}"  # "effort unknown", or recorded as something other than an effort
     return view
 
 
@@ -538,7 +530,7 @@ def crew_key(row):
 
 
 def crew_label(row):
-    """Plain-text crew name with its effort, e.g. ``sol@high`` or ``sol@high (est.)``."""
+    """Plain-text crew name with its effort, e.g. ``sol@high`` or ``sol · effort unknown``."""
     if "base" not in row:
         return row["crew"]
     return row["base"] + row["suffix"]
@@ -549,15 +541,7 @@ def crew_name_html(row):
     e = html.escape
     if "base" not in row or not row["suffix"]:
         return e(row["crew"])
-    est = " is-est" if row["estimated"] else ""
-    return f'{e(row["base"])}<span class="crew-effort{est}">{e(row["suffix"])}</span>'
-
-
-def estimate_note(rows):
-    """The board's one note explaining "(est.)", when any shown row is estimated."""
-    if not any(row.get("estimated") for row in rows):
-        return ""
-    return f'<p class="board-note est-note">{html.escape(EST_NOTE)}</p>'
+    return f'{e(row["base"])}<span class="crew-effort">{e(row["suffix"])}</span>'
 
 
 def display_rows(board, name):
@@ -1021,7 +1005,7 @@ def implementers_overall(shown):
 {score_key_line(unit, fleet, "select a crew for its breakdown" if items else "")}</div>
 {board_window_line(since, until)}
 <p class="score-key">{e(shown["score_key"])}</p>
-{estimate_note(shown["rows"])}{ranking}
+{ranking}
 <p class="support-note">Rows under {shown["min_support"]} {e(unit)} stay unranked.</p>
 {folded}
 </section>'''
@@ -1056,7 +1040,7 @@ def tier_heatmap(block, overall_rows):
     for tier in TIER_ORDER:
         for key, slot in slots[tier].items():
             identities.setdefault(key, {
-                **{name: slot[name] for name in ("crew", "model", "effort", "base", "suffix", "estimated")},
+                **{name: slot[name] for name in ("crew", "model", "effort", "base", "suffix")},
                 "units": 0, "sized": False,
             })
             identities[key]["units"] += slot["units"]
@@ -1135,7 +1119,7 @@ def tier_heatmap(block, overall_rows):
 {legend}
 <div class="hm-foot">{board_window_line(since, until)}
 <p class="score-key">{e(TIER_SCORE_KEY)}</p>
-{estimate_note(identities.values())}</div>
+</div>
 </section>''', slots
 
 
@@ -1178,7 +1162,7 @@ def role_bar_board(shown, element_id, title, label=None, note_html="", columns=(
 {score_key_line(unit, fleet)}</div>
 {board_window_line(since, until)}
 {note_html}<p class="score-key">{e(shown["score_key"])}{(" " + e(key_note)) if key_note else ""}</p>
-{estimate_note(shown["rows"])}{table_html}
+{table_html}
 <p class="support-note">Rows under {shown["min_support"]} {e(unit)} stay unranked and are faded.</p>
 {footer}
 </section>'''
@@ -1374,7 +1358,6 @@ def pooled_models(shown):
             continue
         slot = pooled.setdefault(row["model"], {"weighted": 0.0, "units": 0, "crews": [], "labelled": False})
         slot["labelled"] = slot["labelled"] or row.get("effort") is not None
-        slot["estimated"] = slot.get("estimated", False) or bool(row.get("estimated"))
         slot["weighted"] += row["score"] * row["units"]
         slot["units"] += row["units"]
         label = crew_label(row)
@@ -1383,7 +1366,7 @@ def pooled_models(shown):
     out = {}
     for model, slot in pooled.items():
         out[model] = {"score": slot["weighted"] / slot["units"], "units": slot["units"], "crews": slot["crews"],
-                      "labelled": slot["labelled"], "estimated": slot["estimated"]}
+                      "labelled": slot["labelled"]}
     return out
 
 
@@ -1445,7 +1428,7 @@ def overall_models(scorecards, rule=None):
         weighted = held = 0.0
         units = 0
         crews = []
-        labelled = estimated = False
+        labelled = False
         for role, weight in weights:
             slot = roles[role]["models"].get(model)
             if slot is None or slot.get("index") is None:
@@ -1458,14 +1441,13 @@ def overall_models(scorecards, rule=None):
             units += slot["units"]
             crews.extend(crew for crew in slot["crews"] if crew not in crews)
             labelled = labelled or bool(slot.get("labelled"))
-            estimated = estimated or bool(slot.get("estimated"))
         present = [role for role, _weight in weights if cells[role] is not None]
         if len(present) < min_roles or not held:
             if present:
                 one_role.append((model, present[0]))
             continue
         rows.append({"model": model, "overall": weighted / held, "cells": cells, "units": units, "crews": crews,
-                     "labelled": labelled, "estimated": estimated, "roles": present})
+                     "labelled": labelled, "roles": present})
     rows.sort(key=lambda row: (-row["overall"], row["model"]))
     for index, row in enumerate(rows, 1):
         row["place"] = index
@@ -1507,14 +1489,12 @@ def rank_crew_entries(row):
     """Labels for one model's rank crews, in Orbit's order.
 
     ``system`` and attribution gaps are omitted. A key that already carries
-    an effort (``sol@high``) is that recorded label. A bare crew with
-    ``effort_estimate`` reads ``crew@effort (est.)``; ``null`` reads
-    ``crew · effort unknown``. A bare key with no estimate field is a
-    snapshot from before estimates and stays the raw key. When the guess
-    equals a recorded label on this model, only the recorded label is kept
-    and the guess's tasks are added to it, so the breakdown still counts them.
+    an effort (``sol@high``) is that recorded label. A bare key has no recorded
+    effort, so it reads ``crew · effort unknown``; a snapshot's
+    ``effort_estimate`` (written before ORB-23846) is ignored.
     """
-    raw = []
+    out = []
+    index = {}
     for entry in row.get("crews") or []:
         if not isinstance(entry, dict):
             continue
@@ -1522,48 +1502,14 @@ def rank_crew_entries(row):
         if not isinstance(crew, str) or not crew or crew == RANK_NON_CREW or crew in GAP_CREWS:
             continue
         tasks = entry.get("tasks") if as_number(entry.get("tasks")) else None
-        if "@" in crew:
-            raw.append({"label": crew, "tasks": tasks, "guess": None, "recorded": True})
-            continue
-        estimate = entry.get("effort_estimate")
-        if isinstance(estimate, str) and estimate.strip() and estimate.strip() != "unknown":
-            estimate = estimate.strip()
-            raw.append({
-                "label": f"{crew}@{estimate} (est.)",
-                "tasks": tasks,
-                "guess": f"{crew}@{estimate}",
-                "recorded": False,
-            })
-            continue
-        if "effort_estimate" in entry:
-            raw.append({"label": f"{crew} · effort unknown", "tasks": tasks, "guess": None, "recorded": False})
-            continue
-        raw.append({"label": crew, "tasks": tasks, "guess": None, "recorded": False})
-
-    recorded = {item["label"] for item in raw if item["recorded"]}
-    out = []
-    index = {}
-    pending = {}
-
-    def add_tasks(slot, extra):
-        if extra is None:
-            return
-        slot["tasks"] = extra if slot["tasks"] is None else slot["tasks"] + extra
-
-    for item in raw:
-        label = item["guess"] if item["guess"] and item["guess"] in recorded else item["label"]
-        if label != item["label"] and label not in index:
-            if item["tasks"] is not None:
-                pending[label] = item["tasks"] if label not in pending else pending[label] + item["tasks"]
-            continue
+        label = crew if "@" in crew else f"{crew} · effort unknown"
         if label in index:
-            add_tasks(out[index[label]], item["tasks"])
+            slot = out[index[label]]
+            if tasks is not None:
+                slot["tasks"] = tasks if slot["tasks"] is None else slot["tasks"] + tasks
             continue
-        slot = {"label": label, "tasks": item["tasks"], "estimated": label.endswith(" (est.)")}
-        if label in pending:
-            add_tasks(slot, pending.pop(label))
         index[label] = len(out)
-        out.append(slot)
+        out.append({"label": label, "tasks": tasks})
     return out
 
 
@@ -1628,7 +1574,7 @@ def role_cell(cell, role):
 
 
 def crews_text(row):
-    """A model's crews on one line; commas once the labels carry efforts (``sol@high, sol@high (est.)``)."""
+    """A model's crews on one line; commas once the labels carry efforts (``sol@high, sol · effort unknown``)."""
     return (", " if row.get("labelled") else " · ").join(row["crews"])
 
 
@@ -1677,7 +1623,7 @@ def overall_board(overall, rule=None):
 <p class="board-note differs">Who contributes most across implementing, reviewing and piloting. Unlike Model rank, which judges implementation alone from Orbit's rank board, it weighs each model's crew scores in every role it holds.</p>
 <p class="board-note score-key">{e(overall_rule_text(rule))}</p>
 <div class="weight-bar" role="img" aria-label="Weights: {e(weights_label)}">{segments}</div>
-{estimate_note(rows)}{table}
+{table}
 <ul class="legend rank-legend"><li><i class="k-above" aria-hidden="true"></i>above average</li>
 <li><i class="k-below" aria-hidden="true"></i>below average</li>
 <li><span class="k-fleet" aria-hidden="true"></span> fleet average, 100</li>
@@ -1871,7 +1817,6 @@ def models_board(rank):
     band_pct = rules.get("band_probability")
     band_text = f"{band_pct * 100:.0f}% confidence" if as_number(band_pct) else "the board's confidence level"
     items = []
-    est_html = ""
     if ranked:
         low, high, ticks = whisker_axis(ranked)
         tick_html = "".join(
@@ -1931,8 +1876,6 @@ def models_board(rank):
             '<span class="ml-landed">Landed</span></div>'
         )
         board = f'<div class="model-board">{head}<ol>{"".join(items)}</ol></div>'
-        if any(item["estimated"] for row in ranked for item in rank_crew_entries(row)):
-            est_html = estimate_note([{"estimated": True}])
     else:
         need = rules.get("min_eligible_models")
         board = (
@@ -1971,7 +1914,7 @@ def models_board(rank):
 <p class="board-note rank-notice{" is-live" if live else ""}">{e(notice)}</p>
 <p class="board-note score-key">Who implements best: Orbit's implementer rank, crews pooled into their model, eligible models only. Shared ranks such as 2= are one band at {e(band_text)}; cost orders a band and never crosses it. Cost ratio is the model's $ per task against the fleet's on the same tiers. Select a model for its breakdown.</p>
 {window_html}
-{est_html}{board}
+{board}
 {folded}
 </section>'''
 

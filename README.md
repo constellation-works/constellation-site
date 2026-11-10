@@ -45,7 +45,8 @@ freezes them in `data/crew-rankings/<date>/scorecards.json` (projected as the an
 snapshot projects them) and writes a draft `notes/crew-rankings-<date>/` with its CSVs.
 The note is titled `[Crew Ranking - <date>]: MVP <crew>`; the MVP is the rank-1 row of the
 all-tiers implementer board. The MVP line, summary and byline name it with the boards' own
-`crew_label` (`haiku@xhigh (est.) (claude-haiku-5-5), MVP of the week, 146.2`), so writing a
+`crew_label` (`haiku@xhigh (claude-haiku-5-5), MVP of the week, 146.2`; an MVP whose effort is
+unknown reads `opus · effort unknown (claude-opus-5-5), MVP of the week, 146.2`), so writing a
 note needs `markdown` (`uv run --with markdown==3.8.2`); the title and `--writer-only` use
 the plain crew, and the crew `--writer-only` prints writes the note.
 Its body's `<!-- crews-by-role: data/crew-rankings/<date> -->` marker is replaced at build
@@ -87,10 +88,10 @@ with four stat cards:
   probabilities and per-effort splits left out. The crew `system` is not a
   configured crew (it is Orbit's attribution for system-run work), so the
   exporter drops it from those crew lists and counts it with the other dropped
-  gap crews, and the page never shows it. A bare crew key (no recorded effort)
-  is labelled `crew@<configured effort> (est.)` from the same `effort_estimate`
-  the crew boards use; when that guess equals an effort-recorded crew of the
-  same model, the recorded label is shown once.
+  gap crews, and the page never shows it. A bare crew key carries no recorded
+  effort, so it is labelled `crew · effort unknown`, the label the crew boards
+  use. No effort is read from crew configuration, which changes over time, so
+  nothing on the site guesses an effort.
 - **Implementers** — "Crews by role":
   takeaway callouts, the crew table with the fleet-average marker, and implementers
   by tier. Crews by role is one renderer, `render_crews_by_role(directory, role=None)`,
@@ -99,10 +100,8 @@ with four stat cards:
   without one it stacks every role under a plain heading (the weekly note's body). A scorecard row is one
   crew, model and recorded effort, so every crew board names the crew as `crew@effort`
   (`sol@high`; a crew already named `haiku@high` stays as is). A row whose effort was not
-  recorded shows the crew's configured effort marked `sol@high (est.)` (the exporter's
-  `effort_estimate`, read with `orbit config get crews.<crew>.effort`), with one note per
-  board; without one it reads `effort unknown`. Snapshots from before the split show bare
-  crew names.
+  recorded reads `sol · effort unknown`, with no estimate and no note, in every snapshot,
+  older ones included. Snapshots from before the effort split show bare crew names.
 - **Reviewers** — the provisional/settled toggle, each board with its own window.
 - **Pilots** — the pilot crew table.
 

@@ -89,7 +89,7 @@ Reviewer and pilot rows need the scorecard's minimum support, 10 units.
 
 The **MVP** is the rank-1 crew of the all-tiers implementer board for the note's 30 days:
 the top row of the Implementers crew table, named with its crew label as the boards show
-it (`crew@effort`, marked "(est.)" when the effort is the crew's configured estimate), its
+it (`crew@effort`, or `crew · effort unknown` when the effort was not recorded), its
 model and its score. There is no other step. Reviewer and pilot boards are shown for the record and
 earn no points toward it.
 

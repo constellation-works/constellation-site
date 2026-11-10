@@ -20,8 +20,8 @@ It writes:
 
 The MVP is the rank-1 row of the all-tiers implementer board, nothing else: a
 row is one crew, model and recorded effort. The MVP line, summary and byline
-name it with the boards' own crew@effort label (build.crew_label, ``(est.)``
-when the effort is the crew's configured estimate) and its model; the title and
+name it with the boards' own crew@effort label (build.crew_label; a row whose
+effort is unknown reads ``effort unknown``) and its model; the title and
 ``--writer-only`` use the plain crew. The MVP crew writes the note: it replaces the victory-address
 placeholder with two to four first-person sentences. build.py refuses to
 publish a note while the placeholder remains.
@@ -72,8 +72,7 @@ def fetch(workspace, until, settled_until):
         "reviewers_settled": card("reviewers", end=settled_until),
         "pilots": card("pilots"),
     }
-    estimates = snap.crew_effort_estimates(snap.crews_needing_estimates(cards), workspace)
-    scorecards = snap.assemble_scorecards(cards, True, snap.empty_dropped(), estimates)
+    scorecards = snap.assemble_scorecards(cards, True, snap.empty_dropped())
     snap.scan(scorecards, snap.forbidden_patterns(snap.host_names()))
     snap.assert_no_gap_values(scorecards)
     snap.assert_unique_rows(scorecards)
@@ -86,7 +85,7 @@ def effort_of(row):
 
 
 def board_label(row):
-    """The MVP's name as the boards show it: ``haiku@xhigh (est.)``, ``opus@medium``.
+    """The MVP's name as the boards show it: ``opus@medium``, ``opus · effort unknown``.
 
     Taken from build.py's own crew_label/crew_view, the function that names
     every crew row on the boards, so the MVP line, summary and byline never
@@ -122,15 +121,13 @@ def writer(mvp, crews, fallback):
         "mvp_crew": mvp["crew"] if mvp else None,
         "model": mvp["model"] if mvp else None,
         "effort": effort_of(mvp) if mvp else None,
-        "effort_estimate": mvp.get("effort_estimate") if mvp else None,
         "score": round(mvp["score"], 1) if mvp else None,
         "units": mvp["units"] if mvp else None,
     }
 
 
 def effort_cells(row):
-    return {"effort": row.get("reasoning_effort") or row.get("effort_label") or "",
-            "effort_estimate": row.get("effort_estimate") or ""}
+    return {"effort": row.get("reasoning_effort") or row.get("effort_label") or ""}
 
 
 def board_rows(card, **extra):
@@ -275,7 +272,6 @@ def main():
                     "reviewers_settled": (rev.get("settled") or {}).get("window"),
                     "pilots": scorecards["pilots"]["window"]},
         "mvp": {"crew": mvp["crew"], "label": board_label(mvp), "model": mvp["model"], "effort": effort_of(mvp),
-                "effort_estimate": mvp.get("effort_estimate"),
                 "score": mvp["score"], "units": mvp["units"], "rank": mvp["rank"]} if mvp else None,
         "writer": who,
     }

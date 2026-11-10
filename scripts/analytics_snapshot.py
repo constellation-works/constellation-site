@@ -46,12 +46,11 @@ Copied from each scorecard: ``role``, ``since``, ``until`` (else
 ``provisional_terms``, ``stats`` (``key``, ``label``, ``value``),
 ``reasoning_effort`` and ``effort_label`` (a scorecard row is one model at one
 recorded effort, so these are part of the row's identity; ``unknown`` stays
-``unknown``), ``effort_estimate`` on a row whose effort is ``unknown`` (its
-plain crew's configured effort, read with ``orbit config get
-crews.<crew>.effort``: only that token, never other crew fields) and a usage sum from that row's ``effort_breakdown``
+``unknown``; no effort is ever read from crew configuration, because it
+changes over time), and a usage sum from that row's ``effort_breakdown``
 (invocations, duration, tokens, cost, reasoning efforts). By-tier cells copy
 ``tier``, ``type``, ``crew``, ``model``, ``reasoning_effort``,
-``effort_label``, ``effort_estimate``, ``n``, ``units``, ``score``, ``raw``, ``crew_mean`` and a
+``effort_label``, ``n``, ``units``, ``score``, ``raw``, ``crew_mean`` and a
 rank within the tier and type once ``n`` reaches ``min_support``. The guard
 refuses a board with two rows for the same crew, model and reasoning effort.
 
@@ -120,10 +119,8 @@ Rows whose model is ``model unknown`` and crews that are attribution gaps
 are dropped and counted in ``dropped.rank``. The crew ``system`` is
 Orbit's attribution for system-run work, not a configured crew, so it is
 dropped from rank crew lists and counted in ``dropped.rank`` the same way.
-A bare crew key (no ``@effort``) also gets ``effort_estimate``, that
-crew's configured effort from the same ``orbit config get
-crews.<crew>.effort`` lookup the scorecards use (``null`` when the crew
-has none). Paired probabilities,
+A bare crew key (no ``@effort``) carries no effort: its effort was not
+recorded, and it is shown as effort unknown. Paired probabilities,
 z-scores, per-effort usage splits and the unattributed crew list are not
 copied. Snapshots written before this key existed have no ``rank.json``,
 and those written before the live board carry a settled one; their bundles
@@ -596,15 +593,13 @@ def project_usage(breakdown, dropped, board):
     return totals
 
 
-def project_effort(obj, estimates=None):
+def project_effort(obj):
     """The row's effort identity: ``reasoning_effort`` and ``effort_label``.
 
     Each is copied only when it passes its allowlist; a row with no recorded
     effort field (a snapshot from before scorecards split rows by effort)
-    gets neither key, and ``unknown`` is kept as the value ``unknown``. A row
-    whose effort is ``unknown`` also gets ``effort_estimate``, its crew's
-    configured effort, when ``estimates`` has one: a best guess, kept apart
-    from the recorded effort.
+    gets neither key, and ``unknown`` is kept as the value ``unknown``. No
+    effort is ever read from crew configuration: an unknown effort stays unknown.
     """
     out = {}
     effort = obj.get("reasoning_effort")
@@ -613,71 +608,10 @@ def project_effort(obj, estimates=None):
     label = obj.get("effort_label")
     if isinstance(label, str) and SAFE_LABEL.fullmatch(label):
         out["effort_label"] = label
-    estimate = (estimates or {}).get(obj.get("crew"))
-    if effort == "unknown" and isinstance(estimate, str) and SAFE_TOKEN.fullmatch(estimate) and estimate != "unknown":
-        out["effort_estimate"] = estimate
     return out
 
 
-def estimable_crew(crew):
-    """A plain crew name: one whose configured effort can be read (no ``@effort`` or ``:weight``)."""
-    return isinstance(crew, str) and SAFE_TOKEN.fullmatch(crew) is not None and "@" not in crew and ":" not in crew
-
-
-def crews_needing_estimates(cards):
-    """Plain crews with a row or by-tier cell whose effort was not recorded."""
-    crews = set()
-    for card in cards.values():
-        if not isinstance(card, dict):
-            continue
-        for row in (card.get("rows") or []) + (card.get("cells") or []):
-            if isinstance(row, dict) and row.get("reasoning_effort") == "unknown" and estimable_crew(row.get("crew")):
-                crews.add(row["crew"])
-    return sorted(crews)
-
-
-def rank_bare_crews(payload):
-    """Plain crew keys on the rank board whose configured effort can be read.
-
-    ``system`` is not a crew, so it is not looked up. A key that already
-    names an effort (``sol@high``) is not looked up either.
-    """
-    if not isinstance(payload, dict):
-        return []
-    crews = set()
-    for row in payload.get("rows") or []:
-        if not isinstance(row, dict):
-            continue
-        for entry in row.get("crews") or []:
-            crew = entry.get("crew") if isinstance(entry, dict) else None
-            if is_rank_dropped_crew(crew) or not estimable_crew(crew):
-                continue
-            crews.add(crew)
-    return sorted(crews)
-
-
-def crew_effort_estimates(crews, workspace):
-    """Each crew's configured effort, from ``orbit config get crews.<crew>.effort``.
-
-    Only the effort token is read, one key per crew; no other crew field
-    (env, keys, provider settings) is requested. A crew with no configured
-    effort, a value outside SAFE_TOKEN or a failed lookup gets no estimate.
-    """
-    out = {}
-    for crew in crews:
-        if not estimable_crew(crew):
-            continue
-        try:
-            payload = orbit_json(["config", "get", f"crews.{crew}.effort"], workspace)
-        except SystemExit:
-            continue  # a best guess only: a crew Orbit cannot answer for stays unestimated
-        value = payload.get("value") if isinstance(payload, dict) else None
-        if isinstance(value, str) and SAFE_TOKEN.fullmatch(value) and value != "unknown":
-            out[crew] = value
-    return out
-
-
-def project_row(row, min_support, unit, dropped, board, estimates=None):
+def project_row(row, min_support, unit, dropped, board):
     if not isinstance(row, dict):
         return None
     crew, model = row.get("crew"), row.get("model")
@@ -704,7 +638,7 @@ def project_row(row, min_support, unit, dropped, board, estimates=None):
         "units": units,
         "unjudged": bool(row.get("unjudged")),
     }
-    projected.update(project_effort(row, estimates))
+    projected.update(project_effort(row))
     for key in ("raw", "score", "score_base"):
         if is_number(row.get(key)):
             projected[key] = row[key]
@@ -742,7 +676,7 @@ def window_of(card):
     return {"key": key, "since": since, "until": until}
 
 
-def project_board(card, provisional, dropped, board, settled=False, estimates=None):
+def project_board(card, provisional, dropped, board, settled=False):
     min_support = card.get("min_support")
     if isinstance(min_support, bool) or not isinstance(min_support, int):
         min_support = MIN_SUPPORT_DEFAULT
@@ -751,7 +685,7 @@ def project_board(card, provisional, dropped, board, settled=False, estimates=No
     terms = project_terms(card.get("terms"))
     rows = []
     for row in card.get("rows") or []:
-        projected = project_row(row, min_support, unit, dropped, board, estimates)
+        projected = project_row(row, min_support, unit, dropped, board)
         if projected is not None:
             rows.append(projected)
     role = card.get("role") if card.get("role") in ROLES else board.split("_", 1)[0]
@@ -780,7 +714,7 @@ def effort_sort_key(item):
     return (item.get("reasoning_effort") or "", item.get("effort_label") or "")
 
 
-def project_cells(card, dropped, estimates=None):
+def project_cells(card, dropped):
     min_support = card.get("min_support")
     if isinstance(min_support, bool) or not isinstance(min_support, int):
         min_support = MIN_SUPPORT_DEFAULT
@@ -812,7 +746,7 @@ def project_cells(card, dropped, estimates=None):
             "unit": "tasks",
             "units": count,
         }
-        item.update(project_effort(cell, estimates))
+        item.update(project_effort(cell))
         for key in ("crew_mean", "raw", "score"):
             if is_number(cell.get(key)):
                 item[key] = cell[key]
@@ -1754,7 +1688,7 @@ def project_rank_row_measures(measures, keys, patterns, redactions):
     return out
 
 
-def project_rank_row(row, measure_keys, dropped, patterns, redactions, estimates=None):
+def project_rank_row(row, measure_keys, dropped, patterns, redactions):
     if not isinstance(row, dict):
         return None
     model = row.get("model")
@@ -1816,17 +1750,7 @@ def project_rank_row(row, measure_keys, dropped, patterns, redactions, estimates
             dropped["rank"] += 1
             continue
         if isinstance(crew, str) and SAFE_TOKEN.fullmatch(crew) and is_number(tasks):
-            item = {"crew": crew, "tasks": tasks}
-            # A bare key has no recorded effort. Stamp the configured-effort
-            # guess when the caller looked estimates up (None leaves a
-            # snapshot from before this lookup unchanged).
-            if estimates is not None and estimable_crew(crew):
-                estimate = estimates.get(crew)
-                if isinstance(estimate, str) and SAFE_TOKEN.fullmatch(estimate) and estimate != "unknown":
-                    item["effort_estimate"] = estimate
-                else:
-                    item["effort_estimate"] = None
-            crews.append(item)
+            crews.append({"crew": crew, "tasks": tasks})
     projected["crews"] = crews
     tiers = []
     for entry in row.get("tiers") or []:
@@ -1889,7 +1813,7 @@ def eligibility_rule(payload, rules, patterns, redactions):
     return sentence
 
 
-def project_rank(payload, dropped, patterns, redactions, estimates=None):
+def project_rank(payload, dropped, patterns, redactions):
     """The live 30d managed implementer-model rank board, public fields only.
 
     The board is live and provisional: its window ends at the snapshot, so
@@ -1898,9 +1822,9 @@ def project_rank(payload, dropped, patterns, redactions, estimates=None):
     eligibility rule as one sentence, each non-eligible model's reason, each measure's label, weight, status and sanitized definition, the
     not-scored count by reason, and per model its band, score, p10-p90
     interval, cost per task and ratio, tier mix, landed rate, per-measure
-    contributions, crews (with their task counts and, for a bare crew, its
-    configured ``effort_estimate``) and per-tier scores. The crew ``system``
-    is dropped and counted with the other gap crews. Not copied: paired
+    contributions, crews (with their task counts; a bare crew's effort is
+    unknown) and per-tier scores. The crew ``system`` is dropped and counted
+    with the other gap crews. Not copied: paired
     probabilities, z-scores, per-effort usage splits, the unattributed crew
     list and per-row execution splits.
     """
@@ -1920,7 +1844,7 @@ def project_rank(payload, dropped, patterns, redactions, estimates=None):
     keys = [measure["key"] for measure in measures]
     rows = []
     for row in payload.get("rows") or []:
-        projected = project_rank_row(row, keys, dropped, patterns, redactions, estimates)
+        projected = project_rank_row(row, keys, dropped, patterns, redactions)
         if projected is not None:
             rows.append(projected)
     rules_in = payload.get("rules") if isinstance(payload.get("rules"), dict) else {}
@@ -1980,19 +1904,17 @@ def empty_dropped():
     }
 
 
-def assemble_scorecards(cards, until_supported, dropped, estimates=None):
+def assemble_scorecards(cards, until_supported, dropped):
     reviewers = {
-        "provisional": project_board(cards["reviewers"], True, dropped, "reviewers_provisional", settled=False,
-                                     estimates=estimates),
-        "settled": project_board(cards["reviewers_settled"], False, dropped, "reviewers_settled", settled=True,
-                                 estimates=estimates)
+        "provisional": project_board(cards["reviewers"], True, dropped, "reviewers_provisional", settled=False),
+        "settled": project_board(cards["reviewers_settled"], False, dropped, "reviewers_settled", settled=True)
         if until_supported else None,
     }
     return {
-        "implementers": project_board(cards["implementers"], False, dropped, "implementers", estimates=estimates),
-        "implementers_by_tier": project_cells(cards["implementers_by_type"], dropped, estimates),
+        "implementers": project_board(cards["implementers"], False, dropped, "implementers"),
+        "implementers_by_tier": project_cells(cards["implementers_by_type"], dropped),
         "min_support_default": MIN_SUPPORT_DEFAULT,
-        "pilots": project_board(cards["pilots"], False, dropped, "pilots", estimates=estimates),
+        "pilots": project_board(cards["pilots"], False, dropped, "pilots"),
         "reviewers": reviewers,
         "roles": list(ROLES),
         "roles_omitted": ["orchestrators"],
@@ -2059,8 +1981,6 @@ def collect(workspace, dashboard, generated_at, version):
             ["agents", "scorecard", "--role", "reviewers", "--window", WINDOW, "--until", SETTLED_UNTIL],
             workspace,
         )
-    needing = crews_needing_estimates(cards)
-    estimates = crew_effort_estimates(needing, workspace)
     print("metrics", file=sys.stderr)
     scope = {"workspace": ident}
     durations = http_json(dashboard, "/api/diagnostics/implement_one", {"since": WINDOW, "outcome": "succeeded", **scope})
@@ -2086,9 +2006,6 @@ def collect(workspace, dashboard, generated_at, version):
     rank = http_json(
         dashboard, "/api/agents/rank", {"window": WINDOW, "execution": RANK_EXECUTION, "live": "true", **scope}
     )
-    extra = [crew for crew in rank_bare_crews(rank) if crew not in set(needing)]
-    if extra:
-        estimates.update(crew_effort_estimates(extra, workspace))
     print("experiments", file=sys.stderr)
     listed = orbit_json(["experiment", "list"], workspace)
     experiments = listed.get("experiments") if isinstance(listed, dict) else None
@@ -2122,17 +2039,15 @@ def collect(workspace, dashboard, generated_at, version):
         generated_at=generated_at,
         version=version,
         workspace=workspace,
-        effort_estimates=estimates,
     )
 
 
 def project_all(cards, until_supported, durations, completions, defects, tokens, turns, diff,
-                friction, outcome_mix, reliability, experiments, generated_at, version, workspace, rank=None,
-                effort_estimates=None):
+                friction, outcome_mix, reliability, experiments, generated_at, version, workspace, rank=None):
     dropped = empty_dropped()
     patterns = forbidden_patterns(host_names())
     redactions = [0]
-    scorecards = assemble_scorecards(cards, until_supported, dropped, effort_estimates)
+    scorecards = assemble_scorecards(cards, until_supported, dropped)
     metrics = {
         "completion_by_complexity": project_outcome_mix(outcome_mix),
         "completions": project_completions(completions),
@@ -2162,7 +2077,7 @@ def project_all(cards, until_supported, durations, completions, defects, tokens,
         "scorecards": scorecards,
     }
     if rank is not None:
-        docs["rank"] = project_rank(rank, dropped, patterns, redactions, effort_estimates)
+        docs["rank"] = project_rank(rank, dropped, patterns, redactions)
     docs["meta"] = assemble_meta(docs, generated_at, version, workspace, until_supported, dropped, redactions[0])
     return docs
 
