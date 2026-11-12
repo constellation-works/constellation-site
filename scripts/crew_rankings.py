@@ -305,6 +305,15 @@ def ranked(row):
             and number(interval.get("p10")) and number(interval.get("p90")))
 
 
+def ranked_rows(rank):
+    """The rows Rank placed, by rank and, inside a shared band, by score, highest first, then model (STD-07 §R36).
+
+    Display order only: the MVP band and its writer keep Orbit's band order (cheapest first).
+    """
+    rows = [r for r in rank.get("rows") or [] if ranked(r)]
+    return sorted(rows, key=lambda r: (r["rank"], -r["score"], r["model"]))
+
+
 def rank_columns(rank):
     """The measures the board measured, in Rank's order: one column each. The rest are listed under the table."""
     return [m for m in rank.get("measures") or [] if m.get("status") == "measured"]
@@ -330,13 +339,13 @@ def measure_cell(row, key):
 
 
 def model_rank_rows(rank):
-    """model-rank.csv: one row per model in Rank's order, ranked rows first, then the rows Rank did not place."""
+    """model-rank.csv: one row per model, ranked rows first in rank order (by score inside a band), then the rows Rank did not place."""
     if rank is None:
         return []
     total = weights_total(rank)
     rows = rank.get("rows") or []
     out = []
-    for row in [r for r in rows if ranked(r)] + [r for r in rows if not ranked(r)]:
+    for row in ranked_rows(rank) + [r for r in rows if not ranked(r)]:
         placed = ranked(row)
         interval = row.get("interval") if placed else {}
         line = {
@@ -397,7 +406,7 @@ def model_rank_section(rank, band, why, day):
 
     rows = rank.get("rows") or []
     body = []
-    for row in [r for r in rows if ranked(r)]:
+    for row in ranked_rows(rank):
         crews = crews_line(row)
         model = e(row["model"]) + (f'<span class="crews">{e(crews)}</span>' if crews else "")
         cells = [e(str(row.get("rank_label") or row["rank"])), model, score_text(row["score"]),

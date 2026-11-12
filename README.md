@@ -56,7 +56,7 @@ The band's first model in Orbit's order writes the note, through its crew with t
 implemented tasks in the window; `--writer-only` prints that writer.
 Ahead of the address and the crew boards, a **Model rank** section (between
 `<!-- model-rank -->` markers) is that frozen `rank.json` as a table, led by a line saying it
-decides the MVP and the crew boards do not: one row per ranked model in Rank's order with rank,
+decides the MVP and the crew boards do not: one row per ranked model in rank order (by score inside a shared band, STD-07 §R36) with rank,
 score, p10–p90, implemented tasks, measured weight out of the board's total, and each measured
 measure's actual / expected. An unmeasured cell reads "unmeasured" with Orbit's reason as a
 footnote; the rows Rank did not place fold under "Not ranked" with Orbit's reason. The same
@@ -87,7 +87,7 @@ with four stat cards:
   true) is band-grouped rows with p10–p90 whiskers on a shared axis, $ per task and
   cost ratio, tier mix, landed %, an expandable per-model breakdown, and a folded
   "Not ranked yet" list whose rule and per-model reasons are Orbit's text from
-  `rank.json`. The podium is its top three in Rank's order. When `scales_source` is
+  `rank.json`. The podium is its top three in rank order, a shared band ordered by score (STD-07 §R36). When `scales_source` is
   `window_estimate`, or `qualified` is false, the page shows those scores and
   intervals without ranks, bands or a podium, and states which reason applies. Then
   the **All-roles index** ("who contributes most across

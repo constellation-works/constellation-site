@@ -263,6 +263,28 @@ class CrewRankingScript(unittest.TestCase):
         self.assertEqual(refreshed.count("## Model rank"), 1)
         self.assertNotIn("gpt-tiny", refreshed)
 
+    def test_a_shared_band_is_listed_by_score_and_the_writer_keeps_orbits_order(self):
+        # Orbit lists the 2= band cheapest first; the table and CSV list it by score (STD-07 §R36).
+        board = rank_board(
+            model_row("gpt-6-sol", 1, "1", 115.8, [("sol", 117)]),
+            model_row("muse-wonder-1.0", 2, "2=", 64.1, [("muse-wonder", 34)]),
+            model_row("gpt-6-luna", 2, "2=", 107.0, [("luna", 447)]),
+            model_row("claude-opus-5-5", 2, "2=", 90.5, [("opus", 501)]),
+            model_row("gpt-6.1-sol", 2, "2=", 108.0, [("sol", 824)]),
+            model_row("claude-haiku-5-5", 2, "2=", 101.1, [("haiku", 222)]),
+        )
+        self.freeze(board)
+        note = self.generate()
+        order = ["gpt-6-sol", "gpt-6.1-sol", "gpt-6-luna", "claude-haiku-5-5", "claude-opus-5-5", "muse-wonder-1.0"]
+        section = (note / "index.md").read_text(encoding="utf-8").split("<!-- model-rank -->")[1]
+        self.assertEqual(re.findall(r"<tr><td>[^<]*</td><td>([^<]+)<span", section), order)
+        with open(note / "model-rank.csv", newline="") as f:
+            self.assertEqual([r["model"] for r in csv.DictReader(f)], order)
+        # A shared top band keeps Orbit's cheapest-first order for the writer.
+        tied = rank_board(model_row("b-model", 1, "1=", 120.0, [("b", 5)]), model_row("a-model", 1, "1=", 130.0, [("a", 5)]))
+        self.assertEqual([r["model"] for r in crew_rankings.mvp_band(tied)[0]], ["b-model", "a-model"])
+        self.assertEqual([r["model"] for r in crew_rankings.ranked_rows(tied)], ["a-model", "b-model"])
+
     def test_a_note_without_a_frozen_rank_says_no_model_rank_decided_it(self):
         note = self.notes / "crew-rankings-2026-11-09"
         note.mkdir(parents=True)

@@ -1351,7 +1351,12 @@ def load_rank(directory):
 
 
 def rank_rows(rank):
-    """(ranked, not ranked) model rows, gaps removed; ranked rows in rank order."""
+    """(ranked, not ranked) model rows, gaps removed.
+
+    Ranked rows go in rank order and, inside a shared band, by score, highest first, then model name
+    (STD-07 §R36), so a band reads in the order of the figure the board shows. The MVP's writer still
+    follows Orbit's own band order (cheapest first); that is scripts/crew_rankings.py's rule, not this view's.
+    """
     rows = [
         row for row in rank.get("rows") or []
         if isinstance(row, dict) and isinstance(row.get("model"), str)
@@ -1359,7 +1364,7 @@ def rank_rows(rank):
     ]
     ranked = [row for row in rows if isinstance(row.get("rank"), int) and not isinstance(row.get("rank"), bool)
               and row.get("eligible") is True and as_number(row.get("score"))]
-    ranked.sort(key=lambda row: row["rank"])
+    ranked.sort(key=lambda row: (row["rank"], -row["score"], row["model"]))
     rest = [row for row in rows if row not in ranked]
     return ranked, rest
 
@@ -1539,7 +1544,7 @@ def rank_crew_line(row):
 
 
 def podium_from_rank(rank):
-    """The podium's top three from Model rank, in Rank's order, with their Rank score."""
+    """The podium's top three from Model rank, in rank order (by score inside a band), with their Rank score."""
     ranked, _rest = rank_rows(rank)
     items = []
     for row in ranked[:3]:

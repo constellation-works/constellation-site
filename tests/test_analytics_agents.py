@@ -925,6 +925,13 @@ class RankingPageTest(unittest.TestCase):
         overall_html = overall_html[:overall_html.index("</section>")]
         self.assertNotIn("est-note", overall_html)
 
+    def test_rank_rows_order_a_shared_band_by_score(self):
+        rows = [rank_row("cheap", 2, "2=", 64.1, 40, ["c"]), rank_row("top", 1, "1", 115.8, 40, ["t"]),
+                rank_row("luna", 2, "2=", 107.0, 40, ["l"]), rank_row("sol", 2, "2=", 108.0, 40, ["s"]),
+                rank_row("tie-b", 2, "2=", 90.5, 40, ["b"]), rank_row("tie-a", 2, "2=", 90.5, 40, ["a"])]
+        ranked, _rest = build.rank_rows({"rows": rows})
+        self.assertEqual([row["model"] for row in ranked], ["top", "sol", "luna", "tie-a", "tie-b", "cheap"])
+
     def test_crews_are_grouped_by_crew_with_their_efforts(self):
         group = build.analytics_page.crew_groups_text
         self.assertEqual(group(["haiku@xhigh", "haiku · effort unknown", "haiku@high"]),
