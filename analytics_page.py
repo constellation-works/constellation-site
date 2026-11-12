@@ -18,6 +18,33 @@ import shutil
 import sys
 
 DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def crew_groups_text(labels):
+    """A model's crew labels grouped by crew, each crew named once with its efforts.
+
+    ``haiku@xhigh``, ``haiku@high`` and ``haiku · effort unknown`` read
+    ``haiku: xhigh, high, effort unknown``; several crews are separated by a
+    middle dot (``opus: effort unknown · sol: effort unknown``). A bare crew
+    with no effort (a snapshot from before effort rows) stays its name. Crews
+    keep their first-seen order, and so do recorded efforts, with ``effort unknown`` last. Shared by /ranking/ (build.py)
+    and the weekly notes' Model rank table (scripts/crew_rankings.py).
+    """
+    groups = {}
+    for label in labels:
+        crew, effort = label, None
+        if "@" in label:
+            crew, _sep, effort = label.partition("@")
+        elif " · " in label:
+            crew, _sep, effort = label.partition(" · ")
+        efforts = groups.setdefault(crew, [])
+        if effort and effort not in efforts:
+            efforts.append(effort)
+    def ordered(efforts):
+        return [x for x in efforts if x != "effort unknown"] + [x for x in efforts if x == "effort unknown"]
+
+    return " · ".join(f"{crew}: {', '.join(ordered(efforts))}" if efforts else crew
+                      for crew, efforts in groups.items())
 LOW_ACTOR_SAMPLE = 5
 CHART_W = 640
 CHART_H = 168

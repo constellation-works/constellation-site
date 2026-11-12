@@ -227,9 +227,9 @@ class CrewRankingScript(unittest.TestCase):
                       "to 2026-10-25", section)
         self.assertIn("The crew boards below earn nothing toward it.", section)
         # Ranked rows in Rank's order: rank, score, interval, tasks, measured weight, actual / expected.
-        self.assertIn("<tr><td>1</td><td>claude-haiku-5-5</td><td>103.0</td><td>99.0–107.0</td><td>240</td>"
+        self.assertIn("<tr><td>1</td><td>claude-haiku-5-5<span class=\"crews\">haiku: high, xhigh</span></td><td>103.0</td><td>99.0–107.0</td><td>240</td>"
                       "<td>30 / 55</td><td>1.0 / 2.0</td><td>unmeasured<sup>a</sup></td></tr>", section)
-        self.assertIn("<tr><td>2</td><td>gpt-6-luna</td><td>99.0</td><td>95.0–103.0</td><td>50</td>"
+        self.assertIn("<tr><td>2</td><td>gpt-6-luna<span class=\"crews\">luna: effort unknown</span></td><td>99.0</td><td>95.0–103.0</td><td>50</td>"
                       "<td>50 / 55</td><td>1.0 / 2.0</td><td>1.0 / 2.0</td></tr>", section)
         self.assertLess(section.index("claude-haiku-5-5"), section.index("gpt-6-luna"))
         # An unmeasured cell is never 0 or blank, and Orbit's reason is given.
@@ -249,6 +249,7 @@ class CrewRankingScript(unittest.TestCase):
         self.assertEqual((rows[0]["review_outcome_status"], rows[0]["review_outcome_actual"],
                           rows[0]["review_outcome_reason"]), ("unmeasured", "", "no units for this model in the window"))
         self.assertEqual((rows[0]["weights_measured"], rows[0]["weights_total"], rows[0]["p10"]), ("30.0", "55.0", "99.0"))
+        self.assertEqual(rows[0]["crews"], "haiku: high, xhigh")
         self.assertEqual(rows[2]["not_ranked_reason"], "9 implemented tasks; 30 needed")
         # It renders as a table, and a re-issue refreshes only the section.
         html = build.render_body(body)

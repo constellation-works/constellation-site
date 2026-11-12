@@ -920,10 +920,21 @@ class RankingPageTest(unittest.TestCase):
         row_ = next(row for row in overall["rows"] if row["model"] == "gpt-6.1-sol")
         self.assertEqual(row_["crews"], ["sol · effort unknown", "sol@high"])
         doc = build.render_ranking_body(data, "2026-11-09")
-        self.assertIn('<span class="crew-model">sol · effort unknown, sol@high</span>', doc)
+        self.assertIn('<span class="crew-model">sol: high, effort unknown</span>', doc)
         overall_html = doc[doc.index('aria-labelledby="all-roles-title"'):]
         overall_html = overall_html[:overall_html.index("</section>")]
         self.assertNotIn("est-note", overall_html)
+
+    def test_crews_are_grouped_by_crew_with_their_efforts(self):
+        group = build.analytics_page.crew_groups_text
+        self.assertEqual(group(["haiku@xhigh", "haiku · effort unknown", "haiku@high"]),
+                         "haiku: xhigh, high, effort unknown")
+        self.assertEqual(group(["opus · effort unknown", "sol · effort unknown"]),
+                         "opus: effort unknown · sol: effort unknown")
+        self.assertEqual(group(["sol@high", "luna · effort unknown", "sol@xhigh", "sol@high"]),
+                         "sol: high, xhigh · luna: effort unknown")
+        self.assertEqual(group(["haiku", "opus"]), "haiku · opus")
+        self.assertEqual(group([]), "")
 
     def test_snapshot_without_efforts_renders_crews_as_before(self):
         doc = build.render_ranking_body(scorecards(), "2026-11-08")
@@ -941,7 +952,7 @@ class RankingPageTest(unittest.TestCase):
         overall = build.overall_models(data)
         haiku = next(item for item in overall["rows"] if item["model"] == "claude-haiku-5-5")
         self.assertEqual(haiku["crews"][:2], ["haiku", "haiku@high"])
-        self.assertIn('<span class="crew-model">haiku · haiku@high</span>', build.render_ranking_body(data, "2026-11-08"))
+        self.assertIn('<span class="crew-model">haiku: high</span>', build.render_ranking_body(data, "2026-11-08"))
 
     def test_overall_shows_model_rank_then_all_roles_index(self):
         data = all_roles_scorecards()
@@ -1129,11 +1140,11 @@ class RankingPageTest(unittest.TestCase):
         doc = build.render_ranking_body(scorecards(), "2026-11-08", board)
         self.assertNotIn("system", doc)
         overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
-        self.assertIn('<span class="podium-crews">haiku · effort unknown · haiku@xhigh</span>', overall)
-        self.assertIn('<span class="podium-crews">opus · effort unknown · opus@medium</span>', overall)
-        self.assertIn('<span class="podium-crews">luna · effort unknown</span>', overall)
-        self.assertIn('<span class="ml-crews">haiku · effort unknown · haiku@xhigh</span>', overall)
-        self.assertIn('<span class="ml-crews">opus · effort unknown · opus@medium</span>', overall)
+        self.assertIn('<span class="podium-crews">haiku: xhigh, effort unknown</span>', overall)
+        self.assertIn('<span class="podium-crews">opus: medium, effort unknown</span>', overall)
+        self.assertIn('<span class="podium-crews">luna: effort unknown</span>', overall)
+        self.assertIn('<span class="ml-crews">haiku: xhigh, effort unknown</span>', overall)
+        self.assertIn('<span class="ml-crews">opus: medium, effort unknown</span>', overall)
         self.assertNotIn("(est.)", overall)
         self.assertNotIn("est-note", overall)
         self.assertNotIn("haiku 590", overall)

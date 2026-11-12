@@ -60,7 +60,9 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(1, str(ROOT))
 import analytics_snapshot as snap  # noqa: E402  (shared scorecard and rank projection)
+from analytics_page import crew_groups_text  # noqa: E402  (the crew line /ranking/ uses)
 
 WINDOW = "30d"
 PLACEHOLDER = "{{victory-address}}"
@@ -140,6 +142,12 @@ def mvp_band(rank):
 def crew_key_label(key):
     """A rank crew key as the boards name it: ``crew@effort``, or ``crew · effort unknown`` when no effort was recorded."""
     return key if "@" in key else f"{key} · effort unknown"
+
+
+def crews_line(row):
+    """A rank row's crews as /ranking/ names them: each crew once, with its efforts (``haiku: xhigh, effort unknown``)."""
+    return crew_groups_text(crew_key_label(entry["crew"]) for entry in row.get("crews") or []
+                            if isinstance(entry, dict) and entry.get("crew"))
 
 
 def choose_writer(band, crews, fallback):
@@ -331,6 +339,7 @@ def model_rank_rows(rank):
             "status": "ranked" if placed else "not ranked",
             "rank": (row.get("rank_label") or row["rank"]) if placed else "",
             "model": row["model"],
+            "crews": crews_line(row),
             "score": round(row["score"], 2) if placed else "",
             "p10": interval.get("p10", "") if placed else "",
             "p90": interval.get("p90", "") if placed else "",
@@ -385,7 +394,9 @@ def model_rank_section(rank, band, why, day):
     rows = rank.get("rows") or []
     body = []
     for row in [r for r in rows if ranked(r)]:
-        cells = [e(str(row.get("rank_label") or row["rank"])), e(row["model"]), score_text(row["score"]),
+        crews = crews_line(row)
+        model = e(row["model"]) + (f'<span class="crews">{e(crews)}</span>' if crews else "")
+        cells = [e(str(row.get("rank_label") or row["rank"])), model, score_text(row["score"]),
                  f"{score_text(row['interval']['p10'])}–{score_text(row['interval']['p90'])}",
                  f"{row.get('units', 0):,}",
                  f"{weight_text(row.get('weights_measured'))} / {weight_text(total)}"]

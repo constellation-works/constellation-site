@@ -407,3 +407,5 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 .model-rank td { white-space: nowrap; }
 .model-rank th, .model-rank td { padding-right: 14px; }
 .model-rank sup { line-height: 0; }
+/* A model's crews: its own muted line under the name (STD-07 §R33). */
+.model-rank .crews { display: block; color: var(--muted); font-size: 14px; }

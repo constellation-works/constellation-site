@@ -1531,8 +1531,8 @@ def rank_crew_entries(row):
 
 
 def rank_crew_line(row):
-    """One model's rank crews on one line (``sol@high · sol@xhigh``)."""
-    return " · ".join(item["label"] for item in rank_crew_entries(row))
+    """One model's rank crews on one line, each crew named once (``sol: high, xhigh``)."""
+    return analytics_page.crew_groups_text(item["label"] for item in rank_crew_entries(row))
 
 
 def podium_from_rank(rank):
@@ -1591,8 +1591,8 @@ def role_cell(cell, role):
 
 
 def crews_text(row):
-    """A model's crews on one line; commas once the labels carry efforts (``sol@high, sol · effort unknown``)."""
-    return (", " if row.get("labelled") else " · ").join(row["crews"])
+    """A model's crews on one line, each crew named once (``sol: high, effort unknown · luna: low``)."""
+    return analytics_page.crew_groups_text(row["crews"])
 
 
 def overall_board(overall, rule=None):
