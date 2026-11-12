@@ -29,121 +29,121 @@
         "complexity": "low",
         "statuses": [
           {
-            "count": 3059,
-            "rate": 0.927531837477259,
+            "count": 3060,
+            "rate": 0.9272727272727272,
             "status": "done",
-            "total": 3298
+            "total": 3300
           },
           {
             "count": 8,
-            "rate": 0.002425712553062462,
+            "rate": 0.0024242424242424242,
             "status": "rejected",
-            "total": 3298
+            "total": 3300
           },
           {
             "count": 228,
-            "rate": 0.06913280776228017,
+            "rate": 0.06909090909090909,
             "status": "archived",
-            "total": 3298
+            "total": 3300
           },
           {
             "count": 2,
-            "rate": 0.0006064281382656155,
+            "rate": 0.0006060606060606061,
             "status": "proposed",
-            "total": 3298
+            "total": 3300
           },
           {
             "count": 1,
-            "rate": 0.00030321406913280777,
+            "rate": 0.00030303030303030303,
+            "status": "review",
+            "total": 3300
+          },
+          {
+            "count": 1,
+            "rate": 0.00030303030303030303,
             "status": "someday",
-            "total": 3298
+            "total": 3300
           }
         ],
-        "total": 3298
+        "total": 3300
       },
       {
         "complexity": "medium",
         "statuses": [
           {
-            "count": 5751,
-            "rate": 0.9665546218487395,
+            "count": 5760,
+            "rate": 0.9662808253648717,
             "status": "done",
-            "total": 5950
+            "total": 5961
           },
           {
             "count": 12,
-            "rate": 0.0020168067226890756,
+            "rate": 0.0020130850528434826,
             "status": "rejected",
-            "total": 5950
+            "total": 5961
           },
           {
             "count": 181,
-            "rate": 0.03042016806722689,
+            "rate": 0.030364032880389198,
             "status": "archived",
-            "total": 5950
-          },
-          {
-            "count": 1,
-            "rate": 0.0001680672268907563,
-            "status": "backlog",
-            "total": 5950
-          },
-          {
-            "count": 1,
-            "rate": 0.0001680672268907563,
-            "status": "proposed",
-            "total": 5950
-          },
-          {
-            "count": 1,
-            "rate": 0.0001680672268907563,
-            "status": "review",
-            "total": 5950
+            "total": 5961
           },
           {
             "count": 2,
-            "rate": 0.0003361344537815126,
+            "rate": 0.00033551417547391375,
+            "status": "backlog",
+            "total": 5961
+          },
+          {
+            "count": 2,
+            "rate": 0.00033551417547391375,
+            "status": "proposed",
+            "total": 5961
+          },
+          {
+            "count": 1,
+            "rate": 0.00016775708773695687,
+            "status": "review",
+            "total": 5961
+          },
+          {
+            "count": 2,
+            "rate": 0.00033551417547391375,
             "status": "someday",
-            "total": 5950
+            "total": 5961
           }
         ],
-        "total": 5950
+        "total": 5961
       },
       {
         "complexity": "hard",
         "statuses": [
           {
-            "count": 2531,
-            "rate": 0.9217042971595047,
+            "count": 2533,
+            "rate": 0.9220968329086275,
             "status": "done",
-            "total": 2746
+            "total": 2747
           },
           {
             "count": 3,
-            "rate": 0.0010924981791697013,
+            "rate": 0.0010921004732435385,
             "status": "rejected",
-            "total": 2746
+            "total": 2747
           },
           {
             "count": 207,
-            "rate": 0.07538237436270939,
+            "rate": 0.07535493265380415,
             "status": "archived",
-            "total": 2746
-          },
-          {
-            "count": 1,
-            "rate": 0.0003641660597232338,
-            "status": "review",
-            "total": 2746
+            "total": 2747
           },
           {
             "count": 2,
-            "rate": 0.0007283321194464676,
+            "rate": 0.0007280669821623589,
             "status": "someday",
-            "total": 2746
+            "total": 2747
           }
         ],
-        "total": 2746
+        "total": 2747
       },
       {
         "complexity": "xhard",
@@ -538,11 +538,11 @@
       {
         "archived": 0,
         "done": {
-          "hard": 15,
-          "low": 22,
-          "medium": 35,
+          "hard": 17,
+          "low": 23,
+          "medium": 44,
           "other": 0,
-          "total": 72
+          "total": 84
         },
         "rejected": 1,
         "start": "2026-11-12T00:00:00+00:00"
@@ -551,11 +551,11 @@
     "current": {
       "archived": 547,
       "done": {
-        "hard": 1287,
-        "low": 1941,
-        "medium": 3886,
+        "hard": 1289,
+        "low": 1942,
+        "medium": 3895,
         "other": 33,
-        "total": 7147
+        "total": 7159
       },
       "rejected": 29
     },
@@ -563,11 +563,11 @@
     "previous": {
       "archived": 169,
       "done": {
-        "hard": 910,
-        "low": 678,
-        "medium": 1174,
-        "other": 15,
-        "total": 2777
+        "hard": 911,
+        "low": 681,
+        "medium": 1177,
+        "other": 16,
+        "total": 2785
       },
       "rejected": 0
     },
@@ -598,10 +598,10 @@
       "bucket_seconds": 86400,
       "key": "30d",
       "lead_buckets": 0,
-      "previous_since": "2026-09-12T18:42:40.991074880+00:00",
+      "previous_since": "2026-09-12T17:05:42.705328889+00:00",
       "previous_until": "2026-10-13T00:00:00+00:00",
       "since": "2026-10-13T00:00:00+00:00",
-      "until": "2026-11-12T05:17:19.008925120+00:00"
+      "until": "2026-11-12T06:54:17.294671111+00:00"
     }
   },
   "defects": {
@@ -1268,17 +1268,17 @@
       },
       {
         "lineage": {
-          "fix_for_fix": 12,
+          "fix_for_fix": 16,
           "regression": 8,
-          "unattributed": 9
+          "unattributed": 11
         },
         "origin": {
           "ci-failure-sweep": 1,
           "code-review": 5,
-          "delivery-code-review": 15,
+          "delivery-code-review": 19,
           "friction-curation": 0,
           "full-code-review": 0,
-          "other": 8,
+          "other": 10,
           "qa-full-sweep": 0,
           "qa-sweep": 0,
           "review-reconciliation": 0,
@@ -1286,29 +1286,29 @@
           "security-review": 0
         },
         "start": "2026-11-12T00:00:00+00:00",
-        "total": 29
+        "total": 35
       }
     ],
     "current": {
       "lineage": {
-        "fix_for_fix": 661,
+        "fix_for_fix": 665,
         "regression": 842,
-        "unattributed": 1274
+        "unattributed": 1276
       },
       "origin": {
         "ci-failure-sweep": 111,
         "code-review": 149,
-        "delivery-code-review": 1388,
+        "delivery-code-review": 1392,
         "friction-curation": 64,
         "full-code-review": 84,
-        "other": 875,
+        "other": 877,
         "qa-full-sweep": 59,
         "qa-sweep": 25,
         "review-reconciliation": 0,
         "scanning-sweep": 10,
         "security-review": 12
       },
-      "total": 2777
+      "total": 2783
     },
     "lead_buckets": [],
     "lineages": [
@@ -1333,11 +1333,11 @@
       "lineage": {
         "fix_for_fix": 199,
         "regression": 151,
-        "unattributed": 1402
+        "unattributed": 1403
       },
       "origin": {
         "ci-failure-sweep": 144,
-        "code-review": 241,
+        "code-review": 242,
         "delivery-code-review": 200,
         "friction-curation": 74,
         "full-code-review": 371,
@@ -1348,32 +1348,32 @@
         "scanning-sweep": 37,
         "security-review": 33
       },
-      "total": 1752
+      "total": 1753
     },
     "source": "GET /api/diagnostics/defects?since=30d",
     "window": {
       "bucket_seconds": 86400,
       "key": "30d",
       "lead_buckets": 0,
-      "previous_since": "2026-09-12T18:42:40.886359676+00:00",
+      "previous_since": "2026-09-12T17:05:42.193937238+00:00",
       "previous_until": "2026-10-13T00:00:00+00:00",
       "since": "2026-10-13T00:00:00+00:00",
-      "until": "2026-11-12T05:17:19.113640324+00:00"
+      "until": "2026-11-12T06:54:17.806062762+00:00"
     }
   },
   "diff": {
     "available_complexities": [
       {
         "complexity": "low",
-        "deliveries": 1243
+        "deliveries": 1244
       },
       {
         "complexity": "medium",
-        "deliveries": 1080
+        "deliveries": 1085
       },
       {
         "complexity": "hard",
-        "deliveries": 371
+        "deliveries": 372
       },
       {
         "complexity": "xhard",
@@ -8359,63 +8359,63 @@
           },
           {
             "mean": {
-              "code_added": null,
-              "code_deleted": null,
-              "net": null,
-              "other_added": null,
-              "other_deleted": null,
-              "tests_added": null,
-              "tests_deleted": null
+              "code_added": 551.0,
+              "code_deleted": 50.0,
+              "net": 713.0,
+              "other_added": 4.0,
+              "other_deleted": 3.0,
+              "tests_added": 212.0,
+              "tests_deleted": 0.0
             },
             "median": {
-              "code_added": null,
-              "code_deleted": null,
-              "net": null,
-              "other_added": null,
-              "other_deleted": null,
-              "tests_added": null,
-              "tests_deleted": null
+              "code_added": 551.0,
+              "code_deleted": 50.0,
+              "net": 713.0,
+              "other_added": 4.0,
+              "other_deleted": 3.0,
+              "tests_added": 212.0,
+              "tests_deleted": 0.0
             },
-            "n": 0,
+            "n": 1,
             "sum": {
-              "code_added": 0,
-              "code_deleted": 0,
-              "net": 0,
-              "other_added": 0,
-              "other_deleted": 0,
-              "tests_added": 0,
+              "code_added": 551,
+              "code_deleted": 50,
+              "net": 713,
+              "other_added": 4,
+              "other_deleted": 3,
+              "tests_added": 212,
               "tests_deleted": 0
             },
-            "thin": false
+            "thin": true
           }
         ],
         "total": {
           "mean": {
-            "code_added": 689.4125874125874,
-            "code_deleted": 83.62237762237763,
-            "net": 798.034965034965,
-            "other_added": 129.11888111888112,
-            "other_deleted": 13.601398601398602,
-            "tests_added": 212.2237762237762,
-            "tests_deleted": 19.97902097902098
+            "code_added": 688.4513888888889,
+            "code_deleted": 83.38888888888889,
+            "net": 797.4444444444445,
+            "other_added": 128.25,
+            "other_deleted": 13.527777777777779,
+            "tests_added": 212.22222222222223,
+            "tests_deleted": 19.84027777777778
           },
           "median": {
-            "code_added": 426.0,
+            "code_added": 441.0,
             "code_deleted": 37.0,
-            "net": 439.0,
+            "net": 444.0,
             "other_added": 39.0,
             "other_deleted": 6.0,
-            "tests_added": 134.0,
+            "tests_added": 138.0,
             "tests_deleted": 1.0
           },
-          "n": 143,
+          "n": 144,
           "sum": {
-            "code_added": 98586,
-            "code_deleted": 11958,
-            "net": 114119,
-            "other_added": 18464,
-            "other_deleted": 1945,
-            "tests_added": 30348,
+            "code_added": 99137,
+            "code_deleted": 12008,
+            "net": 114832,
+            "other_added": 18468,
+            "other_deleted": 1948,
+            "tests_added": 30560,
             "tests_deleted": 2857
           },
           "thin": false
@@ -8430,12 +8430,12 @@
           "muse-wonder@high",
           "luna@xhigh",
           "sonnet@high",
-          "muse-wonder-full",
           "haiku@high",
+          "muse-wonder-full",
           "haiku@xhigh",
           "muse-spark@xhigh",
-          "sol@xhigh",
           "gemini-flash@high",
+          "sol@xhigh",
           "sol@high",
           "terra@high",
           "astra@medium",
@@ -9379,64 +9379,64 @@
           },
           {
             "mean": {
-              "code_added": 166.76315789473685,
-              "code_deleted": 99.65789473684211,
-              "net": 119.76315789473684,
-              "other_added": 19.44736842105263,
-              "other_deleted": 15.0,
-              "tests_added": 60.94736842105263,
-              "tests_deleted": 8.289473684210526
+              "code_added": 158.86363636363637,
+              "code_deleted": 89.36363636363636,
+              "net": 123.4090909090909,
+              "other_added": 17.34090909090909,
+              "other_deleted": 13.409090909090908,
+              "tests_added": 61.40909090909091,
+              "tests_deleted": 7.5
             },
             "median": {
-              "code_added": 15.5,
-              "code_deleted": 3.5,
-              "net": 22.5,
+              "code_added": 27.5,
+              "code_deleted": 4.0,
+              "net": 46.0,
               "other_added": 1.0,
               "other_deleted": 1.0,
-              "tests_added": 0.0,
+              "tests_added": 1.0,
               "tests_deleted": 0.0
             },
-            "n": 38,
+            "n": 44,
             "sum": {
-              "code_added": 6337,
-              "code_deleted": 3787,
-              "net": 4551,
-              "other_added": 739,
-              "other_deleted": 570,
-              "tests_added": 2316,
-              "tests_deleted": 315
+              "code_added": 6990,
+              "code_deleted": 3932,
+              "net": 5430,
+              "other_added": 763,
+              "other_deleted": 590,
+              "tests_added": 2702,
+              "tests_deleted": 330
             },
             "thin": false
           }
         ],
         "total": {
           "mean": {
-            "code_added": 199.58389261744966,
-            "code_deleted": 45.22315436241611,
-            "net": 251.8791946308725,
-            "other_added": 42.37248322147651,
-            "other_deleted": 16.77181208053691,
-            "tests_added": 116.49832214765101,
-            "tests_deleted": 18.97986577181208
+            "code_added": 198.67940199335547,
+            "code_deleted": 45.01328903654485,
+            "net": 250.82890365448506,
+            "other_added": 41.990033222591364,
+            "other_deleted": 16.637873754152825,
+            "tests_added": 115.97840531561462,
+            "tests_deleted": 18.8156146179402
           },
           "median": {
-            "code_added": 61.5,
-            "code_deleted": 9.0,
+            "code_added": 62.0,
+            "code_deleted": 9.5,
             "net": 128.5,
             "other_added": 5.0,
-            "other_deleted": 2.0,
-            "tests_added": 51.0,
+            "other_deleted": 1.5,
+            "tests_added": 51.5,
             "tests_deleted": 0.0
           },
-          "n": 596,
+          "n": 602,
           "sum": {
-            "code_added": 118952,
-            "code_deleted": 26953,
-            "net": 150120,
-            "other_added": 25254,
-            "other_deleted": 9996,
-            "tests_added": 69433,
-            "tests_deleted": 11312
+            "code_added": 119605,
+            "code_deleted": 27098,
+            "net": 150999,
+            "other_added": 25278,
+            "other_deleted": 10016,
+            "tests_added": 69819,
+            "tests_deleted": 11327
           },
           "thin": false
         }
@@ -10389,64 +10389,64 @@
         },
         {
           "mean": {
-            "code_added": 166.76315789473685,
-            "code_deleted": 99.65789473684211,
-            "net": 119.76315789473684,
-            "other_added": 19.44736842105263,
-            "other_deleted": 15.0,
-            "tests_added": 60.94736842105263,
-            "tests_deleted": 8.289473684210526
+            "code_added": 167.57777777777778,
+            "code_deleted": 88.4888888888889,
+            "net": 136.51111111111112,
+            "other_added": 17.044444444444444,
+            "other_deleted": 13.177777777777777,
+            "tests_added": 64.75555555555556,
+            "tests_deleted": 7.333333333333333
           },
           "median": {
-            "code_added": 15.5,
-            "code_deleted": 3.5,
-            "net": 22.5,
+            "code_added": 32.0,
+            "code_deleted": 4.0,
+            "net": 49.0,
             "other_added": 1.0,
             "other_deleted": 1.0,
-            "tests_added": 0.0,
+            "tests_added": 2.0,
             "tests_deleted": 0.0
           },
-          "n": 38,
+          "n": 45,
           "sum": {
-            "code_added": 6337,
-            "code_deleted": 3787,
-            "net": 4551,
-            "other_added": 739,
-            "other_deleted": 570,
-            "tests_added": 2316,
-            "tests_deleted": 315
+            "code_added": 7541,
+            "code_deleted": 3982,
+            "net": 6143,
+            "other_added": 767,
+            "other_deleted": 593,
+            "tests_added": 2914,
+            "tests_deleted": 330
           },
           "thin": false
         }
       ],
       "total": {
         "mean": {
-          "code_added": 139.73055657943237,
-          "code_deleted": 45.25875414670107,
-          "net": 155.26944342056763,
-          "other_added": 32.934389974198304,
-          "other_deleted": 9.981938813122005,
-          "tests_added": 80.05676373018798,
-          "tests_deleted": 19.25912274235164
+          "code_added": 139.81360294117647,
+          "code_deleted": 45.21397058823529,
+          "net": 155.45514705882354,
+          "other_added": 32.859926470588235,
+          "other_deleted": 9.964705882352941,
+          "tests_added": 80.07058823529412,
+          "tests_deleted": 19.215073529411764
         },
         "median": {
           "code_added": 12.0,
           "code_deleted": 3.0,
-          "net": 39.0,
+          "net": 40.0,
           "other_added": 4.0,
           "other_deleted": 1.0,
-          "tests_added": 1.0,
+          "tests_added": 1.5,
           "tests_deleted": 0.0
         },
-        "n": 2713,
+        "n": 2720,
         "sum": {
-          "code_added": 379089,
-          "code_deleted": 122787,
-          "net": 421246,
-          "other_added": 89351,
-          "other_deleted": 27081,
-          "tests_added": 217194,
-          "tests_deleted": 52250
+          "code_added": 380293,
+          "code_deleted": 122982,
+          "net": 422838,
+          "other_added": 89379,
+          "other_deleted": 27104,
+          "tests_added": 217792,
+          "tests_deleted": 52265
         },
         "thin": false
       }
@@ -10456,10 +10456,10 @@
       "bucket_seconds": 86400,
       "key": "30d",
       "lead_buckets": 0,
-      "previous_since": "2026-09-12T18:42:40.432517171+00:00",
+      "previous_since": "2026-09-12T17:05:41.863870307+00:00",
       "previous_until": "2026-10-13T00:00:00+00:00",
       "since": "2026-10-13T00:00:00+00:00",
-      "until": "2026-11-12T05:17:19.567482829+00:00"
+      "until": "2026-11-12T06:54:18.136129693+00:00"
     }
   },
   "durations": {
@@ -10548,9 +10548,9 @@
       },
       {
         "actor": "claude / claude-haiku-5-5",
-        "avg": 531095.6418786693,
-        "n": 511,
-        "p50": 454093,
+        "avg": 532540.9064327485,
+        "n": 513,
+        "p50": 454455,
         "p95": 1271022,
         "previous_avg": 1924115.6049382717,
         "trend": [
@@ -10584,7 +10584,7 @@
           929541.7826086957,
           487600.5263157895,
           637681.8,
-          325018.5
+          469215.375
         ]
       },
       {
@@ -10630,8 +10630,8 @@
       },
       {
         "actor": "claude / claude-opus-5-5",
-        "avg": 1942340.2234332424,
-        "n": 367,
+        "avg": 1943174.1005434783,
+        "n": 368,
         "p50": 1606662,
         "p95": 4488901,
         "previous_avg": 2627567.285714286,
@@ -10666,13 +10666,13 @@
           1919692.5,
           1400055.1666666667,
           1256274.4,
-          1353660.75
+          1532770.0
         ]
       },
       {
         "actor": "muse / muse-wonder-1.0",
-        "avg": 679175.8708708709,
-        "n": 333,
+        "avg": 678433.471641791,
+        "n": 335,
         "p50": 586610,
         "p95": 1586929,
         "previous_avg": null,
@@ -10707,7 +10707,7 @@
           580372.9285714285,
           734376.3333333334,
           1005141.3,
-          null
+          554824.0
         ]
       },
       {
@@ -10835,11 +10835,11 @@
       },
       {
         "actor": "gemini / gemini-3.8-flash-high",
-        "avg": 658558.8358208955,
-        "n": 67,
+        "avg": 657077.8088235294,
+        "n": 68,
         "p50": 554898,
         "p95": 1275761,
-        "previous_avg": 1954391.875,
+        "previous_avg": 1936903.2962962964,
         "trend": [
           null,
           null,
@@ -10871,7 +10871,7 @@
           null,
           731293.0,
           283882.0,
-          500059.25
+          511617.2
         ]
       },
       {
@@ -11836,26 +11836,26 @@
       },
       {
         "all": {
-          "avg": 842236.4375,
-          "n": 32,
-          "p50": 724661,
+          "avg": 859786.3684210526,
+          "n": 38,
+          "p50": 726337,
           "p95": 2511161
         },
         "hard": {
-          "avg": 1353660.75,
-          "n": 4,
-          "p50": 1006575,
+          "avg": 1532770.0,
+          "n": 5,
+          "p50": 1045952,
           "p95": 2756522
         },
         "low": {
-          "avg": 802856.052631579,
-          "n": 19,
+          "avg": 790605.7,
+          "n": 20,
           "p50": 440502,
-          "p95": 2511161
+          "p95": 2408559
         },
         "medium": {
-          "avg": 698073.1111111111,
-          "n": 9,
+          "avg": 707378.3076923077,
+          "n": 13,
           "p50": 766175,
           "p95": 1304783
         },
@@ -11865,28 +11865,28 @@
     ],
     "current": {
       "all": {
-        "avg": 875410.843796936,
-        "n": 3329,
-        "p50": 625096,
+        "avg": 875551.1289355322,
+        "n": 3335,
+        "p50": 625191,
         "p95": 2403086
       },
       "hard": {
-        "avg": 1882230.2871900827,
-        "n": 484,
-        "p50": 1546111,
+        "avg": 1882986.9402061857,
+        "n": 485,
+        "p50": 1548333,
         "p95": 4488901
       },
       "low": {
-        "avg": 486079.7054472091,
-        "n": 1487,
+        "avg": 486127.9375,
+        "n": 1488,
         "p50": 422681,
         "p95": 1163127
       },
       "medium": {
-        "avg": 912494.1859596714,
-        "n": 1339,
-        "p50": 730236,
-        "p95": 2258036
+        "avg": 911945.6254653761,
+        "n": 1343,
+        "p50": 730695,
+        "p95": 2248760
       },
       "unset": null,
       "xhard": {
@@ -11901,16 +11901,16 @@
         "actors": [
           {
             "actor": "gemini / gemini-3.8-flash-high",
-            "avg": 658558.8358208955,
-            "n": 67,
+            "avg": 657077.8088235294,
+            "n": 68,
             "p50": 554898,
             "p95": 1275761
           },
           {
             "actor": "codex / gpt-6-luna",
-            "avg": 578166.5347091933,
-            "n": 533,
-            "p50": 486076,
+            "avg": 577630.8590225563,
+            "n": 532,
+            "p50": 484256,
             "p95": 1435775
           },
           {
@@ -12005,9 +12005,9 @@
           },
           {
             "actor": "claude / claude-haiku-5-5",
-            "avg": 1037125.0769230769,
-            "n": 65,
-            "p50": 730236,
+            "avg": 1033085.7014925373,
+            "n": 67,
+            "p50": 735589,
             "p95": 2032734
           },
           {
@@ -12019,15 +12019,15 @@
           },
           {
             "actor": "codex / gpt-6.1-sol",
-            "avg": 810136.7228637413,
-            "n": 433,
-            "p50": 719661,
-            "p95": 1679648
+            "avg": 798754.7943925234,
+            "n": 428,
+            "p50": 715991,
+            "p95": 1595177
           },
           {
             "actor": "muse / muse-wonder-1.0",
-            "avg": 685848.8148148148,
-            "n": 324,
+            "avg": 685044.981595092,
+            "n": 326,
             "p50": 588709,
             "p95": 1586929
           },
@@ -12047,7 +12047,7 @@
           }
         ],
         "complexity": "medium",
-        "n": 1331
+        "n": 1330
       },
       {
         "actors": [
@@ -12081,9 +12081,9 @@
           },
           {
             "actor": "claude / claude-opus-5-5",
-            "avg": 1962863.1770186336,
-            "n": 322,
-            "p50": 1604785,
+            "avg": 1963749.6904024768,
+            "n": 323,
+            "p50": 1606662,
             "p95": 4640230
           },
           {
@@ -12116,7 +12116,7 @@
           }
         ],
         "complexity": "hard",
-        "n": 478
+        "n": 479
       },
       {
         "actors": [
@@ -12142,27 +12142,27 @@
     "outcome": "succeeded",
     "previous": {
       "all": {
-        "avg": 1987969.2386104784,
-        "n": 1756,
-        "p50": 1697243,
-        "p95": 4116478
+        "avg": 1984261.9841179808,
+        "n": 1763,
+        "p50": 1696015,
+        "p95": 4114777
       },
       "hard": {
-        "avg": 2527336.9582309583,
-        "n": 407,
+        "avg": 2530416.1397058824,
+        "n": 408,
         "p50": 2379440,
         "p95": 4940142
       },
       "low": {
-        "avg": 1663451.1501976284,
-        "n": 506,
-        "p50": 1434306,
+        "avg": 1654867.8921568627,
+        "n": 510,
+        "p50": 1426982,
         "p95": 3437261
       },
       "medium": {
-        "avg": 1914431.505376344,
-        "n": 837,
-        "p50": 1656306,
+        "avg": 1911441.0953516092,
+        "n": 839,
+        "p50": 1652624,
         "p95": 3979011
       },
       "unset": null,
@@ -12179,10 +12179,10 @@
       "bucket_seconds": 86400,
       "key": "30d",
       "lead_buckets": 0,
-      "previous_since": "2026-09-12T18:42:41.064497910+00:00",
+      "previous_since": "2026-09-12T17:05:42.781408350+00:00",
       "previous_until": "2026-10-13T00:00:00+00:00",
       "since": "2026-10-13T00:00:00+00:00",
-      "until": "2026-11-12T05:17:18.935502090+00:00"
+      "until": "2026-11-12T06:54:17.218591650+00:00"
     }
   },
   "friction": {
@@ -12193,15 +12193,15 @@
       },
       {
         "complexity": "low",
-        "tasks": 1941
+        "tasks": 1942
       },
       {
         "complexity": "medium",
-        "tasks": 3886
+        "tasks": 3895
       },
       {
         "complexity": "hard",
-        "tasks": 1287
+        "tasks": 1289
       },
       {
         "complexity": "xhard",
@@ -12227,7 +12227,7 @@
       },
       {
         "crew": "opus",
-        "tasks": 512
+        "tasks": 514
       },
       {
         "crew": "sonnet",
@@ -12259,7 +12259,7 @@
       },
       {
         "crew": "sol@high",
-        "tasks": 46
+        "tasks": 49
       },
       {
         "crew": "grok@high",
@@ -12267,11 +12267,11 @@
       },
       {
         "crew": "muse-wonder-full@high",
-        "tasks": 38
+        "tasks": 39
       },
       {
         "crew": "muse-wonder@high",
-        "tasks": 35
+        "tasks": 38
       },
       {
         "crew": "sonnet@high",
@@ -12283,7 +12283,7 @@
       },
       {
         "crew": "haiku@high",
-        "tasks": 27
+        "tasks": 29
       },
       {
         "crew": "sol@xhigh",
@@ -12302,11 +12302,11 @@
         "tasks": 20
       },
       {
-        "crew": "astra@medium",
-        "tasks": 10
+        "crew": "gemini-flash@high",
+        "tasks": 11
       },
       {
-        "crew": "gemini-flash@high",
+        "crew": "astra@medium",
         "tasks": 10
       },
       {
@@ -12399,11 +12399,11 @@
         260,
         165,
         82,
-        72
+        84
       ],
-      "previous": 2777,
+      "previous": 2785,
       "previous_undated": 0,
-      "total": 7147,
+      "total": 7159,
       "undated": 0,
       "unfiltered_points": [
         145,
@@ -12436,9 +12436,9 @@
         260,
         165,
         82,
-        72
+        84
       ],
-      "unfiltered_total": 7147,
+      "unfiltered_total": 7159,
       "unfiltered_undated": 0
     },
     "families": [
@@ -12743,8 +12743,8 @@
               "recovered": 2
             },
             "count": 2,
-            "denominator": 72,
-            "rate": 0.027777777777777776,
+            "denominator": 84,
+            "rate": 0.023809523809523808,
             "sparse": false
           }
         ],
@@ -12754,8 +12754,8 @@
             "recovered": 166
           },
           "count": 215,
-          "denominator": 2777,
-          "rate": 0.07742167806985956,
+          "denominator": 2785,
+          "rate": 0.07719928186714542,
           "sparse": false
         },
         "task_scoped": false,
@@ -12765,8 +12765,8 @@
             "recovered": 452
           },
           "count": 506,
-          "denominator": 7147,
-          "rate": 0.07079893661676227,
+          "denominator": 7159,
+          "rate": 0.0706802626065093,
           "sparse": false
         },
         "unit": "events"
@@ -13094,12 +13094,12 @@
           },
           {
             "breakdown": {
-              "escalated": 2,
+              "escalated": 3,
               "resume": 1
             },
-            "count": 3,
-            "denominator": 72,
-            "rate": 0.041666666666666664,
+            "count": 4,
+            "denominator": 84,
+            "rate": 0.047619047619047616,
             "sparse": false
           }
         ],
@@ -13110,20 +13110,20 @@
             "settled": 11
           },
           "count": 156,
-          "denominator": 2777,
-          "rate": 0.05617572920417717,
+          "denominator": 2785,
+          "rate": 0.05601436265709156,
           "sparse": false
         },
         "task_scoped": false,
         "total": {
           "breakdown": {
-            "escalated": 233,
+            "escalated": 234,
             "resume": 181,
             "settled": 50
           },
-          "count": 464,
-          "denominator": 7147,
-          "rate": 0.06492234503987687,
+          "count": 465,
+          "denominator": 7159,
+          "rate": 0.06495320575499372,
           "sparse": false
         },
         "unit": "events"
@@ -13420,15 +13420,15 @@
               "failed_checks": 1
             },
             "count": 1,
-            "denominator": 72,
-            "rate": 0.013888888888888888,
+            "denominator": 84,
+            "rate": 0.011904761904761904,
             "sparse": false
           }
         ],
         "previous": {
           "breakdown": {},
           "count": 0,
-          "denominator": 2777,
+          "denominator": 2785,
           "rate": 0.0,
           "sparse": false
         },
@@ -13439,8 +13439,8 @@
             "failed_checks": 228
           },
           "count": 315,
-          "denominator": 7147,
-          "rate": 0.04407443682664055,
+          "denominator": 7159,
+          "rate": 0.04400055873725381,
           "sparse": false
         },
         "unit": "events"
@@ -13717,7 +13717,7 @@
           {
             "breakdown": {},
             "count": 0,
-            "denominator": 72,
+            "denominator": 84,
             "rate": 0.0,
             "sparse": false
           }
@@ -13728,8 +13728,8 @@
             "recovered": 87
           },
           "count": 96,
-          "denominator": 2777,
-          "rate": 0.03456967951026287,
+          "denominator": 2785,
+          "rate": 0.03447037701974865,
           "sparse": false
         },
         "task_scoped": false,
@@ -13739,8 +13739,8 @@
             "recovered": 170
           },
           "count": 180,
-          "denominator": 7147,
-          "rate": 0.02518539247236603,
+          "denominator": 7159,
+          "rate": 0.02514317642128789,
           "sparse": false
         },
         "unit": "events"
@@ -14047,8 +14047,8 @@
               "sweep_filing": 1
             },
             "count": 2,
-            "denominator": 72,
-            "rate": 0.027777777777777776,
+            "denominator": 84,
+            "rate": 0.023809523809523808,
             "sparse": false
           }
         ],
@@ -14057,8 +14057,8 @@
             "sweep_filing": 147
           },
           "count": 147,
-          "denominator": 2777,
-          "rate": 0.052934821750090025,
+          "denominator": 2785,
+          "rate": 0.05278276481149013,
           "sparse": false
         },
         "task_scoped": true,
@@ -14068,8 +14068,8 @@
             "sweep_filing": 113
           },
           "count": 348,
-          "denominator": 7147,
-          "rate": 0.048691758779907654,
+          "denominator": 7159,
+          "rate": 0.048610141081156584,
           "sparse": false
         },
         "unit": "events"
@@ -14377,34 +14377,34 @@
           },
           {
             "breakdown": {
-              "invocations": 67.1776
+              "invocations": 69.4126
             },
-            "count": 67.1776,
-            "denominator": 72,
-            "excluded_invocations": 80,
-            "rate": 0.9330221834722222,
+            "count": 69.4126,
+            "denominator": 84,
+            "excluded_invocations": 100,
+            "rate": 0.8263401716666668,
             "sparse": false
           }
         ],
         "previous": {
           "breakdown": {
-            "invocations": 5819.9899
+            "invocations": 5899.2517
           },
-          "count": 5819.9899,
-          "denominator": 2777,
-          "excluded_invocations": 2798,
-          "rate": 2.095783192673751,
+          "count": 5899.2517,
+          "denominator": 2785,
+          "excluded_invocations": 2800,
+          "rate": 2.118223244622983,
           "sparse": false
         },
         "task_scoped": true,
         "total": {
           "breakdown": {
-            "invocations": 6989.1441
+            "invocations": 6991.3791
           },
-          "count": 6989.1441,
-          "denominator": 7147,
-          "excluded_invocations": 7591,
-          "rate": 0.9779129836357893,
+          "count": 6991.3791,
+          "denominator": 7159,
+          "excluded_invocations": 7611,
+          "rate": 0.9765859856481333,
           "sparse": false
         },
         "unit": "usd"
@@ -14416,10 +14416,10 @@
       "bucket_seconds": 86400,
       "key": "30d",
       "lead_buckets": 0,
-      "previous_since": "2026-09-12T18:42:40.414816103+00:00",
+      "previous_since": "2026-09-12T17:05:41.849544541+00:00",
       "previous_until": "2026-10-13T00:00:00+00:00",
       "since": "2026-10-13T00:00:00+00:00",
-      "until": "2026-11-12T05:17:19.585183897+00:00"
+      "until": "2026-11-12T06:54:18.150455459+00:00"
     }
   },
   "outcome": "succeeded",
@@ -14428,15 +14428,15 @@
     "available_models": [
       {
         "model": "gpt-6.1-sol",
-        "tasks": 1682
+        "tasks": 1685
       },
       {
         "model": "muse-wonder-1.0",
-        "tasks": 819
+        "tasks": 822
       },
       {
         "model": "claude-haiku-5-5",
-        "tasks": 679
+        "tasks": 681
       },
       {
         "model": "gpt-6-luna",
@@ -14444,7 +14444,7 @@
       },
       {
         "model": "claude-opus-5-5",
-        "tasks": 609
+        "tasks": 610
       },
       {
         "model": "claude-sonnet-5-5",
@@ -14464,11 +14464,11 @@
       },
       {
         "model": "muse-wonder-full-1.0",
-        "tasks": 111
+        "tasks": 112
       },
       {
         "model": "gemini-3.8-flash-high",
-        "tasks": 72
+        "tasks": 73
       },
       {
         "model": "claude-fable-5-2",
@@ -15093,7 +15093,7 @@
           },
           {
             "excluded_no_invocations": 2,
-            "excluded_uncovered": 4,
+            "excluded_uncovered": 5,
             "mean": 6928787.9375,
             "median": 4218784.0,
             "n": 16,
@@ -15103,7 +15103,7 @@
         ],
         "total": {
           "excluded_no_invocations": 77,
-          "excluded_uncovered": 82,
+          "excluded_uncovered": 83,
           "mean": 3380113.6369248037,
           "median": 2247823.5,
           "n": 1782,
@@ -15388,21 +15388,21 @@
           },
           {
             "excluded_no_invocations": 1,
-            "excluded_uncovered": 2,
-            "mean": 3832227.5625,
-            "median": 2303089.0,
-            "n": 32,
-            "sum": 122631282.0,
+            "excluded_uncovered": 4,
+            "mean": 4219425.794871795,
+            "median": 2560664.0,
+            "n": 39,
+            "sum": 164557606.0,
             "thin": false
           }
         ],
         "total": {
           "excluded_no_invocations": 76,
-          "excluded_uncovered": 68,
-          "mean": 3994424.385088188,
-          "median": 2125696.0,
-          "n": 3742,
-          "sum": 14947136049.0,
+          "excluded_uncovered": 70,
+          "mean": 3998149.472659376,
+          "median": 2138728.0,
+          "n": 3749,
+          "sum": 14989062373.0,
           "thin": false
         }
       },
@@ -15682,22 +15682,22 @@
             "thin": false
           },
           {
-            "excluded_no_invocations": 0,
+            "excluded_no_invocations": 1,
             "excluded_uncovered": 3,
-            "mean": 12508877.833333334,
-            "median": 10946515.5,
-            "n": 12,
-            "sum": 150106534.0,
+            "mean": 13567791.923076924,
+            "median": 15176426.0,
+            "n": 13,
+            "sum": 176381295.0,
             "thin": false
           }
         ],
         "total": {
-          "excluded_no_invocations": 87,
+          "excluded_no_invocations": 88,
           "excluded_uncovered": 68,
-          "mean": 9895840.268551236,
-          "median": 6940057.0,
-          "n": 1132,
-          "sum": 11202091184.0,
+          "mean": 9910296.50926743,
+          "median": 6954024.0,
+          "n": 1133,
+          "sum": 11228365945.0,
           "thin": false
         }
       },
@@ -15999,12 +15999,12 @@
     ],
     "source": "GET /api/diagnostics/task_tokens?since=30d&outcome=done&scope=all",
     "total": {
-      "excluded_no_invocations": 246,
-      "excluded_uncovered": 220,
-      "mean": 4917942.45861398,
-      "median": 2666042.0,
-      "n": 6681,
-      "sum": 32856773566.0,
+      "excluded_no_invocations": 247,
+      "excluded_uncovered": 223,
+      "mean": 4922256.637912991,
+      "median": 2670561.0,
+      "n": 6689,
+      "sum": 32924974651.0,
       "thin": false
     },
     "undated_tasks": 0,
@@ -16012,29 +16012,29 @@
       "bucket_seconds": 86400,
       "key": "30d",
       "lead_buckets": 0,
-      "previous_since": "2026-09-12T18:42:40.749066778+00:00",
+      "previous_since": "2026-09-12T17:05:42.151538630+00:00",
       "previous_until": "2026-10-13T00:00:00+00:00",
       "since": "2026-10-13T00:00:00+00:00",
-      "until": "2026-11-12T05:17:19.250933222+00:00"
+      "until": "2026-11-12T06:54:17.848461370+00:00"
     }
   },
   "turns": {
     "available_providers": [
       {
         "coverage": {
-          "tasks": 2641
+          "tasks": 2644
         },
         "provider": "codex"
       },
       {
         "coverage": {
-          "tasks": 1794
+          "tasks": 1797
         },
         "provider": "claude"
       },
       {
         "coverage": {
-          "tasks": 1341
+          "tasks": 1345
         },
         "provider": "muse"
       },
@@ -16046,7 +16046,7 @@
       },
       {
         "coverage": {
-          "tasks": 78
+          "tasks": 79
         },
         "provider": "gemini"
       }
@@ -16086,13 +16086,13 @@
     ],
     "coverage": {
       "empty_trace": 2046,
-      "incomplete_trace": 771,
-      "measured": 739,
-      "measured_rate": 0.10340002798376942,
-      "no_detectable_edit": 2742,
-      "no_invocation": 849,
-      "tasks": 7147,
-      "trace_rate": 0.67513496348047
+      "incomplete_trace": 779,
+      "measured": 740,
+      "measured_rate": 0.10336639195418354,
+      "no_detectable_edit": 2744,
+      "no_invocation": 850,
+      "tasks": 7159,
+      "trace_rate": 0.6757013789824061
     },
     "excluded_other_provider": 0,
     "min_tasks": 3,
@@ -16982,12 +16982,12 @@
             "excluded_no_detectable_edit": 0,
             "excluded_no_edit": 0,
             "excluded_no_invocation": 3,
-            "mean_result_bytes": 129973.09090909091,
-            "mean_turns": 22.272727272727273,
-            "median_result_bytes": 119857.0,
-            "median_turns": 14.0,
-            "n": 11,
-            "tasks": 22,
+            "mean_result_bytes": 123179.41666666667,
+            "mean_turns": 23.333333333333332,
+            "median_result_bytes": 116622.0,
+            "median_turns": 14.5,
+            "n": 12,
+            "tasks": 23,
             "thin": false
           }
         ],
@@ -16997,12 +16997,12 @@
           "excluded_no_detectable_edit": 464,
           "excluded_no_edit": 949,
           "excluded_no_invocation": 320,
-          "mean_result_bytes": 112111.14669421487,
-          "mean_turns": 13.632231404958677,
-          "median_result_bytes": 83523.0,
+          "mean_result_bytes": 111979.88453608248,
+          "mean_turns": 13.676288659793814,
+          "median_result_bytes": 83351.0,
           "median_turns": 11.0,
-          "n": 484,
-          "tasks": 1941,
+          "n": 485,
+          "tasks": 1942,
           "thin": false
         }
       },
@@ -17432,31 +17432,31 @@
           },
           {
             "excluded_empty_trace": 4,
-            "excluded_incomplete_trace": 3,
-            "excluded_no_detectable_edit": 19,
-            "excluded_no_edit": 23,
+            "excluded_incomplete_trace": 10,
+            "excluded_no_detectable_edit": 21,
+            "excluded_no_edit": 25,
             "excluded_no_invocation": 2,
             "mean_result_bytes": 87613.0,
             "mean_turns": 16.857142857142858,
             "median_result_bytes": 62091.0,
             "median_turns": 13.0,
             "n": 7,
-            "tasks": 35,
+            "tasks": 44,
             "thin": false
           }
         ],
         "total": {
           "excluded_empty_trace": 1161,
-          "excluded_incomplete_trace": 390,
-          "excluded_no_detectable_edit": 1820,
-          "excluded_no_edit": 2981,
+          "excluded_incomplete_trace": 397,
+          "excluded_no_detectable_edit": 1822,
+          "excluded_no_edit": 2983,
           "excluded_no_invocation": 310,
           "mean_result_bytes": 245625.00975609757,
           "mean_turns": 19.521951219512196,
           "median_result_bytes": 195442.0,
           "median_turns": 18.0,
           "n": 205,
-          "tasks": 3886,
+          "tasks": 3895,
           "thin": false
         }
       },
@@ -17886,31 +17886,31 @@
           },
           {
             "excluded_empty_trace": 0,
-            "excluded_incomplete_trace": 9,
+            "excluded_incomplete_trace": 10,
             "excluded_no_detectable_edit": 4,
             "excluded_no_edit": 4,
-            "excluded_no_invocation": 0,
+            "excluded_no_invocation": 1,
             "mean_result_bytes": 102222.5,
             "mean_turns": 23.0,
             "median_result_bytes": 102222.5,
             "median_turns": 23.0,
             "n": 2,
-            "tasks": 15,
+            "tasks": 17,
             "thin": true
           }
         ],
         "total": {
           "excluded_empty_trace": 389,
-          "excluded_incomplete_trace": 184,
+          "excluded_incomplete_trace": 185,
           "excluded_no_detectable_edit": 456,
           "excluded_no_edit": 845,
-          "excluded_no_invocation": 208,
+          "excluded_no_invocation": 209,
           "mean_result_bytes": 229951.54,
           "mean_turns": 24.34,
           "median_result_bytes": 134090.0,
           "median_turns": 23.5,
           "n": 50,
-          "tasks": 1287,
+          "tasks": 1289,
           "thin": false
         }
       },
@@ -18372,16 +18372,16 @@
     "source": "GET /api/diagnostics/turns_to_edit?since=30d&outcome=done",
     "total": {
       "excluded_empty_trace": 2046,
-      "excluded_incomplete_trace": 771,
-      "excluded_no_detectable_edit": 2742,
-      "excluded_no_edit": 4788,
-      "excluded_no_invocation": 849,
-      "mean_result_bytes": 157121.10825439784,
-      "mean_turns": 15.990527740189446,
-      "median_result_bytes": 106602.0,
+      "excluded_incomplete_trace": 779,
+      "excluded_no_detectable_edit": 2744,
+      "excluded_no_edit": 4790,
+      "excluded_no_invocation": 850,
+      "mean_result_bytes": 156974.25405405406,
+      "mean_turns": 16.016216216216215,
+      "median_result_bytes": 106474.5,
       "median_turns": 13.0,
-      "n": 739,
-      "tasks": 7147,
+      "n": 740,
+      "tasks": 7159,
       "thin": false
     },
     "truncated": false,
@@ -18390,10 +18390,10 @@
       "bucket_seconds": 86400,
       "key": "30d",
       "lead_buckets": 0,
-      "previous_since": "2026-09-12T18:42:40.607514693+00:00",
+      "previous_since": "2026-09-12T17:05:42.023562052+00:00",
       "previous_until": "2026-10-13T00:00:00+00:00",
       "since": "2026-10-13T00:00:00+00:00",
-      "until": "2026-11-12T05:17:19.392485307+00:00"
+      "until": "2026-11-12T06:54:17.976437948+00:00"
     }
   },
   "window": "30d",
