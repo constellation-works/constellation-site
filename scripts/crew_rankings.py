@@ -298,6 +298,7 @@ def note_text(day, scorecards, band, why, who, data_rel, fallback):
     address = (f"{PLACEHOLDER} {who['crew']} replaces this line with a victory address: two to four short "
                "first-person sentences, every number taken from this note's CSVs and its frozen rank.json, "
                "no em dashes, and nothing that restates or reframes the boards.")
+    signature = band[0]["model"] if band else who["crew"]
     limits = ("Limits: these are 30 days of one repository's managed tasks, not a controlled comparison; "
               "reviewer scores stay provisional until their findings settle; and implementer, reviewer "
               "and pilot scores are on different scales.")
@@ -318,7 +319,9 @@ tags: {TAGS}
 
 {rule_text(band, who, why, fallback)}
 
-{address}
+> {address}
+>
+> — {signature}
 
 ## Crews by role
 

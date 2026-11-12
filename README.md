@@ -54,8 +54,10 @@ With no qualified, calibrated board the note names no MVP, says why, and its byl
 The band's first model in Orbit's order writes the note, through its crew with the most
 implemented tasks in the window; `--writer-only` prints that writer.
 Its body's `<!-- crews-by-role: data/crew-rankings/<date> -->` marker is replaced at build
-time by the Ranking page's own `render_crews_by_role`, every role stacked. The writer
-replaces the `{{victory-address}}` placeholder; `build.py` refuses a published note that
+time by the Ranking page's own `render_crews_by_role`, every role stacked, with the detailed
+Implementers by tier board omitted from notes. The writer replaces the
+`{{victory-address}}` placeholder inside a shaded blockquote signed by the winner;
+`build.py` refuses a published note that
 still has it. The method is [notes/crew-rankings-method](notes/crew-rankings-method/index.md).
 
 ## Ranking
