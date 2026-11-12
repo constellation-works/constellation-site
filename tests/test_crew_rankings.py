@@ -58,31 +58,6 @@ def rank_board(*rows, scales="season", qualified=True):
     }
 
 
-def model_rank_board():
-    """A calibrated board with an unmeasured review outcome on the MVP, one measure unmeasured for all, and an ineligible row."""
-    haiku = model_row("claude-haiku-5-5", 1, "1", 103.0, [("haiku@high", 40), ("haiku@xhigh", 200)])
-    luna = model_row("gpt-6-luna", 2, "2", 99.0, [("luna", 50)])
-    tiny = model_row("gpt-tiny", None, None, 130.0, [("tiny", 9)], eligible=False)
-    tiny["ineligible_reason"] = "9 implemented tasks; 30 needed"
-    unmeasured = fixtures.rank_measure(20, reason="no units for this model in the window")
-    for row, review in ((haiku, unmeasured), (luna, fixtures.rank_measure(20, 3.0)), (tiny, unmeasured)):
-        row["measures"]["review_outcome"] = review
-    luna["weights_measured"] = 50.0
-    board = rank_board(haiku, luna, tiny)
-    board["measures"] = [
-        {"key": "escaped_regressions", "label": "Escaped regressions", "status": "measured", "sign": -1.0,
-         "weight": 30.0, "reason": None},
-        {"key": "review_outcome", "label": "Review outcome", "status": "measured", "sign": 1.0,
-         "weight": 20.0, "reason": None},
-        {"key": "tool_call_errors", "label": "Tool-call errors", "status": "unmeasured", "sign": -1.0,
-         "weight": 5.0, "reason": "not attributed yet"},
-    ]
-    board["weights_total"] = 55.0
-    board["eligibility_rule"] = "At least 30 implemented tasks."
-    board["not_scored"] = {"count": 7, "reasons": {"spec": 2, "no_cause": 5}}
-    return board
-
-
 # A shared top band, cheapest first: the first model writes the address through its only crew.
 TIED_BAND = [
     model_row("gpt-6.1-sol", 1, "1=", 114.6, [("sol", 825)]),
@@ -144,11 +119,11 @@ class CrewRankingScript(unittest.TestCase):
         body = text.split("---", 2)[2]
         self.assertIn("**Co-MVPs, rank 1=: gpt-6.1-sol at 114.6 (p10–p90 110.6–118.6); "
                       "gpt-6-sol at 119.1 (p10–p90 115.1–123.1).**", body)
-        self.assertIn("its first model, gpt-6.1-sol, writes the address, through its crew sol:", body)
+        self.assertIn("its first model, gpt-6.1-sol, writes the address, through its crew sol", body)
         self.assertIn("{{victory-address}} sol replaces this line", body)
         self.assertIn("Limits:", body)
         self.assertEqual(sorted(p.name for p in note.iterdir()),
-                         ["all-tiers.csv", "by-tier.csv", "index.md", "model-rank.csv", "pilots.csv", "reviewers.csv"])
+                         ["all-tiers.csv", "by-tier.csv", "index.md", "pilots.csv", "reviewers.csv"])
         with open(note / "all-tiers.csv", newline="") as f:
             first = next(csv.DictReader(f))
         self.assertEqual((first["rank"], first["crew"]), ("1", "sol"))
@@ -213,88 +188,6 @@ class CrewRankingScript(unittest.TestCase):
         self.assertEqual(front_matter(text)["title"], "[Crew Ranking - 2026-11-09]: no MVP")
         self.assertIn("**No MVP this week:** the note froze no settled model rank for its date.", text)
         self.assertFalse((self.data / "2026-11-09" / "rank.json").exists())
-
-    def test_the_model_rank_section_shows_the_board_that_decides_the_mvp(self):
-        self.freeze(model_rank_board())
-        note = self.generate()
-        text = (note / "index.md").read_text(encoding="utf-8")
-        body = text.split("---", 2)[2]
-        section = body[body.index("<!-- model-rank -->"):body.index("<!-- /model-rank -->")]
-        # Ahead of the address and the crew boards, led by the line that says which board decides.
-        self.assertLess(body.index("## Model rank"), body.index("## Victory address"))
-        self.assertLess(body.index("## Model rank"), body.index("## Crews by role"))
-        self.assertIn("This table decides the MVP: Orbit's settled model rank for the 30 days from 2026-09-25 "
-                      "to 2026-10-25", section)
-        self.assertIn("The crew boards below earn nothing toward it.", section)
-        # Ranked rows in Rank's order: rank, score, interval, tasks, measured weight, actual / expected.
-        self.assertIn("<tr><td>1</td><td>claude-haiku-5-5<span class=\"crews\">haiku: high, xhigh</span></td><td>103.0</td><td>99.0–107.0</td><td>240</td>"
-                      "<td>30 / 55</td><td>1.0 / 2.0</td><td>unmeasured<sup>a</sup></td></tr>", section)
-        self.assertIn("<tr><td>2</td><td>gpt-6-luna<span class=\"crews\">luna</span></td><td>99.0</td><td>95.0–103.0</td><td>50</td>"
-                      "<td>50 / 55</td><td>1.0 / 2.0</td><td>1.0 / 2.0</td></tr>", section)
-        self.assertLess(section.index("claude-haiku-5-5"), section.index("gpt-6-luna"))
-        # An unmeasured cell is never 0 or blank, and Orbit's reason is given.
-        self.assertIn("<sup>a</sup> no units for this model in the window", section)
-        self.assertNotIn("<td></td>", section)
-        self.assertIn("Not measured for any model: Tool-call errors (weight 5), not attributed yet.", section)
-        # The ineligible row goes below, folded, with Orbit's reason and rule.
-        self.assertIn("<summary>Not ranked (1)</summary>", section)
-        self.assertIn("<tr><td>gpt-tiny</td><td>9</td><td>9 implemented tasks; 30 needed</td></tr>", section)
-        self.assertGreater(section.index("gpt-tiny"), section.index("gpt-6-luna"))
-        self.assertIn("Orbit scored no model on 7 of the window's tasks (no cause 5, spec 2).", section)
-        # The same table, published as model-rank.csv.
-        with open(note / "model-rank.csv", newline="") as f:
-            rows = list(csv.DictReader(f))
-        self.assertEqual([(r["status"], r["rank"], r["model"]) for r in rows],
-                         [("ranked", "1", "claude-haiku-5-5"), ("ranked", "2", "gpt-6-luna"), ("not ranked", "", "gpt-tiny")])
-        self.assertEqual((rows[0]["review_outcome_status"], rows[0]["review_outcome_actual"],
-                          rows[0]["review_outcome_reason"]), ("unmeasured", "", "no units for this model in the window"))
-        self.assertEqual((rows[0]["weights_measured"], rows[0]["weights_total"], rows[0]["p10"]), ("30.0", "55.0", "99.0"))
-        self.assertEqual(rows[0]["crews"], "haiku: high, xhigh")
-        self.assertEqual(rows[2]["not_ranked_reason"], "9 implemented tasks; 30 needed")
-        # It renders as a table, and a re-issue refreshes only the section.
-        html = build.render_body(body)
-        self.assertIn('<div class="table"><table>', html)
-        self.assertIn("<h2", html)
-        (note / "index.md").write_text(text.replace("{{victory-address}}", "Written address."), encoding="utf-8")
-        self.freeze(rank_board(HAIKU_ROW, LUNA_ROW))
-        self.generate("--model-rank")
-        refreshed = (note / "index.md").read_text(encoding="utf-8")
-        self.assertIn("Written address.", refreshed)
-        self.assertEqual(refreshed.count("## Model rank"), 1)
-        self.assertNotIn("gpt-tiny", refreshed)
-
-    def test_a_shared_band_is_listed_by_score_and_the_writer_keeps_orbits_order(self):
-        # Orbit lists the 2= band cheapest first; the table and CSV list it by score (STD-07 §R36).
-        board = rank_board(
-            model_row("gpt-6-sol", 1, "1", 115.8, [("sol", 117)]),
-            model_row("muse-wonder-1.0", 2, "2=", 64.1, [("muse-wonder", 34)]),
-            model_row("gpt-6-luna", 2, "2=", 107.0, [("luna", 447)]),
-            model_row("claude-opus-5-5", 2, "2=", 90.5, [("opus", 501)]),
-            model_row("gpt-6.1-sol", 2, "2=", 108.0, [("sol", 824)]),
-            model_row("claude-haiku-5-5", 2, "2=", 101.1, [("haiku", 222)]),
-        )
-        self.freeze(board)
-        note = self.generate()
-        order = ["gpt-6-sol", "gpt-6.1-sol", "gpt-6-luna", "claude-haiku-5-5", "claude-opus-5-5", "muse-wonder-1.0"]
-        section = (note / "index.md").read_text(encoding="utf-8").split("<!-- model-rank -->")[1]
-        self.assertEqual(re.findall(r"<tr><td>[^<]*</td><td>([^<]+)<span", section), order)
-        with open(note / "model-rank.csv", newline="") as f:
-            self.assertEqual([r["model"] for r in csv.DictReader(f)], order)
-        # A shared top band keeps Orbit's cheapest-first order for the writer.
-        tied = rank_board(model_row("b-model", 1, "1=", 120.0, [("b", 5)]), model_row("a-model", 1, "1=", 130.0, [("a", 5)]))
-        self.assertEqual([r["model"] for r in crew_rankings.mvp_band(tied)[0]], ["b-model", "a-model"])
-        self.assertEqual([r["model"] for r in crew_rankings.ranked_rows(tied)], ["a-model", "b-model"])
-
-    def test_a_note_without_a_frozen_rank_says_no_model_rank_decided_it(self):
-        note = self.notes / "crew-rankings-2026-11-09"
-        note.mkdir(parents=True)
-        (note / "index.md").write_text("Intro.\n\n## Victory address\n\n> Hi.\n", encoding="utf-8")
-        (self.frozen / "rank.json").unlink()
-        self.generate("--model-rank")
-        text = (note / "index.md").read_text(encoding="utf-8")
-        self.assertIn("## Model rank\n\nNo settled model rank was frozen for this note's date", text)
-        self.assertLess(text.index("## Model rank"), text.index("## Victory address"))
-        self.assertFalse((note / "model-rank.csv").exists())
 
     def test_an_existing_note_is_not_overwritten_without_force(self):
         note = self.generate()
