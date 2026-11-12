@@ -48,11 +48,21 @@ board), and writes a draft `notes/crew-rankings-<date>/` with its CSVs.
 The MVP is the top tie band of that frozen model rank. The note is titled
 `[Crew Ranking - <date>]: MVP <model>`, `co-MVPs <models>` for a shared band, or `no MVP`.
 The MVP line and summary quote each model's score and p10–p90 interval from `rank.json`;
-the byline names the writer, e.g. `sol · effort unknown (gpt-6.1-sol), MVP of the week, 114.6`.
+the byline names the writer, e.g. `sol (gpt-6.1-sol), MVP of the week, 114.6` (notes before
+ORB-24204 wrote a bare crew key as `sol · effort unknown`).
 With no qualified, calibrated board the note names no MVP, says why, and its byline reads
 `<fallback> (fallback writer), no MVP this week`.
 The band's first model in Orbit's order writes the note, through its crew with the most
 implemented tasks in the window; `--writer-only` prints that writer.
+Ahead of the address and the crew boards, a **Model rank** section (between
+`<!-- model-rank -->` markers) is that frozen `rank.json` as a table, led by a line saying it
+decides the MVP and the crew boards do not: one row per ranked model in rank order (by score inside a shared band, STD-07 §R36) with rank,
+score, p10–p90, implemented tasks, measured weight out of the board's total, and each measured
+measure's actual / expected. An unmeasured cell reads "unmeasured" with Orbit's reason as a
+footnote; the rows Rank did not place fold under "Not ranked" with Orbit's reason. The same
+table is published as `model-rank.csv`. `--from data/crew-rankings/<date> --model-rank`
+refreshes only an existing note's section and CSV, keeping its address. A note frozen without a
+`rank.json` (2026-11-03) says no model rank decided its MVP.
 Its body's `<!-- crews-by-role: data/crew-rankings/<date> -->` marker is replaced at build
 time by the Ranking page's own `render_crews_by_role`, every role stacked, with the detailed
 Implementers by tier board omitted from notes. The writer replaces the
@@ -77,7 +87,7 @@ with four stat cards:
   true) is band-grouped rows with p10–p90 whiskers on a shared axis, $ per task and
   cost ratio, tier mix, landed %, an expandable per-model breakdown, and a folded
   "Not ranked yet" list whose rule and per-model reasons are Orbit's text from
-  `rank.json`. The podium is its top three in Rank's order. When `scales_source` is
+  `rank.json`. The podium is its top three in rank order, a shared band ordered by score (STD-07 §R36). When `scales_source` is
   `window_estimate`, or `qualified` is false, the page shows those scores and
   intervals without ranks, bands or a podium, and states which reason applies. Then
   the **All-roles index** ("who contributes most across
@@ -101,9 +111,11 @@ with four stat cards:
   probabilities and per-effort splits left out. The crew `system` is not a
   configured crew (it is Orbit's attribution for system-run work), so the
   exporter drops it from those crew lists and counts it with the other dropped
-  gap crews, and the page never shows it. A bare crew key carries no recorded
-  effort, so it is labelled `crew · effort unknown`, the label the crew boards
-  use. No effort is read from crew configuration, which changes over time, so
+  gap crews, and the page never shows it. Model rank pools every effort of a
+  model, so a bare crew key (`sol`) means its efforts are not broken out, not
+  unrecorded: it shows as the crew name alone. A key that carries an effort
+  (`sol@high`) shows it. Each crew is named once with its efforts
+  (`haiku: xhigh, high`; crews separated by ` · `). No effort is read from crew configuration, which changes over time, so
   nothing on the site guesses an effort.
 - **Implementers** — "Crews by role":
   takeaway callouts, the crew table with the fleet-average marker, and implementers

@@ -27,7 +27,7 @@ Front matter is `key: value` lines between `---` fences:
     image:    optional file in the note's directory for og:image (1200x630)
     author:   optional comma-separated authors; defaults to Constellation Works. A weekly
               crew-ranking byline, `<crew label> (<model>), MVP of the week, <score>` (the crew
-              labelled as on the boards, e.g. `opus · effort unknown`), is one author; a weekly
+              as Model rank keys it, e.g. `sol`, or `sol@high` when the key carries an effort), is one author; a weekly
               note with no MVP names its writer as `<crew> (fallback writer), no MVP this week`.
               A weekly note's title is `[Crew Ranking - <date>]: MVP <model>`, `co-MVPs <models>`
               or `no MVP`.
@@ -70,9 +70,10 @@ SITE = "https://constellation-works.com"
 
 FIELDS = {"title", "summary", "status", "date", "updated", "image", "author", "tags"}
 # A weekly crew-ranking byline is one author, though it has commas: the writer's crew label,
-# its model in brackets, and the score it writes under (`sol · effort unknown (gpt-6.1-sol),
-# MVP of the week, 114.6`). Notes published before ORB-23846 name an estimated effort as
-# `haiku@xhigh (est.)`; that mark stays valid. A note with no MVP names its fallback writer.
+# its model in brackets, and the score it writes under (`sol (gpt-6.1-sol), MVP of the week,
+# 114.6`). Notes published before ORB-24204 wrote a bare crew key as `sol · effort unknown`,
+# and notes published before ORB-23846 name an estimated effort as `haiku@xhigh (est.)`;
+# both stay valid. A note with no MVP names its fallback writer.
 MVP_BYLINE = re.compile(r"[^,()]+(?: \(est\.\))? \([^()]+\), MVP of the week, [^,]+")
 FALLBACK_BYLINE = re.compile(r"[^,()]+ \(fallback writer\), no MVP this week")
 WEEKLY_SLUG = re.compile(r"crew-rankings-\d{4}-\d{2}-\d{2}")
@@ -1350,7 +1351,12 @@ def load_rank(directory):
 
 
 def rank_rows(rank):
-    """(ranked, not ranked) model rows, gaps removed; ranked rows in rank order."""
+    """(ranked, not ranked) model rows, gaps removed.
+
+    Ranked rows go in rank order and, inside a shared band, by score, highest first, then model name
+    (STD-07 §R36), so a band reads in the order of the figure the board shows. The MVP's writer still
+    follows Orbit's own band order (cheapest first); that is scripts/crew_rankings.py's rule, not this view's.
+    """
     rows = [
         row for row in rank.get("rows") or []
         if isinstance(row, dict) and isinstance(row.get("model"), str)
@@ -1358,7 +1364,7 @@ def rank_rows(rank):
     ]
     ranked = [row for row in rows if isinstance(row.get("rank"), int) and not isinstance(row.get("rank"), bool)
               and row.get("eligible") is True and as_number(row.get("score"))]
-    ranked.sort(key=lambda row: row["rank"])
+    ranked.sort(key=lambda row: (row["rank"], -row["score"], row["model"]))
     rest = [row for row in rows if row not in ranked]
     return ranked, rest
 
@@ -1505,10 +1511,12 @@ def ordinal(number):
 def rank_crew_entries(row):
     """Labels for one model's rank crews, in Orbit's order.
 
-    ``system`` and attribution gaps are omitted. A key that already carries
-    an effort (``sol@high``) is that recorded label. A bare key has no recorded
-    effort, so it reads ``crew · effort unknown``; a snapshot's
-    ``effort_estimate`` (written before ORB-23846) is ignored.
+    ``system`` and attribution gaps are omitted. A key that carries an effort
+    (``sol@high``) is that recorded label. Model rank pools every effort of a
+    model, so a bare key (``sol``) means its efforts are not broken out, not
+    that they went unrecorded: it is the crew name alone, never
+    ``effort unknown`` (ORB-24204). A snapshot's ``effort_estimate`` (written
+    before ORB-23846) is ignored.
     """
     out = []
     index = {}
@@ -1519,7 +1527,7 @@ def rank_crew_entries(row):
         if not isinstance(crew, str) or not crew or crew == RANK_NON_CREW or crew in GAP_CREWS:
             continue
         tasks = entry.get("tasks") if as_number(entry.get("tasks")) else None
-        label = crew if "@" in crew else f"{crew} · effort unknown"
+        label = crew
         if label in index:
             slot = out[index[label]]
             if tasks is not None:
@@ -1531,12 +1539,12 @@ def rank_crew_entries(row):
 
 
 def rank_crew_line(row):
-    """One model's rank crews on one line (``sol@high · sol@xhigh``)."""
-    return " · ".join(item["label"] for item in rank_crew_entries(row))
+    """One model's rank crews on one line, each crew named once (``sol: high, xhigh``)."""
+    return analytics_page.crew_groups_text(item["label"] for item in rank_crew_entries(row))
 
 
 def podium_from_rank(rank):
-    """The podium's top three from Model rank, in Rank's order, with their Rank score."""
+    """The podium's top three from Model rank, in rank order (by score inside a band), with their Rank score."""
     ranked, _rest = rank_rows(rank)
     items = []
     for row in ranked[:3]:
@@ -1591,8 +1599,8 @@ def role_cell(cell, role):
 
 
 def crews_text(row):
-    """A model's crews on one line; commas once the labels carry efforts (``sol@high, sol · effort unknown``)."""
-    return (", " if row.get("labelled") else " · ").join(row["crews"])
+    """A model's crews on one line, each crew named once (``sol: high, effort unknown · luna: low``)."""
+    return analytics_page.crew_groups_text(row["crews"])
 
 
 def overall_board(overall, rule=None):
