@@ -397,3 +397,13 @@ footer .sp { margin-left: auto; display: flex; gap: 20px; }
 @media (max-width: 460px) {
   .brand b { display: none; }
 }
+
+/* A weekly note's Model rank table has nine columns: on a wide screen it runs into the bleed
+   column like the title. Narrower, it keeps the text column and scrolls inside its own box.
+   Its cells keep one line; the headers wrap. */
+@media (min-width: 1001px) {
+  .note > .table.wide { grid-column: text / -1; }
+}
+.model-rank td { white-space: nowrap; }
+.model-rank th, .model-rank td { padding-right: 14px; }
+.model-rank sup { line-height: 0; }

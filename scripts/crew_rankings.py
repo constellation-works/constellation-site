@@ -18,7 +18,9 @@ It writes:
   projected as the analytics snapshot projects rank.json. The MVP is read from it;
 - data/crew-rankings/<date>/facts.json: the windows, the MVP band and the writer;
 - notes/crew-rankings-<date>/: a draft index.md and the CSVs it publishes
-  (all-tiers.csv, by-tier.csv, reviewers.csv, pilots.csv).
+  (all-tiers.csv, by-tier.csv, reviewers.csv, pilots.csv, model-rank.csv). Its Model rank
+  section, ahead of the crew boards, is the frozen rank.json as a table: the board that
+  decides the MVP.
 
 The MVP is the top tie band of the settled model rank, never the live board: the
 models whose rank is the lowest in the board (``1=`` when shared). A shared band
@@ -42,12 +44,16 @@ Usage, on the Orbit owner host:
     python3 scripts/crew_rankings.py <date> --writer-only [--crews a,b,...]
         # print only the writer JSON (the MVP band's writer); write no files
 
+    python3 scripts/crew_rankings.py <date> --from data/crew-rankings/<date> --model-rank
+        # re-issue: refresh only an existing note's Model rank section and model-rank.csv
+
 --force overwrites an existing note's index.md (the writer's address is lost).
 """
 
 import argparse
 import csv
 import datetime
+import html
 import json
 import pathlib
 import sys
@@ -58,6 +64,7 @@ import analytics_snapshot as snap  # noqa: E402  (shared scorecard and rank proj
 
 WINDOW = "30d"
 PLACEHOLDER = "{{victory-address}}"
+RANK_START, RANK_END = "<!-- model-rank -->", "<!-- /model-rank -->"
 METHOD = "../crew-rankings-method/"
 TAGS = "operating data, crew selection, rankings, weekly"
 RULE = ("the MVP is the top tie band of the settled model rank for the note's date; "
@@ -278,7 +285,164 @@ def mvp_line(band, why):
             + "; ".join(band_phrase(row) for row in band) + ".**")
 
 
-def note_text(day, scorecards, band, why, who, data_rel, fallback):
+def ranked(row):
+    """A row Rank placed: eligible, with a rank, a score and a p10–p90 interval."""
+    interval = row.get("interval")
+    return (row.get("eligible") is True and isinstance(row.get("rank"), int) and not isinstance(row.get("rank"), bool)
+            and number(row.get("score")) and isinstance(interval, dict)
+            and number(interval.get("p10")) and number(interval.get("p90")))
+
+
+def rank_columns(rank):
+    """The measures the board measured, in Rank's order: one column each. The rest are listed under the table."""
+    return [m for m in rank.get("measures") or [] if m.get("status") == "measured"]
+
+
+def weights_total(rank):
+    total = rank.get("weights_total")
+    return total if number(total) else sum(m.get("weight") or 0 for m in rank.get("measures") or [])
+
+
+def weight_text(value):
+    return f"{value:g}" if number(value) else "?"
+
+
+def measure_cell(row, key):
+    """(text, reason): a measure's actual / expected, or ("unmeasured", Orbit's reason)."""
+    m = (row.get("measures") or {}).get(key)
+    if m is None:
+        return "unmeasured", "not reported for this model"
+    if m.get("status") == "measured" and number(m.get("actual")) and number(m.get("expected")):
+        return f"{m['actual']:.1f} / {m['expected']:.1f}", None
+    return "unmeasured", m.get("reason") or "Orbit gave no reason"
+
+
+def model_rank_rows(rank):
+    """model-rank.csv: one row per model in Rank's order, ranked rows first, then the rows Rank did not place."""
+    if rank is None:
+        return []
+    total = weights_total(rank)
+    rows = rank.get("rows") or []
+    out = []
+    for row in [r for r in rows if ranked(r)] + [r for r in rows if not ranked(r)]:
+        placed = ranked(row)
+        interval = row.get("interval") if placed else {}
+        line = {
+            "status": "ranked" if placed else "not ranked",
+            "rank": (row.get("rank_label") or row["rank"]) if placed else "",
+            "model": row["model"],
+            "score": round(row["score"], 2) if placed else "",
+            "p10": interval.get("p10", "") if placed else "",
+            "p90": interval.get("p90", "") if placed else "",
+            "implemented_tasks": row.get("units", ""),
+            "weights_measured": row.get("weights_measured", ""),
+            "weights_total": total,
+        }
+        for m in rank_columns(rank):
+            data = (row.get("measures") or {}).get(m["key"]) or {}
+            text, reason = measure_cell(row, m["key"])
+            line[f"{m['key']}_status"] = "measured" if reason is None else "unmeasured"
+            line[f"{m['key']}_actual"] = data.get("actual") if data.get("actual") is not None else ""
+            line[f"{m['key']}_expected"] = data.get("expected") if data.get("expected") is not None else ""
+            line[f"{m['key']}_reason"] = reason or ""
+        line["not_ranked_reason"] = "" if placed else (row.get("ineligible_reason") or "Orbit placed no rank or interval")
+        out.append(line)
+    return out
+
+
+def model_rank_section(rank, band, why, day):
+    """The note's Model rank section, between its markers: the frozen table that decides the MVP.
+
+    Raw HTML inside the Markdown, so cells carry their footnote marks and the not-ranked rows fold.
+    """
+    e = html.escape
+    head = [RANK_START, "", "## Model rank", ""]
+    if rank is None:
+        return "\n".join(head + [
+            "No settled model rank was frozen for this note's date, so no model rank decided its MVP.",
+            "", RANK_END])
+    window = rank.get("window") or {}
+    since, until = (window.get("since") or "?")[:10], (window.get("until") or "?")[:10]
+    span = (f"Orbit's settled model rank for the 30 days from {since} to {until}, which end the settle lag "
+            f"({rank.get('settle_lag') or 'unknown'}) before the note's date")
+    lead = (f"This table decides the MVP: {span}. The crew boards below earn nothing toward it." if band else
+            f"This is {span}. It names no MVP this week: {why}. The crew boards below earn nothing toward one.")
+    columns = rank_columns(rank)
+    total = weights_total(rank)
+    notes = {}
+
+    def mark(reason):
+        if reason not in notes:
+            notes[reason] = "abcdefghijklmnopqrstuvwxyz"[len(notes) % 26]
+        return notes[reason]
+
+    def direction(m):
+        lower = (m.get("sign") or 0) < 0
+        # Not .sr-only: an absolute span escapes the table's scroll box and widens a phone's page.
+        return (f'<span role="img" aria-label="{"lower" if lower else "higher"} is better">'
+                f'{"↓" if lower else "↑"}</span>')
+
+    rows = rank.get("rows") or []
+    body = []
+    for row in [r for r in rows if ranked(r)]:
+        cells = [e(str(row.get("rank_label") or row["rank"])), e(row["model"]), score_text(row["score"]),
+                 f"{score_text(row['interval']['p10'])}–{score_text(row['interval']['p90'])}",
+                 f"{row.get('units', 0):,}",
+                 f"{weight_text(row.get('weights_measured'))} / {weight_text(total)}"]
+        for m in columns:
+            text, reason = measure_cell(row, m["key"])
+            cells.append(e(text) if reason is None else f"unmeasured<sup>{mark(reason)}</sup>")
+        body.append("<tr>" + "".join(f"<td>{c}</td>" for c in cells) + "</tr>")
+    header = (["Rank", "Model", "Score", "p10–p90", "Tasks", "Measured weight"]
+              + [f"{e(m.get('label') or m['key'])} {direction(m)}" for m in columns])
+    # Its own class keeps build.render_body from wrapping it; the wrapper lets it use the bleed column.
+    table = ('<div class="table wide">\n<table class="model-rank">\n<thead><tr>' + "".join(f'<th scope="col">{h}</th>' for h in header) + "</tr></thead>\n<tbody>\n"
+             + "\n".join(body) + "\n</tbody>\n</table>\n</div>")
+    key = ("Tasks are implemented tasks; measured weight is the weight of the measures Orbit could measure for "
+           "the model, out of the board's total. Each measure reads actual / expected; "
+           "↓ lower is better, ↑ higher is better.")
+    out = head + [lead, "", key, "", table, ""]
+    if notes:
+        out += ["Unmeasured, in Orbit's words: " + "; ".join(f"<sup>{k}</sup> {e(reason)}" for reason, k in notes.items())
+                + ". An unmeasured measure is left out of the measured weight.", ""]
+    idle = [m for m in rank.get("measures") or [] if m.get("status") != "measured"]
+    if idle:
+        out += ["Not measured for any model: " + "; ".join(
+            f"{e(m.get('label') or m['key'])} (weight {weight_text(m.get('weight'))}), {e(m.get('reason') or 'Orbit gave no reason')}"
+            for m in idle) + ".", ""]
+    rest = [r for r in rows if not ranked(r)]
+    if rest:
+        lines = "\n".join(
+            f"<tr><td>{e(r['model'])}</td><td>{r.get('units', 0):,}</td>"
+            f"<td>{e(r.get('ineligible_reason') or 'Orbit placed no rank or interval')}</td></tr>" for r in rest)
+        rule = f"<p>{e(rank['eligibility_rule'])}</p>\n" if rank.get("eligibility_rule") else ""
+        out += [f"<details>\n<summary>Not ranked ({len(rest)})</summary>\n{rule}<table>\n<thead><tr>"
+                '<th scope="col">Model</th><th scope="col">Implemented tasks</th><th scope="col">Orbit\'s reason</th>'
+                f"</tr></thead>\n<tbody>\n{lines}\n</tbody>\n</table>\n</details>", ""]
+    skipped = rank.get("not_scored") or {}
+    if number(skipped.get("count")) and skipped["count"]:
+        reasons = sorted((skipped.get("reasons") or {}).items(), key=lambda kv: (-kv[1], kv[0]))
+        detail = ", ".join(f"{k.replace('_', ' ')} {v:,}" for k, v in reasons)
+        out += [f"Orbit scored no model on {skipped['count']:,} of the window's tasks"
+                + (f" ({detail})." if detail else "."), ""]
+    out += ["The table is [model-rank.csv](model-rank.csv), drawn from the frozen rank.json.", "", RANK_END]
+    return "\n".join(out)
+
+
+def splice_model_rank(text, section):
+    """Put the Model rank section in a note: replace its markers' span, or insert it before the Victory address."""
+    start, end = text.find(RANK_START), text.find(RANK_END)
+    if start != -1 and end != -1:
+        return text[:start] + section + text[end + len(RANK_END):]
+    anchor = text.find("## Victory address")
+    if anchor == -1:
+        anchor = text.find("## Crews by role")
+    if anchor == -1:
+        sys.exit("the note has no Victory address or Crews by role heading to put the Model rank section before")
+    return text[:anchor] + section + "\n\n" + text[anchor:]
+
+
+def note_text(day, scorecards, band, why, who, data_rel, fallback, rank=None):
     impl = scorecards["implementers"]
     since, until = impl["window"]["since"], impl["window"]["until"]
     if band:
@@ -315,6 +479,8 @@ tags: {TAGS}
 
 {mvp_line(band, why)}
 
+{model_rank_section(rank, band, why, day)}
+
 ## Victory address
 
 {rule_text(band, who, why, fallback)}
@@ -345,6 +511,9 @@ def main():
     ap.add_argument("--writer-only", action="store_true",
                     help="print only the writer JSON on stdout and write no files")
     ap.add_argument("--force", action="store_true", help="overwrite an existing note's index.md")
+    ap.add_argument("--model-rank", action="store_true",
+                    help="with --from: refresh only an existing note's Model rank section and model-rank.csv, "
+                    "keeping the rest of its index.md")
     a = ap.parse_args()
     try:
         day = (datetime.date.fromisoformat(a.date) if a.date
@@ -370,6 +539,14 @@ def main():
     data = pathlib.Path(a.data_dir) / day.isoformat()
     note = pathlib.Path(a.notes_dir) / f"crew-rankings-{day.isoformat()}"
     index = note / "index.md"
+    if a.model_rank:
+        if not a.source or not index.is_file():
+            sys.exit("--model-rank refreshes an existing note from a frozen --from directory")
+        text = index.read_text(encoding="utf-8")
+        index.write_text(splice_model_rank(text, model_rank_section(rank, band, why, day)), encoding="utf-8")
+        write_csv(note / "model-rank.csv", model_rank_rows(rank))
+        print(f"refreshed the Model rank section of {index}", file=sys.stderr)
+        return
     if index.exists() and not a.force:
         sys.exit(f"{index} exists; pass --force to overwrite it")
     data.mkdir(parents=True, exist_ok=True)
@@ -404,11 +581,12 @@ def main():
               board_rows(rev["provisional"], board="provisional")
               + (board_rows(rev["settled"], board="settled") if rev.get("settled") else []))
     write_csv(note / "pilots.csv", board_rows(scorecards["pilots"]))
+    write_csv(note / "model-rank.csv", model_rank_rows(rank))
     try:
         data_rel = data.resolve().relative_to(ROOT).as_posix()
     except ValueError:
         data_rel = data.as_posix()
-    index.write_text(note_text(day, scorecards, band, why, who, data_rel, a.fallback_crew), encoding="utf-8")
+    index.write_text(note_text(day, scorecards, band, why, who, data_rel, a.fallback_crew, rank), encoding="utf-8")
     named = names(row["model"] for row in band) if band else "none"
     print(f"wrote {index} (draft) and {data}; MVP {named}; writer {who['crew']}", file=sys.stderr)
 

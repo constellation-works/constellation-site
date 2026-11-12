@@ -53,6 +53,15 @@ With no qualified, calibrated board the note names no MVP, says why, and its byl
 `<fallback> (fallback writer), no MVP this week`.
 The band's first model in Orbit's order writes the note, through its crew with the most
 implemented tasks in the window; `--writer-only` prints that writer.
+Ahead of the address and the crew boards, a **Model rank** section (between
+`<!-- model-rank -->` markers) is that frozen `rank.json` as a table, led by a line saying it
+decides the MVP and the crew boards do not: one row per ranked model in Rank's order with rank,
+score, p10–p90, implemented tasks, measured weight out of the board's total, and each measured
+measure's actual / expected. An unmeasured cell reads "unmeasured" with Orbit's reason as a
+footnote; the rows Rank did not place fold under "Not ranked" with Orbit's reason. The same
+table is published as `model-rank.csv`. `--from data/crew-rankings/<date> --model-rank`
+refreshes only an existing note's section and CSV, keeping its address. A note frozen without a
+`rank.json` (2026-11-03) says no model rank decided its MVP.
 Its body's `<!-- crews-by-role: data/crew-rankings/<date> -->` marker is replaced at build
 time by the Ranking page's own `render_crews_by_role`, every role stacked, with the detailed
 Implementers by tier board omitted from notes. The writer replaces the
