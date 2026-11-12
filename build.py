@@ -2072,7 +2072,7 @@ def role_callouts(shown, role, board=None):
     return f'<ul class="tiles takeaways" aria-label="Callouts">{items}</ul>'
 
 
-def crew_role_bodies(scorecards):
+def crew_role_bodies(scorecards, *, include_tiers=True):
     """Per role: (shown rows, callouts + boards HTML) for the crews-by-role section."""
     if not isinstance(scorecards, dict):
         sys.exit("scorecards.json: expected an object")
@@ -2090,7 +2090,7 @@ def crew_role_bodies(scorecards):
     reviewer_html, prov = reviewers_group(reviewers)
     pilot_html, pilot = pilots_board(pilots)
     return {
-        "implementers": (impl, takeaways + implementers_overall(impl) + heatmap),
+        "implementers": (impl, takeaways + implementers_overall(impl) + (heatmap if include_tiers else "")),
         "reviewers": (prov, role_callouts(prov, "reviewers", reviewers.get("provisional")) + reviewer_html),
         "pilots": (pilot, role_callouts(pilot, "pilots") + pilot_html),
     }
@@ -2131,12 +2131,15 @@ def render_crews_by_role(directory, role=None):
 
     One shared component: /ranking/ renders one role in each role tab and the
     weekly crew-ranking note reuses it with every role stacked under plain
-    headings, so it is never restyled per view (STD-07 §R30). Neither form draws
+    headings, omitting the detailed tier board. The shared boards are never
+    restyled per view (STD-07 §R30). Neither form draws
     a role toggle. It reads only the directory's scorecards.json.
     """
     if role is not None and role not in ROLE_ORDER:
         sys.exit(f"crews by role: unknown role {role!r}")
-    return crews_by_role_html(crew_role_bodies(load_scorecards(directory)), role)
+    return crews_by_role_html(
+        crew_role_bodies(load_scorecards(directory), include_tiers=role is not None), role
+    )
 
 
 def weekly_ranking_notes(root=None):

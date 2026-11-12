@@ -1228,7 +1228,8 @@ class RankingPageTest(unittest.TestCase):
             self.assertNotIn("role-pills", stacked)
             headings = re.findall(r'<h2 id="crews-(\w+)-title">([^<]+)</h2>', stacked)
             self.assertEqual(headings, [("implementers", "Implementers"), ("reviewers", "Reviewers"), ("pilots", "Pilots")])
-            for element_id in ("implementer-crews", "tiers", "reviewers-provisional", "pilot-crews"):
+            self.assertNotIn('id="tiers"', stacked)
+            for element_id in ("implementer-crews", "reviewers-provisional", "pilot-crews"):
                 self.assertEqual(stacked.count(f'id="{element_id}"'), 1, element_id)
             with self.assertRaises(SystemExit):
                 build.render_crews_by_role(directory, "orchestrators")
