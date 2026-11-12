@@ -48,7 +48,8 @@ board), and writes a draft `notes/crew-rankings-<date>/` with its CSVs.
 The MVP is the top tie band of that frozen model rank. The note is titled
 `[Crew Ranking - <date>]: MVP <model>`, `co-MVPs <models>` for a shared band, or `no MVP`.
 The MVP line and summary quote each model's score and p10–p90 interval from `rank.json`;
-the byline names the writer, e.g. `sol · effort unknown (gpt-6.1-sol), MVP of the week, 114.6`.
+the byline names the writer, e.g. `sol (gpt-6.1-sol), MVP of the week, 114.6` (notes before
+ORB-24204 wrote a bare crew key as `sol · effort unknown`).
 With no qualified, calibrated board the note names no MVP, says why, and its byline reads
 `<fallback> (fallback writer), no MVP this week`.
 The band's first model in Orbit's order writes the note, through its crew with the most
@@ -110,9 +111,11 @@ with four stat cards:
   probabilities and per-effort splits left out. The crew `system` is not a
   configured crew (it is Orbit's attribution for system-run work), so the
   exporter drops it from those crew lists and counts it with the other dropped
-  gap crews, and the page never shows it. A bare crew key carries no recorded
-  effort, so it is labelled `crew · effort unknown`, the label the crew boards
-  use. No effort is read from crew configuration, which changes over time, so
+  gap crews, and the page never shows it. Model rank pools every effort of a
+  model, so a bare crew key (`sol`) means its efforts are not broken out, not
+  unrecorded: it shows as the crew name alone. A key that carries an effort
+  (`sol@high`) shows it. Each crew is named once with its efforts
+  (`haiku: xhigh, high`; crews separated by ` · `). No effort is read from crew configuration, which changes over time, so
   nothing on the site guesses an effort.
 - **Implementers** — "Crews by role":
   takeaway callouts, the crew table with the fleet-average marker, and implementers

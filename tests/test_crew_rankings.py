@@ -137,14 +137,14 @@ class CrewRankingScript(unittest.TestCase):
         text = (note / "index.md").read_text(encoding="utf-8")
         meta = front_matter(text)
         self.assertEqual(meta["title"], "[Crew Ranking - 2026-11-09]: co-MVPs gpt-6.1-sol and gpt-6-sol")
-        self.assertEqual(meta["author"], "sol · effort unknown (gpt-6.1-sol), MVP of the week, 114.6")
+        self.assertEqual(meta["author"], "sol (gpt-6.1-sol), MVP of the week, 114.6")
         self.assertEqual(meta["status"], "draft")
         self.assertIn("Co-MVPs: gpt-6.1-sol at 114.6 (p10–p90 110.6–118.6); "
                       "gpt-6-sol at 119.1 (p10–p90 115.1–123.1).", meta["summary"])
         body = text.split("---", 2)[2]
         self.assertIn("**Co-MVPs, rank 1=: gpt-6.1-sol at 114.6 (p10–p90 110.6–118.6); "
                       "gpt-6-sol at 119.1 (p10–p90 115.1–123.1).**", body)
-        self.assertIn("its first model, gpt-6.1-sol, writes the address, through its crew sol · effort unknown", body)
+        self.assertIn("its first model, gpt-6.1-sol, writes the address, through its crew sol:", body)
         self.assertIn("{{victory-address}} sol replaces this line", body)
         self.assertIn("Limits:", body)
         self.assertEqual(sorted(p.name for p in note.iterdir()),
@@ -229,7 +229,7 @@ class CrewRankingScript(unittest.TestCase):
         # Ranked rows in Rank's order: rank, score, interval, tasks, measured weight, actual / expected.
         self.assertIn("<tr><td>1</td><td>claude-haiku-5-5<span class=\"crews\">haiku: high, xhigh</span></td><td>103.0</td><td>99.0–107.0</td><td>240</td>"
                       "<td>30 / 55</td><td>1.0 / 2.0</td><td>unmeasured<sup>a</sup></td></tr>", section)
-        self.assertIn("<tr><td>2</td><td>gpt-6-luna<span class=\"crews\">luna: effort unknown</span></td><td>99.0</td><td>95.0–103.0</td><td>50</td>"
+        self.assertIn("<tr><td>2</td><td>gpt-6-luna<span class=\"crews\">luna</span></td><td>99.0</td><td>95.0–103.0</td><td>50</td>"
                       "<td>50 / 55</td><td>1.0 / 2.0</td><td>1.0 / 2.0</td></tr>", section)
         self.assertLess(section.index("claude-haiku-5-5"), section.index("gpt-6-luna"))
         # An unmeasured cell is never 0 or blank, and Orbit's reason is given.

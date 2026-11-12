@@ -26,15 +26,15 @@ Tasks are implemented tasks; measured weight is the weight of the measures Orbit
 <table class="model-rank">
 <thead><tr><th scope="col">Rank</th><th scope="col">Model</th><th scope="col">Score</th><th scope="col">p10–p90</th><th scope="col">Tasks</th><th scope="col">Measured weight</th><th scope="col">Escaped regressions <span role="img" aria-label="lower is better">↓</span></th><th scope="col">Review outcome <span role="img" aria-label="higher is better">↑</span></th><th scope="col">Crew-caused rework <span role="img" aria-label="lower is better">↓</span></th></tr></thead>
 <tbody>
-<tr><td>1</td><td>gpt-6-sol<span class="crews">sol: effort unknown</span></td><td>115.8</td><td>113.3–118.2</td><td>117</td><td>35 / 80</td><td>2.0 / 14.7</td><td>unmeasured<sup>a</sup></td><td>1.0 / 14.2</td></tr>
-<tr><td>2=</td><td>muse-wonder-1.0<span class="crews">muse-wonder: effort unknown</span></td><td>64.1</td><td>42.5–86.6</td><td>34</td><td>35 / 80</td><td>21.0 / 3.6</td><td>unmeasured<sup>b</sup></td><td>0.0 / 3.7</td></tr>
-<tr><td>2=</td><td>gpt-6-luna<span class="crews">luna: effort unknown</span></td><td>107.0</td><td>104.3–109.6</td><td>447</td><td>55 / 80</td><td>10.0 / 20.0</td><td>51.0 / 39.0</td><td>33.0 / 52.3</td></tr>
-<tr><td>2=</td><td>claude-sonnet-5-5<span class="crews">sonnet: effort unknown</span></td><td>99.9</td><td>94.2–105.9</td><td>139</td><td>55 / 80</td><td>20.0 / 14.3</td><td>21.5 / 19.2</td><td>6.0 / 15.5</td></tr>
-<tr><td>2=</td><td>gpt-6.1-sol<span class="crews">sol: effort unknown</span></td><td>108.0</td><td>105.4–110.6</td><td>824</td><td>55 / 80</td><td>92.8 / 112.4</td><td>115.0 / 83.9</td><td>67.0 / 100.3</td></tr>
-<tr><td>2=</td><td>claude-haiku-5-5<span class="crews">haiku: effort unknown</span></td><td>101.1</td><td>96.6–105.3</td><td>222</td><td>35 / 80</td><td>11.0 / 8.9</td><td>unmeasured<sup>b</sup></td><td>11.0 / 25.9</td></tr>
-<tr><td>2=</td><td>claude-opus-5-5<span class="crews">opus: effort unknown</span></td><td>90.5</td><td>83.0–97.9</td><td>501</td><td>55 / 80</td><td>166.0 / 101.5</td><td>19.0 / 18.9</td><td>65.0 / 96.3</td></tr>
-<tr><td>2=</td><td>grok-4.7<span class="crews">grok: effort unknown</span></td><td>94.5</td><td>86.5–102.2</td><td>195</td><td>35 / 80</td><td>34.2 / 21.4</td><td>unmeasured<sup>b</sup></td><td>7.0 / 22.1</td></tr>
-<tr><td>2=</td><td>gemini-3.8-flash-high<span class="crews">gemini-flash: effort unknown</span></td><td>94.0</td><td>86.8–100.0</td><td>124</td><td>35 / 80</td><td>12.0 / 4.1</td><td>unmeasured<sup>b</sup></td><td>10.0 / 14.5</td></tr>
+<tr><td>1</td><td>gpt-6-sol<span class="crews">sol</span></td><td>115.8</td><td>113.3–118.2</td><td>117</td><td>35 / 80</td><td>2.0 / 14.7</td><td>unmeasured<sup>a</sup></td><td>1.0 / 14.2</td></tr>
+<tr><td>2=</td><td>muse-wonder-1.0<span class="crews">muse-wonder</span></td><td>64.1</td><td>42.5–86.6</td><td>34</td><td>35 / 80</td><td>21.0 / 3.6</td><td>unmeasured<sup>b</sup></td><td>0.0 / 3.7</td></tr>
+<tr><td>2=</td><td>gpt-6-luna<span class="crews">luna</span></td><td>107.0</td><td>104.3–109.6</td><td>447</td><td>55 / 80</td><td>10.0 / 20.0</td><td>51.0 / 39.0</td><td>33.0 / 52.3</td></tr>
+<tr><td>2=</td><td>claude-sonnet-5-5<span class="crews">sonnet</span></td><td>99.9</td><td>94.2–105.9</td><td>139</td><td>55 / 80</td><td>20.0 / 14.3</td><td>21.5 / 19.2</td><td>6.0 / 15.5</td></tr>
+<tr><td>2=</td><td>gpt-6.1-sol<span class="crews">sol</span></td><td>108.0</td><td>105.4–110.6</td><td>824</td><td>55 / 80</td><td>92.8 / 112.4</td><td>115.0 / 83.9</td><td>67.0 / 100.3</td></tr>
+<tr><td>2=</td><td>claude-haiku-5-5<span class="crews">haiku</span></td><td>101.1</td><td>96.6–105.3</td><td>222</td><td>35 / 80</td><td>11.0 / 8.9</td><td>unmeasured<sup>b</sup></td><td>11.0 / 25.9</td></tr>
+<tr><td>2=</td><td>claude-opus-5-5<span class="crews">opus</span></td><td>90.5</td><td>83.0–97.9</td><td>501</td><td>55 / 80</td><td>166.0 / 101.5</td><td>19.0 / 18.9</td><td>65.0 / 96.3</td></tr>
+<tr><td>2=</td><td>grok-4.7<span class="crews">grok</span></td><td>94.5</td><td>86.5–102.2</td><td>195</td><td>35 / 80</td><td>34.2 / 21.4</td><td>unmeasured<sup>b</sup></td><td>7.0 / 22.1</td></tr>
+<tr><td>2=</td><td>gemini-3.8-flash-high<span class="crews">gemini-flash</span></td><td>94.0</td><td>86.8–100.0</td><td>124</td><td>35 / 80</td><td>12.0 / 4.1</td><td>unmeasured<sup>b</sup></td><td>10.0 / 14.5</td></tr>
 </tbody>
 </table>
 </div>

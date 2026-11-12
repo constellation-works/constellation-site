@@ -1110,15 +1110,15 @@ class RankingPageTest(unittest.TestCase):
         # The model row's own numbers stay the fixture's, not the crew-task sum.
         self.assertEqual((board["rows"][0]["units"], board["rows"][0]["score"]), (60, 120.0))
 
-        # A bare crew has no recorded effort: it reads effort unknown whatever an older estimate says.
+        # A bare key pools the model's efforts: it is the crew name alone, never effort unknown, whatever an older estimate says.
         haiku = build.rank_crew_entries(board["rows"][0])
         self.assertEqual([(item["label"], item["tasks"]) for item in haiku],
-                         [("haiku · effort unknown", 590), ("haiku@xhigh", 1)])
+                         [("haiku", 590), ("haiku@xhigh", 1)])
         opus = build.rank_crew_entries(board["rows"][1])
         self.assertEqual([(item["label"], item["tasks"]) for item in opus],
-                         [("opus · effort unknown", 40), ("opus@medium", 8)])
+                         [("opus", 40), ("opus@medium", 8)])
         self.assertEqual([item["label"] for item in build.rank_crew_entries(board["rows"][2])],
-                         ["luna · effort unknown"])
+                         ["luna"])
         # Snapshots from before estimates read the same way, and still hide system.
         legacy = build.rank_crew_entries({"crews": [
             {"crew": "sol", "tasks": 861}, {"crew": "sol@high", "tasks": 10},
@@ -1126,28 +1126,30 @@ class RankingPageTest(unittest.TestCase):
             {"crew": "crew unknown", "tasks": 1},
         ]})
         self.assertEqual([item["label"] for item in legacy],
-                         ["sol · effort unknown", "sol@high", "sol@xhigh"])
-        # The recorded label keeps its own tasks; a repeated bare crew is one unknown label.
+                         ["sol", "sol@high", "sol@xhigh"])
+        # The recorded label keeps its own tasks; a repeated bare crew is one label.
         repeated = build.rank_crew_entries({"crews": [
             {"crew": "sol", "tasks": 3, "effort_estimate": "medium"},
             {"crew": "sol", "tasks": 2, "effort_estimate": "medium"},
             {"crew": "sol@high", "tasks": 1},
         ]})
         self.assertEqual([(item["label"], item["tasks"]) for item in repeated],
-                         [("sol · effort unknown", 5), ("sol@high", 1)])
+                         [("sol", 5), ("sol@high", 1)])
         self.assertTrue(all("estimated" not in item for item in repeated))
 
         doc = build.render_ranking_body(scorecards(), "2026-11-08", board)
         self.assertNotIn("system", doc)
         overall = doc[doc.index('data-group="overall"'):doc.index('data-group="implementers"')]
-        self.assertIn('<span class="podium-crews">haiku: xhigh, effort unknown</span>', overall)
-        self.assertIn('<span class="podium-crews">opus: medium, effort unknown</span>', overall)
-        self.assertIn('<span class="podium-crews">luna: effort unknown</span>', overall)
-        self.assertIn('<span class="ml-crews">haiku: xhigh, effort unknown</span>', overall)
-        self.assertIn('<span class="ml-crews">opus: medium, effort unknown</span>', overall)
+        self.assertIn('<span class="podium-crews">haiku: xhigh</span>', overall)
+        self.assertIn('<span class="podium-crews">opus: medium</span>', overall)
+        self.assertIn('<span class="podium-crews">luna</span>', overall)
+        self.assertIn('<span class="ml-crews">haiku: xhigh</span>', overall)
+        self.assertIn('<span class="ml-crews">opus: medium</span>', overall)
         self.assertNotIn("(est.)", overall)
         self.assertNotIn("est-note", overall)
-        self.assertNotIn("haiku 590", overall)
+        # The breakdown keeps each key's tasks: the pooled bare key, then the one carrying an effort.
+        self.assertIn("<dd>haiku 590 · haiku@xhigh 1</dd>", overall)
+        self.assertNotIn("effort unknown", overall)
         self.assertIn('<span class="ml-units">60</span>', overall)
 
     def test_without_rank_json_overall_shows_a_notice_and_the_index_podium(self):

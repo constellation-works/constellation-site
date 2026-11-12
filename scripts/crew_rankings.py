@@ -140,12 +140,16 @@ def mvp_band(rank):
 
 
 def crew_key_label(key):
-    """A rank crew key as the boards name it: ``crew@effort``, or ``crew · effort unknown`` when no effort was recorded."""
-    return key if "@" in key else f"{key} · effort unknown"
+    """A rank crew key as /ranking/ names it: ``crew@effort`` when the key carries one, else the crew alone.
+
+    Model rank pools every effort of a model, so a bare key means its efforts are not broken out, not that
+    they went unrecorded; it never reads ``effort unknown`` (ORB-24204).
+    """
+    return key
 
 
 def crews_line(row):
-    """A rank row's crews as /ranking/ names them: each crew once, with its efforts (``haiku: xhigh, effort unknown``)."""
+    """A rank row's crews as /ranking/ names them: each crew once, with any efforts its keys carry (``haiku: xhigh``)."""
     return crew_groups_text(crew_key_label(entry["crew"]) for entry in row.get("crews") or []
                             if isinstance(entry, dict) and entry.get("crew"))
 
