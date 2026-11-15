@@ -10,7 +10,7 @@ and the analytics pages into `public/analytics/` (all ignored by git) before eac
 - `public/index.html` — the home page, one file, styles inline.
 - `notes/<slug>/index.md` — one note: front matter, Markdown, and the files it links to
   (data, `card.png` for the link preview). `build.py` documents the front matter.
-- `build.py` — builds each note page, the `/notes/` index, the Atom feed,
+- `build.py` — entry point (page modules are the sibling `build_*.py` files) that builds each note page, the `/notes/` index, the Atom feed,
   `/ranking/` from the newest `data/analytics/<YYYY-MM-DD>/scorecards.json` and `rank.json`,
   `/analytics/metrics/` from the newest `data/analytics/<YYYY-MM-DD>/metrics.json`,
   `/analytics/reliability/` from the newest snapshot's `reliability.json`,
@@ -87,7 +87,7 @@ with four stat cards:
   units, weighed 60/25/15 over the roles the model holds with the weights rescaled
   to sum to 1. A model needs a ranked crew in at least two roles; one-role models
   are listed, not ranked, and no missing role is imputed. The weights and the
-  minimum live in one constant, `OVERALL_RULE` in `build.py`, and the page states
+  minimum live in one constant, `OVERALL_RULE` in `build_ranking_boards.py`, and the page states
   the rule from it. A snapshot without `rank.json` shows one line in place of
   Model rank and the podium follows the All-roles index, saying so. A `rank.json`
   that carries a live board still renders as it was published, labelled provisional;

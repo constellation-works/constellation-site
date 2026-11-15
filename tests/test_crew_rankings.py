@@ -24,6 +24,7 @@ def load(name, path):
 
 
 build = load("site_build", ROOT / "build.py")
+import build_notes
 fixtures = load("ranking_fixtures", ROOT / "tests" / "test_analytics_agents.py")
 crew_rankings = load("crew_rankings_script", SCRIPT)
 
@@ -292,7 +293,7 @@ tags: rankings, weekly
             directory = Path(tmp) / "data" / "crew-rankings" / "2026-11-09"
             directory.mkdir(parents=True)
             (directory / "scorecards.json").write_text(json.dumps(fixtures.effort_scorecards()), encoding="utf-8")
-            with mock.patch.object(build, "ROOT", Path(tmp)):
+            with mock.patch.object(build, "ROOT", Path(tmp)), mock.patch.object(build_notes, "ROOT", Path(tmp)):
                 body = build.render_body("Intro.\n\n<!-- crews-by-role: data/crew-rankings/2026-11-09 -->\n\nLimits.\n")
                 html, embedded = build.embed_crews_by_role(body, "note")
                 self.assertTrue(embedded)
