@@ -1,0 +1,37 @@
+rank,crew,model,effort,units,score,fleet_average,landed_pct
+1,opus,claude-opus-5-5,medium,181,137.9,103.53,98.9
+2,haiku,claude-haiku-5-5,xhigh,625,127.4,103.53,98.9
+3,sol,gpt-6.1-sol,high,544,123.2,103.53,95.4
+4,sonnet,claude-sonnet-5-5,high,204,114.8,103.53,97.1
+5,sol,gpt-6.1-sol,xhigh,142,113.7,103.53,98.6
+6,grok,grok-4.7,high,303,113.1,103.53,96.0
+7,luna,gpt-6-luna,xhigh,696,104.7,103.53,98.3
+8,gemini-flash@high,gemini-3.8-flash-high,high,29,102.2,103.53,100.0
+9,terra,gpt-6.1-terra,high,238,100.6,103.53,95.4
+10,gemini-flash,gemini-3.8-flash-high,provider default,71,91.0,103.53,98.6
+11,muse-spark,muse-spark-1.3-contributor,provider default,64,86.6,103.53,95.3
+12,grok,grok-4.7,provider default,19,85.7,103.53,89.5
+13,muse-wonder,muse-wonder-1.0,high,441,84.4,103.53,98.2
+14,muse-spark,muse-spark-1.3-contributor,xhigh,480,82.8,103.53,99.2
+15,muse-wonder,muse-wonder-1.0,provider default,54,80.3,103.53,100.0
+16,opus,claude-opus-5-5,high,266,80.1,103.53,98.5
+17,haiku,claude-haiku-5-5,high,61,48.0,103.53,95.1
+18,muse-wonder-full,muse-wonder-full-1.0,high,48,13.1,103.53,97.9
+19,sol,gpt-6.1-sol,unknown,33,-3.1,103.53,21.2
+,astra,gpt-6-astra,medium,6,109.7,103.53,100.0
+,fable,claude-fable-5-2,medium,4,105.7,103.53,100.0
+,argon@high,gemini-4-argon-high,high,3,105.5,103.53,100.0
+,opus,claude-opus-5-5,unknown,5,104.7,103.53,20.0
+,astra,gpt-6-astra,high,2,104.3,103.53,50.0
+,gemini-flash,gemini-3.8-flash-high,unknown,1,103.6,103.53,100.0
+,luna,gpt-6-luna,unknown,6,92.4,103.53,83.3
+,muse-spark,muse-spark-1.3-contributor,unknown,2,90.4,103.53,100.0
+,muse-wonder-full,muse-wonder-full-1.0,provider default,9,80.2,103.53,100.0
+,sonnet,claude-sonnet-5-5,unknown,5,59.9,103.53,80.0
+,muse-wonder,muse-wonder-1.0,unknown,6,58.9,103.53,33.3
+,terra,gpt-6.1-terra,unknown,7,48.9,103.53,71.4
+,haiku,claude-haiku-5-5,unknown,5,43.9,103.53,40.0
+,grok,grok-4.7,unknown,4,31.7,103.53,75.0
+,argon,gemini-4-argon-high,provider default,7,25.2,103.53,57.1
+,luna,gpt-6.1-luna,unknown,1,2.9,103.53,0.0
+,argon,gemini-4-argon-high,unknown,1,-56.4,103.53,0.0
