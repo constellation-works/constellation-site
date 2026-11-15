@@ -296,7 +296,7 @@ def embed_crews_by_role(body, path):
     """Replace each crews-by-role marker with the /ranking/ page's own component.
 
     Returns the body and whether it embedded one (the page then loads the
-    component's stylesheet and script, analytics.css and analytics.js).
+    component's stylesheets in analytics_page.ANALYTICS_CSS and analytics.js).
     """
     found = False
 
@@ -337,7 +337,7 @@ def build_note(note):
     title = f"{note['title']} — Constellation Works"
     (dest / "index.html").write_text(
         page(title, note["summary"], url, body, image, note["status"] == "draft", "article",
-             extra_css=("analytics.css",) if embedded else (),
+             extra_css=analytics_page.ANALYTICS_CSS if embedded else (),
              extra_js=("analytics.js",) if embedded else ()),
         encoding="utf-8",
     )
@@ -2406,7 +2406,7 @@ def render_ranking_page(scorecards, snapshot_date, rank=None, weekly=None, root=
         f"{SITE}/ranking/",
         render_ranking_body(scorecards, snapshot_date, rank, weekly),
         current="ranking",
-        extra_css=("analytics.css",), extra_js=("analytics.js",),
+        extra_css=analytics_page.ANALYTICS_CSS, extra_js=("analytics.js",),
     )
 
 
@@ -2939,7 +2939,7 @@ def render_reliability_page(data, snapshot_date, picker=None, banner="", archive
         "Reliability — Constellation Works",
         "Aggregate Orbit success and failure counts and rates over 30 days.",
         url or f"{SITE}/analytics/reliability/", body, current="analytics",
-        extra_css=("analytics.css",), extra_js=("analytics.js",),
+        extra_css=analytics_page.ANALYTICS_CSS, extra_js=("analytics.js",),
     )
 
 
@@ -3692,7 +3692,7 @@ def render_experiments_page(data, snapshot_date, picker=None, banner="", archive
         "Concluded experiments — Constellation Works",
         "Questions, arms, aggregate outcomes, intervals and decisions from concluded Orbit experiments.",
         url or f"{SITE}/analytics/experiments/", body, current="analytics",
-        extra_css=("analytics.css",), extra_js=("analytics.js",),
+        extra_css=analytics_page.ANALYTICS_CSS, extra_js=("analytics.js",),
     )
 
 

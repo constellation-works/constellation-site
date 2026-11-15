@@ -84,6 +84,16 @@ class ArchiveBuildTest(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=SCRATCH) as tmp:
             root = make_root(tmp, ("2026-10-31", "2026-11-08", "2026-11-30", "2026-12-15"))
             build_all(root)
+            # Every analytics view, including archives, keeps the original cascade order.
+            pages = [root / "public" / "ranking" / "index.html"]
+            pages.extend(page for slug in PAGES
+                         for page in (root / "public" / "analytics" / slug).rglob("index.html"))
+            for page in pages:
+                document = page.read_text(encoding="utf-8")
+                stylesheets = re.findall(r'href="(/assets/[^"?]+\.css)\?v=[0-9a-f]+"', document)
+                self.assertEqual(stylesheets, [
+                    "/assets/notes.css", "/assets/analytics.css", "/assets/analytics-ranking.css",
+                ], str(page))
             out = root / "public" / "analytics"
             for slug in PAGES:
                 live = (out / slug / "index.html").read_text(encoding="utf-8")

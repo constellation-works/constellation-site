@@ -1359,7 +1359,7 @@ class RankingPageTest(unittest.TestCase):
         # ORB-23658: between 561px and desktop the Overall table squeezed its Model
         # column to a few letters. Every ranking board now collapses on its own box
         # (a container query), at a width measured to keep names on one line.
-        css = (ROOT / "public" / "assets" / "analytics.css").read_text(encoding="utf-8")
+        css = (ROOT / "public" / "assets" / "analytics-ranking.css").read_text(encoding="utf-8")
         self.assertIn(".ranking-page .role-group, .crews-by-role { container: ranking / inline-size; }", css)
         blocks = {
             int(width): body
