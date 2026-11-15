@@ -58,6 +58,7 @@ import math
 import pathlib
 import re
 import shutil
+import statistics
 import sys
 
 import analytics_page
@@ -1714,17 +1715,39 @@ def percent(value, places=1):
 
 
 def whisker_axis(ranked):
+    # Bound observed scores/intervals to the score median +/- max(75, 3 * IQR),
+    # using inclusive quartiles. The 75-point floor keeps broad ordinary
+    # intervals visible; a distant score or interval cannot flatten the bulk.
+    # Include fleet 100, then round outward to tens with 5 points of padding.
+    scores = [row["score"] for row in ranked if as_number(row.get("score"))]
+    center = statistics.median(scores) if scores else 100.0
+    quartiles = statistics.quantiles(scores, n=4, method="inclusive") if len(scores) > 1 else [center] * 3
+    radius = max(75, 3 * (quartiles[2] - quartiles[0]))
     values = [100.0]
     for row in ranked:
         interval = row.get("interval") or {}
         for value in (interval.get("p10"), interval.get("p90"), row.get("score")):
             if as_number(value):
-                values.append(value)
+                values.append(max(center - radius, min(center + radius, value)))
     low = math.floor(min(values) / 10) * 10 - 5
     high = math.ceil(max(values) / 10) * 10 + 5
-    step = 10 if high - low <= 80 else 20
-    ticks = list(range(int(math.ceil(low / step) * step), int(high) + 1, step))
-    return low, high, ticks
+    # Round steps, anchored at fleet 100 so even a step above 100 retains it.
+    # Budget label widths for the CSS axis minimum (240px), including a gap.
+    magnitude = 10
+    while True:
+        for factor in (1, 2, 2.5, 5):
+            step = int(magnitude * factor)
+            if step < (high - low) / 6:
+                continue
+            ticks = list(range(100 + math.ceil((low - 100) / step) * step, int(high) + 1, step))
+            label_width = max(len(whisker_tick_label(tick)) for tick in ticks) * 6.5
+            if len(ticks) <= 7 and step / (high - low) * 240 >= label_width + 12:
+                return low, high, ticks
+        magnitude *= 10
+
+
+def whisker_tick_label(tick):
+    return f"{tick:.3g}" if abs(tick) >= 10000 else str(tick)
 
 
 def axis_pct(value, low, high):
@@ -1782,6 +1805,11 @@ def model_detail(row, rank):
         + (f" (k = {k})" if k else "") + ".</p>"
         if as_number(raw) else ""
     )
+    interval = row.get("interval") or {}
+    interval_text = (
+        f'<p class="detail-note">p10–p90 interval: {fmt_score(interval["p10"])} to {fmt_score(interval["p90"])}.</p>'
+        if as_number(interval.get("p10")) and as_number(interval.get("p90")) else ""
+    )
     min_tier_tasks = rules.get("min_tier_tasks") if as_number(rules.get("min_tier_tasks")) else 0
     tier_rows = []
     for tier in row.get("tiers") or []:
@@ -1823,7 +1851,7 @@ def model_detail(row, rank):
     return (
         '<div class="model-detail">'
         f'<div class="detail-col"><h4>Score contributions <span class="detail-key">weight · vs. tier expectation</span></h4>'
-        f'<ul class="contribs">{"".join(measures)}</ul>{shrink}</div>'
+        f'<ul class="contribs">{"".join(measures)}</ul>{shrink}{interval_text}</div>'
         f'<div class="detail-col"><h4>By tier</h4>{tiers_html}</div>'
         f'<div class="detail-col"><h4>Delivery</h4>{delivery}</div>'
         '</div>'
@@ -1901,7 +1929,7 @@ def models_board(rank):
     if ranked:
         low, high, ticks = whisker_axis(ranked)
         tick_html = "".join(
-            f'<span style="left:{axis_pct(tick, low, high):.2f}%">{tick}</span>' for tick in ticks
+            f'<span style="left:{axis_pct(tick, low, high):.2f}%">{whisker_tick_label(tick)}</span>' for tick in ticks
         )
         grid_html = "".join(
             f'<span class="{"is-ref" if tick == 100 else ""}" style="left:{axis_pct(tick, low, high):.2f}%"></span>'
@@ -1929,8 +1957,16 @@ def models_board(rank):
             if as_number(interval.get("p10")) and as_number(interval.get("p90")):
                 left = axis_pct(interval["p10"], low, high)
                 right = axis_pct(interval["p90"], low, high)
-                whisker = f'<span class="whisker prov-{provider(row["model"])}" style="left:{left:.2f}%;width:{max(right - left, 0.5):.2f}%"></span>'
+                whisker = f'<span class="whisker prov-{provider(row["model"])}" style="left:{left:.2f}%;width:{max(right - left, 0):.2f}%"></span>'
             point = f'<span class="whisker-point prov-{provider(row["model"])}" style="left:{axis_pct(row["score"], low, high):.2f}%"></span>'
+            plotted = [row["score"]] + [interval[key] for key in ("p10", "p90") if as_number(interval.get(key))]
+            offscale = "".join(
+                f'<span class="whisker-offscale is-{side}" title="{label} scale">{arrow}</span>'
+                for side, label, arrow, clipped in (
+                    ("low", "Below", "◀", min(plotted) < low),
+                    ("high", "Above", "▶", max(plotted) > high),
+                ) if clipped
+            )
             cost = row.get("cost") or {}
             ratio = cost.get("ratio")
             ratio_html = (
@@ -1955,7 +1991,7 @@ def models_board(rank):
                 f'<span class="ml-crews">{e(crews)}</span>{single_html}</span>'
                 f'<span class="ml-score">{fmt_score(row["score"])}</span>'
                 f'<span class="ml-whisker"><span class="whisker-grid" aria-hidden="true">{grid_html}</span>'
-                f'<span aria-hidden="true">{whisker}{point}</span><span class="sr-only">{e(interval_sr)}</span></span>'
+                f'<span aria-hidden="true">{whisker}{point}{offscale}</span><span class="sr-only">{e(interval_sr)}</span></span>'
                 f'<span class="ml-cost" data-label="$ / task"><span>{money(cost.get("per_task"))}</span>{ratio_html}</span>'
                 f'<span class="ml-tasks" data-label="Tasks"><span class="ml-units">{fmt_count(row["units"])}</span>{tier_mix(row)}</span>'
                 f'<span class="ml-landed" data-label="Landed">{percent(row.get("landed_rate"))}</span>'
@@ -2026,7 +2062,7 @@ def models_board(rank):
         )
     return f'''<section class="board models-board" id="models" aria-labelledby="models-title">
 <div class="board-head"><h2 id="models-title">Model rank</h2>
-<p class="board-key">p10–p90 whisker on a shared score axis · <span class="k-fleet" aria-hidden="true"></span> 100 is the fleet</p></div>
+<p class="board-key">p10–p90 whisker on a shared score axis · <span class="k-fleet" aria-hidden="true"></span> 100 is the fleet · ◀/▶ off scale</p></div>
 <p class="board-note rank-notice{notice_class}">{e(notice)}</p>
 <p class="board-note score-key">{e(score_key)}</p>
 {window_html}

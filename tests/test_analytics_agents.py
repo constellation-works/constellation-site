@@ -300,6 +300,74 @@ def workflow_job_condition(workflow, job):
 
 
 class RankingPageTest(unittest.TestCase):
+    def test_whisker_axis_normal_range(self):
+        rows = rank_board()["rows"][:3]
+        low, high, ticks = build.whisker_axis(rows)
+        self.assertLessEqual(low, min(row["interval"]["p10"] for row in rows))
+        self.assertGreaterEqual(high, max(row["interval"]["p90"] for row in rows))
+        self.assertTrue(3 <= len(ticks) <= 7)
+        self.assertIn(100, ticks)
+
+    def test_whisker_axis_far_off_model_keeps_other_intervals_on_scale(self):
+        rank = json.loads((ROOT / "data/analytics/2026-11-15/rank.json").read_text())
+        rows, _ = build.rank_rows(rank)
+        low, high, ticks = build.whisker_axis(rows)
+        self.assertLessEqual(len(ticks), 7)
+        self.assertIn(100, ticks)
+        self.assertLess(high - low, 150)
+        for row in rows:
+            if row["model"] == "muse-wonder-full-1.0":
+                self.assertLess(row["score"], low)
+                self.assertLess(row["interval"]["p90"], low)
+            else:
+                self.assertLessEqual(low, row["interval"]["p10"], row["model"])
+                self.assertGreaterEqual(high, row["interval"]["p90"], row["model"])
+
+        doc = build.models_board(rank)
+        labels = re.findall(r'<span style="left:([^%]+)%">([^<]+)</span>', doc)
+        self.assertEqual([label for _, label in labels], [str(tick) for tick in ticks])
+        grids = re.findall(r'<span class="whisker-grid" aria-hidden="true">(.*?)</span></span>', doc)
+        self.assertEqual(len(grids), len(rows))
+        for grid in grids:
+            self.assertEqual(re.findall(r'left:([^%]+)%', grid), [pos for pos, _ in labels])
+        self.assertEqual(doc.count('class="whisker-offscale is-low"'), 1)
+        self.assertNotIn('class="whisker-offscale is-high"', doc)
+        outlier = doc[doc.index('>muse-wonder-full-1.0</span>'):]
+        self.assertIn('<span class="ml-score">−83.9</span>', outlier)
+        self.assertIn('class="whisker-point prov-muse" style="left:0.00%"', outlier)
+        self.assertIn('class="sr-only">p10 −161.5 to p90 −3.0</span>', outlier)
+        self.assertIn('p10–p90 interval: −161.5 to −3.0.', outlier)
+
+    def test_whisker_axis_clips_interval_tails_and_point_independently(self):
+        rank = rank_board()
+        rank["rows"] = [rank_row(f"model-{i}", i + 1, str(i + 1), 90 + i * 2, 50, ["sol"])
+                        for i in range(10)]
+        rank["rows"][1]["interval"] = {"p10": -1000, "p90": 1000}
+        rank["rows"][2]["score"] = 200
+        low, high, ticks = build.whisker_axis(rank["rows"])
+        self.assertGreater(low, -1000)
+        self.assertLess(high, 1000)
+        doc = build.models_board(rank)
+        self.assertIn('class="whisker-offscale is-low"', doc)
+        self.assertIn('class="whisker-offscale is-high"', doc)
+        self.assertIn('left:0.00%;width:100.00%', doc)
+        self.assertIn('p10 −1000.0 to p90 1000.0', doc)
+        self.assertEqual(doc.count('class="whisker-offscale is-high"'), 2)
+        self.assertIn('class="whisker-point prov-other" style="left:100.00%"', doc)
+        self.assertIn(100, ticks)
+
+    def test_whisker_axis_tick_budget_across_ranges(self):
+        for scale in (1, 10, 100, 10000, 1000000):
+            with self.subTest(scale=scale):
+                rows = [{"score": score * scale} for score in (-50, 0, 50, 100, 150)]
+                low, high, ticks = build.whisker_axis(rows)
+                self.assertTrue(1 <= len(ticks) <= 7)
+                self.assertIn(100, ticks)
+                self.assertTrue(all(low <= tick <= high for tick in ticks))
+                gap = (ticks[1] - ticks[0]) / (high - low) * 240
+                width = max(len(build.whisker_tick_label(tick)) for tick in ticks) * 6.5
+                self.assertGreaterEqual(gap, width + 12)
+
     def test_snapshot_picker_keeps_concise_value_beside_label(self):
         picker = build.analytics_page.snapshot_picker(
             "agents",

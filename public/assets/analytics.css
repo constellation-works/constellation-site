@@ -837,7 +837,7 @@
 .analytics .model-board li:first-child { border-top: 0; }
 .model-line {
   display: grid;
-  grid-template-columns: 2.6rem minmax(0, 1.5fr) 4rem minmax(0, 2fr) 7rem minmax(0, 1.1fr) 4rem;
+  grid-template-columns: 2.6rem minmax(0, 1.5fr) 4rem minmax(240px, 2fr) 7rem minmax(0, 1.1fr) 4rem;
   gap: 14px; align-items: center; padding: 10px 8px; min-height: 52px; font-size: 14px;
 }
 .model-head { color: var(--muted); font-size: 12px; min-height: 0; padding-top: 0; border-bottom: 1px solid var(--rule-strong); }
@@ -863,6 +863,9 @@
 .whisker-grid span.is-ref { background: var(--muted); }
 .whisker-ticks { position: relative; display: block; height: 12px; font-family: var(--mono); font-size: 10.5px; }
 .whisker-ticks span { position: absolute; top: 0; transform: translateX(-50%); }
+.whisker-offscale { position: absolute; top: 3px; font-size: 12px; color: var(--fg); }
+.whisker-offscale.is-low { left: 0; }
+.whisker-offscale.is-high { right: 0; }
 .whisker {
   position: absolute; top: 7px; height: 8px; border-radius: 4px; --w: var(--prov-other);
   background: color-mix(in srgb, var(--w) 18%, transparent);
@@ -1017,12 +1020,13 @@
   .model-head .ml-tasks { display: none; }
 }
 @container ranking (max-width: 580px) {
-  .model-head { display: none; }
+  .model-head > :not(.ml-whisker) { display: none; }
   .model-line {
     grid-template-columns: 2.4rem minmax(0, 1fr) auto;
     gap: 6px 10px; padding: 12px 4px;
   }
   .model-line .ml-whisker { grid-column: 1 / -1; grid-row: 2; }
+  .model-head .ml-whisker { grid-row: 1; }
   .model-line .ml-cost { grid-column: 1 / 3; grid-row: 3; justify-content: flex-start; }
   .model-line .ml-landed { grid-column: 3; grid-row: 3; }
   .model-line .ml-tasks { grid-column: 1 / -1; grid-row: 4; }
