@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Build the Notes section and the public analytics pages.
 
 Each note is a directory under notes/ holding index.md (front matter plus Markdown)
