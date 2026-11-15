@@ -17,6 +17,9 @@ import re
 import shutil
 import sys
 
+# Keep the ranking rules after the shared rules to preserve the analytics cascade.
+ANALYTICS_CSS = ("analytics.css", "analytics-ranking.css")
+
 DAY = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
@@ -1967,6 +1970,8 @@ def render_body(metrics, picker="", banner=""):
 
 def render_page(root, metrics, day, picker=None, banner="", archive_month=None, url=None):
     root = pathlib.Path(root)
+    stylesheets = "\n".join(f'<link rel="stylesheet" href="{asset(root, name)}">'
+                            for name in ANALYTICS_CSS)
     if picker is None:
         picker = picker_html(root / "data" / "analytics", "metrics", "metrics.json", archive_month)
     page_url = url or "https://constellation-works.com/analytics/metrics/"
@@ -2002,7 +2007,7 @@ def render_page(root, metrics, day, picker=None, banner="", archive_month=None, 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="{asset(root, 'notes.css')}">
-<link rel="stylesheet" href="{asset(root, 'analytics.css')}">
+{stylesheets}
 <script src="{asset(root, 'theme-init.js')}"></script>
 </head>
 <body>
