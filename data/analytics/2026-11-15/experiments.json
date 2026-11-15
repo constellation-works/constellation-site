@@ -225,7 +225,7 @@
           "weight": 1
         }
       ],
-      "as_of": "2026-11-15T05:17:41.005458151+00:00",
+      "as_of": "2026-11-15T20:04:41.068368707+00:00",
       "concluded_arm": null,
       "enrollment": {
         "analysed": 182,
@@ -2634,7 +2634,7 @@
           "weight": 1
         }
       ],
-      "as_of": "2026-11-15T05:17:38.382477780+00:00",
+      "as_of": "2026-11-15T20:04:38.162682014+00:00",
       "concluded_arm": null,
       "enrollment": {
         "analysed": 40,
@@ -2701,29 +2701,29 @@
           "arms": [
             {
               "arm": "sonnet",
-              "estimate": 2.4166666666666665,
+              "estimate": 2.525,
               "interval": [
-                -0.3760416666666666,
-                6.75
+                0.7625000000000002,
+                5.05
               ],
               "limit": 3.0,
               "status": "straddles"
             },
             {
               "arm": "grok",
-              "estimate": 0.75,
+              "estimate": 3.625,
               "interval": [
-                0.0,
-                1.5
+                1.0,
+                6.1875
               ],
               "limit": 3.0,
-              "status": "ok"
+              "status": "breached"
             },
             {
               "arm": "terra",
-              "estimate": -0.25,
+              "estimate": -0.125,
               "interval": [
-                -1.0,
+                -0.8125,
                 0.5
               ],
               "limit": 3.0,
@@ -2731,9 +2731,9 @@
             },
             {
               "arm": "muse-wonder",
-              "estimate": null,
+              "estimate": -0.875,
               "limit": 3.0,
-              "status": "unknown"
+              "status": "straddles"
             }
           ],
           "metric": "escaped_regressions",
@@ -2820,7 +2820,7 @@
       "hypothesis": "The medium-tier run suggested cheaper crews hold quality with review, CI and auto-fix behind them. On hard tasks, give one arm per model (sonnet, grok, terra, muse-wonder) against the live hard pool. That shows which models can carry hard work at lower cost without raising rework, recoveries or escapes. Control reads the live pool, unpinned, by Daniel's choice.",
       "id": "exp-c66f06ca",
       "lagging": {
-        "open_regression_windows": 24,
+        "open_regression_windows": 9,
         "open_tasks": 0,
         "regression_window_days": 14
       },
@@ -6207,31 +6207,31 @@
           "arms": [
             {
               "arm": "control",
-              "mean": 1.25,
+              "mean": 0.875,
               "mean_interval": [
-                0.5,
-                2.0
+                0.4375,
+                1.4375
               ],
-              "median": 1.5,
+              "median": 0.5,
               "median_interval": [
                 0.0,
                 2.0
               ],
-              "n": 8,
-              "open": 11,
+              "n": 16,
+              "open": 3,
               "segments": [
                 {
-                  "mean": 1.25,
+                  "mean": 0.875,
                   "mean_interval": [
-                    0.5,
-                    2.0
+                    0.375,
+                    1.375
                   ],
-                  "median": 1.5,
+                  "median": 0.5,
                   "median_interval": [
                     0.0,
                     2.0
                   ],
-                  "n": 8,
+                  "n": 16,
                   "segment": 1
                 },
                 {
@@ -6243,31 +6243,31 @@
             },
             {
               "arm": "sonnet",
-              "mean": 3.6666666666666665,
+              "mean": 3.4,
               "mean_interval": [
-                1.0,
-                8.0
+                1.6,
+                5.8
               ],
-              "median": 2.0,
+              "median": 3.0,
               "median_interval": [
                 1.0,
                 8.0
               ],
-              "n": 3,
-              "open": 4,
+              "n": 5,
+              "open": 2,
               "segments": [
                 {
-                  "mean": 3.6666666666666665,
+                  "mean": 3.4,
                   "mean_interval": [
-                    1.0,
-                    8.0
+                    1.8,
+                    5.8
                   ],
-                  "median": 2.0,
+                  "median": 3.0,
                   "median_interval": [
                     1.0,
                     8.0
                   ],
-                  "n": 3,
+                  "n": 5,
                   "segment": 1
                 },
                 {
@@ -6279,31 +6279,31 @@
             },
             {
               "arm": "grok",
-              "mean": 2.0,
+              "mean": 4.5,
               "mean_interval": [
                 2.0,
-                2.0
+                7.0
               ],
-              "median": 2.0,
+              "median": 4.5,
               "median_interval": [
                 2.0,
-                2.0
+                7.0
               ],
-              "n": 2,
-              "open": 3,
+              "n": 4,
+              "open": 1,
               "segments": [
                 {
-                  "mean": 2.0,
+                  "mean": 4.5,
                   "mean_interval": [
                     2.0,
-                    2.0
+                    7.0
                   ],
-                  "median": 2.0,
+                  "median": 4.5,
                   "median_interval": [
                     2.0,
-                    2.0
+                    7.0
                   ],
-                  "n": 2,
+                  "n": 4,
                   "segment": 1
                 }
               ],
@@ -6311,31 +6311,31 @@
             },
             {
               "arm": "terra",
-              "mean": 1.0,
+              "mean": 0.75,
               "mean_interval": [
-                1.0,
+                0.25,
                 1.0
               ],
               "median": 1.0,
               "median_interval": [
-                1.0,
+                0.0,
                 1.0
               ],
-              "n": 2,
-              "open": 3,
+              "n": 4,
+              "open": 1,
               "segments": [
                 {
-                  "mean": 1.0,
+                  "mean": 0.75,
                   "mean_interval": [
-                    1.0,
+                    0.25,
                     1.0
                   ],
                   "median": 1.0,
                   "median_interval": [
-                    1.0,
+                    0.0,
                     1.0
                   ],
-                  "n": 2,
+                  "n": 4,
                   "segment": 1
                 }
               ],
@@ -6343,12 +6343,15 @@
             },
             {
               "arm": "muse-wonder",
-              "mean": null,
-              "n": 0,
-              "open": 3,
+              "mean": 0.0,
+              "median": 0.0,
+              "n": 1,
+              "open": 2,
               "segments": [
                 {
-                  "n": 0,
+                  "mean": 0.0,
+                  "median": 0.0,
+                  "n": 1,
                   "segment": 1
                 },
                 {
@@ -6366,21 +6369,21 @@
               "by_complexity": [
                 {
                   "complexity": "hard",
-                  "estimate": 2.4166666666666665,
+                  "estimate": 2.525,
                   "interval": [
-                    -0.375,
-                    6.625
+                    0.6621875000000002,
+                    5.0
                   ],
-                  "n_arm": 3,
-                  "n_control": 8
+                  "n_arm": 5,
+                  "n_control": 16
                 }
               ],
               "overall": {
                 "cells_dropped": [],
-                "estimate": 2.4166666666666665,
+                "estimate": 2.525,
                 "interval": [
-                  -0.3760416666666666,
-                  6.75
+                  0.7625000000000002,
+                  5.05
                 ]
               }
             },
@@ -6389,21 +6392,21 @@
               "by_complexity": [
                 {
                   "complexity": "hard",
-                  "estimate": 0.75,
+                  "estimate": 3.625,
                   "interval": [
-                    0.0,
-                    1.5
+                    1.0625,
+                    6.1875
                   ],
-                  "n_arm": 2,
-                  "n_control": 8
+                  "n_arm": 4,
+                  "n_control": 16
                 }
               ],
               "overall": {
                 "cells_dropped": [],
-                "estimate": 0.75,
+                "estimate": 3.625,
                 "interval": [
-                  0.0,
-                  1.5
+                  1.0,
+                  6.1875
                 ]
               }
             },
@@ -6412,20 +6415,20 @@
               "by_complexity": [
                 {
                   "complexity": "hard",
-                  "estimate": -0.25,
+                  "estimate": -0.125,
                   "interval": [
-                    -1.0,
+                    -0.8125,
                     0.5
                   ],
-                  "n_arm": 2,
-                  "n_control": 8
+                  "n_arm": 4,
+                  "n_control": 16
                 }
               ],
               "overall": {
                 "cells_dropped": [],
-                "estimate": -0.25,
+                "estimate": -0.125,
                 "interval": [
-                  -1.0,
+                  -0.8125,
                   0.5
                 ]
               }
@@ -6435,16 +6438,14 @@
               "by_complexity": [
                 {
                   "complexity": "hard",
-                  "estimate": null,
-                  "n_arm": 0,
-                  "n_control": 8
+                  "estimate": -0.875,
+                  "n_arm": 1,
+                  "n_control": 16
                 }
               ],
               "overall": {
-                "cells_dropped": [
-                  "hard"
-                ],
-                "estimate": null
+                "cells_dropped": [],
+                "estimate": -0.875
               }
             }
           ],
@@ -7634,7 +7635,7 @@
           "weight": 1
         }
       ],
-      "as_of": "2026-11-15T05:17:32.399532750+00:00",
+      "as_of": "2026-11-15T20:04:29.512982327+00:00",
       "concluded_arm": null,
       "enrollment": {
         "analysed": 230,

@@ -1,6 +1,6 @@
 {
   "implementers": {
-    "fleet_average": 103.7,
+    "fleet_average": 103.35,
     "min_support": 10,
     "provisional": false,
     "role": "implementers",
@@ -10,29 +10,29 @@
         "counts": {
           "crew_rework": 3,
           "escaped_regressions": 86.5,
-          "first_pass_accepts": 8,
+          "first_pass_accepts": 10,
           "review_rejects": 0,
           "reviewer_repairs": 2,
-          "weighted_landed": 179
+          "weighted_landed": 184
         },
         "crew": "opus",
         "effort_label": "medium",
         "expected": {
-          "crew_rework": 10.2,
-          "escaped_regressions": 214.86,
-          "first_pass_accepts": 4.9,
-          "review_rejects": 0.96,
-          "reviewer_repairs": 3.16,
-          "weighted_landed": 170.95
+          "crew_rework": 10.43,
+          "escaped_regressions": 219.57,
+          "first_pass_accepts": 5.87,
+          "review_rejects": 1.1,
+          "reviewer_repairs": 3.91,
+          "weighted_landed": 176.44
         },
         "model": "claude-opus-5-5",
         "per_100": {
-          "crew_rework": 1.66,
-          "escaped_regressions": 47.79,
-          "first_pass_accepts": 80,
+          "crew_rework": 1.6,
+          "escaped_regressions": 46.26,
+          "first_pass_accepts": 83.33,
           "review_rejects": 0,
-          "reviewer_repairs": 20,
-          "weighted_landed": 98.9
+          "reviewer_repairs": 16.67,
+          "weighted_landed": 98.4
         },
         "provisional_terms": [
           "first_pass_accepts",
@@ -40,11 +40,11 @@
           "reviewer_repairs"
         ],
         "rank": 1,
-        "raw": 143.88,
+        "raw": 143.6,
         "reasoning_effort": "medium",
-        "reviewed_units": 10,
+        "reviewed_units": 12,
         "runs_without_model": 0,
-        "score": 138.17,
+        "score": 138.03,
         "score_base": 100,
         "stats": [
           {
@@ -55,17 +55,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 191
+            "value": 197
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 171
+            "value": 176
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 20
+            "value": 21
           },
           {
             "key": "cost_missing_run_attempts",
@@ -75,25 +75,25 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 1582.35
+            "value": 1558.86
           }
         ],
         "term_units": {
-          "first_pass_accepts": 10,
-          "review_rejects": 10,
-          "reviewer_repairs": 10
+          "first_pass_accepts": 12,
+          "review_rejects": 12,
+          "reviewer_repairs": 12
         },
         "unit": "implemented tasks",
-        "units": 181,
+        "units": 187,
         "unjudged": false,
         "usage": {
-          "duration_ms": 862912550,
+          "duration_ms": 873267415,
           "efforts": "medium, high",
-          "input_tokens": 90480,
-          "invocations": 637,
-          "output_tokens": 32535773,
-          "provider_cost_count": 637,
-          "provider_cost_usd": 3227.2729953000003
+          "input_tokens": 91748,
+          "invocations": 655,
+          "output_tokens": 32976970,
+          "provider_cost_count": 655,
+          "provider_cost_usd": 3283.2220445
         }
       },
       {
@@ -101,37 +101,37 @@
         "counts": {
           "crew_rework": 5,
           "escaped_regressions": 26.75,
-          "first_pass_accepts": 41,
+          "first_pass_accepts": 46,
           "review_rejects": 0,
           "reviewer_repairs": 8,
-          "weighted_landed": 625
+          "weighted_landed": 631
         },
         "crew": "haiku",
         "effort_label": "xhigh",
         "expected": {
           "crew_rework": 7.95,
-          "escaped_regressions": 55.58,
-          "first_pass_accepts": 32.96,
-          "review_rejects": 1.91,
-          "reviewer_repairs": 12.81,
-          "weighted_landed": 620.46
+          "escaped_regressions": 55.91,
+          "first_pass_accepts": 36.35,
+          "review_rejects": 2.03,
+          "reviewer_repairs": 14.15,
+          "weighted_landed": 625.94
         },
         "model": "claude-haiku-5-5",
         "per_100": {
-          "crew_rework": 0.79,
-          "escaped_regressions": 4.23,
-          "first_pass_accepts": 82,
+          "crew_rework": 0.78,
+          "escaped_regressions": 4.19,
+          "first_pass_accepts": 83.64,
           "review_rejects": 0,
-          "reviewer_repairs": 16,
-          "weighted_landed": 98.89
+          "reviewer_repairs": 14.55,
+          "weighted_landed": 98.75
         },
         "provisional_terms": [],
         "rank": 2,
-        "raw": 128.18,
+        "raw": 130.36,
         "reasoning_effort": "xhigh",
-        "reviewed_units": 50,
+        "reviewed_units": 55,
         "runs_without_model": 0,
-        "score": 127.07,
+        "score": 129.15,
         "score_base": 100,
         "stats": [
           {
@@ -142,17 +142,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 638
+            "value": 645
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 563
+            "value": 569
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 75
+            "value": 76
           },
           {
             "key": "cost_missing_run_attempts",
@@ -162,25 +162,25 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 536.63
+            "value": 534.43
           }
         ],
         "term_units": {
-          "first_pass_accepts": 50,
-          "review_rejects": 50,
-          "reviewer_repairs": 50
+          "first_pass_accepts": 55,
+          "review_rejects": 55,
+          "reviewer_repairs": 55
         },
         "unit": "implemented tasks",
-        "units": 632,
+        "units": 639,
         "unjudged": false,
         "usage": {
-          "duration_ms": 361178451,
+          "duration_ms": 362577858,
           "efforts": "xhigh",
-          "input_tokens": 49662,
-          "invocations": 700,
-          "output_tokens": 43707640,
-          "provider_cost_count": 700,
-          "provider_cost_usd": 270.2213116300002
+          "input_tokens": 49898,
+          "invocations": 706,
+          "output_tokens": 43855672,
+          "provider_cost_count": 706,
+          "provider_cost_usd": 270.72295611000015
         }
       },
       {
@@ -196,12 +196,12 @@
         "crew": "sol",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 19.76,
-          "escaped_regressions": 262.49,
-          "first_pass_accepts": 30.25,
-          "review_rejects": 3.39,
-          "reviewer_repairs": 14.97,
-          "weighted_landed": 507.68
+          "crew_rework": 19.61,
+          "escaped_regressions": 261.2,
+          "first_pass_accepts": 30.24,
+          "review_rejects": 3.25,
+          "reviewer_repairs": 15.35,
+          "weighted_landed": 507.03
         },
         "model": "gpt-6.1-sol",
         "per_100": {
@@ -214,11 +214,11 @@
         },
         "provisional_terms": [],
         "rank": 3,
-        "raw": 122.78,
+        "raw": 122.87,
         "reasoning_effort": "high",
         "reviewed_units": 50,
         "runs_without_model": 0,
-        "score": 121.76,
+        "score": 121.83,
         "score_base": 100,
         "stats": [
           {
@@ -261,11 +261,11 @@
         "units": 532,
         "unjudged": false,
         "usage": {
-          "duration_ms": 962149808,
+          "duration_ms": 963923386,
           "efforts": "high, xhigh",
-          "input_tokens": 7924993749,
-          "invocations": 1520,
-          "output_tokens": 31703673,
+          "input_tokens": 7937408762,
+          "invocations": 1525,
+          "output_tokens": 31758436,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -273,39 +273,39 @@
       {
         "below_support": false,
         "counts": {
-          "crew_rework": 2,
-          "escaped_regressions": 83.5,
-          "first_pass_accepts": 22,
-          "review_rejects": 1,
-          "reviewer_repairs": 8,
-          "weighted_landed": 200
+          "crew_rework": 4,
+          "escaped_regressions": 119.5,
+          "first_pass_accepts": 26,
+          "review_rejects": 0,
+          "reviewer_repairs": 10,
+          "weighted_landed": 293
         },
-        "crew": "sonnet",
+        "crew": "grok",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 7.01,
-          "escaped_regressions": 82.84,
-          "first_pass_accepts": 19.41,
-          "review_rejects": 1.7,
-          "reviewer_repairs": 8.76,
-          "weighted_landed": 197.01
+          "crew_rework": 10.32,
+          "escaped_regressions": 118.14,
+          "first_pass_accepts": 23.91,
+          "review_rejects": 2.03,
+          "reviewer_repairs": 11.06,
+          "weighted_landed": 291.2
         },
-        "model": "claude-sonnet-5-5",
+        "model": "grok-4.7",
         "per_100": {
-          "crew_rework": 0.97,
-          "escaped_regressions": 40.53,
-          "first_pass_accepts": 73.33,
-          "review_rejects": 3.33,
-          "reviewer_repairs": 26.67,
-          "weighted_landed": 97.09
+          "crew_rework": 1.31,
+          "escaped_regressions": 39.18,
+          "first_pass_accepts": 70.27,
+          "review_rejects": 0,
+          "reviewer_repairs": 27.03,
+          "weighted_landed": 96.07
         },
         "provisional_terms": [],
         "rank": 4,
-        "raw": 115.96,
+        "raw": 115.0,
         "reasoning_effort": "high",
-        "reviewed_units": 30,
+        "reviewed_units": 37,
         "runs_without_model": 0,
-        "score": 114.4,
+        "score": 113.96,
         "score_base": 100,
         "stats": [
           {
@@ -316,17 +316,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 210
+            "value": 309
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 187
+            "value": 271
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 23
+            "value": 38
           },
           {
             "key": "cost_missing_run_attempts",
@@ -336,25 +336,25 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 576.52
+            "value": 1858.48
           }
         ],
         "term_units": {
-          "first_pass_accepts": 30,
-          "review_rejects": 30,
-          "reviewer_repairs": 30
+          "first_pass_accepts": 37,
+          "review_rejects": 37,
+          "reviewer_repairs": 37
         },
         "unit": "implemented tasks",
-        "units": 206,
+        "units": 305,
         "unjudged": false,
         "usage": {
-          "duration_ms": 167206298,
+          "duration_ms": 702600937,
           "efforts": "high",
-          "input_tokens": 26800,
-          "invocations": 506,
-          "output_tokens": 8358560,
-          "provider_cost_count": 506,
-          "provider_cost_usd": 394.41231409999983
+          "input_tokens": 159694768,
+          "invocations": 504,
+          "output_tokens": 35297655,
+          "provider_cost_count": 503,
+          "provider_cost_usd": 2720.7494343999983
         }
       },
       {
@@ -370,12 +370,12 @@
         "crew": "sol",
         "effort_label": "xhigh",
         "expected": {
-          "crew_rework": 6.2,
-          "escaped_regressions": 82.32,
-          "first_pass_accepts": 8.42,
-          "review_rejects": 1.41,
-          "reviewer_repairs": 5.01,
-          "weighted_landed": 135.11
+          "crew_rework": 6.14,
+          "escaped_regressions": 81.92,
+          "first_pass_accepts": 8.44,
+          "review_rejects": 1.34,
+          "reviewer_repairs": 5.15,
+          "weighted_landed": 134.95
         },
         "model": "gpt-6.1-sol",
         "per_100": {
@@ -392,11 +392,11 @@
           "reviewer_repairs"
         ],
         "rank": 5,
-        "raw": 116.03,
+        "raw": 115.95,
         "reasoning_effort": "xhigh",
         "reviewed_units": 16,
         "runs_without_model": 0,
-        "score": 113.88,
+        "score": 113.76,
         "score_base": 100,
         "stats": [
           {
@@ -451,39 +451,39 @@
       {
         "below_support": false,
         "counts": {
-          "crew_rework": 4,
-          "escaped_regressions": 118.5,
-          "first_pass_accepts": 25,
-          "review_rejects": 0,
-          "reviewer_repairs": 10,
-          "weighted_landed": 292
+          "crew_rework": 2,
+          "escaped_regressions": 83.5,
+          "first_pass_accepts": 23,
+          "review_rejects": 1,
+          "reviewer_repairs": 9,
+          "weighted_landed": 203
         },
-        "crew": "grok",
+        "crew": "sonnet",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 10.35,
-          "escaped_regressions": 118.2,
-          "first_pass_accepts": 23.29,
-          "review_rejects": 2.04,
-          "reviewer_repairs": 10.51,
-          "weighted_landed": 290.64
+          "crew_rework": 7.06,
+          "escaped_regressions": 83.99,
+          "first_pass_accepts": 20.68,
+          "review_rejects": 1.75,
+          "reviewer_repairs": 9.57,
+          "weighted_landed": 199.6
         },
-        "model": "grok-4.7",
+        "model": "claude-sonnet-5-5",
         "per_100": {
-          "crew_rework": 1.32,
-          "escaped_regressions": 38.98,
-          "first_pass_accepts": 69.44,
-          "review_rejects": 0,
-          "reviewer_repairs": 27.78,
-          "weighted_landed": 96.05
+          "crew_rework": 0.96,
+          "escaped_regressions": 39.95,
+          "first_pass_accepts": 71.88,
+          "review_rejects": 3.13,
+          "reviewer_repairs": 28.13,
+          "weighted_landed": 97.13
         },
         "provisional_terms": [],
         "rank": 6,
-        "raw": 113.61,
+        "raw": 114.66,
         "reasoning_effort": "high",
-        "reviewed_units": 36,
+        "reviewed_units": 32,
         "runs_without_model": 0,
-        "score": 112.72,
+        "score": 113.24,
         "score_base": 100,
         "stats": [
           {
@@ -494,17 +494,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 308
+            "value": 213
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 270
+            "value": 189
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 38
+            "value": 24
           },
           {
             "key": "cost_missing_run_attempts",
@@ -514,25 +514,25 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 1855.62
+            "value": 573.78
           }
         ],
         "term_units": {
-          "first_pass_accepts": 36,
-          "review_rejects": 36,
-          "reviewer_repairs": 36
+          "first_pass_accepts": 32,
+          "review_rejects": 32,
+          "reviewer_repairs": 32
         },
         "unit": "implemented tasks",
-        "units": 304,
+        "units": 209,
         "unjudged": false,
         "usage": {
-          "duration_ms": 698376339,
+          "duration_ms": 171275222,
           "efforts": "high",
-          "input_tokens": 157710728,
-          "invocations": 502,
-          "output_tokens": 35093872,
-          "provider_cost_count": 501,
-          "provider_cost_usd": 2699.5772303999984
+          "input_tokens": 26952,
+          "invocations": 508,
+          "output_tokens": 8410458,
+          "provider_cost_count": 508,
+          "provider_cost_usd": 396.67681259999983
         }
       },
       {
@@ -543,34 +543,34 @@
           "first_pass_accepts": 45,
           "review_rejects": 4,
           "reviewer_repairs": 9,
-          "weighted_landed": 684
+          "weighted_landed": 688
         },
         "crew": "luna",
         "effort_label": "xhigh",
         "expected": {
-          "crew_rework": 8.05,
-          "escaped_regressions": 51.31,
-          "first_pass_accepts": 40.86,
-          "review_rejects": 2.38,
-          "reviewer_repairs": 15.91,
-          "weighted_landed": 683.22
+          "crew_rework": 8.02,
+          "escaped_regressions": 50.97,
+          "first_pass_accepts": 40.96,
+          "review_rejects": 2.31,
+          "reviewer_repairs": 15.98,
+          "weighted_landed": 686.57
         },
         "model": "gpt-6-luna",
         "per_100": {
-          "crew_rework": 1.73,
-          "escaped_regressions": 9.06,
+          "crew_rework": 1.71,
+          "escaped_regressions": 9,
           "first_pass_accepts": 72.58,
           "review_rejects": 6.45,
           "reviewer_repairs": 14.52,
-          "weighted_landed": 98.42
+          "weighted_landed": 98.29
         },
         "provisional_terms": [],
         "rank": 7,
-        "raw": 108.35,
+        "raw": 108.19,
         "reasoning_effort": "xhigh",
         "reviewed_units": 62,
         "runs_without_model": 0,
-        "score": 108.16,
+        "score": 107.99,
         "score_base": 100,
         "stats": [
           {
@@ -581,17 +581,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 708
+            "value": 713
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 603
+            "value": 607
           },
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 105
+            "value": 106
           },
           {
             "key": "cost_missing_run_attempts",
@@ -610,14 +610,14 @@
           "reviewer_repairs": 62
         },
         "unit": "implemented tasks",
-        "units": 695,
+        "units": 700,
         "unjudged": false,
         "usage": {
-          "duration_ms": 403280252,
+          "duration_ms": 406695183,
           "efforts": "xhigh",
-          "input_tokens": 2911420025,
-          "invocations": 653,
-          "output_tokens": 20081427,
+          "input_tokens": 2929817392,
+          "invocations": 657,
+          "output_tokens": 20232731,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -630,22 +630,22 @@
           "first_pass_accepts": 13,
           "review_rejects": 0,
           "reviewer_repairs": 4,
-          "weighted_landed": 32
+          "weighted_landed": 34
         },
         "crew": "gemini-flash@high",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 0.33,
-          "escaped_regressions": 1.88,
-          "first_pass_accepts": 11.21,
-          "review_rejects": 0.64,
-          "reviewer_repairs": 4.34,
-          "weighted_landed": 31.5
+          "crew_rework": 0.35,
+          "escaped_regressions": 1.89,
+          "first_pass_accepts": 11.24,
+          "review_rejects": 0.62,
+          "reviewer_repairs": 4.36,
+          "weighted_landed": 33.39
         },
         "model": "gemini-3.8-flash-high",
         "per_100": {
           "crew_rework": 0,
-          "escaped_regressions": 6.25,
+          "escaped_regressions": 5.88,
           "first_pass_accepts": 76.47,
           "review_rejects": 0,
           "reviewer_repairs": 23.53,
@@ -657,11 +657,11 @@
           "reviewer_repairs"
         ],
         "rank": 8,
-        "raw": 102.41,
+        "raw": 102.65,
         "reasoning_effort": "high",
         "reviewed_units": 17,
         "runs_without_model": 0,
-        "score": 102.41,
+        "score": 102.65,
         "score_base": 100,
         "stats": [
           {
@@ -672,7 +672,7 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 33
+            "value": 35
           },
           {
             "key": "cost_measured_attempts",
@@ -682,7 +682,7 @@
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 33
+            "value": 35
           },
           {
             "key": "cost_missing_run_attempts",
@@ -692,7 +692,7 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 632.15
+            "value": 583.4
           }
         ],
         "term_units": {
@@ -701,14 +701,14 @@
           "reviewer_repairs": 17
         },
         "unit": "implemented tasks",
-        "units": 32,
+        "units": 34,
         "unjudged": false,
         "usage": {
-          "duration_ms": 19094445,
+          "duration_ms": 20041184,
           "efforts": "high",
-          "input_tokens": 7965928,
-          "invocations": 31,
-          "output_tokens": 1986419,
+          "input_tokens": 8357818,
+          "invocations": 33,
+          "output_tokens": 2091174,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -718,29 +718,29 @@
         "counts": {
           "crew_rework": 12,
           "escaped_regressions": 39.25,
-          "first_pass_accepts": 9,
+          "first_pass_accepts": 11,
           "review_rejects": 0,
           "reviewer_repairs": 8,
-          "weighted_landed": 229
+          "weighted_landed": 231
         },
         "crew": "terra",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 5.76,
-          "escaped_regressions": 60.06,
-          "first_pass_accepts": 10.48,
-          "review_rejects": 0.72,
-          "reviewer_repairs": 4.31,
-          "weighted_landed": 232.39
+          "crew_rework": 5.82,
+          "escaped_regressions": 61.24,
+          "first_pass_accepts": 11.78,
+          "review_rejects": 0.8,
+          "reviewer_repairs": 4.96,
+          "weighted_landed": 234.84
         },
         "model": "gpt-6.1-terra",
         "per_100": {
-          "crew_rework": 5,
-          "escaped_regressions": 16.35,
-          "first_pass_accepts": 56.25,
+          "crew_rework": 4.94,
+          "escaped_regressions": 16.15,
+          "first_pass_accepts": 61.11,
           "review_rejects": 0,
-          "reviewer_repairs": 50,
-          "weighted_landed": 95.42
+          "reviewer_repairs": 44.44,
+          "weighted_landed": 95.06
         },
         "provisional_terms": [
           "first_pass_accepts",
@@ -748,11 +748,11 @@
           "reviewer_repairs"
         ],
         "rank": 9,
-        "raw": 100.32,
+        "raw": 100.4,
         "reasoning_effort": "high",
-        "reviewed_units": 16,
+        "reviewed_units": 18,
         "runs_without_model": 0,
-        "score": 100.32,
+        "score": 100.4,
         "score_base": 100,
         "stats": [
           {
@@ -763,12 +763,12 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 253
+            "value": 256
           },
           {
             "key": "cost_measured_attempts",
             "label": "Cost measured attempts",
-            "value": 215
+            "value": 218
           },
           {
             "key": "cost_unpriced_attempts",
@@ -787,19 +787,19 @@
           }
         ],
         "term_units": {
-          "first_pass_accepts": 16,
-          "review_rejects": 16,
-          "reviewer_repairs": 16
+          "first_pass_accepts": 18,
+          "review_rejects": 18,
+          "reviewer_repairs": 18
         },
         "unit": "implemented tasks",
-        "units": 240,
+        "units": 243,
         "unjudged": false,
         "usage": {
-          "duration_ms": 105216357,
+          "duration_ms": 108990183,
           "efforts": "high",
-          "input_tokens": 1088107342,
-          "invocations": 334,
-          "output_tokens": 1953659,
+          "input_tokens": 1152682916,
+          "invocations": 341,
+          "output_tokens": 2070289,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -817,12 +817,12 @@
         "crew": "gemini-flash",
         "effort_label": "provider default",
         "expected": {
-          "crew_rework": 0.74,
-          "escaped_regressions": 3.51,
+          "crew_rework": 0.73,
+          "escaped_regressions": 3.5,
           "first_pass_accepts": 2.64,
           "review_rejects": 0.15,
-          "reviewer_repairs": 1.02,
-          "weighted_landed": 69.9
+          "reviewer_repairs": 1.03,
+          "weighted_landed": 69.73
         },
         "model": "gemini-3.8-flash-high",
         "per_100": {
@@ -839,10 +839,10 @@
           "reviewer_repairs"
         ],
         "rank": 10,
-        "raw": 90.99,
+        "raw": 91.19,
         "reviewed_units": 4,
         "runs_without_model": 0,
-        "score": 90.99,
+        "score": 91.19,
         "score_base": 100,
         "stats": [
           {
@@ -907,12 +907,12 @@
         "crew": "muse-spark",
         "effort_label": "provider default",
         "expected": {
-          "crew_rework": 0.81,
-          "escaped_regressions": 5.87,
-          "first_pass_accepts": 11.79,
-          "review_rejects": 0.79,
-          "reviewer_repairs": 4.82,
-          "weighted_landed": 62.84
+          "crew_rework": 0.8,
+          "escaped_regressions": 5.85,
+          "first_pass_accepts": 11.81,
+          "review_rejects": 0.77,
+          "reviewer_repairs": 4.87,
+          "weighted_landed": 62.69
         },
         "model": "muse-spark-1.3-contributor",
         "per_100": {
@@ -929,10 +929,10 @@
           "reviewer_repairs"
         ],
         "rank": 11,
-        "raw": 86.57,
+        "raw": 86.76,
         "reviewed_units": 18,
         "runs_without_model": 0,
-        "score": 86.57,
+        "score": 86.76,
         "score_base": 100,
         "stats": [
           {
@@ -997,12 +997,12 @@
         "crew": "grok",
         "effort_label": "provider default",
         "expected": {
-          "crew_rework": 0.64,
-          "escaped_regressions": 7.58,
-          "first_pass_accepts": 7.76,
-          "review_rejects": 0.68,
-          "reviewer_repairs": 3.5,
-          "weighted_landed": 18.17
+          "crew_rework": 0.63,
+          "escaped_regressions": 7.56,
+          "first_pass_accepts": 7.75,
+          "review_rejects": 0.66,
+          "reviewer_repairs": 3.59,
+          "weighted_landed": 18.14
         },
         "model": "grok-4.7",
         "per_100": {
@@ -1019,10 +1019,10 @@
           "reviewer_repairs"
         ],
         "rank": 12,
-        "raw": 85.57,
+        "raw": 85.64,
         "reviewed_units": 12,
         "runs_without_model": 0,
-        "score": 85.57,
+        "score": 85.64,
         "score_base": 100,
         "stats": [
           {
@@ -1078,38 +1078,38 @@
         "below_support": false,
         "counts": {
           "crew_rework": 4,
-          "escaped_regressions": 242.25,
-          "first_pass_accepts": 35,
+          "escaped_regressions": 244.25,
+          "first_pass_accepts": 36,
           "review_rejects": 3,
-          "reviewer_repairs": 22,
-          "weighted_landed": 436
+          "reviewer_repairs": 25,
+          "weighted_landed": 439
         },
         "crew": "muse-wonder",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 14.86,
-          "escaped_regressions": 139.38,
-          "first_pass_accepts": 38.82,
-          "review_rejects": 3.4,
-          "reviewer_repairs": 17.52,
-          "weighted_landed": 424.69
+          "crew_rework": 14.94,
+          "escaped_regressions": 140.38,
+          "first_pass_accepts": 40.71,
+          "review_rejects": 3.45,
+          "reviewer_repairs": 18.84,
+          "weighted_landed": 428.89
         },
         "model": "muse-wonder-1.0",
         "per_100": {
-          "crew_rework": 0.9,
-          "escaped_regressions": 54.56,
-          "first_pass_accepts": 58.33,
-          "review_rejects": 5,
-          "reviewer_repairs": 36.67,
-          "weighted_landed": 98.2
+          "crew_rework": 0.89,
+          "escaped_regressions": 54.4,
+          "first_pass_accepts": 57.14,
+          "review_rejects": 4.76,
+          "reviewer_repairs": 39.68,
+          "weighted_landed": 97.77
         },
         "provisional_terms": [],
         "rank": 13,
-        "raw": 83.98,
+        "raw": 81.46,
         "reasoning_effort": "high",
-        "reviewed_units": 60,
+        "reviewed_units": 63,
         "runs_without_model": 0,
-        "score": 83.98,
+        "score": 81.46,
         "score_base": 100,
         "stats": [
           {
@@ -1120,104 +1120,17 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 451
-          },
-          {
-            "key": "cost_measured_attempts",
-            "label": "Cost measured attempts",
-            "value": 420
-          },
-          {
-            "key": "cost_unpriced_attempts",
-            "label": "Cost unpriced attempts",
-            "value": 31
-          },
-          {
-            "key": "cost_missing_run_attempts",
-            "label": "Cost missing-run attempts",
-            "value": 0
-          },
-          {
-            "key": "median_run_seconds",
-            "label": "Median completed run (seconds)",
-            "value": 638.52
-          }
-        ],
-        "term_units": {
-          "first_pass_accepts": 60,
-          "review_rejects": 60,
-          "reviewer_repairs": 60
-        },
-        "unit": "implemented tasks",
-        "units": 444,
-        "unjudged": false,
-        "usage": {
-          "duration_ms": 380928949,
-          "efforts": "high",
-          "input_tokens": 0,
-          "invocations": 935,
-          "output_tokens": 0,
-          "provider_cost_count": 0,
-          "provider_cost_usd": 0.0
-        }
-      },
-      {
-        "below_support": false,
-        "counts": {
-          "crew_rework": 0,
-          "escaped_regressions": 51.75,
-          "first_pass_accepts": 22,
-          "review_rejects": 0,
-          "reviewer_repairs": 18,
-          "weighted_landed": 479
-        },
-        "crew": "muse-spark",
-        "effort_label": "xhigh",
-        "expected": {
-          "crew_rework": 6.1,
-          "escaped_regressions": 39.95,
-          "first_pass_accepts": 27.7,
-          "review_rejects": 1.59,
-          "reviewer_repairs": 10.73,
-          "weighted_landed": 474.19
-        },
-        "model": "muse-spark-1.3-contributor",
-        "per_100": {
-          "crew_rework": 0,
-          "escaped_regressions": 10.71,
-          "first_pass_accepts": 52.38,
-          "review_rejects": 0,
-          "reviewer_repairs": 42.86,
-          "weighted_landed": 99.17
-        },
-        "provisional_terms": [],
-        "rank": 14,
-        "raw": 82.6,
-        "reasoning_effort": "xhigh",
-        "reviewed_units": 42,
-        "runs_without_model": 0,
-        "score": 82.6,
-        "score_base": 100,
-        "stats": [
-          {
-            "key": "cost_per_weighted_landed",
-            "label": "Cost per landed task (USD)",
-            "value": null
-          },
-          {
-            "key": "cost_coverage_attempts",
-            "label": "Cost coverage denominator (counted attempts)",
-            "value": 486
-          },
-          {
-            "key": "cost_measured_attempts",
-            "label": "Cost measured attempts",
             "value": 456
           },
           {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 423
+          },
+          {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 30
+            "value": 33
           },
           {
             "key": "cost_missing_run_attempts",
@@ -1227,22 +1140,22 @@
           {
             "key": "median_run_seconds",
             "label": "Median completed run (seconds)",
-            "value": 395.91
+            "value": 639.13
           }
         ],
         "term_units": {
-          "first_pass_accepts": 42,
-          "review_rejects": 42,
-          "reviewer_repairs": 42
+          "first_pass_accepts": 63,
+          "review_rejects": 63,
+          "reviewer_repairs": 63
         },
         "unit": "implemented tasks",
-        "units": 483,
+        "units": 449,
         "unjudged": false,
         "usage": {
-          "duration_ms": 234040832,
-          "efforts": "xhigh",
+          "duration_ms": 384023534,
+          "efforts": "high",
           "input_tokens": 0,
-          "invocations": 479,
+          "invocations": 944,
           "output_tokens": 0,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
@@ -1261,12 +1174,12 @@
         "crew": "muse-wonder",
         "effort_label": "provider default",
         "expected": {
-          "crew_rework": 1.77,
-          "escaped_regressions": 19.74,
-          "first_pass_accepts": 8.41,
-          "review_rejects": 0.74,
-          "reviewer_repairs": 3.8,
-          "weighted_landed": 51.69
+          "crew_rework": 1.76,
+          "escaped_regressions": 19.71,
+          "first_pass_accepts": 8.4,
+          "review_rejects": 0.71,
+          "reviewer_repairs": 3.89,
+          "weighted_landed": 51.62
         },
         "model": "muse-wonder-1.0",
         "per_100": {
@@ -1282,11 +1195,11 @@
           "review_rejects",
           "reviewer_repairs"
         ],
-        "rank": 15,
-        "raw": 80.23,
+        "rank": 14,
+        "raw": 80.31,
         "reviewed_units": 13,
         "runs_without_model": 0,
-        "score": 80.23,
+        "score": 80.31,
         "score_base": 100,
         "stats": [
           {
@@ -1351,12 +1264,12 @@
         "crew": "opus",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 14.9,
-          "escaped_regressions": 270.08,
-          "first_pass_accepts": 11.55,
-          "review_rejects": 2.16,
-          "reviewer_repairs": 7.26,
-          "weighted_landed": 251.02
+          "crew_rework": 14.72,
+          "escaped_regressions": 269.14,
+          "first_pass_accepts": 11.58,
+          "review_rejects": 2.04,
+          "reviewer_repairs": 7.46,
+          "weighted_landed": 250.8
         },
         "model": "claude-opus-5-5",
         "per_100": {
@@ -1372,12 +1285,12 @@
           "review_rejects",
           "reviewer_repairs"
         ],
-        "rank": 16,
-        "raw": 80.09,
+        "rank": 15,
+        "raw": 79.93,
         "reasoning_effort": "high",
         "reviewed_units": 23,
         "runs_without_model": 0,
-        "score": 80.09,
+        "score": 79.93,
         "score_base": 100,
         "stats": [
           {
@@ -1420,13 +1333,100 @@
         "units": 266,
         "unjudged": false,
         "usage": {
-          "duration_ms": 575242627,
+          "duration_ms": 575696420,
           "efforts": "high, medium",
-          "input_tokens": 67130,
-          "invocations": 364,
-          "output_tokens": 24383850,
-          "provider_cost_count": 363,
-          "provider_cost_usd": 2427.5590873
+          "input_tokens": 67238,
+          "invocations": 366,
+          "output_tokens": 24419833,
+          "provider_cost_count": 365,
+          "provider_cost_usd": 2430.7904113
+        }
+      },
+      {
+        "below_support": false,
+        "counts": {
+          "crew_rework": 0,
+          "escaped_regressions": 51.75,
+          "first_pass_accepts": 22,
+          "review_rejects": 0,
+          "reviewer_repairs": 20,
+          "weighted_landed": 483
+        },
+        "crew": "muse-spark",
+        "effort_label": "xhigh",
+        "expected": {
+          "crew_rework": 6.11,
+          "escaped_regressions": 39.99,
+          "first_pass_accepts": 29.09,
+          "review_rejects": 1.61,
+          "reviewer_repairs": 11.28,
+          "weighted_landed": 480.0
+        },
+        "model": "muse-spark-1.3-contributor",
+        "per_100": {
+          "crew_rework": 0,
+          "escaped_regressions": 10.56,
+          "first_pass_accepts": 50,
+          "review_rejects": 0,
+          "reviewer_repairs": 45.45,
+          "weighted_landed": 98.57
+        },
+        "provisional_terms": [],
+        "rank": 16,
+        "raw": 78.3,
+        "reasoning_effort": "xhigh",
+        "reviewed_units": 44,
+        "runs_without_model": 0,
+        "score": 78.3,
+        "score_base": 100,
+        "stats": [
+          {
+            "key": "cost_per_weighted_landed",
+            "label": "Cost per landed task (USD)",
+            "value": null
+          },
+          {
+            "key": "cost_coverage_attempts",
+            "label": "Cost coverage denominator (counted attempts)",
+            "value": 493
+          },
+          {
+            "key": "cost_measured_attempts",
+            "label": "Cost measured attempts",
+            "value": 461
+          },
+          {
+            "key": "cost_unpriced_attempts",
+            "label": "Cost unpriced attempts",
+            "value": 32
+          },
+          {
+            "key": "cost_missing_run_attempts",
+            "label": "Cost missing-run attempts",
+            "value": 0
+          },
+          {
+            "key": "median_run_seconds",
+            "label": "Median completed run (seconds)",
+            "value": 394.7
+          }
+        ],
+        "term_units": {
+          "first_pass_accepts": 44,
+          "review_rejects": 44,
+          "reviewer_repairs": 44
+        },
+        "unit": "implemented tasks",
+        "units": 490,
+        "unjudged": false,
+        "usage": {
+          "duration_ms": 235191971,
+          "efforts": "xhigh",
+          "input_tokens": 0,
+          "invocations": 484,
+          "output_tokens": 0,
+          "provider_cost_count": 0,
+          "provider_cost_usd": 0.0
         }
       },
       {
@@ -1442,12 +1442,12 @@
         "crew": "haiku",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 1.31,
-          "escaped_regressions": 11.83,
-          "first_pass_accepts": 20.89,
-          "review_rejects": 1.53,
-          "reviewer_repairs": 8.8,
-          "weighted_landed": 59.23
+          "crew_rework": 1.3,
+          "escaped_regressions": 11.82,
+          "first_pass_accepts": 20.9,
+          "review_rejects": 1.48,
+          "reviewer_repairs": 8.93,
+          "weighted_landed": 59.12
         },
         "model": "claude-haiku-5-5",
         "per_100": {
@@ -1460,11 +1460,11 @@
         },
         "provisional_terms": [],
         "rank": 17,
-        "raw": 47.44,
+        "raw": 47.61,
         "reasoning_effort": "high",
         "reviewed_units": 32,
         "runs_without_model": 0,
-        "score": 47.44,
+        "score": 47.61,
         "score_base": 100,
         "stats": [
           {
@@ -1520,30 +1520,30 @@
         "below_support": false,
         "counts": {
           "crew_rework": 0,
-          "escaped_regressions": 133.25,
+          "escaped_regressions": 135.25,
           "first_pass_accepts": 2,
           "review_rejects": 0,
-          "reviewer_repairs": 4,
-          "weighted_landed": 47
+          "reviewer_repairs": 6,
+          "weighted_landed": 49
         },
         "crew": "muse-wonder-full",
         "effort_label": "high",
         "expected": {
-          "crew_rework": 2.82,
-          "escaped_regressions": 40.8,
-          "first_pass_accepts": 3.77,
-          "review_rejects": 0.82,
-          "reviewer_repairs": 2.58,
-          "weighted_landed": 45.28
+          "crew_rework": 2.91,
+          "escaped_regressions": 41.71,
+          "first_pass_accepts": 4.73,
+          "review_rejects": 0.97,
+          "reviewer_repairs": 3.33,
+          "weighted_landed": 47.13
         },
         "model": "muse-wonder-full-1.0",
         "per_100": {
           "crew_rework": 0,
-          "escaped_regressions": 277.6,
-          "first_pass_accepts": 25,
+          "escaped_regressions": 270.5,
+          "first_pass_accepts": 20,
           "review_rejects": 0,
-          "reviewer_repairs": 50,
-          "weighted_landed": 97.92
+          "reviewer_repairs": 60,
+          "weighted_landed": 98
         },
         "provisional_terms": [
           "first_pass_accepts",
@@ -1551,11 +1551,11 @@
           "reviewer_repairs"
         ],
         "rank": 18,
-        "raw": 13.16,
+        "raw": 16.02,
         "reasoning_effort": "high",
-        "reviewed_units": 8,
+        "reviewed_units": 10,
         "runs_without_model": 0,
-        "score": 13.16,
+        "score": 16.02,
         "score_base": 100,
         "stats": [
           {
@@ -1566,7 +1566,7 @@
           {
             "key": "cost_coverage_attempts",
             "label": "Cost coverage denominator (counted attempts)",
-            "value": 48
+            "value": 50
           },
           {
             "key": "cost_measured_attempts",
@@ -1576,7 +1576,7 @@
           {
             "key": "cost_unpriced_attempts",
             "label": "Cost unpriced attempts",
-            "value": 48
+            "value": 50
           },
           {
             "key": "cost_missing_run_attempts",
@@ -1590,18 +1590,18 @@
           }
         ],
         "term_units": {
-          "first_pass_accepts": 8,
-          "review_rejects": 8,
-          "reviewer_repairs": 8
+          "first_pass_accepts": 10,
+          "review_rejects": 10,
+          "reviewer_repairs": 10
         },
         "unit": "implemented tasks",
-        "units": 48,
+        "units": 50,
         "unjudged": false,
         "usage": {
-          "duration_ms": 176323314,
+          "duration_ms": 190736518,
           "efforts": "high",
           "input_tokens": 0,
-          "invocations": 194,
+          "invocations": 199,
           "output_tokens": 0,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
@@ -1620,12 +1620,12 @@
         "crew": "sol",
         "effort_label": "effort unknown",
         "expected": {
-          "crew_rework": 1.32,
-          "escaped_regressions": 16.62,
+          "crew_rework": 1.3,
+          "escaped_regressions": 16.51,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 30.49
+          "weighted_landed": 30.46
         },
         "model": "gpt-6.1-sol",
         "per_100": {
@@ -1638,11 +1638,11 @@
         },
         "provisional_terms": [],
         "rank": 19,
-        "raw": -7.4,
+        "raw": -7.5,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": -7.4,
+        "score": -7.5,
         "score_base": 100,
         "stats": [
           {
@@ -1708,11 +1708,11 @@
         "effort_label": "medium",
         "expected": {
           "crew_rework": 0.36,
-          "escaped_regressions": 4.76,
+          "escaped_regressions": 4.72,
           "first_pass_accepts": 0.47,
           "review_rejects": 0.1,
-          "reviewer_repairs": 0.32,
-          "weighted_landed": 5.66
+          "reviewer_repairs": 0.33,
+          "weighted_landed": 5.65
         },
         "model": "gpt-6-astra",
         "per_100": {
@@ -1729,11 +1729,11 @@
           "reviewer_repairs"
         ],
         "rank": null,
-        "raw": 140.96,
+        "raw": 140.59,
         "reasoning_effort": "medium",
         "reviewed_units": 1,
         "runs_without_model": 0,
-        "score": 109.91,
+        "score": 109.56,
         "score_base": 100,
         "stats": [
           {
@@ -1776,11 +1776,11 @@
         "units": 6,
         "unjudged": false,
         "usage": {
-          "duration_ms": 24268078,
+          "duration_ms": 24566660,
           "efforts": "medium",
-          "input_tokens": 135882607,
-          "invocations": 38,
-          "output_tokens": 496496,
+          "input_tokens": 137872241,
+          "invocations": 40,
+          "output_tokens": 506370,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -1799,7 +1799,7 @@
         "effort_label": "medium",
         "expected": {
           "crew_rework": 0.22,
-          "escaped_regressions": 3.36,
+          "escaped_regressions": 3.35,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
@@ -1816,11 +1816,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 122.9,
+        "raw": 122.86,
         "reasoning_effort": "medium",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 106.44,
+        "score": 106.14,
         "score_base": 100,
         "stats": [
           {
@@ -1886,10 +1886,10 @@
         "effort_label": "high",
         "expected": {
           "crew_rework": 0.18,
-          "escaped_regressions": 2.8,
-          "first_pass_accepts": 0.94,
-          "review_rejects": 0.21,
-          "reviewer_repairs": 0.65,
+          "escaped_regressions": 2.78,
+          "first_pass_accepts": 0.95,
+          "review_rejects": 0.19,
+          "reviewer_repairs": 0.67,
           "weighted_landed": 2.83
         },
         "model": "gemini-4-argon-high",
@@ -1907,11 +1907,11 @@
           "reviewer_repairs"
         ],
         "rank": null,
-        "raw": 124.98,
+        "raw": 124.7,
         "reasoning_effort": "high",
         "reviewed_units": 2,
         "runs_without_model": 0,
-        "score": 105.63,
+        "score": 105.29,
         "score_base": 100,
         "stats": [
           {
@@ -1976,12 +1976,12 @@
         "crew": "opus",
         "effort_label": "effort unknown",
         "expected": {
-          "crew_rework": 0.25,
-          "escaped_regressions": 8.15,
+          "crew_rework": 0.24,
+          "escaped_regressions": 8.13,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 4.72
+          "weighted_landed": 4.71
         },
         "model": "claude-opus-5-5",
         "per_100": {
@@ -1994,11 +1994,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 112.02,
+        "raw": 111.86,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 104.89,
+        "score": 104.57,
         "score_base": 100,
         "stats": [
           {
@@ -2041,13 +2041,13 @@
         "units": 5,
         "unjudged": false,
         "usage": {
-          "duration_ms": 559491965,
+          "duration_ms": 559945758,
           "efforts": "high, medium",
-          "input_tokens": 66760,
-          "invocations": 361,
-          "output_tokens": 24093265,
-          "provider_cost_count": 361,
-          "provider_cost_usd": 2408.4752949
+          "input_tokens": 66868,
+          "invocations": 363,
+          "output_tokens": 24129248,
+          "provider_cost_count": 363,
+          "provider_cost_usd": 2411.7066188999997
         }
       },
       {
@@ -2064,11 +2064,11 @@
         "effort_label": "high",
         "expected": {
           "crew_rework": 0.12,
-          "escaped_regressions": 2.16,
+          "escaped_regressions": 2.15,
           "first_pass_accepts": 0.47,
           "review_rejects": 0.1,
-          "reviewer_repairs": 0.32,
-          "weighted_landed": 1.89
+          "reviewer_repairs": 0.33,
+          "weighted_landed": 1.88
         },
         "model": "gpt-6-astra",
         "per_100": {
@@ -2085,11 +2085,11 @@
           "reviewer_repairs"
         ],
         "rank": null,
-        "raw": 115.69,
+        "raw": 115.48,
         "reasoning_effort": "high",
         "reviewed_units": 1,
         "runs_without_model": 0,
-        "score": 104.45,
+        "score": 104.11,
         "score_base": 100,
         "stats": [
           {
@@ -2172,11 +2172,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 105.92,
+        "raw": 106.11,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 103.77,
+        "score": 103.44,
         "score_base": 100,
         "stats": [
           {
@@ -2241,12 +2241,12 @@
         "crew": "luna",
         "effort_label": "effort unknown",
         "expected": {
-          "crew_rework": 0.09,
+          "crew_rework": 0.08,
           "escaped_regressions": 0.67,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 5.88
+          "weighted_landed": 5.87
         },
         "model": "gpt-6-luna",
         "per_100": {
@@ -2259,11 +2259,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 92.39,
+        "raw": 92.59,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 92.39,
+        "score": 92.59,
         "score_base": 100,
         "stats": [
           {
@@ -2346,11 +2346,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 90.31,
+        "raw": 90.53,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 90.31,
+        "score": 90.53,
         "score_base": 100,
         "stats": [
           {
@@ -2415,12 +2415,12 @@
         "crew": "muse-wonder-full",
         "effort_label": "provider default",
         "expected": {
-          "crew_rework": 0.54,
-          "escaped_regressions": 8.35,
+          "crew_rework": 0.53,
+          "escaped_regressions": 8.3,
           "first_pass_accepts": 1.89,
-          "review_rejects": 0.41,
-          "reviewer_repairs": 1.29,
-          "weighted_landed": 8.49
+          "review_rejects": 0.39,
+          "reviewer_repairs": 1.33,
+          "weighted_landed": 8.48
         },
         "model": "muse-wonder-full-1.0",
         "per_100": {
@@ -2437,10 +2437,10 @@
           "reviewer_repairs"
         ],
         "rank": null,
-        "raw": 80.34,
+        "raw": 80.06,
         "reviewed_units": 4,
         "runs_without_model": 0,
-        "score": 80.34,
+        "score": 80.06,
         "score_base": 100,
         "stats": [
           {
@@ -2508,9 +2508,9 @@
           "crew_rework": 0.19,
           "escaped_regressions": 3.12,
           "first_pass_accepts": 0.65,
-          "review_rejects": 0.06,
-          "reviewer_repairs": 0.29,
-          "weighted_landed": 4.77
+          "review_rejects": 0.05,
+          "reviewer_repairs": 0.3,
+          "weighted_landed": 4.76
         },
         "model": "claude-sonnet-5-5",
         "per_100": {
@@ -2527,11 +2527,11 @@
           "reviewer_repairs"
         ],
         "rank": null,
-        "raw": 59.72,
+        "raw": 59.78,
         "reasoning_effort": "unknown",
         "reviewed_units": 1,
         "runs_without_model": 0,
-        "score": 59.72,
+        "score": 59.78,
         "score_base": 100,
         "stats": [
           {
@@ -2601,7 +2601,7 @@
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 5.74
+          "weighted_landed": 5.73
         },
         "model": "muse-wonder-1.0",
         "per_100": {
@@ -2614,11 +2614,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 58.76,
+        "raw": 58.82,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 58.76,
+        "score": 58.82,
         "score_base": 100,
         "stats": [
           {
@@ -2688,7 +2688,7 @@
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 6.72
+          "weighted_landed": 6.71
         },
         "model": "gpt-6.1-terra",
         "per_100": {
@@ -2701,11 +2701,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 49.23,
+        "raw": 49.31,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 49.23,
+        "score": 49.31,
         "score_base": 100,
         "stats": [
           {
@@ -2775,7 +2775,7 @@
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
-          "weighted_landed": 4.92
+          "weighted_landed": 4.91
         },
         "model": "claude-haiku-5-5",
         "per_100": {
@@ -2788,11 +2788,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 43.93,
+        "raw": 44.13,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 43.93,
+        "score": 44.13,
         "score_base": 100,
         "stats": [
           {
@@ -2858,7 +2858,7 @@
         "effort_label": "effort unknown",
         "expected": {
           "crew_rework": 0.16,
-          "escaped_regressions": 1.84,
+          "escaped_regressions": 1.82,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
@@ -2875,11 +2875,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 31.67,
+        "raw": 31.62,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 31.67,
+        "score": 31.62,
         "score_base": 100,
         "stats": [
           {
@@ -2945,11 +2945,11 @@
         "effort_label": "provider default",
         "expected": {
           "crew_rework": 0.29,
-          "escaped_regressions": 3.29,
+          "escaped_regressions": 3.27,
           "first_pass_accepts": 0.47,
           "review_rejects": 0.1,
-          "reviewer_repairs": 0.32,
-          "weighted_landed": 6.67
+          "reviewer_repairs": 0.33,
+          "weighted_landed": 6.66
         },
         "model": "gemini-4-argon-high",
         "per_100": {
@@ -2966,10 +2966,10 @@
           "reviewer_repairs"
         ],
         "rank": null,
-        "raw": 25.24,
+        "raw": 25.16,
         "reviewed_units": 1,
         "runs_without_model": 0,
-        "score": 25.24,
+        "score": 25.16,
         "score_base": 100,
         "stats": [
           {
@@ -3035,7 +3035,7 @@
         "effort_label": "effort unknown",
         "expected": {
           "crew_rework": 0.01,
-          "escaped_regressions": 0.0,
+          "escaped_regressions": 0.01,
           "first_pass_accepts": 0,
           "review_rejects": 0,
           "reviewer_repairs": 0,
@@ -3052,11 +3052,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": 2.83,
+        "raw": 3.22,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": 2.83,
+        "score": 3.22,
         "score_base": 100,
         "stats": [
           {
@@ -3139,11 +3139,11 @@
         },
         "provisional_terms": [],
         "rank": null,
-        "raw": -56.05,
+        "raw": -56.48,
         "reasoning_effort": "unknown",
         "reviewed_units": 0,
         "runs_without_model": 0,
-        "score": -56.05,
+        "score": -56.48,
         "score_base": 100,
         "stats": [
           {
@@ -3196,9 +3196,9 @@
         }
       }
     ],
-    "score_key": "Score: per 100 implemented tasks, credit for landed, first-pass accepts; debits for review rejects, reviewer repairs, crew-caused rework, escaped regressions. The fleet average is 103.7.",
+    "score_key": "Score: per 100 implemented tasks, credit for landed, first-pass accepts; debits for review rejects, reviewer repairs, crew-caused rework, escaped regressions. The fleet average is 103.3.",
     "settled": false,
-    "tasks_scanned": 13570,
+    "tasks_scanned": 13647,
     "terms": [
       {
         "group": "credit",
@@ -3240,8 +3240,8 @@
     "unit": "implemented tasks",
     "window": {
       "key": "30d",
-      "since": "2026-10-16T05:16:19Z",
-      "until": "2026-11-15T05:16:19Z"
+      "since": "2026-10-16T20:04:05Z",
+      "until": "2026-11-15T20:04:05Z"
     }
   },
   "implementers_by_tier": {
@@ -3249,18 +3249,18 @@
       {
         "below_support": true,
         "crew": "gemini-flash@high",
-        "crew_mean": 101.18,
+        "crew_mean": 101.41,
         "effort_label": "high",
         "model": "gemini-3.8-flash-high",
-        "n": 1,
+        "n": 2,
         "rank": null,
-        "raw": 105.4,
+        "raw": 105.59,
         "reasoning_effort": "high",
-        "score": 101.31,
+        "score": 101.67,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
-        "units": 1
+        "units": 2
       },
       {
         "below_support": true,
@@ -3270,9 +3270,9 @@
         "model": "grok-4.7",
         "n": 1,
         "rank": null,
-        "raw": 5.4,
+        "raw": 5.59,
         "reasoning_effort": "high",
-        "score": 94.0,
+        "score": 94.01,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -3281,14 +3281,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 125.39,
+        "crew_mean": 127.55,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 3,
         "rank": null,
-        "raw": 105.4,
+        "raw": 105.59,
         "reasoning_effort": "xhigh",
-        "score": 123.57,
+        "score": 125.55,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -3297,14 +3297,14 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 111.07,
+        "crew_mean": 110.91,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
         "n": 5,
         "rank": null,
-        "raw": 55.4,
+        "raw": 55.59,
         "reasoning_effort": "xhigh",
-        "score": 103.12,
+        "score": 103.01,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -3313,14 +3313,14 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 83.75,
+        "crew_mean": 79.66,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
         "n": 3,
         "rank": null,
-        "raw": 105.4,
+        "raw": 105.59,
         "reasoning_effort": "xhigh",
-        "score": 85.72,
+        "score": 82.02,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -3334,9 +3334,9 @@
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": 5.4,
+        "raw": 5.59,
         "reasoning_effort": "unknown",
-        "score": 94.0,
+        "score": 94.01,
         "tier": "low",
         "type": "ci",
         "unit": "tasks",
@@ -3345,14 +3345,14 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 125.39,
+        "crew_mean": 127.55,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 84,
         "rank": 1,
-        "raw": 104.01,
+        "raw": 103.98,
         "reasoning_effort": "xhigh",
-        "score": 109.64,
+        "score": 110.18,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3361,30 +3361,30 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 111.07,
+        "crew_mean": 110.91,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
-        "n": 87,
+        "n": 89,
         "rank": 2,
         "raw": 102.29,
         "reasoning_effort": "xhigh",
-        "score": 104.54,
+        "score": 104.47,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
-        "units": 87
+        "units": 89
       },
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 100.78,
+        "crew_mean": 100.92,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 19,
         "rank": 3,
-        "raw": 103.35,
+        "raw": 103.32,
         "reasoning_effort": "high",
-        "score": 101.78,
+        "score": 101.85,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3393,14 +3393,14 @@
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 83.75,
+        "crew_mean": 79.66,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
         "n": 43,
         "rank": 4,
-        "raw": 101.68,
+        "raw": 101.65,
         "reasoning_effort": "xhigh",
-        "score": 94.31,
+        "score": 92.62,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3409,13 +3409,13 @@
       {
         "below_support": true,
         "crew": "gemini-flash",
-        "crew_mean": 93.9,
+        "crew_mean": 94.03,
         "effort_label": "provider default",
         "model": "gemini-3.8-flash-high",
         "n": 8,
         "rank": null,
-        "raw": 104.01,
-        "score": 96.03,
+        "raw": 103.98,
+        "score": 96.13,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3424,14 +3424,14 @@
       {
         "below_support": true,
         "crew": "gemini-flash@high",
-        "crew_mean": 101.18,
+        "crew_mean": 101.41,
         "effort_label": "high",
         "model": "gemini-3.8-flash-high",
         "n": 4,
         "rank": null,
-        "raw": 104.01,
+        "raw": 103.98,
         "reasoning_effort": "high",
-        "score": 101.51,
+        "score": 101.71,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3440,14 +3440,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 96.34,
+        "crew_mean": 96.44,
         "effort_label": "high",
         "model": "claude-haiku-5-5",
         "n": 9,
         "rank": null,
-        "raw": 81.79,
+        "raw": 81.76,
         "reasoning_effort": "high",
-        "score": 92.98,
+        "score": 93.05,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3456,14 +3456,14 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "effort unknown",
         "model": "gpt-6-luna",
         "n": 1,
         "rank": null,
-        "raw": 104.01,
+        "raw": 103.98,
         "reasoning_effort": "unknown",
-        "score": 100.88,
+        "score": 100.9,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3477,9 +3477,9 @@
         "model": "gpt-6.1-luna",
         "n": 1,
         "rank": null,
-        "raw": 4.01,
+        "raw": 3.98,
         "reasoning_effort": "unknown",
-        "score": 93.95,
+        "score": 93.96,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3488,13 +3488,13 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 93.33,
+        "crew_mean": 93.46,
         "effort_label": "provider default",
         "model": "muse-spark-1.3-contributor",
         "n": 5,
         "rank": null,
-        "raw": 4.01,
-        "score": 80.57,
+        "raw": 3.98,
+        "score": 80.68,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3503,12 +3503,12 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 100.17,
+        "crew_mean": 100.18,
         "effort_label": "effort unknown",
         "model": "muse-spark-1.3-contributor",
         "n": 1,
         "rank": null,
-        "raw": 104.01,
+        "raw": 103.98,
         "reasoning_effort": "unknown",
         "score": 100.3,
         "tier": "low",
@@ -3519,13 +3519,13 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 100.34,
+        "crew_mean": 100.35,
         "effort_label": "provider default",
         "model": "muse-wonder-1.0",
         "n": 1,
         "rank": null,
-        "raw": 104.01,
-        "score": 100.46,
+        "raw": 103.98,
+        "score": 100.47,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3534,14 +3534,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 100.9,
+        "crew_mean": 100.93,
         "effort_label": "high",
         "model": "muse-wonder-1.0",
         "n": 2,
         "rank": null,
-        "raw": 104.01,
+        "raw": 103.98,
         "reasoning_effort": "high",
-        "score": 101.09,
+        "score": 101.12,
         "tier": "low",
         "type": "docs",
         "unit": "tasks",
@@ -3550,62 +3550,62 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 125.39,
+        "crew_mean": 127.55,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
-        "n": 313,
+        "n": 319,
         "rank": 1,
-        "raw": 131.91,
+        "raw": 132.81,
         "reasoning_effort": "xhigh",
-        "score": 131.34,
+        "score": 132.35,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 313
+        "units": 319
       },
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 111.07,
+        "crew_mean": 110.91,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
-        "n": 383,
+        "n": 384,
         "rank": 2,
-        "raw": 98.97,
+        "raw": 98.62,
         "reasoning_effort": "xhigh",
-        "score": 99.85,
+        "score": 99.51,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 383
+        "units": 384
       },
       {
         "below_support": false,
         "crew": "gemini-flash@high",
-        "crew_mean": 101.18,
+        "crew_mean": 101.41,
         "effort_label": "high",
         "model": "gemini-3.8-flash-high",
-        "n": 15,
+        "n": 16,
         "rank": 3,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "high",
-        "score": 102.38,
+        "score": 102.66,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 15
+        "units": 16
       },
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 100.78,
+        "crew_mean": 100.92,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 70,
         "rank": 4,
-        "raw": 99.08,
+        "raw": 99.29,
         "reasoning_effort": "high",
-        "score": 99.59,
+        "score": 99.78,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3614,14 +3614,14 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 96.34,
+        "crew_mean": 96.44,
         "effort_label": "high",
         "model": "claude-haiku-5-5",
         "n": 17,
         "rank": 5,
-        "raw": 98.91,
+        "raw": 99.12,
         "reasoning_effort": "high",
-        "score": 97.27,
+        "score": 97.41,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3630,13 +3630,13 @@
       {
         "below_support": false,
         "crew": "gemini-flash",
-        "crew_mean": 93.9,
+        "crew_mean": 94.03,
         "effort_label": "provider default",
         "model": "gemini-3.8-flash-high",
         "n": 28,
         "rank": 6,
-        "raw": 94.08,
-        "score": 93.99,
+        "raw": 94.29,
+        "score": 94.15,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3645,13 +3645,13 @@
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 93.33,
+        "crew_mean": 93.46,
         "effort_label": "provider default",
         "model": "muse-spark-1.3-contributor",
         "n": 41,
         "rank": 7,
-        "raw": 97.48,
-        "score": 95.73,
+        "raw": 97.68,
+        "score": 95.9,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3660,30 +3660,30 @@
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 83.75,
+        "crew_mean": 79.66,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
-        "n": 271,
+        "n": 276,
         "rank": 8,
-        "raw": 80.65,
+        "raw": 76.95,
         "reasoning_effort": "xhigh",
-        "score": 80.96,
+        "score": 77.21,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
-        "units": 271
+        "units": 276
       },
       {
         "below_support": true,
         "crew": "gemini-flash",
-        "crew_mean": 100.17,
+        "crew_mean": 100.18,
         "effort_label": "effort unknown",
         "model": "gemini-3.8-flash-high",
         "n": 1,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "unknown",
-        "score": 100.32,
+        "score": 100.34,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3692,14 +3692,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 92.2,
+        "crew_mean": 92.23,
         "effort_label": "effort unknown",
         "model": "claude-haiku-5-5",
         "n": 1,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "unknown",
-        "score": 92.61,
+        "score": 92.64,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3708,14 +3708,14 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "effort unknown",
         "model": "gpt-6-luna",
         "n": 3,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "unknown",
-        "score": 101.14,
+        "score": 101.18,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3724,13 +3724,13 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 100.34,
+        "crew_mean": 100.35,
         "effort_label": "provider default",
         "model": "muse-wonder-1.0",
         "n": 1,
         "rank": null,
-        "raw": 104.8,
-        "score": 100.48,
+        "raw": 105,
+        "score": 100.5,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3739,14 +3739,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 100.9,
+        "crew_mean": 100.93,
         "effort_label": "high",
         "model": "muse-wonder-1.0",
         "n": 4,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "high",
-        "score": 101.36,
+        "score": 101.41,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3755,14 +3755,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 3,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "medium",
-        "score": 101.14,
+        "score": 101.18,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3771,14 +3771,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 100.49,
+        "crew_mean": 100.51,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "high",
-        "score": 100.63,
+        "score": 100.65,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3787,14 +3787,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 100.49,
+        "crew_mean": 100.51,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 2,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "xhigh",
-        "score": 100.76,
+        "score": 100.79,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3803,14 +3803,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 1,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "high",
-        "score": 100.9,
+        "score": 100.93,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3819,14 +3819,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 100.17,
+        "crew_mean": 100.18,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
-        "raw": 104.8,
+        "raw": 105,
         "reasoning_effort": "unknown",
-        "score": 100.32,
+        "score": 100.34,
         "tier": "low",
         "type": "other",
         "unit": "tasks",
@@ -3835,14 +3835,14 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 125.39,
+        "crew_mean": 127.55,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 22,
         "rank": 1,
         "raw": 105.88,
         "reasoning_effort": "xhigh",
-        "score": 117.14,
+        "score": 118.38,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3851,14 +3851,14 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 111.07,
+        "crew_mean": 110.91,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
         "n": 13,
         "rank": 2,
         "raw": 105.88,
         "reasoning_effort": "xhigh",
-        "score": 109.5,
+        "score": 109.39,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3867,13 +3867,13 @@
       {
         "below_support": true,
         "crew": "gemini-flash",
-        "crew_mean": 93.9,
+        "crew_mean": 94.03,
         "effort_label": "provider default",
         "model": "gemini-3.8-flash-high",
         "n": 2,
         "rank": null,
         "raw": 105.88,
-        "score": 94.65,
+        "score": 94.77,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3882,14 +3882,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 92.2,
+        "crew_mean": 92.23,
         "effort_label": "effort unknown",
         "model": "claude-haiku-5-5",
         "n": 3,
         "rank": null,
         "raw": 5.88,
         "reasoning_effort": "unknown",
-        "score": 84.35,
+        "score": 84.38,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3898,14 +3898,14 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 83.75,
+        "crew_mean": 79.66,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
         "n": 7,
         "rank": null,
         "raw": 105.88,
         "reasoning_effort": "xhigh",
-        "score": 87.94,
+        "score": 84.62,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3914,14 +3914,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
         "raw": 105.88,
         "reasoning_effort": "medium",
-        "score": 100.94,
+        "score": 100.96,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3930,14 +3930,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 100.49,
+        "crew_mean": 100.51,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
         "raw": 105.88,
         "reasoning_effort": "high",
-        "score": 100.67,
+        "score": 100.68,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3946,14 +3946,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 1,
         "rank": null,
         "raw": 105.88,
         "reasoning_effort": "high",
-        "score": 100.94,
+        "score": 100.96,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3962,14 +3962,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 100.78,
+        "crew_mean": 100.92,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
         "raw": 105.88,
         "reasoning_effort": "high",
-        "score": 100.94,
+        "score": 101.08,
         "tier": "low",
         "type": "refactor",
         "unit": "tasks",
@@ -3978,13 +3978,13 @@
       {
         "below_support": true,
         "crew": "gemini-flash",
-        "crew_mean": 93.9,
+        "crew_mean": 94.03,
         "effort_label": "provider default",
         "model": "gemini-3.8-flash-high",
         "n": 1,
         "rank": null,
-        "raw": 105.4,
-        "score": 94.27,
+        "raw": 105.59,
+        "score": 94.4,
         "tier": "low",
         "type": "security",
         "unit": "tasks",
@@ -3993,14 +3993,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 125.39,
+        "crew_mean": 127.55,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 1,
         "rank": null,
-        "raw": 105.4,
+        "raw": 105.59,
         "reasoning_effort": "xhigh",
-        "score": 124.74,
+        "score": 126.84,
         "tier": "low",
         "type": "security",
         "unit": "tasks",
@@ -4009,14 +4009,14 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 111.07,
+        "crew_mean": 110.91,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
         "n": 4,
         "rank": null,
-        "raw": -19.6,
+        "raw": -19.41,
         "reasoning_effort": "xhigh",
-        "score": 95.7,
+        "score": 95.58,
         "tier": "low",
         "type": "security",
         "unit": "tasks",
@@ -4025,62 +4025,62 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 83.75,
+        "crew_mean": 79.66,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
-        "n": 1,
+        "n": 2,
         "rank": null,
-        "raw": 105.4,
+        "raw": 55.59,
         "reasoning_effort": "xhigh",
-        "score": 84.45,
+        "score": 78.16,
         "tier": "low",
         "type": "security",
         "unit": "tasks",
-        "units": 1
+        "units": 2
       },
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 125.39,
+        "crew_mean": 127.55,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
-        "n": 149,
+        "n": 150,
         "rank": 1,
-        "raw": 103.12,
+        "raw": 103.29,
         "reasoning_effort": "xhigh",
-        "score": 106.85,
+        "score": 107.33,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
-        "units": 149
+        "units": 150
       },
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 111.07,
+        "crew_mean": 110.91,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
-        "n": 169,
+        "n": 171,
         "rank": 2,
-        "raw": 101.59,
+        "raw": 101.2,
         "reasoning_effort": "xhigh",
-        "score": 103.02,
+        "score": 102.65,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
-        "units": 169
+        "units": 171
       },
       {
         "below_support": false,
         "crew": "gemini-flash@high",
-        "crew_mean": 101.18,
+        "crew_mean": 101.41,
         "effort_label": "high",
         "model": "gemini-3.8-flash-high",
         "n": 12,
         "rank": 3,
-        "raw": 97.47,
+        "raw": 97.62,
         "reasoning_effort": "high",
-        "score": 100.12,
+        "score": 100.33,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4089,14 +4089,14 @@
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 100.78,
+        "crew_mean": 100.92,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 15,
         "rank": 4,
-        "raw": 102.47,
+        "raw": 102.62,
         "reasoning_effort": "high",
-        "score": 101.34,
+        "score": 101.49,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4105,13 +4105,13 @@
       {
         "below_support": false,
         "crew": "gemini-flash",
-        "crew_mean": 93.9,
+        "crew_mean": 94.03,
         "effort_label": "provider default",
         "model": "gemini-3.8-flash-high",
         "n": 32,
         "rank": 5,
-        "raw": 83.93,
-        "score": 88.75,
+        "raw": 84.08,
+        "score": 88.89,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4120,13 +4120,13 @@
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 93.33,
+        "crew_mean": 93.46,
         "effort_label": "provider default",
         "model": "muse-spark-1.3-contributor",
         "n": 12,
         "rank": 6,
-        "raw": 97.47,
-        "score": 94.52,
+        "raw": 97.62,
+        "score": 94.65,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4135,30 +4135,30 @@
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 83.75,
+        "crew_mean": 79.66,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
-        "n": 112,
+        "n": 113,
         "rank": 7,
-        "raw": 99.89,
+        "raw": 100.09,
         "reasoning_effort": "xhigh",
-        "score": 96.48,
+        "score": 95.8,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
-        "units": 112
+        "units": 113
       },
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 96.34,
+        "crew_mean": 96.44,
         "effort_label": "high",
         "model": "claude-haiku-5-5",
         "n": 6,
         "rank": null,
-        "raw": 89.14,
+        "raw": 89.29,
         "reasoning_effort": "high",
-        "score": 95.14,
+        "score": 95.24,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4167,14 +4167,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 92.2,
+        "crew_mean": 92.23,
         "effort_label": "effort unknown",
         "model": "claude-haiku-5-5",
         "n": 1,
         "rank": null,
-        "raw": 105.81,
+        "raw": 105.95,
         "reasoning_effort": "unknown",
-        "score": 92.64,
+        "score": 92.67,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4183,14 +4183,14 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "effort unknown",
         "model": "gpt-6-luna",
         "n": 1,
         "rank": null,
-        "raw": 105.81,
+        "raw": 105.95,
         "reasoning_effort": "unknown",
-        "score": 100.93,
+        "score": 100.97,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4199,14 +4199,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 97.91,
+        "crew_mean": 97.94,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 5,
         "rank": null,
-        "raw": 85.81,
+        "raw": 85.95,
         "reasoning_effort": "high",
-        "score": 96.18,
+        "score": 96.23,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4215,14 +4215,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
-        "raw": 105.81,
+        "raw": 105.95,
         "reasoning_effort": "medium",
-        "score": 100.93,
+        "score": 100.97,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4231,14 +4231,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 100.49,
+        "crew_mean": 100.51,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": 105.81,
+        "raw": 105.95,
         "reasoning_effort": "high",
-        "score": 100.66,
+        "score": 100.68,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4247,14 +4247,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 100.49,
+        "crew_mean": 100.51,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": 105.81,
+        "raw": 105.95,
         "reasoning_effort": "xhigh",
-        "score": 100.66,
+        "score": 100.68,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4263,14 +4263,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 100.77,
+        "crew_mean": 100.8,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 3,
         "rank": null,
-        "raw": 105.81,
+        "raw": 105.95,
         "reasoning_effort": "high",
-        "score": 101.23,
+        "score": 101.27,
         "tier": "low",
         "type": "ui",
         "unit": "tasks",
@@ -4279,14 +4279,14 @@
       {
         "below_support": false,
         "crew": "grok",
-        "crew_mean": 114.58,
+        "crew_mean": 115.86,
         "effort_label": "high",
         "model": "grok-4.7",
         "n": 18,
         "rank": 1,
         "raw": 110.63,
         "reasoning_effort": "high",
-        "score": 113.1,
+        "score": 113.9,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4295,14 +4295,14 @@
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.35,
+        "crew_mean": 85.01,
         "effort_label": "high",
         "model": "muse-wonder-1.0",
         "n": 17,
         "rank": 2,
         "raw": 110.63,
         "reasoning_effort": "high",
-        "score": 95.77,
+        "score": 94.28,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4311,14 +4311,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 106.87,
+        "crew_mean": 106.92,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 1,
         "rank": null,
         "raw": 110.63,
         "reasoning_effort": "xhigh",
-        "score": 107.0,
+        "score": 107.04,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4327,14 +4327,14 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 101.89,
+        "crew_mean": 101.93,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
         "n": 3,
         "rank": null,
         "raw": 110.63,
         "reasoning_effort": "xhigh",
-        "score": 102.68,
+        "score": 102.72,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4343,13 +4343,13 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 86.42,
+        "crew_mean": 86.47,
         "effort_label": "provider default",
         "model": "muse-wonder-1.0",
         "n": 2,
         "rank": null,
         "raw": 54.38,
-        "score": 84.42,
+        "score": 84.46,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4358,14 +4358,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 83.6,
+        "crew_mean": 83.62,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
         "raw": 10.63,
         "reasoning_effort": "high",
-        "score": 81.25,
+        "score": 81.27,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4374,14 +4374,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 121.58,
+        "crew_mean": 121.87,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 9,
         "rank": null,
         "raw": 93.97,
         "reasoning_effort": "high",
-        "score": 115.21,
+        "score": 115.43,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4390,14 +4390,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 109.62,
+        "crew_mean": 109.67,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 6,
         "rank": null,
         "raw": 110.63,
         "reasoning_effort": "xhigh",
-        "score": 109.79,
+        "score": 109.83,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4406,14 +4406,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 115.32,
+        "crew_mean": 114.18,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 3,
         "rank": null,
         "raw": 60.63,
         "reasoning_effort": "high",
-        "score": 110.35,
+        "score": 109.31,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4422,14 +4422,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 101.08,
+        "crew_mean": 100.98,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 6,
         "rank": null,
         "raw": 93.97,
         "reasoning_effort": "high",
-        "score": 99.9,
+        "score": 99.82,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4438,14 +4438,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 90.44,
+        "crew_mean": 90.45,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
         "raw": 10.63,
         "reasoning_effort": "unknown",
-        "score": 87.86,
+        "score": 87.87,
         "tier": "medium",
         "type": "ci",
         "unit": "tasks",
@@ -4454,14 +4454,14 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 121.58,
+        "crew_mean": 121.87,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 13,
         "rank": 1,
-        "raw": 110.77,
+        "raw": 111.98,
         "reasoning_effort": "high",
-        "score": 118.31,
+        "score": 118.88,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4470,14 +4470,14 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 106.87,
+        "crew_mean": 106.92,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 12,
         "rank": 2,
-        "raw": 107.25,
+        "raw": 108.45,
         "reasoning_effort": "xhigh",
-        "score": 106.98,
+        "score": 107.36,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4486,30 +4486,30 @@
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.35,
+        "crew_mean": 85.01,
         "effort_label": "high",
         "model": "muse-wonder-1.0",
-        "n": 17,
+        "n": 18,
         "rank": 3,
-        "raw": 103.08,
+        "raw": 99.42,
         "reasoning_effort": "high",
-        "score": 93.04,
+        "score": 90.41,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
-        "units": 17
+        "units": 18
       },
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 114.58,
+        "crew_mean": 115.86,
         "effort_label": "high",
         "model": "grok-4.7",
         "n": 7,
         "rank": null,
-        "raw": 115.58,
+        "raw": 116.79,
         "reasoning_effort": "high",
-        "score": 114.77,
+        "score": 116.04,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4518,14 +4518,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 101.52,
+        "crew_mean": 101.56,
         "effort_label": "high",
         "model": "claude-haiku-5-5",
         "n": 2,
         "rank": null,
-        "raw": 115.58,
+        "raw": 116.79,
         "reasoning_effort": "high",
-        "score": 102.4,
+        "score": 102.51,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4534,14 +4534,14 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 85.02,
+        "crew_mean": 85.06,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
         "n": 2,
         "rank": null,
-        "raw": 115.58,
+        "raw": 116.79,
         "reasoning_effort": "xhigh",
-        "score": 86.93,
+        "score": 87.04,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4550,14 +4550,14 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 101.89,
+        "crew_mean": 101.93,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
         "n": 5,
         "rank": null,
-        "raw": 115.58,
+        "raw": 116.79,
         "reasoning_effort": "xhigh",
-        "score": 103.84,
+        "score": 104.05,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4566,14 +4566,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 93.21,
+        "crew_mean": 93.23,
         "effort_label": "effort unknown",
         "model": "muse-wonder-1.0",
         "n": 1,
         "rank": null,
-        "raw": 15.58,
+        "raw": 16.79,
         "reasoning_effort": "unknown",
-        "score": 90.71,
+        "score": 90.76,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4582,14 +4582,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 55.78,
+        "crew_mean": 55.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": -84.42,
+        "raw": -83.21,
         "reasoning_effort": "unknown",
-        "score": 51.26,
+        "score": 51.33,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4598,14 +4598,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 109.62,
+        "crew_mean": 109.67,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 2,
         "rank": null,
-        "raw": 115.58,
+        "raw": 116.79,
         "reasoning_effort": "xhigh",
-        "score": 109.99,
+        "score": 110.12,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4614,14 +4614,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 115.32,
+        "crew_mean": 114.18,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 3,
         "rank": null,
-        "raw": 115.58,
+        "raw": 116.79,
         "reasoning_effort": "high",
-        "score": 115.35,
+        "score": 114.41,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4630,14 +4630,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 101.08,
+        "crew_mean": 100.98,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 3,
         "rank": null,
-        "raw": 15.58,
+        "raw": 16.79,
         "reasoning_effort": "high",
-        "score": 93.31,
+        "score": 93.33,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4646,14 +4646,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 90.44,
+        "crew_mean": 90.45,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
-        "raw": 15.58,
+        "raw": 16.79,
         "reasoning_effort": "unknown",
-        "score": 88.02,
+        "score": 88.07,
         "tier": "medium",
         "type": "docs",
         "unit": "tasks",
@@ -4662,14 +4662,14 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 121.58,
+        "crew_mean": 121.87,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 251,
         "rank": 1,
-        "raw": 107.56,
+        "raw": 107.5,
         "reasoning_effort": "high",
-        "score": 109.06,
+        "score": 109.04,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -4677,47 +4677,47 @@
       },
       {
         "below_support": false,
-        "crew": "sonnet",
-        "crew_mean": 115.32,
+        "crew": "grok",
+        "crew_mean": 115.86,
         "effort_label": "high",
-        "model": "claude-sonnet-5-5",
-        "n": 107,
+        "model": "grok-4.7",
+        "n": 175,
         "rank": 2,
-        "raw": 108.69,
+        "raw": 101.71,
         "reasoning_effort": "high",
-        "score": 110.15,
+        "score": 103.78,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 107
+        "units": 175
       },
       {
         "below_support": false,
-        "crew": "grok",
-        "crew_mean": 114.58,
+        "crew": "sonnet",
+        "crew_mean": 114.18,
         "effort_label": "high",
-        "model": "grok-4.7",
-        "n": 174,
+        "model": "claude-sonnet-5-5",
+        "n": 110,
         "rank": 3,
-        "raw": 101.91,
+        "raw": 109.12,
         "reasoning_effort": "high",
-        "score": 103.77,
+        "score": 110.2,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 174
+        "units": 110
       },
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 109.62,
+        "crew_mean": 109.67,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 39,
         "rank": 4,
-        "raw": 109.67,
+        "raw": 109.61,
         "reasoning_effort": "xhigh",
-        "score": 109.65,
+        "score": 109.64,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -4726,12 +4726,12 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 106.87,
+        "crew_mean": 106.92,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 24,
         "rank": 5,
-        "raw": 109.67,
+        "raw": 109.61,
         "reasoning_effort": "xhigh",
         "score": 108.12,
         "tier": "medium",
@@ -4742,12 +4742,12 @@
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 101.89,
+        "crew_mean": 101.93,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
         "n": 22,
         "rank": 6,
-        "raw": 96.79,
+        "raw": 96.73,
         "reasoning_effort": "xhigh",
         "score": 99.73,
         "tier": "medium",
@@ -4758,12 +4758,12 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 101.52,
+        "crew_mean": 101.56,
         "effort_label": "high",
         "model": "claude-haiku-5-5",
         "n": 15,
         "rank": 7,
-        "raw": 103.0,
+        "raw": 102.95,
         "reasoning_effort": "high",
         "score": 102.02,
         "tier": "medium",
@@ -4774,28 +4774,28 @@
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 101.08,
+        "crew_mean": 100.98,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
-        "n": 84,
+        "n": 85,
         "rank": 8,
-        "raw": 103.12,
+        "raw": 103.34,
         "reasoning_effort": "high",
-        "score": 102.58,
+        "score": 102.72,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
-        "units": 84
+        "units": 85
       },
       {
         "below_support": false,
         "crew": "grok",
-        "crew_mean": 93.73,
+        "crew_mean": 93.76,
         "effort_label": "provider default",
         "model": "grok-4.7",
         "n": 13,
         "rank": 9,
-        "raw": 87.87,
+        "raw": 87.82,
         "score": 91.96,
         "tier": "medium",
         "type": "other",
@@ -4805,29 +4805,13 @@
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.35,
-        "effort_label": "high",
-        "model": "muse-wonder-1.0",
-        "n": 263,
-        "rank": 10,
-        "raw": 84.38,
-        "reasoning_effort": "high",
-        "score": 84.68,
-        "tier": "medium",
-        "type": "other",
-        "unit": "tasks",
-        "units": 263
-      },
-      {
-        "below_support": false,
-        "crew": "muse-wonder",
-        "crew_mean": 86.42,
+        "crew_mean": 86.47,
         "effort_label": "provider default",
         "model": "muse-wonder-1.0",
         "n": 35,
-        "rank": 11,
-        "raw": 86.33,
-        "score": 86.38,
+        "rank": 10,
+        "raw": 86.28,
+        "score": 86.37,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -4836,12 +4820,12 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 85.02,
+        "crew_mean": 85.06,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
         "n": 17,
-        "rank": 12,
-        "raw": 61.63,
+        "rank": 11,
+        "raw": 61.57,
         "reasoning_effort": "xhigh",
         "score": 76.56,
         "tier": "medium",
@@ -4851,15 +4835,31 @@
       },
       {
         "below_support": false,
+        "crew": "muse-wonder",
+        "crew_mean": 85.01,
+        "effort_label": "high",
+        "model": "muse-wonder-1.0",
+        "n": 266,
+        "rank": 12,
+        "raw": 81.34,
+        "reasoning_effort": "high",
+        "score": 81.71,
+        "tier": "medium",
+        "type": "other",
+        "unit": "tasks",
+        "units": 266
+      },
+      {
+        "below_support": false,
         "crew": "sol",
-        "crew_mean": 55.78,
+        "crew_mean": 55.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 11,
         "rank": 13,
-        "raw": 17.24,
+        "raw": 17.19,
         "reasoning_effort": "unknown",
-        "score": 45.44,
+        "score": 45.45,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -4868,12 +4868,12 @@
       {
         "below_support": true,
         "crew": "argon",
-        "crew_mean": 82.28,
+        "crew_mean": 82.29,
         "effort_label": "provider default",
         "model": "gemini-4-argon-high",
         "n": 5,
         "rank": null,
-        "raw": -23.67,
+        "raw": -23.72,
         "score": 67.14,
         "tier": "medium",
         "type": "other",
@@ -4883,12 +4883,12 @@
       {
         "below_support": true,
         "crew": "fable",
-        "crew_mean": 102.36,
+        "crew_mean": 102.37,
         "effort_label": "medium",
         "model": "claude-fable-5-2",
         "n": 3,
         "rank": null,
-        "raw": 126.33,
+        "raw": 126.28,
         "reasoning_effort": "medium",
         "score": 104.54,
         "tier": "medium",
@@ -4899,14 +4899,14 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 97.81,
+        "crew_mean": 97.82,
         "effort_label": "effort unknown",
         "model": "grok-4.7",
         "n": 1,
         "rank": null,
-        "raw": 126.33,
+        "raw": 126.28,
         "reasoning_effort": "unknown",
-        "score": 98.73,
+        "score": 98.74,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -4915,12 +4915,12 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 91.82,
+        "crew_mean": 91.84,
         "effort_label": "provider default",
         "model": "muse-spark-1.3-contributor",
         "n": 5,
         "rank": null,
-        "raw": 36.33,
+        "raw": 36.28,
         "score": 83.9,
         "tier": "medium",
         "type": "other",
@@ -4930,12 +4930,12 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 99.22,
+        "crew_mean": 99.23,
         "effort_label": "effort unknown",
         "model": "muse-spark-1.3-contributor",
         "n": 1,
         "rank": null,
-        "raw": 76.33,
+        "raw": 76.28,
         "reasoning_effort": "unknown",
         "score": 98.49,
         "tier": "medium",
@@ -4946,12 +4946,12 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 93.21,
+        "crew_mean": 93.23,
         "effort_label": "effort unknown",
         "model": "muse-wonder-1.0",
         "n": 4,
         "rank": null,
-        "raw": 76.33,
+        "raw": 76.28,
         "reasoning_effort": "unknown",
         "score": 91.23,
         "tier": "medium",
@@ -4962,14 +4962,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 83.6,
+        "crew_mean": 83.62,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 3,
         "rank": null,
-        "raw": 126.33,
+        "raw": 126.28,
         "reasoning_effort": "high",
-        "score": 87.49,
+        "score": 87.5,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -4978,14 +4978,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 101.49,
+        "crew_mean": 101.5,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 6,
         "rank": null,
-        "raw": 101.33,
+        "raw": 101.28,
         "reasoning_effort": "medium",
-        "score": 101.46,
+        "score": 101.47,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -4994,12 +4994,12 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 100.11,
+        "crew_mean": 100.12,
         "effort_label": "effort unknown",
         "model": "claude-sonnet-5-5",
         "n": 2,
         "rank": null,
-        "raw": 76.33,
+        "raw": 76.28,
         "reasoning_effort": "unknown",
         "score": 98.63,
         "tier": "medium",
@@ -5010,14 +5010,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 90.44,
+        "crew_mean": 90.45,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-terra",
         "n": 2,
         "rank": null,
-        "raw": 126.33,
+        "raw": 126.28,
         "reasoning_effort": "unknown",
-        "score": 92.68,
+        "score": 92.69,
         "tier": "medium",
         "type": "other",
         "unit": "tasks",
@@ -5026,14 +5026,14 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 121.58,
+        "crew_mean": 121.87,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 40,
         "rank": 1,
         "raw": 98.02,
         "reasoning_effort": "high",
-        "score": 108.12,
+        "score": 108.24,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5042,14 +5042,14 @@
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.35,
+        "crew_mean": 85.01,
         "effort_label": "high",
         "model": "muse-wonder-1.0",
         "n": 12,
         "rank": 2,
         "raw": 103.86,
         "reasoning_effort": "high",
-        "score": 92.07,
+        "score": 90.39,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5058,14 +5058,14 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 114.58,
+        "crew_mean": 115.86,
         "effort_label": "high",
         "model": "grok-4.7",
         "n": 9,
         "rank": null,
         "raw": 108.02,
         "reasoning_effort": "high",
-        "score": 113.07,
+        "score": 114.05,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5074,14 +5074,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 101.52,
+        "crew_mean": 101.56,
         "effort_label": "high",
         "model": "claude-haiku-5-5",
         "n": 2,
         "rank": null,
         "raw": 58.02,
         "reasoning_effort": "high",
-        "score": 98.81,
+        "score": 98.84,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5090,14 +5090,14 @@
       {
         "below_support": true,
         "crew": "haiku",
-        "crew_mean": 106.87,
+        "crew_mean": 106.92,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 4,
         "rank": null,
         "raw": 108.02,
         "reasoning_effort": "xhigh",
-        "score": 107.01,
+        "score": 107.05,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5106,14 +5106,14 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 85.02,
+        "crew_mean": 85.06,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
         "n": 1,
         "rank": null,
         "raw": 108.02,
         "reasoning_effort": "xhigh",
-        "score": 85.76,
+        "score": 85.8,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5122,14 +5122,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 55.78,
+        "crew_mean": 55.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
         "raw": 8.02,
         "reasoning_effort": "unknown",
-        "score": 54.24,
+        "score": 54.27,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5138,14 +5138,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 115.32,
+        "crew_mean": 114.18,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 8,
         "rank": null,
         "raw": 108.02,
         "reasoning_effort": "high",
-        "score": 113.79,
+        "score": 112.88,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5154,14 +5154,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 101.08,
+        "crew_mean": 100.98,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 4,
         "rank": null,
         "raw": 108.02,
         "reasoning_effort": "high",
-        "score": 101.9,
+        "score": 101.81,
         "tier": "medium",
         "type": "refactor",
         "unit": "tasks",
@@ -5170,14 +5170,14 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 114.58,
+        "crew_mean": 115.86,
         "effort_label": "high",
         "model": "grok-4.7",
         "n": 3,
         "rank": null,
-        "raw": 109.28,
+        "raw": 109.35,
         "reasoning_effort": "high",
-        "score": 114.1,
+        "score": 115.27,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -5186,14 +5186,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 87.35,
+        "crew_mean": 85.01,
         "effort_label": "high",
         "model": "muse-wonder-1.0",
         "n": 5,
         "rank": null,
-        "raw": -14.05,
+        "raw": -13.98,
         "reasoning_effort": "high",
-        "score": 72.87,
+        "score": 70.86,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -5202,14 +5202,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 83.6,
+        "crew_mean": 83.62,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
-        "raw": -174.05,
+        "raw": -173.98,
         "reasoning_effort": "high",
-        "score": 75.29,
+        "score": 75.31,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -5218,14 +5218,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 121.58,
+        "crew_mean": 121.87,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 3,
         "rank": null,
-        "raw": 59.28,
+        "raw": 59.35,
         "reasoning_effort": "high",
-        "score": 115.92,
+        "score": 116.18,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -5234,14 +5234,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 109.62,
+        "crew_mean": 109.67,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": 75.95,
+        "raw": 76.02,
         "reasoning_effort": "xhigh",
-        "score": 108.54,
+        "score": 108.59,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -5250,14 +5250,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 115.32,
+        "crew_mean": 114.18,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 1,
         "rank": null,
-        "raw": 125.95,
+        "raw": 126.02,
         "reasoning_effort": "high",
-        "score": 115.67,
+        "score": 114.56,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -5266,30 +5266,30 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 101.08,
+        "crew_mean": 100.98,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
-        "n": 4,
+        "n": 5,
         "rank": null,
-        "raw": 125.95,
+        "raw": 106.02,
         "reasoning_effort": "high",
-        "score": 104.01,
+        "score": 101.7,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
-        "units": 4
+        "units": 5
       },
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 90.44,
+        "crew_mean": 90.45,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
-        "raw": 125.95,
+        "raw": 126.02,
         "reasoning_effort": "unknown",
-        "score": 91.58,
+        "score": 91.6,
         "tier": "medium",
         "type": "security",
         "unit": "tasks",
@@ -5298,14 +5298,14 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 121.58,
+        "crew_mean": 121.87,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 132,
         "rank": 1,
-        "raw": 115.23,
+        "raw": 115.3,
         "reasoning_effort": "high",
-        "score": 116.41,
+        "score": 116.52,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5313,31 +5313,15 @@
       },
       {
         "below_support": false,
-        "crew": "sonnet",
-        "crew_mean": 115.32,
-        "effort_label": "high",
-        "model": "claude-sonnet-5-5",
-        "n": 70,
-        "rank": 2,
-        "raw": 102.02,
-        "reasoning_effort": "high",
-        "score": 106.01,
-        "tier": "medium",
-        "type": "ui",
-        "unit": "tasks",
-        "units": 70
-      },
-      {
-        "below_support": false,
         "crew": "grok",
-        "crew_mean": 114.58,
+        "crew_mean": 115.86,
         "effort_label": "high",
         "model": "grok-4.7",
         "n": 86,
-        "rank": 3,
-        "raw": 106.37,
+        "rank": 2,
+        "raw": 106.45,
         "reasoning_effort": "high",
-        "score": 108.5,
+        "score": 108.88,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5345,15 +5329,31 @@
       },
       {
         "below_support": false,
+        "crew": "sonnet",
+        "crew_mean": 114.18,
+        "effort_label": "high",
+        "model": "claude-sonnet-5-5",
+        "n": 70,
+        "rank": 3,
+        "raw": 102.09,
+        "reasoning_effort": "high",
+        "score": 105.72,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 70
+      },
+      {
+        "below_support": false,
         "crew": "sol",
-        "crew_mean": 109.62,
+        "crew_mean": 109.67,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 34,
         "rank": 4,
-        "raw": 119.05,
+        "raw": 119.12,
         "reasoning_effort": "xhigh",
-        "score": 114.63,
+        "score": 114.69,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5362,14 +5362,14 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 106.87,
+        "crew_mean": 106.92,
         "effort_label": "xhigh",
         "model": "claude-haiku-5-5",
         "n": 17,
         "rank": 5,
-        "raw": 105.81,
+        "raw": 105.88,
         "reasoning_effort": "xhigh",
-        "score": 106.49,
+        "score": 106.55,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5378,14 +5378,14 @@
       {
         "below_support": false,
         "crew": "muse-spark",
-        "crew_mean": 101.89,
+        "crew_mean": 101.93,
         "effort_label": "xhigh",
         "model": "muse-spark-1.3-contributor",
         "n": 16,
         "rank": 6,
-        "raw": 104.34,
+        "raw": 104.41,
         "reasoning_effort": "xhigh",
-        "score": 102.74,
+        "score": 102.79,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5394,14 +5394,14 @@
       {
         "below_support": false,
         "crew": "haiku",
-        "crew_mean": 101.52,
+        "crew_mean": 101.56,
         "effort_label": "high",
         "model": "claude-haiku-5-5",
         "n": 10,
         "rank": 7,
-        "raw": 108.09,
+        "raw": 108.16,
         "reasoning_effort": "high",
-        "score": 103.17,
+        "score": 103.21,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5410,45 +5410,29 @@
       {
         "below_support": false,
         "crew": "terra",
-        "crew_mean": 101.08,
+        "crew_mean": 100.98,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
-        "n": 29,
+        "n": 30,
         "rank": 8,
-        "raw": 100.03,
+        "raw": 101.08,
         "reasoning_effort": "high",
-        "score": 100.56,
+        "score": 101.03,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
-        "units": 29
+        "units": 30
       },
       {
         "below_support": false,
         "crew": "muse-wonder",
-        "crew_mean": 87.35,
-        "effort_label": "high",
-        "model": "muse-wonder-1.0",
-        "n": 121,
-        "rank": 9,
-        "raw": 94.01,
-        "reasoning_effort": "high",
-        "score": 92.69,
-        "tier": "medium",
-        "type": "ui",
-        "unit": "tasks",
-        "units": 121
-      },
-      {
-        "below_support": false,
-        "crew": "muse-wonder",
-        "crew_mean": 86.42,
+        "crew_mean": 86.47,
         "effort_label": "provider default",
         "model": "muse-wonder-1.0",
         "n": 15,
-        "rank": 10,
-        "raw": 66.01,
-        "score": 79.62,
+        "rank": 9,
+        "raw": 66.08,
+        "score": 79.67,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5457,29 +5441,45 @@
       {
         "below_support": false,
         "crew": "luna",
-        "crew_mean": 85.02,
+        "crew_mean": 85.06,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
         "n": 13,
-        "rank": 11,
-        "raw": 75.49,
+        "rank": 10,
+        "raw": 75.56,
         "reasoning_effort": "xhigh",
-        "score": 82.14,
+        "score": 82.19,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
         "units": 13
       },
       {
+        "below_support": false,
+        "crew": "muse-wonder",
+        "crew_mean": 85.01,
+        "effort_label": "high",
+        "model": "muse-wonder-1.0",
+        "n": 122,
+        "rank": 11,
+        "raw": 93.55,
+        "reasoning_effort": "high",
+        "score": 91.86,
+        "tier": "medium",
+        "type": "ui",
+        "unit": "tasks",
+        "units": 122
+      },
+      {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 93.73,
+        "crew_mean": 93.76,
         "effort_label": "provider default",
         "model": "grok-4.7",
         "n": 6,
         "rank": null,
-        "raw": 79.34,
-        "score": 91.34,
+        "raw": 79.41,
+        "score": 91.37,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5488,14 +5488,14 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 97.81,
+        "crew_mean": 97.82,
         "effort_label": "effort unknown",
         "model": "grok-4.7",
         "n": 2,
         "rank": null,
-        "raw": 54.34,
+        "raw": 54.41,
         "reasoning_effort": "unknown",
-        "score": 95.1,
+        "score": 95.11,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5509,7 +5509,7 @@
         "model": "gpt-6-luna",
         "n": 1,
         "rank": null,
-        "raw": 29.34,
+        "raw": 29.41,
         "reasoning_effort": "unknown",
         "score": 95.41,
         "tier": "medium",
@@ -5520,13 +5520,13 @@
       {
         "below_support": true,
         "crew": "muse-spark",
-        "crew_mean": 91.82,
+        "crew_mean": 91.84,
         "effort_label": "provider default",
         "model": "muse-spark-1.3-contributor",
         "n": 1,
         "rank": null,
-        "raw": 129.34,
-        "score": 93.03,
+        "raw": 129.41,
+        "score": 93.05,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5535,14 +5535,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 93.21,
+        "crew_mean": 93.23,
         "effort_label": "effort unknown",
         "model": "muse-wonder-1.0",
         "n": 1,
         "rank": null,
-        "raw": 29.34,
+        "raw": 29.41,
         "reasoning_effort": "unknown",
-        "score": 91.15,
+        "score": 91.17,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5551,14 +5551,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 95.37,
+        "crew_mean": 95.38,
         "effort_label": "high",
         "model": "muse-wonder-full-1.0",
         "n": 2,
         "rank": null,
-        "raw": 29.34,
+        "raw": 29.41,
         "reasoning_effort": "high",
-        "score": 91.24,
+        "score": 91.25,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5567,14 +5567,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 83.6,
+        "crew_mean": 83.62,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 7,
         "rank": null,
-        "raw": 43.63,
+        "raw": 43.7,
         "reasoning_effort": "high",
-        "score": 76.04,
+        "score": 76.07,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5583,14 +5583,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 101.49,
+        "crew_mean": 101.5,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 4,
         "rank": null,
-        "raw": 116.84,
+        "raw": 116.91,
         "reasoning_effort": "medium",
-        "score": 103.29,
+        "score": 103.32,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5604,7 +5604,7 @@
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
-        "raw": 129.34,
+        "raw": 129.41,
         "reasoning_effort": "unknown",
         "score": 101.76,
         "tier": "medium",
@@ -5615,14 +5615,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 55.78,
+        "crew_mean": 55.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 8,
         "rank": null,
-        "raw": -33.16,
+        "raw": -33.09,
         "reasoning_effort": "unknown",
-        "score": 37.06,
+        "score": 37.1,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5631,14 +5631,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 100.11,
+        "crew_mean": 100.12,
         "effort_label": "effort unknown",
         "model": "claude-sonnet-5-5",
         "n": 2,
         "rank": null,
-        "raw": 129.34,
+        "raw": 129.41,
         "reasoning_effort": "unknown",
-        "score": 101.94,
+        "score": 101.95,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5647,14 +5647,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 90.44,
+        "crew_mean": 90.45,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
-        "raw": -170.66,
+        "raw": -170.59,
         "reasoning_effort": "unknown",
-        "score": 82.01,
+        "score": 82.03,
         "tier": "medium",
         "type": "ui",
         "unit": "tasks",
@@ -5663,14 +5663,14 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 95.97,
+        "crew_mean": 95.57,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 15,
         "rank": 1,
         "raw": 142.08,
         "reasoning_effort": "high",
-        "score": 111.34,
+        "score": 111.08,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -5679,14 +5679,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 99.46,
+        "crew_mean": 99.42,
         "effort_label": "high",
         "model": "muse-wonder-1.0",
         "n": 1,
         "rank": null,
         "raw": 58.75,
         "reasoning_effort": "high",
-        "score": 98.14,
+        "score": 98.1,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -5695,14 +5695,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 50.39,
+        "crew_mean": 51.66,
         "effort_label": "high",
         "model": "muse-wonder-full-1.0",
         "n": 3,
         "rank": null,
         "raw": 154.58,
         "reasoning_effort": "high",
-        "score": 59.86,
+        "score": 61.02,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -5711,14 +5711,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 129.43,
+        "crew_mean": 129.5,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
         "raw": -141.25,
         "reasoning_effort": "medium",
-        "score": 120.7,
+        "score": 120.77,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -5727,14 +5727,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 107.99,
+        "crew_mean": 107.68,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
         "raw": -241.25,
         "reasoning_effort": "high",
-        "score": 96.73,
+        "score": 96.42,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -5743,14 +5743,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 73.92,
+        "crew_mean": 73.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 2,
         "rank": null,
         "raw": -41.25,
         "reasoning_effort": "unknown",
-        "score": 66.72,
+        "score": 66.62,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -5759,14 +5759,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 115.63,
+        "crew_mean": 115.34,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 6,
         "rank": null,
         "raw": 125.42,
         "reasoning_effort": "xhigh",
-        "score": 117.26,
+        "score": 117.02,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -5775,14 +5775,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 91.53,
+        "crew_mean": 91.46,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
         "raw": 58.75,
         "reasoning_effort": "high",
-        "score": 90.47,
+        "score": 90.41,
         "tier": "hard",
         "type": "ci",
         "unit": "tasks",
@@ -5791,14 +5791,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 107.99,
+        "crew_mean": 107.68,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 2,
         "rank": null,
-        "raw": 10.69,
+        "raw": 10.25,
         "reasoning_effort": "high",
-        "score": 101.91,
+        "score": 101.59,
         "tier": "hard",
         "type": "docs",
         "unit": "tasks",
@@ -5807,14 +5807,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 115.63,
+        "crew_mean": 115.34,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 2,
         "rank": null,
-        "raw": 110.69,
+        "raw": 110.25,
         "reasoning_effort": "xhigh",
-        "score": 115.32,
+        "score": 115.02,
         "tier": "hard",
         "type": "docs",
         "unit": "tasks",
@@ -5823,30 +5823,30 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 129.43,
+        "crew_mean": 129.5,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
-        "n": 95,
+        "n": 101,
         "rank": 1,
-        "raw": 125.29,
+        "raw": 124.96,
         "reasoning_effort": "medium",
-        "score": 126.29,
+        "score": 126.0,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
-        "units": 95
+        "units": 101
       },
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 115.63,
+        "crew_mean": 115.34,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 31,
         "rank": 2,
-        "raw": 120.47,
+        "raw": 120.07,
         "reasoning_effort": "xhigh",
-        "score": 118.09,
+        "score": 117.74,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5855,14 +5855,14 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 107.99,
+        "crew_mean": 107.68,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 55,
         "rank": 3,
-        "raw": 107.37,
+        "raw": 106.97,
         "reasoning_effort": "high",
-        "score": 107.59,
+        "score": 107.22,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5871,14 +5871,14 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 95.97,
+        "crew_mean": 95.57,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 109,
         "rank": 4,
-        "raw": 85.26,
+        "raw": 84.86,
         "reasoning_effort": "high",
-        "score": 87.57,
+        "score": 87.17,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5887,29 +5887,29 @@
       {
         "below_support": false,
         "crew": "muse-wonder-full",
-        "crew_mean": 50.39,
+        "crew_mean": 51.66,
         "effort_label": "high",
         "model": "muse-wonder-full-1.0",
-        "n": 24,
+        "n": 26,
         "rank": 5,
-        "raw": 76.39,
+        "raw": 77.27,
         "reasoning_effort": "high",
-        "score": 61.94,
+        "score": 63.55,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
-        "units": 24
+        "units": 26
       },
       {
         "below_support": true,
         "crew": "argon",
-        "crew_mean": 103.79,
+        "crew_mean": 103.77,
         "effort_label": "provider default",
         "model": "gemini-4-argon-high",
         "n": 2,
         "rank": null,
-        "raw": 143.06,
-        "score": 106.25,
+        "raw": 142.65,
+        "score": 106.2,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5918,14 +5918,14 @@
       {
         "below_support": true,
         "crew": "argon",
-        "crew_mean": 95.51,
+        "crew_mean": 95.49,
         "effort_label": "effort unknown",
         "model": "gemini-4-argon-high",
         "n": 1,
         "rank": null,
-        "raw": -56.94,
+        "raw": -57.35,
         "reasoning_effort": "unknown",
-        "score": 90.59,
+        "score": 90.56,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5934,14 +5934,14 @@
       {
         "below_support": true,
         "crew": "argon@high",
-        "crew_mean": 102.49,
+        "crew_mean": 102.45,
         "effort_label": "high",
         "model": "gemini-4-argon-high",
         "n": 2,
         "rank": null,
-        "raw": 93.06,
+        "raw": 92.65,
         "reasoning_effort": "high",
-        "score": 101.9,
+        "score": 101.83,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5950,14 +5950,14 @@
       {
         "below_support": true,
         "crew": "astra",
-        "crew_mean": 100.67,
+        "crew_mean": 100.64,
         "effort_label": "high",
         "model": "gpt-6-astra",
         "n": 1,
         "rank": null,
-        "raw": 143.06,
+        "raw": 142.65,
         "reasoning_effort": "high",
-        "score": 102.04,
+        "score": 102.0,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5966,14 +5966,14 @@
       {
         "below_support": true,
         "crew": "astra",
-        "crew_mean": 108.38,
+        "crew_mean": 108.31,
         "effort_label": "medium",
         "model": "gpt-6-astra",
         "n": 5,
         "rank": null,
-        "raw": 133.06,
+        "raw": 132.65,
         "reasoning_effort": "medium",
-        "score": 111.9,
+        "score": 111.78,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5982,14 +5982,14 @@
       {
         "below_support": true,
         "crew": "fable",
-        "crew_mean": 100.67,
+        "crew_mean": 100.64,
         "effort_label": "medium",
         "model": "claude-fable-5-2",
         "n": 1,
         "rank": null,
-        "raw": 143.06,
+        "raw": 142.65,
         "reasoning_effort": "medium",
-        "score": 102.04,
+        "score": 102.0,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -5998,14 +5998,14 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 78.17,
+        "crew_mean": 78.1,
         "effort_label": "high",
         "model": "grok-4.7",
         "n": 2,
         "rank": null,
-        "raw": 93.06,
+        "raw": 92.65,
         "reasoning_effort": "high",
-        "score": 79.1,
+        "score": 79.01,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6014,14 +6014,14 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 93.89,
+        "crew_mean": 93.88,
         "effort_label": "effort unknown",
         "model": "grok-4.7",
         "n": 1,
         "rank": null,
-        "raw": -106.94,
+        "raw": -107.35,
         "reasoning_effort": "unknown",
-        "score": 87.41,
+        "score": 87.39,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6030,14 +6030,14 @@
       {
         "below_support": true,
         "crew": "luna",
-        "crew_mean": 98.73,
+        "crew_mean": 98.72,
         "effort_label": "xhigh",
         "model": "gpt-6-luna",
         "n": 1,
         "rank": null,
-        "raw": 43.06,
+        "raw": 42.65,
         "reasoning_effort": "xhigh",
-        "score": 96.94,
+        "score": 96.91,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6046,14 +6046,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder",
-        "crew_mean": 99.46,
+        "crew_mean": 99.42,
         "effort_label": "high",
         "model": "muse-wonder-1.0",
         "n": 2,
         "rank": null,
-        "raw": 93.06,
+        "raw": 92.65,
         "reasoning_effort": "high",
-        "score": 99.06,
+        "score": 98.99,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6062,13 +6062,13 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 96.06,
+        "crew_mean": 95.95,
         "effort_label": "provider default",
         "model": "muse-wonder-full-1.0",
         "n": 6,
         "rank": null,
-        "raw": 59.72,
-        "score": 90.0,
+        "raw": 59.32,
+        "score": 89.85,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6077,14 +6077,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 96.43,
+        "crew_mean": 96.39,
         "effort_label": "effort unknown",
         "model": "claude-opus-5-5",
         "n": 2,
         "rank": null,
-        "raw": 43.06,
+        "raw": 42.65,
         "reasoning_effort": "unknown",
-        "score": 93.09,
+        "score": 93.03,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6093,14 +6093,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 73.92,
+        "crew_mean": 73.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 4,
         "rank": null,
-        "raw": 30.56,
+        "raw": 30.15,
         "reasoning_effort": "unknown",
-        "score": 68.82,
+        "score": 68.68,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6109,14 +6109,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 88.44,
+        "crew_mean": 88.34,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 3,
         "rank": null,
-        "raw": 72.22,
+        "raw": 71.82,
         "reasoning_effort": "high",
-        "score": 86.96,
+        "score": 86.84,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6125,14 +6125,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 91.53,
+        "crew_mean": 91.46,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 3,
         "rank": null,
-        "raw": -23.61,
+        "raw": -24.01,
         "reasoning_effort": "high",
-        "score": 81.06,
+        "score": 80.97,
         "tier": "hard",
         "type": "other",
         "unit": "tasks",
@@ -6141,14 +6141,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 50.39,
+        "crew_mean": 51.66,
         "effort_label": "high",
         "model": "muse-wonder-full-1.0",
         "n": 1,
         "rank": null,
-        "raw": 160.69,
+        "raw": 160.25,
         "reasoning_effort": "high",
-        "score": 53.94,
+        "score": 55.16,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -6157,14 +6157,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 95.97,
+        "crew_mean": 95.57,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 4,
         "rank": null,
-        "raw": 160.69,
+        "raw": 160.25,
         "reasoning_effort": "high",
-        "score": 103.58,
+        "score": 103.18,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -6173,14 +6173,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 129.43,
+        "crew_mean": 129.5,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 3,
         "rank": null,
-        "raw": 160.69,
+        "raw": 160.25,
         "reasoning_effort": "medium",
-        "score": 132.27,
+        "score": 132.3,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -6189,14 +6189,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 107.99,
+        "crew_mean": 107.68,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 5,
         "rank": null,
-        "raw": 60.69,
+        "raw": 60.25,
         "reasoning_effort": "high",
-        "score": 101.24,
+        "score": 100.9,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -6205,14 +6205,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 73.92,
+        "crew_mean": 73.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 2,
         "rank": null,
-        "raw": -39.31,
+        "raw": -39.75,
         "reasoning_effort": "unknown",
-        "score": 66.85,
+        "score": 66.71,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -6221,14 +6221,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 115.63,
+        "crew_mean": 115.34,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 5,
         "rank": null,
-        "raw": 160.69,
+        "raw": 160.25,
         "reasoning_effort": "xhigh",
-        "score": 122.06,
+        "score": 121.75,
         "tier": "hard",
         "type": "refactor",
         "unit": "tasks",
@@ -6237,14 +6237,14 @@
       {
         "below_support": true,
         "crew": "astra",
-        "crew_mean": 100.67,
+        "crew_mean": 100.64,
         "effort_label": "high",
         "model": "gpt-6-astra",
         "n": 1,
         "rank": null,
-        "raw": 60.69,
+        "raw": 60.25,
         "reasoning_effort": "high",
-        "score": 99.38,
+        "score": 99.34,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -6253,14 +6253,14 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 50.39,
+        "crew_mean": 51.66,
         "effort_label": "high",
         "model": "muse-wonder-full-1.0",
         "n": 2,
         "rank": null,
-        "raw": -139.31,
+        "raw": -139.75,
         "reasoning_effort": "high",
-        "score": 38.53,
+        "score": 39.7,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -6269,14 +6269,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 95.97,
+        "crew_mean": 95.57,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 9,
         "rank": null,
-        "raw": 44.03,
+        "raw": 43.58,
         "reasoning_effort": "high",
-        "score": 83.98,
+        "score": 83.58,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -6285,14 +6285,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 129.43,
+        "crew_mean": 129.5,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 6,
         "rank": null,
-        "raw": 135.69,
+        "raw": 135.25,
         "reasoning_effort": "medium",
-        "score": 130.47,
+        "score": 130.46,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -6301,14 +6301,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 73.92,
+        "crew_mean": 73.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": -39.31,
+        "raw": -39.75,
         "reasoning_effort": "unknown",
-        "score": 70.27,
+        "score": 70.15,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -6317,14 +6317,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 115.63,
+        "crew_mean": 115.34,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
-        "raw": 160.69,
+        "raw": 160.25,
         "reasoning_effort": "xhigh",
-        "score": 117.08,
+        "score": 116.78,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -6333,14 +6333,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 88.44,
+        "crew_mean": 88.34,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 1,
         "rank": null,
-        "raw": 160.69,
+        "raw": 160.25,
         "reasoning_effort": "high",
-        "score": 90.77,
+        "score": 90.66,
         "tier": "hard",
         "type": "security",
         "unit": "tasks",
@@ -6349,14 +6349,14 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 129.43,
+        "crew_mean": 129.5,
         "effort_label": "medium",
         "model": "claude-opus-5-5",
         "n": 56,
         "rank": 1,
         "raw": 151.32,
         "reasoning_effort": "medium",
-        "score": 143.69,
+        "score": 143.71,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6365,14 +6365,14 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 115.63,
+        "crew_mean": 115.34,
         "effort_label": "xhigh",
         "model": "gpt-6.1-sol",
         "n": 12,
         "rank": 2,
         "raw": 95.6,
         "reasoning_effort": "xhigh",
-        "score": 109.9,
+        "score": 109.7,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6381,14 +6381,14 @@
       {
         "below_support": false,
         "crew": "sol",
-        "crew_mean": 107.99,
+        "crew_mean": 107.68,
         "effort_label": "high",
         "model": "gpt-6.1-sol",
         "n": 12,
         "rank": 3,
         "raw": 141.43,
         "reasoning_effort": "high",
-        "score": 117.55,
+        "score": 117.32,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6397,14 +6397,14 @@
       {
         "below_support": false,
         "crew": "opus",
-        "crew_mean": 95.97,
+        "crew_mean": 95.57,
         "effort_label": "high",
         "model": "claude-opus-5-5",
         "n": 95,
         "rank": 4,
         "raw": 107.92,
         "reasoning_effort": "high",
-        "score": 105.05,
+        "score": 104.96,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6413,14 +6413,14 @@
       {
         "below_support": false,
         "crew": "muse-wonder-full",
-        "crew_mean": 50.39,
+        "crew_mean": 51.66,
         "effort_label": "high",
         "model": "muse-wonder-full-1.0",
         "n": 16,
         "rank": 5,
         "raw": -84.61,
         "reasoning_effort": "high",
-        "score": 3.43,
+        "score": 4.26,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6429,14 +6429,14 @@
       {
         "below_support": true,
         "crew": "argon@high",
-        "crew_mean": 102.49,
+        "crew_mean": 102.45,
         "effort_label": "high",
         "model": "gemini-4-argon-high",
         "n": 1,
         "rank": null,
         "raw": 187.26,
         "reasoning_effort": "high",
-        "score": 105.22,
+        "score": 105.18,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6445,14 +6445,14 @@
       {
         "below_support": true,
         "crew": "astra",
-        "crew_mean": 108.38,
+        "crew_mean": 108.31,
         "effort_label": "medium",
         "model": "gpt-6-astra",
         "n": 1,
         "rank": null,
         "raw": 174.76,
         "reasoning_effort": "medium",
-        "score": 110.52,
+        "score": 110.45,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6461,14 +6461,14 @@
       {
         "below_support": true,
         "crew": "fable",
-        "crew_mean": 100.67,
+        "crew_mean": 100.64,
         "effort_label": "medium",
         "model": "claude-fable-5-2",
         "n": 1,
         "rank": null,
         "raw": 87.26,
         "reasoning_effort": "medium",
-        "score": 100.24,
+        "score": 100.21,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6477,14 +6477,14 @@
       {
         "below_support": true,
         "crew": "grok",
-        "crew_mean": 78.17,
+        "crew_mean": 78.1,
         "effort_label": "high",
         "model": "grok-4.7",
         "n": 4,
         "rank": null,
         "raw": -75.24,
         "reasoning_effort": "high",
-        "score": 60.12,
+        "score": 60.06,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6493,13 +6493,13 @@
       {
         "below_support": true,
         "crew": "muse-wonder-full",
-        "crew_mean": 96.06,
+        "crew_mean": 95.95,
         "effort_label": "provider default",
         "model": "muse-wonder-full-1.0",
         "n": 3,
         "rank": null,
         "raw": 120.6,
-        "score": 98.29,
+        "score": 98.19,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6508,14 +6508,14 @@
       {
         "below_support": true,
         "crew": "opus",
-        "crew_mean": 96.43,
+        "crew_mean": 96.39,
         "effort_label": "effort unknown",
         "model": "claude-opus-5-5",
         "n": 1,
         "rank": null,
         "raw": 87.26,
         "reasoning_effort": "unknown",
-        "score": 96.13,
+        "score": 96.09,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6524,14 +6524,14 @@
       {
         "below_support": true,
         "crew": "sol",
-        "crew_mean": 73.92,
+        "crew_mean": 73.81,
         "effort_label": "effort unknown",
         "model": "gpt-6.1-sol",
         "n": 1,
         "rank": null,
         "raw": -12.74,
         "reasoning_effort": "unknown",
-        "score": 71.13,
+        "score": 71.02,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6540,14 +6540,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 88.44,
+        "crew_mean": 88.34,
         "effort_label": "high",
         "model": "claude-sonnet-5-5",
         "n": 4,
         "rank": null,
         "raw": 9.14,
         "reasoning_effort": "high",
-        "score": 79.11,
+        "score": 79.02,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6556,14 +6556,14 @@
       {
         "below_support": true,
         "crew": "sonnet",
-        "crew_mean": 92.28,
+        "crew_mean": 92.27,
         "effort_label": "effort unknown",
         "model": "claude-sonnet-5-5",
         "n": 1,
         "rank": null,
         "raw": -112.74,
         "reasoning_effort": "unknown",
-        "score": 85.67,
+        "score": 85.65,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6572,14 +6572,14 @@
       {
         "below_support": true,
         "crew": "terra",
-        "crew_mean": 91.53,
+        "crew_mean": 91.46,
         "effort_label": "high",
         "model": "gpt-6.1-terra",
         "n": 1,
         "rank": null,
         "raw": 187.26,
         "reasoning_effort": "high",
-        "score": 94.62,
+        "score": 94.55,
         "tier": "hard",
         "type": "ui",
         "unit": "tasks",
@@ -6705,13 +6705,13 @@
     "unit": "tasks",
     "window": {
       "key": "30d",
-      "since": "2026-10-16T05:16:32Z",
-      "until": "2026-11-15T05:16:32Z"
+      "since": "2026-10-16T20:04:08Z",
+      "until": "2026-11-15T20:04:08Z"
     }
   },
   "min_support_default": 10,
   "pilots": {
-    "fleet_average": 40.92,
+    "fleet_average": 41.17,
     "min_support": 10,
     "provisional": false,
     "role": "pilots",
@@ -6744,7 +6744,7 @@
         "raw": 45.32,
         "reasoning_effort": "xhigh",
         "runs_without_model": 0,
-        "score": 45.16,
+        "score": 45.17,
         "stats": [
           {
             "key": "recall_percent",
@@ -6844,62 +6844,62 @@
       {
         "below_support": false,
         "counts": {
-          "confirmed_warnings": 30,
+          "confirmed_warnings": 33,
           "costly_misses": 0,
           "dismissed_warnings": 9,
-          "f1_lift": 112.42,
+          "f1_lift": 112.81,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0,
-          "tier_calibration": 342
+          "tier_calibration": 347
         },
         "crew": "haiku@high",
         "effort_label": "high",
         "model": "claude-haiku-5-5",
         "per_100": {
-          "confirmed_warnings": 4.01,
+          "confirmed_warnings": 4.33,
           "costly_misses": 0,
-          "dismissed_warnings": 1.2,
-          "f1_lift": 16.91,
+          "dismissed_warnings": 1.18,
+          "f1_lift": 16.76,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0,
-          "tier_calibration": 61.29
+          "tier_calibration": 61.31
         },
         "provisional_terms": [],
         "rank": 2,
-        "raw": 43.04,
+        "raw": 43.9,
         "reasoning_effort": "high",
         "runs_without_model": 0,
-        "score": 42.95,
+        "score": 43.78,
         "stats": [
           {
             "key": "recall_percent",
             "label": "Recall (%)",
-            "value": 71.82
+            "value": 71.31
           },
           {
             "key": "precision_percent",
             "label": "Precision (%)",
-            "value": 86.42
+            "value": 86.23
           },
           {
             "key": "f1_percent",
             "label": "F1 (%)",
-            "value": 78.45
+            "value": 78.06
           },
           {
             "key": "filer_f1_percent",
             "label": "Filer's F1 (%)",
-            "value": 65.89
+            "value": 65.62
           },
           {
             "key": "missed_files",
             "label": "Landed files no pilot selector covered",
-            "value": 746
+            "value": 770
           },
           {
             "key": "unused_selectors",
             "label": "Pilot selectors that covered no landed file",
-            "value": 292
+            "value": 299
           },
           {
             "key": "selectors_per_task",
@@ -6914,7 +6914,7 @@
           {
             "key": "cost_per_assessment",
             "label": "Cost per assessment (USD)",
-            "value": 0.03974670636842106
+            "value": 0.03973356483655276
           },
           {
             "key": "median_run_seconds",
@@ -6924,22 +6924,22 @@
           {
             "key": "warning_precision_percent",
             "label": "Warning precision (%)",
-            "value": 76.92
+            "value": 78.57
           },
           {
             "key": "holds_per_100_assessments",
             "label": "Holds per 100 assessments",
-            "value": 8.03
+            "value": 8.21
           },
           {
             "key": "settled_assessments",
             "label": "Settled assessments",
-            "value": 749
+            "value": 762
           },
           {
             "key": "excluded_assessments",
             "label": "Excluded or pending assessments",
-            "value": 148
+            "value": 152
           },
           {
             "key": "missed_scope_block_count",
@@ -6948,22 +6948,22 @@
           }
         ],
         "term_units": {
-          "confirmed_warnings": 749,
-          "dismissed_warnings": 749,
-          "missed_scope_blocks": 749,
-          "tier_calibration": 558
+          "confirmed_warnings": 762,
+          "dismissed_warnings": 762,
+          "missed_scope_blocks": 762,
+          "tier_calibration": 566
         },
         "unit": "assessed tasks",
-        "units": 665,
+        "units": 673,
         "unjudged": false,
         "usage": {
-          "duration_ms": 76792121,
+          "duration_ms": 78182337,
           "efforts": "high",
-          "input_tokens": 17394,
-          "invocations": 965,
-          "output_tokens": 15908029,
-          "provider_cost_count": 965,
-          "provider_cost_usd": 36.62199444500003
+          "input_tokens": 17670,
+          "invocations": 986,
+          "output_tokens": 16179187,
+          "provider_cost_count": 986,
+          "provider_cost_usd": 37.19896939500003
         }
       },
       {
@@ -7094,42 +7094,42 @@
       {
         "below_support": false,
         "counts": {
-          "confirmed_warnings": 28,
+          "confirmed_warnings": 29,
           "costly_misses": 1,
           "dismissed_warnings": 10,
-          "f1_lift": 115.63,
+          "f1_lift": 116.63,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 1,
-          "tier_calibration": 379
+          "tier_calibration": 380
         },
         "crew": "luna@high",
         "effort_label": "high",
         "model": "gpt-6-luna",
         "per_100": {
-          "confirmed_warnings": 3.37,
+          "confirmed_warnings": 3.48,
           "costly_misses": 0.14,
           "dismissed_warnings": 1.2,
-          "f1_lift": 16.68,
+          "f1_lift": 16.8,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0.12,
-          "tier_calibration": 62.75
+          "tier_calibration": 62.81
         },
         "provisional_terms": [],
         "rank": 4,
-        "raw": 40.78,
+        "raw": 41.24,
         "reasoning_effort": "high",
         "runs_without_model": 0,
-        "score": 40.78,
+        "score": 41.23,
         "stats": [
           {
             "key": "recall_percent",
             "label": "Recall (%)",
-            "value": 71.44
+            "value": 71.45
           },
           {
             "key": "precision_percent",
             "label": "Precision (%)",
-            "value": 85.65
+            "value": 85.66
           },
           {
             "key": "f1_percent",
@@ -7139,7 +7139,7 @@
           {
             "key": "filer_f1_percent",
             "label": "Filer's F1 (%)",
-            "value": 66.2
+            "value": 66.15
           },
           {
             "key": "missed_files",
@@ -7154,7 +7154,7 @@
           {
             "key": "selectors_per_task",
             "label": "Selectors per task",
-            "value": 3.24
+            "value": 3.23
           },
           {
             "key": "within_one_tier_percent",
@@ -7164,27 +7164,27 @@
           {
             "key": "cost_per_assessment",
             "label": "Cost per assessment (USD)",
-            "value": 0.011802275930735925
+            "value": 0.011793680864553308
           },
           {
             "key": "median_run_seconds",
             "label": "Median pilot run (seconds)",
-            "value": 93.09
+            "value": 92.96
           },
           {
             "key": "warning_precision_percent",
             "label": "Warning precision (%)",
-            "value": 73.68
+            "value": 74.36
           },
           {
             "key": "holds_per_100_assessments",
             "label": "Holds per 100 assessments",
-            "value": 7.26
+            "value": 7.23
           },
           {
             "key": "settled_assessments",
             "label": "Settled assessments",
-            "value": 830
+            "value": 834
           },
           {
             "key": "excluded_assessments",
@@ -7198,20 +7198,20 @@
           }
         ],
         "term_units": {
-          "confirmed_warnings": 830,
-          "dismissed_warnings": 830,
-          "missed_scope_blocks": 830,
-          "tier_calibration": 604
+          "confirmed_warnings": 834,
+          "dismissed_warnings": 834,
+          "missed_scope_blocks": 834,
+          "tier_calibration": 605
         },
         "unit": "assessed tasks",
-        "units": 693,
+        "units": 694,
         "unjudged": false,
         "usage": {
-          "duration_ms": 84341800,
+          "duration_ms": 85716015,
           "efforts": "high",
-          "input_tokens": 444896667,
-          "invocations": 876,
-          "output_tokens": 5073256,
+          "input_tokens": 448648483,
+          "invocations": 881,
+          "output_tokens": 5129742,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
         }
@@ -7222,64 +7222,64 @@
           "confirmed_warnings": 5,
           "costly_misses": 1,
           "dismissed_warnings": 5,
-          "f1_lift": 49.95,
+          "f1_lift": 51.4,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0,
-          "tier_calibration": 219
+          "tier_calibration": 228
         },
         "crew": "muse-spark@high",
         "effort_label": "high",
         "model": "muse-spark-1.3-contributor",
         "per_100": {
-          "confirmed_warnings": 1.04,
-          "costly_misses": 0.24,
-          "dismissed_warnings": 1.04,
-          "f1_lift": 11.75,
+          "confirmed_warnings": 1.01,
+          "costly_misses": 0.23,
+          "dismissed_warnings": 1.01,
+          "f1_lift": 11.79,
           "lock_wait_hours": 0,
           "missed_scope_blocks": 0,
-          "tier_calibration": 62.04
+          "tier_calibration": 62.81
         },
         "provisional_terms": [],
         "rank": 5,
-        "raw": 29.11,
+        "raw": 29.29,
         "reasoning_effort": "high",
         "runs_without_model": 0,
-        "score": 29.11,
+        "score": 29.29,
         "stats": [
           {
             "key": "recall_percent",
             "label": "Recall (%)",
-            "value": 71.37
+            "value": 71.45
           },
           {
             "key": "precision_percent",
             "label": "Precision (%)",
-            "value": 83.35
+            "value": 83.07
           },
           {
             "key": "f1_percent",
             "label": "F1 (%)",
-            "value": 76.89
+            "value": 76.82
           },
           {
             "key": "filer_f1_percent",
             "label": "Filer's F1 (%)",
-            "value": 69.86
+            "value": 69.89
           },
           {
             "key": "missed_files",
             "label": "Landed files no pilot selector covered",
-            "value": 459
+            "value": 464
           },
           {
             "key": "unused_selectors",
             "label": "Pilot selectors that covered no landed file",
-            "value": 225
+            "value": 233
           },
           {
             "key": "selectors_per_task",
             "label": "Selectors per task",
-            "value": 3.18
+            "value": 3.16
           },
           {
             "key": "within_one_tier_percent",
@@ -7294,7 +7294,7 @@
           {
             "key": "median_run_seconds",
             "label": "Median pilot run (seconds)",
-            "value": 98.79
+            "value": 98.36
           },
           {
             "key": "warning_precision_percent",
@@ -7304,17 +7304,17 @@
           {
             "key": "holds_per_100_assessments",
             "label": "Holds per 100 assessments",
-            "value": 2.89
+            "value": 2.98
           },
           {
             "key": "settled_assessments",
             "label": "Settled assessments",
-            "value": 481
+            "value": 494
           },
           {
             "key": "excluded_assessments",
             "label": "Excluded or pending assessments",
-            "value": 72
+            "value": 77
           },
           {
             "key": "missed_scope_block_count",
@@ -7323,19 +7323,19 @@
           }
         ],
         "term_units": {
-          "confirmed_warnings": 481,
-          "dismissed_warnings": 481,
-          "missed_scope_blocks": 481,
-          "tier_calibration": 353
+          "confirmed_warnings": 494,
+          "dismissed_warnings": 494,
+          "missed_scope_blocks": 494,
+          "tier_calibration": 363
         },
         "unit": "assessed tasks",
-        "units": 425,
+        "units": 436,
         "unjudged": false,
         "usage": {
-          "duration_ms": 55014970,
+          "duration_ms": 56477005,
           "efforts": "high",
           "input_tokens": 0,
-          "invocations": 543,
+          "invocations": 561,
           "output_tokens": 0,
           "provider_cost_count": 0,
           "provider_cost_usd": 0.0
@@ -7472,9 +7472,9 @@
         }
       }
     ],
-    "score_key": "Score: per 100 assessed tasks, credit for f1 lift, tier calibration, confirmed warnings; debits for dismissed warnings, missed scope blocks, costly misses, lock-wait hours. The fleet average is 40.9.",
+    "score_key": "Score: per 100 assessed tasks, credit for f1 lift, tier calibration, confirmed warnings; debits for dismissed warnings, missed scope blocks, costly misses, lock-wait hours. The fleet average is 41.2.",
     "settled": false,
-    "tasks_scanned": 13570,
+    "tasks_scanned": 13647,
     "terms": [
       {
         "group": "credit",
@@ -7522,16 +7522,16 @@
     "unit": "assessed tasks",
     "window": {
       "key": "30d",
-      "since": "2026-10-16T05:16:59Z",
-      "until": "2026-11-15T05:16:59Z"
+      "since": "2026-10-16T20:04:12Z",
+      "until": "2026-11-15T20:04:12Z"
     }
   },
   "reviewers": {
     "provisional": {
-      "fleet_average": 133.06,
+      "fleet_average": 132.11,
       "min_support": 10,
       "provisional": true,
-      "provisional_units": 1606,
+      "provisional_units": 1638,
       "role": "reviewers",
       "rows": [
         {
@@ -7562,7 +7562,7 @@
           "raw": 243.06,
           "reasoning_effort": "xhigh",
           "runs_without_model": 0,
-          "score": 215.56,
+          "score": 215.32,
           "stats": [
             {
               "key": "gate_reviews",
@@ -7643,7 +7643,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 687.25,
+            "findings_held": 688.25,
             "fixes_held": 2,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -7655,18 +7655,18 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 189.33,
+            "findings_held": 189.08,
             "fixes_held": 0.55,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
-            "rejected_findings": 0.28
+            "rejected_findings": 0.27
           },
-          "provisional": 363,
+          "provisional": 364,
           "rank": 2,
-          "raw": 189.6,
+          "raw": 189.35,
           "reasoning_effort": "high",
           "runs_without_model": 0,
-          "score": 185.28,
+          "score": 185.0,
           "stats": [
             {
               "key": "gate_reviews",
@@ -7676,7 +7676,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 356
+              "value": 357
             },
             {
               "key": "accept_rate",
@@ -7691,7 +7691,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 87.33
+              "value": 87.86
             },
             {
               "key": "accepts_often",
@@ -7706,7 +7706,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 358
+              "value": 359
             },
             {
               "key": "outcome_false_alarm",
@@ -7730,7 +7730,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 363,
+          "units": 364,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -7747,11 +7747,11 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 284.75,
-            "fixes_held": 61,
+            "findings_held": 293,
+            "fixes_held": 67,
             "incomplete_reviews": 2,
             "missed_regressions": 0,
-            "rejected_findings": 10
+            "rejected_findings": 11
           },
           "crew": "haiku",
           "effort_label": "xhigh",
@@ -7759,23 +7759,23 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 149.08,
-            "fixes_held": 31.94,
-            "incomplete_reviews": 1.05,
+            "findings_held": 147.98,
+            "fixes_held": 33.84,
+            "incomplete_reviews": 1.01,
             "missed_regressions": 0,
-            "rejected_findings": 5.24
+            "rejected_findings": 5.56
           },
-          "provisional": 191,
+          "provisional": 198,
           "rank": 3,
-          "raw": 175.26,
+          "raw": 175.76,
           "reasoning_effort": "xhigh",
           "runs_without_model": 0,
-          "score": 169.53,
+          "score": 170.01,
           "stats": [
             {
               "key": "gate_reviews",
               "label": "Review gate settlements",
-              "value": 104
+              "value": 111
             },
             {
               "key": "review_jobs",
@@ -7785,17 +7785,17 @@
             {
               "key": "accept_rate",
               "label": "Accept rate (%)",
-              "value": 89.42
+              "value": 90.09
             },
             {
               "key": "compared_accept_rate",
               "label": "Accept rate on tiers peers also reviewed (%)",
-              "value": 89.42
+              "value": 90.09
             },
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 88.23
+              "value": 88.57
             },
             {
               "key": "accepts_often",
@@ -7805,12 +7805,12 @@
             {
               "key": "outcome_held_up",
               "label": "Accepted and held up",
-              "value": 32
+              "value": 33
             },
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 149
+              "value": 155
             },
             {
               "key": "outcome_false_alarm",
@@ -7830,20 +7830,20 @@
             {
               "key": "median_review_minutes",
               "label": "Median review minutes",
-              "value": 7.54
+              "value": 7.58
             }
           ],
           "unit": "settled reviews",
-          "units": 191,
+          "units": 198,
           "unjudged": false,
           "usage": {
-            "duration_ms": 37480838,
+            "duration_ms": 40530556,
             "efforts": "xhigh",
-            "input_tokens": 4712,
-            "invocations": 75,
-            "output_tokens": 4094129,
-            "provider_cost_count": 75,
-            "provider_cost_usd": 21.06399061
+            "input_tokens": 5116,
+            "invocations": 82,
+            "output_tokens": 4436956,
+            "provider_cost_count": 82,
+            "provider_cost_usd": 22.87690088
           }
         },
         {
@@ -7874,7 +7874,7 @@
           "raw": 169.23,
           "reasoning_effort": "high",
           "runs_without_model": 0,
-          "score": 153.51,
+          "score": 153.09,
           "stats": [
             {
               "key": "gate_reviews",
@@ -7955,7 +7955,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 86,
+            "findings_held": 87.5,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -7967,18 +7967,18 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 145.76,
+            "findings_held": 143.44,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
             "rejected_findings": 0
           },
-          "provisional": 59,
+          "provisional": 61,
           "rank": 5,
-          "raw": 145.76,
+          "raw": 143.44,
           "reasoning_effort": "high",
           "runs_without_model": 0,
-          "score": 141.48,
+          "score": 139.71,
           "stats": [
             {
               "key": "gate_reviews",
@@ -7988,7 +7988,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 59
+              "value": 61
             },
             {
               "key": "accept_rate",
@@ -8018,7 +8018,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 58
+              "value": 60
             },
             {
               "key": "outcome_false_alarm",
@@ -8042,111 +8042,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 59,
-          "unjudged": false,
-          "usage": {
-            "duration_ms": 0,
-            "efforts": "",
-            "input_tokens": 0,
-            "invocations": 0,
-            "output_tokens": 0,
-            "provider_cost_count": 0,
-            "provider_cost_usd": 0.0
-          }
-        },
-        {
-          "below_support": false,
-          "counts": {
-            "failed_fixes": 0,
-            "false_rejects": 0,
-            "findings_held": 27.5,
-            "fixes_held": 0,
-            "incomplete_reviews": 0,
-            "missed_regressions": 0,
-            "rejected_findings": 0
-          },
-          "crew": "astra",
-          "effort_label": "medium",
-          "model": "gpt-6-astra",
-          "per_100": {
-            "failed_fixes": 0,
-            "false_rejects": 0,
-            "findings_held": 144.74,
-            "fixes_held": 0,
-            "incomplete_reviews": 0,
-            "missed_regressions": 0,
-            "rejected_findings": 0
-          },
-          "provisional": 19,
-          "rank": 6,
-          "raw": 144.74,
-          "reasoning_effort": "medium",
-          "runs_without_model": 0,
-          "score": 137.59,
-          "stats": [
-            {
-              "key": "gate_reviews",
-              "label": "Review gate settlements",
-              "value": 0
-            },
-            {
-              "key": "review_jobs",
-              "label": "Review job runs that filed findings",
-              "value": 19
-            },
-            {
-              "key": "accept_rate",
-              "label": "Accept rate (%)",
-              "value": null
-            },
-            {
-              "key": "compared_accept_rate",
-              "label": "Accept rate on tiers peers also reviewed (%)",
-              "value": null
-            },
-            {
-              "key": "peer_accept_rate",
-              "label": "Peers' accept rate on the same tiers (%)",
-              "value": null
-            },
-            {
-              "key": "accepts_often",
-              "label": "Accepts often",
-              "value": false
-            },
-            {
-              "key": "outcome_held_up",
-              "label": "Accepted and held up",
-              "value": 0
-            },
-            {
-              "key": "outcome_caught",
-              "label": "Caught a real problem",
-              "value": 19
-            },
-            {
-              "key": "outcome_false_alarm",
-              "label": "False alarm",
-              "value": 0
-            },
-            {
-              "key": "outcome_missed",
-              "label": "Missed a regression",
-              "value": 0
-            },
-            {
-              "key": "outcome_unresolved",
-              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
-              "value": 0
-            },
-            {
-              "key": "median_review_minutes",
-              "label": "Median review minutes",
-              "value": null
-            }
-          ],
-          "unit": "settled reviews",
-          "units": 19,
+          "units": 61,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -8182,11 +8078,11 @@
             "rejected_findings": 1.06
           },
           "provisional": 94,
-          "rank": 7,
+          "rank": 6,
           "raw": 137.77,
           "reasoning_effort": "high",
           "runs_without_model": 0,
-          "score": 136.63,
+          "score": 136.4,
           "stats": [
             {
               "key": "gate_reviews",
@@ -8267,6 +8163,110 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
+            "findings_held": 28.5,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "crew": "astra",
+          "effort_label": "medium",
+          "model": "gpt-6-astra",
+          "per_100": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
+            "findings_held": 142.5,
+            "fixes_held": 0,
+            "incomplete_reviews": 0,
+            "missed_regressions": 0,
+            "rejected_findings": 0
+          },
+          "provisional": 20,
+          "rank": 7,
+          "raw": 142.5,
+          "reasoning_effort": "medium",
+          "runs_without_model": 0,
+          "score": 136.27,
+          "stats": [
+            {
+              "key": "gate_reviews",
+              "label": "Review gate settlements",
+              "value": 0
+            },
+            {
+              "key": "review_jobs",
+              "label": "Review job runs that filed findings",
+              "value": 20
+            },
+            {
+              "key": "accept_rate",
+              "label": "Accept rate (%)",
+              "value": null
+            },
+            {
+              "key": "compared_accept_rate",
+              "label": "Accept rate on tiers peers also reviewed (%)",
+              "value": null
+            },
+            {
+              "key": "peer_accept_rate",
+              "label": "Peers' accept rate on the same tiers (%)",
+              "value": null
+            },
+            {
+              "key": "accepts_often",
+              "label": "Accepts often",
+              "value": false
+            },
+            {
+              "key": "outcome_held_up",
+              "label": "Accepted and held up",
+              "value": 0
+            },
+            {
+              "key": "outcome_caught",
+              "label": "Caught a real problem",
+              "value": 20
+            },
+            {
+              "key": "outcome_false_alarm",
+              "label": "False alarm",
+              "value": 0
+            },
+            {
+              "key": "outcome_missed",
+              "label": "Missed a regression",
+              "value": 0
+            },
+            {
+              "key": "outcome_unresolved",
+              "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
+              "value": 0
+            },
+            {
+              "key": "median_review_minutes",
+              "label": "Median review minutes",
+              "value": null
+            }
+          ],
+          "unit": "settled reviews",
+          "units": 20,
+          "unjudged": false,
+          "usage": {
+            "duration_ms": 0,
+            "efforts": "",
+            "input_tokens": 0,
+            "invocations": 0,
+            "output_tokens": 0,
+            "provider_cost_count": 0,
+            "provider_cost_usd": 0.0
+          }
+        },
+        {
+          "below_support": false,
+          "counts": {
+            "failed_fixes": 0,
+            "false_rejects": 0,
             "findings_held": 74.25,
             "fixes_held": 14,
             "incomplete_reviews": 9,
@@ -8290,7 +8290,7 @@
           "raw": 135.27,
           "reasoning_effort": "unknown",
           "runs_without_model": 0,
-          "score": 134.5,
+          "score": 134.17,
           "stats": [
             {
               "key": "gate_reviews",
@@ -8315,7 +8315,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 88.71
+              "value": 89.28
             },
             {
               "key": "accepts_often",
@@ -8371,7 +8371,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 93,
+            "findings_held": 97,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -8383,18 +8383,18 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 134.78,
+            "findings_held": 132.88,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
-            "rejected_findings": 1.45
+            "rejected_findings": 1.37
           },
-          "provisional": 69,
+          "provisional": 73,
           "rank": 9,
-          "raw": 133.33,
+          "raw": 131.51,
           "reasoning_effort": "medium",
           "runs_without_model": 0,
-          "score": 133.25,
+          "score": 131.51,
           "stats": [
             {
               "key": "gate_reviews",
@@ -8404,7 +8404,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 69
+              "value": 73
             },
             {
               "key": "accept_rate",
@@ -8434,7 +8434,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 69
+              "value": 72
             },
             {
               "key": "outcome_false_alarm",
@@ -8449,7 +8449,7 @@
             {
               "key": "outcome_unresolved",
               "label": "Unresolved (not judged yet, incomplete, failed fixes or findings dropped unverified)",
-              "value": 0
+              "value": 1
             },
             {
               "key": "median_review_minutes",
@@ -8458,7 +8458,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 69,
+          "units": 73,
           "unjudged": false,
           "usage": {
             "duration_ms": 0,
@@ -8579,7 +8579,7 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 125.5,
+            "findings_held": 125.75,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
@@ -8591,18 +8591,18 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 117.29,
+            "findings_held": 116.44,
             "fixes_held": 0,
             "incomplete_reviews": 0,
             "missed_regressions": 0,
             "rejected_findings": 0
           },
-          "provisional": 107,
+          "provisional": 108,
           "rank": 11,
-          "raw": 117.29,
+          "raw": 116.44,
           "reasoning_effort": "high",
           "runs_without_model": 0,
-          "score": 117.29,
+          "score": 116.44,
           "stats": [
             {
               "key": "gate_reviews",
@@ -8612,7 +8612,7 @@
             {
               "key": "review_jobs",
               "label": "Review job runs that filed findings",
-              "value": 107
+              "value": 108
             },
             {
               "key": "accept_rate",
@@ -8642,7 +8642,7 @@
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 106
+              "value": 107
             },
             {
               "key": "outcome_false_alarm",
@@ -8666,7 +8666,7 @@
             }
           ],
           "unit": "settled reviews",
-          "units": 107,
+          "units": 108,
           "unjudged": false,
           "usage": {
             "duration_ms": 159420,
@@ -8835,7 +8835,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 87.99
+              "value": 88.62
             },
             {
               "key": "accepts_often",
@@ -8891,8 +8891,8 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 43,
-            "fixes_held": 30,
+            "findings_held": 46,
+            "fixes_held": 31,
             "incomplete_reviews": 7,
             "missed_regressions": 0.25,
             "rejected_findings": 1
@@ -8903,23 +8903,23 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 39.81,
-            "fixes_held": 27.78,
-            "incomplete_reviews": 6.48,
-            "missed_regressions": 0.23,
-            "rejected_findings": 0.93
+            "findings_held": 40.71,
+            "fixes_held": 27.43,
+            "incomplete_reviews": 6.19,
+            "missed_regressions": 0.22,
+            "rejected_findings": 0.88
           },
-          "provisional": 108,
+          "provisional": 113,
           "rank": 14,
-          "raw": 62.96,
+          "raw": 63.72,
           "reasoning_effort": "xhigh",
           "runs_without_model": 0,
-          "score": 62.96,
+          "score": 63.72,
           "stats": [
             {
               "key": "gate_reviews",
               "label": "Review gate settlements",
-              "value": 102
+              "value": 107
             },
             {
               "key": "review_jobs",
@@ -8929,17 +8929,17 @@
             {
               "key": "accept_rate",
               "label": "Accept rate (%)",
-              "value": 88.24
+              "value": 88.79
             },
             {
               "key": "compared_accept_rate",
               "label": "Accept rate on tiers peers also reviewed (%)",
-              "value": 88.24
+              "value": 88.79
             },
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 88.08
+              "value": 88.37
             },
             {
               "key": "accepts_often",
@@ -8949,12 +8949,12 @@
             {
               "key": "outcome_held_up",
               "label": "Accepted and held up",
-              "value": 59
+              "value": 63
             },
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 35
+              "value": 36
             },
             {
               "key": "outcome_false_alarm",
@@ -8974,18 +8974,18 @@
             {
               "key": "median_review_minutes",
               "label": "Median review minutes",
-              "value": 10.02
+              "value": 9.8
             }
           ],
           "unit": "settled reviews",
-          "units": 108,
+          "units": 113,
           "unjudged": false,
           "usage": {
-            "duration_ms": 67835717,
+            "duration_ms": 73101994,
             "efforts": "xhigh",
-            "input_tokens": 295448237,
-            "invocations": 83,
-            "output_tokens": 2292724,
+            "input_tokens": 324751926,
+            "invocations": 88,
+            "output_tokens": 2416126,
             "provider_cost_count": 0,
             "provider_cost_usd": 0.0
           }
@@ -9043,7 +9043,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 86.59
+              "value": 87.24
             },
             {
               "key": "accepts_often",
@@ -9147,7 +9147,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 85.46
+              "value": 86.17
             },
             {
               "key": "accepts_often",
@@ -9203,8 +9203,8 @@
           "counts": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 19.25,
-            "fixes_held": 11,
+            "findings_held": 20.25,
+            "fixes_held": 12,
             "incomplete_reviews": 7,
             "missed_regressions": 4,
             "rejected_findings": 0
@@ -9215,23 +9215,23 @@
           "per_100": {
             "failed_fixes": 0,
             "false_rejects": 0,
-            "findings_held": 11.74,
-            "fixes_held": 6.71,
-            "incomplete_reviews": 4.27,
-            "missed_regressions": 2.44,
+            "findings_held": 11.57,
+            "fixes_held": 6.86,
+            "incomplete_reviews": 4,
+            "missed_regressions": 2.29,
             "rejected_findings": 0
           },
-          "provisional": 164,
+          "provisional": 175,
           "rank": 17,
-          "raw": 11.43,
+          "raw": 11.86,
           "reasoning_effort": "xhigh",
           "runs_without_model": 0,
-          "score": 11.43,
+          "score": 11.86,
           "stats": [
             {
               "key": "gate_reviews",
               "label": "Review gate settlements",
-              "value": 164
+              "value": 175
             },
             {
               "key": "review_jobs",
@@ -9241,32 +9241,32 @@
             {
               "key": "accept_rate",
               "label": "Accept rate (%)",
-              "value": 95.12
+              "value": 95.43
             },
             {
               "key": "compared_accept_rate",
               "label": "Accept rate on tiers peers also reviewed (%)",
-              "value": 95.12
+              "value": 95.43
             },
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 85.05
+              "value": 85.44
             },
             {
               "key": "accepts_often",
               "label": "Accepts often",
-              "value": true
+              "value": false
             },
             {
               "key": "outcome_held_up",
               "label": "Accepted and held up",
-              "value": 143
+              "value": 153
             },
             {
               "key": "outcome_caught",
               "label": "Caught a real problem",
-              "value": 11
+              "value": 12
             },
             {
               "key": "outcome_false_alarm",
@@ -9286,17 +9286,17 @@
             {
               "key": "median_review_minutes",
               "label": "Median review minutes",
-              "value": 6.21
+              "value": 6.18
             }
           ],
           "unit": "settled reviews",
-          "units": 164,
+          "units": 175,
           "unjudged": false,
           "usage": {
-            "duration_ms": 59432058,
+            "duration_ms": 63222147,
             "efforts": "xhigh",
             "input_tokens": 0,
-            "invocations": 122,
+            "invocations": 133,
             "output_tokens": 0,
             "provider_cost_count": 0,
             "provider_cost_usd": 0.0
@@ -9330,7 +9330,7 @@
           "raw": 328.13,
           "reasoning_effort": "high",
           "runs_without_model": 0,
-          "score": 174.13,
+          "score": 173.38,
           "stats": [
             {
               "key": "gate_reviews",
@@ -9434,7 +9434,7 @@
           "raw": 150,
           "reasoning_effort": "unknown",
           "runs_without_model": 0,
-          "score": 134.12,
+          "score": 133.23,
           "stats": [
             {
               "key": "gate_reviews",
@@ -9459,7 +9459,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 83.42
+              "value": 84.28
             },
             {
               "key": "accepts_often",
@@ -9770,7 +9770,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 88.95
+              "value": 89.35
             },
             {
               "key": "accepts_often",
@@ -9874,7 +9874,7 @@
             {
               "key": "peer_accept_rate",
               "label": "Peers' accept rate on the same tiers (%)",
-              "value": 89.06
+              "value": 89.49
             },
             {
               "key": "accepts_often",
@@ -10029,9 +10029,9 @@
           }
         }
       ],
-      "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 133.1.",
+      "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 132.1.",
       "settled": false,
-      "tasks_scanned": 13570,
+      "tasks_scanned": 13647,
       "terms": [
         {
           "group": "credit",
@@ -10079,8 +10079,8 @@
       "unit": "settled reviews",
       "window": {
         "key": "30d",
-        "since": "2026-10-16T05:16:46Z",
-        "until": "2026-11-15T05:16:46Z"
+        "since": "2026-10-16T20:04:10Z",
+        "until": "2026-11-15T20:04:10Z"
       }
     },
     "settled": {
@@ -11132,7 +11132,7 @@
       ],
       "score_key": "Score: per 100 settled reviews, credit for findings that held, fixes that held; debits for rejected findings, false rejects, failed fixes, missed regressions, incomplete reviews. The fleet average is 76.5.",
       "settled": true,
-      "tasks_scanned": 13570,
+      "tasks_scanned": 13647,
       "terms": [
         {
           "group": "credit",
@@ -11180,8 +11180,8 @@
       "unit": "settled reviews",
       "window": {
         "key": "30d",
-        "since": "2026-09-16T05:16:59Z",
-        "until": "2026-10-16T05:16:59Z"
+        "since": "2026-09-16T20:04:13Z",
+        "until": "2026-10-16T20:04:13Z"
       }
     }
   },
