@@ -9,7 +9,7 @@ and any files the note links to (data, images). Output is a page per note, a
 scorecards.json, and rank.json when the snapshot has one); it has no archive. It replaced
 /analytics/agents/, whose URLs public/_redirects sends to /ranking/.
 /analytics/metrics/ is rendered from the newest data/analytics/<YYYY-MM-DD>/metrics.json
-via analytics_page.py. public/analytics/ and public/ranking/ are generated too: do not
+via the analytics_page package. public/analytics/ and public/ranking/ are generated too: do not
 edit or commit them.
 /analytics/reliability/ uses the newest snapshot's reliability.json aggregates.
 /analytics/experiments/ uses the newest snapshot's concluded experiments.json entries.
