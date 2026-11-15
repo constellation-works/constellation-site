@@ -10,6 +10,9 @@ from unittest.mock import patch
 
 import analytics_page
 import build
+import build_common
+import build_experiments
+import build_reliability
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRATCH = ROOT / ".orbit" / "tmp"
@@ -37,7 +40,8 @@ def picker_html(document):
 
 
 def build_all(root):
-    with patch.object(build, "ROOT", root):
+    with patch.object(build, "ROOT", root), patch.object(build_common, "ROOT", root), \
+            patch.object(build_reliability, "ROOT", root), patch.object(build_experiments, "ROOT", root):
         build.build_analytics_index()
         build.build_ranking(root)
         analytics_page.build(root)
@@ -421,7 +425,8 @@ class WrongTypeWindowCandidatesTest(unittest.TestCase):
             reliability_path.write_text(json.dumps(reliability), encoding="utf-8")
             entry = analytics_page.snapshot_entry(archived, "experiments")
             self.assertEqual((entry["since"], entry["until"]), (None, None))
-            with patch.object(build, "ROOT", root):
+            with patch.object(build, "ROOT", root), patch.object(build_common, "ROOT", root), \
+                    patch.object(build_experiments, "ROOT", root):
                 build.build_analytics_index()
                 build.build_experiments()
             archive = (root / "public" / "analytics" / "experiments" / "2026-11" / "index.html").read_text(

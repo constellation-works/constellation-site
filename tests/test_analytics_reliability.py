@@ -11,6 +11,8 @@ from pathlib import Path
 from unittest.mock import patch
 
 import build
+import build_common
+import build_reliability
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -147,7 +149,8 @@ class ReliabilityTests(unittest.TestCase):
                 if day == "2026-11-07":
                     data["totals"]["job_runs"]["counts"].update(succeeded=70, failed=30)
                 (directory / "reliability.json").write_text(json.dumps(data))
-            with patch.object(build, "ROOT", root):
+            with patch.object(build, "ROOT", root), patch.object(build_common, "ROOT", root), \
+                    patch.object(build_reliability, "ROOT", root):
                 build.build_reliability()
                 document = (root / "public" / "analytics" / "reliability" / "index.html").read_text()
                 self.assertIn("Snapshot 2026-11-08", document)

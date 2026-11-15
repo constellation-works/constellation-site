@@ -9,6 +9,8 @@ import unittest
 from unittest.mock import patch
 
 import build
+import build_common
+import build_experiments
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -450,7 +452,8 @@ class ExperimentsPageTest(unittest.TestCase):
                 data = fixture()
                 data["experiments"][0]["name"] = f"Experiment from {day}"
                 (directory / "experiments.json").write_text(json.dumps(data))
-            with patch.object(build, "ROOT", root):
+            with patch.object(build, "ROOT", root), patch.object(build_common, "ROOT", root), \
+                    patch.object(build_experiments, "ROOT", root):
                 build.build_experiments()
                 output = root / "public" / "analytics" / "experiments" / "index.html"
                 self.assertIn("Experiment from 2026-11-08", output.read_text())
