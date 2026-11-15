@@ -309,7 +309,8 @@ class RankingPageTest(unittest.TestCase):
         self.assertIn(100, ticks)
 
     def test_whisker_axis_far_off_model_keeps_other_intervals_on_scale(self):
-        rank = json.loads((ROOT / "data/analytics/2026-11-15/rank.json").read_text())
+        # The 2026-11-15 snapshot as first published, frozen so re-published data cannot move these numbers.
+        rank = json.loads((ROOT / "tests/fixtures/rank-far-off-model.json").read_text())
         rows, _ = build.rank_rows(rank)
         low, high, ticks = build.whisker_axis(rows)
         self.assertLessEqual(len(ticks), 7)
