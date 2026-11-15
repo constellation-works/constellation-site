@@ -1,5 +1,5 @@
 {
- "computed_at": "2026-11-15T07:43:51.592Z",
+ "computed_at": "2026-11-15T20:03:52.361Z",
  "eligibility_rule": "At least 30 implemented tasks, with at least 5 in one assessed tier. The board needs 3 such models.",
  "eligible_models": 11,
  "execution": "managed",
@@ -666,10 +666,6 @@
     {
      "crew": "opus@medium",
      "tasks": 8
-    },
-    {
-     "crew": "sol",
-     "tasks": 3
     }
    ],
    "eligible": true,
@@ -1918,7 +1914,7 @@
  "settle_lag": "14d",
  "source": "GET /api/agents/rank?window=30d&execution=managed",
  "status": "ok",
- "tasks_scanned": 13589,
+ "tasks_scanned": 13647,
  "unattributed_tasks": 10,
  "weights_total": 80.0,
  "window": {
