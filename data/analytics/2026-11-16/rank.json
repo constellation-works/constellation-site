@@ -1,0 +1,1923 @@
+{
+  "computed_at": "2026-11-16T05:15:09.984Z",
+  "eligibility_rule": "At least 30 implemented tasks, with at least 5 in one assessed tier. The board needs 3 such models.",
+  "eligible_models": 11,
+  "execution": "managed",
+  "live": false,
+  "measures": [
+    {
+      "definition": "The implementer scorecard's escaped regressions at severity weight, deduplicated against pre-landing review charges, compared with its size-adjusted expectation.",
+      "key": "escaped_regressions",
+      "label": "Escaped regressions",
+      "pillar": "quality",
+      "reason": null,
+      "sign": -1.0,
+      "status": "measured",
+      "units": "implemented tasks",
+      "weight": 30.0
+    },
+    {
+      "definition": "+1 per first-pass accept, -1 per reject and -0.5 per accept-with-fixes on the row's candidates, summed per reviewed delivery and compared with the same combination of the scorecard's tier expectations.",
+      "key": "review_outcome",
+      "label": "Review outcome",
+      "pillar": "quality",
+      "reason": null,
+      "sign": 1.0,
+      "status": "measured",
+      "units": "reviewed deliveries",
+      "weight": 20.0
+    },
+    {
+      "definition": "Required-check failures on the row's candidate heads classed code.",
+      "key": "ci_failures",
+      "label": "Implementer CI failures",
+      "pillar": "reliability",
+      "reason": "required-check failures are not recorded by cause yet",
+      "sign": -1.0,
+      "status": "unmeasured",
+      "units": "implemented tasks",
+      "weight": 10.0
+    },
+    {
+      "definition": "Final-recovery decisions whose fault is implementer.",
+      "key": "final_recoveries",
+      "label": "Implementer-fault final recoveries",
+      "pillar": "reliability",
+      "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+      "sign": -1.0,
+      "status": "unmeasured",
+      "units": "implemented tasks",
+      "weight": 10.0
+    },
+    {
+      "definition": "The implementer scorecard's crew-caused rework, which already leaves out review verdicts; CI failures are not yet classified by cause and final-recovery faults are not yet computed as a ranking measure, so neither is subtracted.",
+      "key": "crew_rework",
+      "label": "Crew-caused rework",
+      "pillar": "reliability",
+      "reason": null,
+      "sign": -1.0,
+      "status": "measured",
+      "units": "implemented tasks",
+      "weight": 5.0
+    },
+    {
+      "definition": "Orbit tool calls in the row's implementing activities classed expected or denied.",
+      "key": "tool_call_errors",
+      "label": "Tool-call errors",
+      "pillar": "reliability",
+      "reason": "tool audit attribution is not available to the ranking yet",
+      "sign": -1.0,
+      "status": "unmeasured",
+      "units": "tool calls",
+      "weight": 5.0
+    }
+  ],
+  "not_scored": {
+    "count": 1404,
+    "reasons": {
+      "contract_drift": 250,
+      "infrastructure": 64,
+      "merge_reintroduced": 1,
+      "no_cause": 459,
+      "no_diff_expected": 38,
+      "no_review": 37,
+      "no_run": 1,
+      "nondeterministic": 31,
+      "platform_only": 64,
+      "spec": 181,
+      "test_not_selected": 26,
+      "unclassified": 252
+    }
+  },
+  "provisional": false,
+  "qualified": true,
+  "role": "implementers",
+  "rows": [
+    {
+      "band_size": 1,
+      "cost": {
+        "cost_unknown": true,
+        "coverage": 0.7731,
+        "expected_per_task": 2.395,
+        "per_task": 1.6529,
+        "ratio": 0.6902
+      },
+      "crews": [
+        {
+          "crew": "sol",
+          "tasks": 1203
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 117.42,
+        "p90": 123.39
+      },
+      "landed_rate": 0.9102,
+      "landed_tasks": 1095.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 142.0,
+          "contribution": -0.65,
+          "expected": 108.91,
+          "reason": null,
+          "residual": -0.03,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 1203,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 204.0,
+          "contribution": 18.22,
+          "expected": 443.2,
+          "reason": null,
+          "residual": 0.2,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 1203,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 151.0,
+          "contribution": 3.61,
+          "expected": 118.87,
+          "reason": null,
+          "residual": 0.13,
+          "status": "measured",
+          "unit": "reviewed deliveries",
+          "units": 251,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "gpt-6.1-sol",
+      "rank": 1,
+      "rank_label": "1",
+      "raw_score": 121.18,
+      "score": 120.42,
+      "tasks_by_tier": {
+        "hard": 194,
+        "low": 55,
+        "medium": 948,
+        "unassessed": 2,
+        "xhard": 4
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.732,
+          "cost_per_task": 2.2732,
+          "cost_unknown": true,
+          "score": 125.29,
+          "tasks": 194,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 0.7273,
+          "cost_per_task": 1.1911,
+          "cost_unknown": true,
+          "score": 103.79,
+          "tasks": 55,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.7848,
+          "cost_per_task": 1.5449,
+          "cost_unknown": true,
+          "score": 119.63,
+          "tasks": 948,
+          "tier": "medium"
+        },
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": 103.53,
+          "tasks": 2,
+          "tier": "unassessed"
+        },
+        {
+          "cost_coverage": 1.0,
+          "cost_per_task": 4.3395,
+          "cost_unknown": false,
+          "score": 769.05,
+          "tasks": 4,
+          "tier": "xhard"
+        }
+      ],
+      "units": 1203,
+      "weights_measured": 55.0
+    },
+    {
+      "band_size": 8,
+      "cost": {
+        "cost_unknown": true,
+        "coverage": 0.7658,
+        "expected_per_task": 5.6941,
+        "per_task": 7.0821,
+        "ratio": 1.2438
+      },
+      "crews": [
+        {
+          "crew": "opus",
+          "tasks": 642
+        },
+        {
+          "crew": "opus@medium",
+          "tasks": 24
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 95.51,
+        "p90": 112.46
+      },
+      "landed_rate": 0.961,
+      "landed_tasks": 640.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 110.0,
+          "contribution": -0.04,
+          "expected": 108.98,
+          "reason": null,
+          "residual": 0.0,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 666,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 465.25,
+          "contribution": 6.4,
+          "expected": 511.74,
+          "reason": null,
+          "residual": 0.07,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 666,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 18.5,
+          "contribution": -1.67,
+          "expected": 25.0,
+          "reason": null,
+          "residual": -0.06,
+          "status": "measured",
+          "unit": "reviewed deliveries",
+          "units": 110,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "claude-opus-5-5",
+      "rank": 2,
+      "rank_label": "2=",
+      "raw_score": 104.69,
+      "score": 104.38,
+      "tasks_by_tier": {
+        "hard": 580,
+        "low": 11,
+        "medium": 53,
+        "unassessed": 3,
+        "xhard": 19
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.781,
+          "cost_per_task": 7.1717,
+          "cost_unknown": true,
+          "score": 120.89,
+          "tasks": 580,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 0.5455,
+          "cost_per_task": 1.4807,
+          "cost_unknown": true,
+          "score": 86.42,
+          "tasks": 11,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.7358,
+          "cost_per_task": 4.4945,
+          "cost_unknown": true,
+          "score": 80.63,
+          "tasks": 53,
+          "tier": "medium"
+        },
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": 91.1,
+          "tasks": 3,
+          "tier": "unassessed"
+        },
+        {
+          "cost_coverage": 0.6316,
+          "cost_per_task": 14.9116,
+          "cost_unknown": true,
+          "score": -543.29,
+          "tasks": 19,
+          "tier": "xhard"
+        }
+      ],
+      "units": 666,
+      "weights_measured": 55.0
+    },
+    {
+      "band_size": 8,
+      "cost": {
+        "cost_unknown": false,
+        "coverage": 0.8113,
+        "expected_per_task": 0.4216,
+        "per_task": 0.4055,
+        "ratio": 0.9619
+      },
+      "crews": [
+        {
+          "crew": "haiku",
+          "tasks": 546
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 98.39,
+        "p90": 106.88
+      },
+      "landed_rate": 0.9637,
+      "landed_tasks": 531.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 17.0,
+          "contribution": 0.79,
+          "expected": 35.43,
+          "reason": null,
+          "residual": 0.03,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 551,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 27.25,
+          "contribution": 2.27,
+          "expected": 40.92,
+          "reason": null,
+          "residual": 0.02,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 551,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 26.0,
+          "contribution": 0.18,
+          "expected": 25.68,
+          "reason": null,
+          "residual": 0.01,
+          "status": "measured",
+          "unit": "reviewed deliveries",
+          "units": 50,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "claude-haiku-5-5",
+      "rank": 2,
+      "rank_label": "2=",
+      "raw_score": 103.25,
+      "score": 102.97,
+      "tasks_by_tier": {
+        "low": 496,
+        "medium": 53,
+        "unassessed": 2
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.8004,
+          "cost_per_task": 0.3491,
+          "cost_unknown": false,
+          "score": 101.89,
+          "tasks": 496,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.9434,
+          "cost_per_task": 0.8535,
+          "cost_unknown": false,
+          "score": 112.46,
+          "tasks": 53,
+          "tier": "medium"
+        },
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": 103.53,
+          "tasks": 2,
+          "tier": "unassessed"
+        }
+      ],
+      "units": 551,
+      "weights_measured": 55.0
+    },
+    {
+      "band_size": 8,
+      "cost": {
+        "cost_unknown": false,
+        "coverage": 0.8108,
+        "expected_per_task": 0.3874,
+        "per_task": 0.166,
+        "ratio": 0.4285
+      },
+      "crews": [
+        {
+          "crew": "luna",
+          "tasks": 758
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 96.38,
+        "p90": 102.07
+      },
+      "landed_rate": 0.9537,
+      "landed_tasks": 741.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 68.0,
+          "contribution": -0.55,
+          "expected": 50.09,
+          "reason": null,
+          "residual": -0.02,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 777,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 60.5,
+          "contribution": -0.32,
+          "expected": 57.81,
+          "reason": null,
+          "residual": 0.0,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 777,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 64.0,
+          "contribution": 0.13,
+          "expected": 63.44,
+          "reason": null,
+          "residual": 0.0,
+          "status": "measured",
+          "unit": "reviewed deliveries",
+          "units": 124,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "gpt-6-luna",
+      "rank": 2,
+      "rank_label": "2=",
+      "raw_score": 99.26,
+      "score": 99.23,
+      "tasks_by_tier": {
+        "hard": 3,
+        "low": 711,
+        "medium": 62,
+        "unassessed": 1
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.6667,
+          "cost_per_task": 0.7319,
+          "cost_unknown": true,
+          "score": 87.06,
+          "tasks": 3,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 0.8143,
+          "cost_per_task": 0.1348,
+          "cost_unknown": false,
+          "score": 102.76,
+          "tasks": 711,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.7903,
+          "cost_per_task": 0.511,
+          "cost_unknown": true,
+          "score": 69.22,
+          "tasks": 62,
+          "tier": "medium"
+        },
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": 103.53,
+          "tasks": 1,
+          "tier": "unassessed"
+        }
+      ],
+      "units": 777,
+      "weights_measured": 55.0
+    },
+    {
+      "band_size": 8,
+      "cost": {
+        "cost_unknown": false,
+        "coverage": 0.8776,
+        "expected_per_task": 1.8096,
+        "per_task": 1.137,
+        "ratio": 0.6283
+      },
+      "crews": [
+        {
+          "crew": "sonnet",
+          "tasks": 237
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 90.1,
+        "p90": 105.85
+      },
+      "landed_rate": 0.9494,
+      "landed_tasks": 225.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 14.0,
+          "contribution": 0.46,
+          "expected": 18.6,
+          "reason": null,
+          "residual": 0.02,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 237,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 76.0,
+          "contribution": -5.19,
+          "expected": 62.58,
+          "reason": null,
+          "residual": -0.06,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 237,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 28.0,
+          "contribution": 2.63,
+          "expected": 23.71,
+          "reason": null,
+          "residual": 0.09,
+          "status": "measured",
+          "unit": "reviewed deliveries",
+          "units": 46,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "claude-sonnet-5-5",
+      "rank": 2,
+      "rank_label": "2=",
+      "raw_score": 97.9,
+      "score": 97.97,
+      "tasks_by_tier": {
+        "hard": 11,
+        "low": 19,
+        "medium": 206,
+        "unassessed": 1
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.7273,
+          "cost_per_task": 3.1903,
+          "cost_unknown": true,
+          "score": -38.22,
+          "tasks": 11,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 0.9474,
+          "cost_per_task": 0.6447,
+          "cost_unknown": false,
+          "score": 108.01,
+          "tasks": 19,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.8835,
+          "cost_per_task": 1.0954,
+          "cost_unknown": false,
+          "score": 102.18,
+          "tasks": 206,
+          "tier": "medium"
+        },
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": 103.53,
+          "tasks": 1,
+          "tier": "unassessed"
+        }
+      ],
+      "units": 237,
+      "weights_measured": 55.0
+    },
+    {
+      "band_size": 8,
+      "cost": {
+        "cost_unknown": false,
+        "coverage": 0.88,
+        "expected_per_task": 1.9487,
+        "per_task": 1.3423,
+        "ratio": 0.6888
+      },
+      "crews": [
+        {
+          "crew": "terra",
+          "tasks": 100
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 82.63,
+        "p90": 109.56
+      },
+      "landed_rate": 0.94,
+      "landed_tasks": 94.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 10.0,
+          "contribution": -0.78,
+          "expected": 7.91,
+          "reason": null,
+          "residual": -0.02,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 100,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 30.0,
+          "contribution": -3.53,
+          "expected": 27.55,
+          "reason": null,
+          "residual": -0.02,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 100,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": -1.0,
+          "contribution": null,
+          "expected": 1.05,
+          "reason": "fewer reviewed deliveries than the minimum support",
+          "residual": -1.02,
+          "status": "unmeasured",
+          "unit": "reviewed deliveries",
+          "units": 2,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "gpt-6.1-terra",
+      "rank": 2,
+      "rank_label": "2=",
+      "raw_score": 95.69,
+      "score": 96.35,
+      "tasks_by_tier": {
+        "hard": 5,
+        "low": 5,
+        "medium": 90
+      },
+      "tiers": [
+        {
+          "cost_coverage": 1.0,
+          "cost_per_task": 2.2391,
+          "cost_unknown": false,
+          "score": 72.37,
+          "tasks": 5,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 0.8,
+          "cost_per_task": 0.133,
+          "cost_unknown": false,
+          "score": 109.49,
+          "tasks": 5,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.8778,
+          "cost_per_task": 1.3467,
+          "cost_unknown": false,
+          "score": 96.21,
+          "tasks": 90,
+          "tier": "medium"
+        }
+      ],
+      "units": 100,
+      "weights_measured": 35.0
+    },
+    {
+      "band_size": 8,
+      "cost": {
+        "cost_unknown": true,
+        "coverage": 0.0556,
+        "expected_per_task": 0.2502,
+        "per_task": 0.2924,
+        "ratio": 1.169
+      },
+      "crews": [
+        {
+          "crew": "gemini-flash",
+          "tasks": 144
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 81.61,
+        "p90": 97.45
+      },
+      "landed_rate": 0.9028,
+      "landed_tasks": 130.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 14.0,
+          "contribution": -1.24,
+          "expected": 9.23,
+          "reason": null,
+          "residual": -0.03,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 144,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 20.0,
+          "contribution": -11.09,
+          "expected": 8.9,
+          "reason": null,
+          "residual": -0.08,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 144,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 8.5,
+          "contribution": null,
+          "expected": 13.86,
+          "reason": "fewer reviewed deliveries than the minimum support",
+          "residual": -0.2,
+          "status": "unmeasured",
+          "unit": "reviewed deliveries",
+          "units": 27,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "gemini-3.8-flash-high",
+      "rank": 2,
+      "rank_label": "2=",
+      "raw_score": 87.67,
+      "score": 89.6,
+      "single_tier": "low",
+      "tasks_by_tier": {
+        "hard": 1,
+        "low": 140,
+        "medium": 3
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": 120.78,
+          "tasks": 1,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 0.0571,
+          "cost_per_task": 0.2924,
+          "cost_unknown": true,
+          "score": 86.77,
+          "tasks": 140,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": 118.42,
+          "tasks": 3,
+          "tier": "medium"
+        }
+      ],
+      "units": 144,
+      "weights_measured": 35.0
+    },
+    {
+      "band_size": 8,
+      "cost": {
+        "cost_unknown": false,
+        "coverage": 0.8525,
+        "expected_per_task": 1.8875,
+        "per_task": 4.8827,
+        "ratio": 2.5869
+      },
+      "crews": [
+        {
+          "crew": "grok",
+          "tasks": 305
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 79.21,
+        "p90": 95.01
+      },
+      "landed_rate": 0.9443,
+      "landed_tasks": 288.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 14.0,
+          "contribution": 0.76,
+          "expected": 23.7,
+          "reason": null,
+          "residual": 0.03,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 305,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 113.5,
+          "contribution": -10.95,
+          "expected": 77.06,
+          "reason": null,
+          "residual": -0.12,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 305,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 14.5,
+          "contribution": -3.8,
+          "expected": 19.75,
+          "reason": null,
+          "residual": -0.13,
+          "status": "measured",
+          "unit": "reviewed deliveries",
+          "units": 39,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "grok-4.7",
+      "rank": 2,
+      "rank_label": "2=",
+      "raw_score": 86.01,
+      "score": 87.21,
+      "tasks_by_tier": {
+        "hard": 11,
+        "low": 15,
+        "medium": 279
+      },
+      "tiers": [
+        {
+          "cost_coverage": 1.0,
+          "cost_per_task": 7.8998,
+          "cost_unknown": false,
+          "score": -132.84,
+          "tasks": 11,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 0.8,
+          "cost_per_task": 1.6433,
+          "cost_unknown": false,
+          "score": 106.38,
+          "tasks": 15,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.8495,
+          "cost_per_task": 4.9067,
+          "cost_unknown": false,
+          "score": 88.95,
+          "tasks": 279,
+          "tier": "medium"
+        }
+      ],
+      "units": 305,
+      "weights_measured": 55.0
+    },
+    {
+      "band_size": 8,
+      "cost": {
+        "cost_unknown": false,
+        "coverage": 0.8654,
+        "expected_per_task": 0.5703,
+        "per_task": 0.0221,
+        "ratio": 0.0387
+      },
+      "crews": [
+        {
+          "crew": "muse-spark",
+          "tasks": 260
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 81.38,
+        "p90": 92.4
+      },
+      "landed_rate": 0.9846,
+      "landed_tasks": 256.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 6.0,
+          "contribution": 1.01,
+          "expected": 17.01,
+          "reason": null,
+          "residual": 0.04,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 260,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 43.5,
+          "contribution": -6.56,
+          "expected": 24.88,
+          "reason": null,
+          "residual": -0.07,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 260,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 7.0,
+          "contribution": -8.72,
+          "expected": 17.5,
+          "reason": null,
+          "residual": -0.31,
+          "status": "measured",
+          "unit": "reviewed deliveries",
+          "units": 34,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "muse-spark-1.3-contributor",
+      "rank": 2,
+      "rank_label": "2=",
+      "raw_score": 85.73,
+      "score": 87.13,
+      "tasks_by_tier": {
+        "low": 207,
+        "medium": 53
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.8599,
+          "cost_per_task": 0.026,
+          "cost_unknown": false,
+          "score": 95.57,
+          "tasks": 207,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.8868,
+          "cost_per_task": 0.0072,
+          "cost_unknown": false,
+          "score": 74.47,
+          "tasks": 53,
+          "tier": "medium"
+        }
+      ],
+      "units": 260,
+      "weights_measured": 55.0
+    },
+    {
+      "band_size": 1,
+      "cost": {
+        "cost_unknown": false,
+        "coverage": 0.871,
+        "expected_per_task": 1.808,
+        "per_task": 0.028,
+        "ratio": 0.0155
+      },
+      "crews": [
+        {
+          "crew": "muse-wonder",
+          "tasks": 217
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": 29.2,
+        "p90": 62.2
+      },
+      "landed_rate": 0.9631,
+      "landed_tasks": 209.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 4.0,
+          "contribution": 2.14,
+          "expected": 16.44,
+          "reason": null,
+          "residual": 0.06,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 217,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 145.75,
+          "contribution": -64.35,
+          "expected": 48.77,
+          "reason": null,
+          "residual": -0.45,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 217,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 9.5,
+          "contribution": null,
+          "expected": 14.68,
+          "reason": "fewer reviewed deliveries than the minimum support",
+          "residual": -0.18,
+          "status": "unmeasured",
+          "unit": "reviewed deliveries",
+          "units": 28,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "muse-wonder-1.0",
+      "rank": 3,
+      "rank_label": "3",
+      "raw_score": 37.79,
+      "score": 45.54,
+      "tasks_by_tier": {
+        "hard": 3,
+        "low": 5,
+        "medium": 209
+      },
+      "tiers": [
+        {
+          "cost_coverage": 1.0,
+          "cost_per_task": 0.0,
+          "cost_unknown": false,
+          "score": 111.93,
+          "tasks": 3,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 1.0,
+          "cost_per_task": 0.0,
+          "cost_unknown": false,
+          "score": 106.22,
+          "tasks": 5,
+          "tier": "low"
+        },
+        {
+          "cost_coverage": 0.866,
+          "cost_per_task": 0.0292,
+          "cost_unknown": false,
+          "score": 35.09,
+          "tasks": 209,
+          "tier": "medium"
+        }
+      ],
+      "units": 217,
+      "weights_measured": 35.0
+    },
+    {
+      "band_size": 1,
+      "cost": {
+        "cost_unknown": true,
+        "coverage": 0.0,
+        "expected_per_task": null,
+        "per_task": null,
+        "ratio": null
+      },
+      "crews": [
+        {
+          "crew": "muse-wonder-full",
+          "tasks": 38
+        }
+      ],
+      "eligible": true,
+      "ineligible_reason": null,
+      "interval": {
+        "p10": -167.92,
+        "p90": -2.95
+      },
+      "landed_rate": 1.0,
+      "landed_tasks": 38.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 2.0,
+          "contribution": 4.46,
+          "expected": 6.55,
+          "reason": null,
+          "residual": 0.12,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 38,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 111.0,
+          "contribution": -331.11,
+          "expected": 23.61,
+          "reason": null,
+          "residual": -2.3,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 38,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": -0.5,
+          "contribution": null,
+          "expected": 2.05,
+          "reason": "fewer reviewed deliveries than the minimum support",
+          "residual": -0.26,
+          "status": "unmeasured",
+          "unit": "reviewed deliveries",
+          "units": 10,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "muse-wonder-full-1.0",
+      "rank": 4,
+      "rank_label": "4",
+      "raw_score": -226.65,
+      "score": -81.98,
+      "single_tier": "hard",
+      "tasks_by_tier": {
+        "hard": 37,
+        "medium": 1
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": -228.86,
+          "tasks": 37,
+          "tier": "hard"
+        },
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": -144.85,
+          "tasks": 1,
+          "tier": "medium"
+        }
+      ],
+      "units": 38,
+      "weights_measured": 35.0
+    },
+    {
+      "band_size": null,
+      "cost": {
+        "cost_unknown": true,
+        "coverage": 0.5,
+        "expected_per_task": 5.9287,
+        "per_task": 8.8649,
+        "ratio": 1.4952
+      },
+      "crews": [
+        {
+          "crew": "astra",
+          "tasks": 6
+        }
+      ],
+      "eligible": false,
+      "ineligible_reason": "6 implemented tasks; 30 needed",
+      "interval": null,
+      "landed_rate": 0.6667,
+      "landed_tasks": 4.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 0.0,
+          "contribution": 6.52,
+          "expected": 1.05,
+          "reason": null,
+          "residual": 0.17,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 6,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 0.0,
+          "contribution": 104.87,
+          "expected": 4.37,
+          "reason": null,
+          "residual": 0.73,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 6,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": -0.5,
+          "contribution": null,
+          "expected": 0.21,
+          "reason": "fewer reviewed deliveries than the minimum support",
+          "residual": -0.71,
+          "status": "unmeasured",
+          "unit": "reviewed deliveries",
+          "units": 1,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "gpt-6-astra",
+      "rank": null,
+      "rank_label": null,
+      "raw_score": 211.39,
+      "score": 117.31,
+      "tasks_by_tier": {
+        "hard": 6
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.5,
+          "cost_per_task": 8.8649,
+          "cost_unknown": true,
+          "score": 211.39,
+          "tasks": 6,
+          "tier": "hard"
+        }
+      ],
+      "units": 6,
+      "weights_measured": 35.0
+    },
+    {
+      "band_size": null,
+      "cost": {
+        "cost_unknown": true,
+        "coverage": 0.0,
+        "expected_per_task": null,
+        "per_task": null,
+        "ratio": null
+      },
+      "crews": [
+        {
+          "crew": "argon",
+          "tasks": 3
+        }
+      ],
+      "eligible": false,
+      "ineligible_reason": "3 implemented tasks; 30 needed",
+      "interval": null,
+      "landed_rate": 0.6667,
+      "landed_tasks": 2.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 1.0,
+          "contribution": -5.91,
+          "expected": 0.52,
+          "reason": null,
+          "residual": -0.16,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 3,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 0.0,
+          "contribution": 107.99,
+          "expected": 2.25,
+          "reason": null,
+          "residual": 0.75,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 3,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": 1.0,
+          "contribution": null,
+          "expected": 0.21,
+          "reason": "fewer reviewed deliveries than the minimum support",
+          "residual": 0.79,
+          "status": "unmeasured",
+          "unit": "reviewed deliveries",
+          "units": 1,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "gemini-4-argon-high",
+      "rank": null,
+      "rank_label": null,
+      "raw_score": 202.08,
+      "score": 107.91,
+      "tasks_by_tier": {
+        "hard": 3
+      },
+      "tiers": [
+        {
+          "cost_coverage": 0.0,
+          "cost_per_task": null,
+          "cost_unknown": true,
+          "score": 202.08,
+          "tasks": 3,
+          "tier": "hard"
+        }
+      ],
+      "units": 3,
+      "weights_measured": 35.0
+    },
+    {
+      "band_size": null,
+      "cost": {
+        "cost_unknown": false,
+        "coverage": 1.0,
+        "expected_per_task": 0.2502,
+        "per_task": 0.1806,
+        "ratio": 0.722
+      },
+      "crews": [
+        {
+          "crew": "luna",
+          "tasks": 1
+        }
+      ],
+      "eligible": false,
+      "ineligible_reason": "1 implemented tasks; 30 needed",
+      "interval": null,
+      "landed_rate": 0.0,
+      "landed_tasks": 0.0,
+      "measures": {
+        "ci_failures": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "required-check failures are not recorded by cause yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "crew_rework": {
+          "actual": 0.0,
+          "contribution": 2.35,
+          "expected": 0.06,
+          "reason": null,
+          "residual": 0.06,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 1,
+          "weight": 5.0
+        },
+        "escaped_regressions": {
+          "actual": 0.0,
+          "contribution": 0.61,
+          "expected": 0.0,
+          "reason": null,
+          "residual": 0.0,
+          "status": "measured",
+          "unit": "implemented tasks",
+          "units": 1,
+          "weight": 30.0
+        },
+        "final_recoveries": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "final-recovery fault is recorded but the ranking measure is not yet computed",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "implemented tasks",
+          "units": 0,
+          "weight": 10.0
+        },
+        "review_outcome": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "no units for this model in the window",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "reviewed deliveries",
+          "units": 0,
+          "weight": 20.0
+        },
+        "tool_call_errors": {
+          "actual": null,
+          "contribution": null,
+          "expected": null,
+          "reason": "tool audit attribution is not available to the ranking yet",
+          "residual": null,
+          "status": "unmeasured",
+          "unit": "tool calls",
+          "units": 0,
+          "weight": 5.0
+        }
+      },
+      "model": "gpt-6.1-luna",
+      "rank": null,
+      "rank_label": null,
+      "raw_score": 102.96,
+      "score": 98.64,
+      "tasks_by_tier": {
+        "low": 1
+      },
+      "tiers": [
+        {
+          "cost_coverage": 1.0,
+          "cost_per_task": 0.1806,
+          "cost_unknown": false,
+          "score": 102.96,
+          "tasks": 1,
+          "tier": "low"
+        }
+      ],
+      "units": 1,
+      "weights_measured": 35.0
+    }
+  ],
+  "rules": {
+    "band_probability": 0.95,
+    "draws": 1000,
+    "interval_percentiles": [
+      10.0,
+      90.0
+    ],
+    "min_cost_coverage": 0.8,
+    "min_eligible_models": 3,
+    "min_tasks": 30,
+    "min_tier_tasks": 5,
+    "min_tiers": 1,
+    "shrinkage_k": 30.0
+  },
+  "scales_source": "season",
+  "schema_version": 1,
+  "settle_lag": "14d",
+  "source": "GET /api/agents/rank?window=30d&execution=managed",
+  "status": "ok",
+  "tasks_scanned": 13824,
+  "unattributed_tasks": 10,
+  "weights_total": 80.0,
+  "window": {
+    "key": "30d",
+    "since": "2026-10-03T05:15:09Z",
+    "until": "2026-11-02T05:15:09Z"
+  }
+}
