@@ -1,0 +1,75 @@
+{
+  "dropped": {
+    "experiments": 0,
+    "experiments_omitted": 3,
+    "implementers": 1,
+    "implementers_by_tier": 3,
+    "metrics_diff": 0,
+    "metrics_durations": 0,
+    "metrics_friction": 0,
+    "metrics_tokens": 0,
+    "pilots": 0,
+    "rank": 2,
+    "reliability": 0,
+    "reviewers_provisional": 0,
+    "reviewers_settled": 0
+  },
+  "free_text_redactions": 1,
+  "generated_at": "2026-11-17T05:15:33Z",
+  "orbit_version": "0.51.0",
+  "reviewer_settled": true,
+  "schema_version": 1,
+  "windows": {
+    "experiments": [
+      "2026-11-17T05:16:00.796319324+00:00",
+      "2026-11-17T05:15:58.230287675+00:00",
+      "2026-11-17T05:15:51.680860883+00:00"
+    ],
+    "implementers": {
+      "key": "30d",
+      "since": "2026-10-18T05:15:35Z",
+      "until": "2026-11-17T05:15:35Z"
+    },
+    "implementers_by_tier": {
+      "key": "30d",
+      "since": "2026-10-18T05:15:37Z",
+      "until": "2026-11-17T05:15:37Z"
+    },
+    "metrics": {
+      "bucket_seconds": 86400,
+      "key": "30d",
+      "lead_buckets": 0,
+      "previous_since": "2026-09-17T18:44:15.837240465+00:00",
+      "previous_until": "2026-10-18T00:00:00+00:00",
+      "since": "2026-10-18T00:00:00+00:00",
+      "until": "2026-11-17T05:15:44.162759535+00:00"
+    },
+    "pilots": {
+      "key": "30d",
+      "since": "2026-10-18T05:15:41Z",
+      "until": "2026-11-17T05:15:41Z"
+    },
+    "rank": {
+      "key": "30d",
+      "since": "2026-10-04T05:15:51Z",
+      "until": "2026-11-03T05:15:51Z"
+    },
+    "reliability": {
+      "bucket": "day",
+      "label": "30d",
+      "since": "2026-10-18T05:15:51.131703452Z",
+      "until": "2026-11-17T05:15:51.131703452Z"
+    },
+    "reviewers_provisional": {
+      "key": "30d",
+      "since": "2026-10-18T05:15:39Z",
+      "until": "2026-11-17T05:15:39Z"
+    },
+    "reviewers_settled": {
+      "key": "30d",
+      "since": "2026-09-18T05:15:42Z",
+      "until": "2026-10-18T05:15:42Z"
+    }
+  },
+  "workspace": "orbit"
+}
