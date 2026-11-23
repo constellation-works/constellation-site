@@ -1,0 +1,20 @@
+name: Instruction contract
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  check:
+    name: Check agent instructions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Check instruction files
+        run: python3 scripts/check_instruction_contract.py
