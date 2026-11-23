@@ -107,6 +107,7 @@
   gap: 14px; align-items: center; padding: 10px 8px; min-height: 52px; font-size: 14px;
 }
 .model-head { color: var(--muted); font-size: 12px; min-height: 0; padding-top: 0; border-bottom: 1px solid var(--rule-strong); }
+.model-head .ml-model { justify-content: center; }
 .model-head .ml-whisker { display: flex; flex-direction: column; gap: 6px; text-align: center; }
 .model-row > summary { list-style: none; cursor: pointer; }
 .model-row > summary::-webkit-details-marker { display: none; }
