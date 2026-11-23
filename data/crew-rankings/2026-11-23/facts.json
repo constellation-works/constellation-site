@@ -1,0 +1,91 @@
+{
+  "date": "2026-11-23",
+  "window": {
+    "key": "30d",
+    "since": "2026-10-24T00:00:00Z",
+    "until": "2026-11-23T00:00:00Z"
+  },
+  "windows": {
+    "implementers": {
+      "key": "30d",
+      "since": "2026-10-24T00:00:00Z",
+      "until": "2026-11-23T00:00:00Z"
+    },
+    "implementers_by_tier": {
+      "key": "30d",
+      "since": "2026-10-24T00:00:00Z",
+      "until": "2026-11-23T00:00:00Z"
+    },
+    "reviewers_provisional": {
+      "key": "30d",
+      "since": "2026-10-24T00:00:00Z",
+      "until": "2026-11-23T00:00:00Z"
+    },
+    "reviewers_settled": {
+      "key": "30d",
+      "since": "2026-09-24T00:00:00Z",
+      "until": "2026-10-24T00:00:00Z"
+    },
+    "pilots": {
+      "key": "30d",
+      "since": "2026-10-24T00:00:00Z",
+      "until": "2026-11-23T00:00:00Z"
+    },
+    "model_rank": {
+      "key": "30d",
+      "since": "2026-10-10T00:00:00Z",
+      "until": "2026-11-09T00:00:00Z"
+    }
+  },
+  "model_rank": {
+    "file": "rank.json",
+    "settle_lag": "14d",
+    "qualified": true,
+    "scales_source": "season",
+    "window": {
+      "key": "30d",
+      "since": "2026-10-10T00:00:00Z",
+      "until": "2026-11-09T00:00:00Z"
+    }
+  },
+  "mvp": {
+    "rule": "the MVP is the top tie band of the settled model rank for the note's date; a shared band gives co-MVPs, and the band's first model in Orbit's order writes the address",
+    "models": [
+      {
+        "model": "gpt-6.1-sol",
+        "rank": 1,
+        "rank_label": "1",
+        "score": 127.29,
+        "interval": {
+          "p10": 123.15,
+          "p90": 131.62
+        },
+        "units": 998,
+        "crews": [
+          {
+            "crew": "sol",
+            "tasks": 987
+          },
+          {
+            "crew": "sol@high",
+            "tasks": 8
+          },
+          {
+            "crew": "sol@xhigh",
+            "tasks": 3
+          }
+        ]
+      }
+    ]
+  },
+  "reason": null,
+  "writer": {
+    "crew": "sol",
+    "source": "mvp",
+    "mvp_crew": "sol",
+    "model": "gpt-6.1-sol",
+    "effort": null,
+    "score": 127.3,
+    "units": 998
+  }
+}

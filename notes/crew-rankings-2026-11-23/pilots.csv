@@ -1,0 +1,7 @@
+rank,crew,model,effort,units,score,fleet_average
+1,haiku,claude-haiku-5-5,xhigh,549,47.8,43.49
+2,haiku@high,claude-haiku-5-5,high,1165,47.5,43.49
+3,luna@high,gpt-6-luna,high,949,45.1,43.49
+4,luna,gpt-6-luna,xhigh,497,38.9,43.49
+5,muse-spark@high,muse-spark-1.3-contributor,high,501,30.6,43.49
+,muse-spark,muse-spark-1.3-contributor,xhigh,8,18.9,43.49
