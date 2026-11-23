@@ -102,8 +102,10 @@ def models_board(rank):
                 f'<span class="ml-score">{fmt_score(row["score"])}</span>'
                 f'<span class="ml-whisker"><span class="whisker-grid" aria-hidden="true">{grid_html}</span>'
                 f'<span aria-hidden="true">{whisker}{point}{offscale}</span><span class="sr-only">{e(interval_sr)}</span></span>'
-                f'<span class="ml-cost" data-label="$ / task"><span>{money(cost.get("per_task"))}</span>{ratio_html}</span>'
-                f'<span class="ml-tasks" data-label="Tasks"><span class="ml-units">{fmt_count(row["units"])}</span>{tier_mix(row)}</span>'
+                '<span class="ml-cost"><span class="sr-only">Cost / task </span>'
+                f'<span>{money(cost.get("per_task"))}</span><span class="sr-only">vs fleet </span>{ratio_html}</span>'
+                '<span class="ml-tasks"><span class="sr-only">Tasks </span>'
+                f'<span class="ml-units">{fmt_count(row["units"])}</span><span class="mix-label" aria-hidden="true">Tier mix</span>{tier_mix(row)}</span>'
                 f'<span class="ml-landed" data-label="Landed">{percent(row.get("landed_rate"))}</span>'
                 f'</summary>{model_detail(row, rank)}</details></li>'
             )
@@ -112,7 +114,8 @@ def models_board(rank):
             f'<span class="ml-rank">{"Rank" if publish else ""}</span>'
             '<span class="ml-model">Model</span><span class="ml-score">Score</span>'
             f'<span class="ml-whisker"><span>p10–p90 interval</span><span class="whisker-ticks">{tick_html}</span></span>'
-            '<span class="ml-cost">Cost / task</span><span class="ml-tasks">Tasks · tier mix</span>'
+            '<span class="ml-cost"><span>Cost / task</span><span>vs fleet</span></span>'
+            '<span class="ml-tasks"><span>Tasks</span><span>Tier mix</span></span>'
             '<span class="ml-landed">Landed</span></div>'
         )
         board = f'<div class="model-board">{head}<ol>{"".join(items)}</ol></div>'

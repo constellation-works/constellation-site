@@ -315,12 +315,7 @@ def score_key_line(unit, fleet, extra=""):
     return f'<p class="board-key">{" · ".join(parts)}</p>'
 
 def board_window_line(since, until, prefix="Window"):
-    e = html.escape
-    return (
-        f'<p class="board-window">{e(prefix)} {friendly_window(since, until)}. '
-        f'<span class="window-exact">Exact: <time datetime="{e(since)}">{e(since)}</time>'
-        f' to <time datetime="{e(until)}">{e(until)}</time> UTC.</span></p>'
-    )
+    return f'<p class="board-window">{html.escape(prefix)} {friendly_window(since, until)}.</p>'
 
 def implementer_takeaways(slots, rows, terms, unit):
     """Takeaway cards derived from the tier slots and the overall breakdown.

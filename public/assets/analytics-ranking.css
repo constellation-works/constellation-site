@@ -103,11 +103,11 @@
 .analytics .model-board li:first-child { border-top: 0; }
 .model-line {
   display: grid;
-  grid-template-columns: 2.6rem minmax(0, 1.5fr) 4rem minmax(240px, 2fr) 7rem minmax(0, 1.1fr) 4rem;
+  grid-template-columns: 2.6rem minmax(0, 1.5fr) 4rem minmax(240px, 2fr) 7.75rem minmax(0, 1.1fr) 4rem;
   gap: 14px; align-items: center; padding: 10px 8px; min-height: 52px; font-size: 14px;
 }
 .model-head { color: var(--muted); font-size: 12px; min-height: 0; padding-top: 0; border-bottom: 1px solid var(--rule-strong); }
-.model-head .ml-whisker { display: flex; flex-direction: column; gap: 6px; }
+.model-head .ml-whisker { display: flex; flex-direction: column; gap: 6px; text-align: center; }
 .model-row > summary { list-style: none; cursor: pointer; }
 .model-row > summary::-webkit-details-marker { display: none; }
 .model-row > summary:hover, .model-row[open] > summary { background: var(--card); }
@@ -138,9 +138,12 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--w) 60%, transparent);
 }
 .whisker-point { position: absolute; top: 5px; width: 3px; height: 12px; margin-left: -1.5px; border-radius: 1px; background: var(--prov-other); }
-.ml-cost { display: flex; justify-content: flex-end; align-items: baseline; gap: 8px; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.cost-ratio { font-size: 12px; min-width: 3rem; text-align: right; color: var(--muted); }
-.ml-tasks { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ml-cost { display: grid; grid-template-columns: 1fr 3.1rem; text-align: right; align-items: baseline; gap: 8px; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cost-ratio { font-size: 12px; text-align: right; color: var(--muted); }
+.ml-tasks { display: grid; grid-template-columns: 3.25rem minmax(0, 1fr); align-items: center; gap: 10px; min-width: 0; }
+.model-head .ml-tasks > :first-child { text-align: right; }
+.model-head .ml-tasks > :last-child { text-align: center; }
+.mix-label { display: none; }
 .ml-units { font-family: var(--mono); font-variant-numeric: tabular-nums; min-width: 2.2rem; text-align: right; }
 .mix-track { display: flex; gap: 1px; flex: 1 1 auto; min-width: 3rem; height: 6px; border-radius: 3px; overflow: hidden; background: var(--rule); }
 .mix-track span { display: block; height: 100%; min-width: 2px; }
@@ -280,10 +283,16 @@
 }
 @container ranking (max-width: 960px) {
   .model-detail { grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
-  .model-line { grid-template-columns: 2.6rem minmax(0, 1fr) 4rem 7rem 4rem; row-gap: 6px; }
+  .model-line { grid-template-columns: 2.6rem minmax(0, 1fr) 4rem 7.75rem 4rem; row-gap: 6px; }
   .model-line .ml-whisker { grid-column: 2 / -1; grid-row: 2; }
   .model-line .ml-tasks { grid-column: 2 / -1; grid-row: 3; }
   .model-head .ml-tasks { display: none; }
+  .model-row .ml-tasks { display: flex; }
+  .model-row .ml-tasks > .sr-only:first-child, .model-row .mix-label {
+    display: inline; position: static; width: auto; height: auto; clip-path: none;
+    color: var(--muted); font: 12px var(--sans); white-space: nowrap;
+  }
+  .model-row .ml-units { min-width: 0; }
 }
 @container ranking (max-width: 580px) {
   .model-head > :not(.ml-whisker) { display: none; }
@@ -293,13 +302,13 @@
   }
   .model-line .ml-whisker { grid-column: 1 / -1; grid-row: 2; }
   .model-head .ml-whisker { grid-row: 1; }
-  .model-line .ml-cost { grid-column: 1 / 3; grid-row: 3; justify-content: flex-start; }
+  .model-row .ml-cost { display: flex; grid-column: 1 / 3; grid-row: 3; flex-wrap: wrap; }
+  .model-row .ml-cost > .sr-only { position: static; width: auto; height: auto; clip-path: none; font: 12px var(--sans); color: var(--muted); }
   .model-line .ml-landed { grid-column: 3; grid-row: 3; }
   .model-line .ml-tasks { grid-column: 1 / -1; grid-row: 4; }
-  .model-line .ml-cost::before, .model-line .ml-landed::before, .model-line .ml-tasks::before {
-    content: attr(data-label); font-family: var(--sans); font-size: 12px; color: var(--muted);
+  .model-line .ml-landed::before {
+    content: attr(data-label); font-family: var(--sans); font-size: 12px; color: var(--muted); margin-right: 6px;
   }
-  .model-line .ml-landed::before { margin-right: 6px; }
 }
 @container ranking (max-width: 560px) {
   /* The name takes the whole first line; the bar, score and count share the second. */

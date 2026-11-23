@@ -544,7 +544,6 @@
 .analytics .board-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin: 0 0 6px; }
 .analytics .board-head h2 { margin: 0; }
 .analytics .board-key { flex: 1 1 auto; color: var(--muted); font-size: 14px; margin: 0; max-width: 100%; }
-.analytics .window-exact { display: block; font-size: 13px; }
 .k-fleet, .k-ref { display: inline-block; vertical-align: -2px; }
 .k-fleet { width: 2px; height: 14px; background: var(--fg); }
 .k-ref { width: 16px; height: 0; border-top: 1px dashed var(--muted); vertical-align: middle; }
