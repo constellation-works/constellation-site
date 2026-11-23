@@ -190,6 +190,40 @@ class CrewRankingScript(unittest.TestCase):
         self.assertIn("**No MVP this week:** the note froze no settled model rank for its date.", text)
         self.assertFalse((self.data / "2026-11-09" / "rank.json").exists())
 
+    def test_monthly_award_and_weekly_boards_use_the_same_schedule_for_routing(self):
+        for day, award in [("2026-11-30", False), ("2026-12-07", True),
+                           ("2026-12-14", False), ("2027-01-04", True)]:
+            with self.subTest(day=day):
+                args = [day, *self.args[1:]]
+                writer = json.loads(run(*args, "--writer-only").stdout)
+                proc = run(*args)
+                self.assertEqual(proc.returncode, 0, proc.stderr)
+                path = self.notes / f"crew-rankings-{day}" / "index.md"
+                meta = build.parse(path)
+                facts = json.loads((self.data / day / "facts.json").read_text())
+                self.assertEqual(facts["writer"], writer)
+                self.assertEqual(facts["award_period"], "month" if award else None)
+                self.assertEqual(bool(facts["mvp"]), award)
+                self.assertIn("crews-by-role:", meta["body"])
+                self.assertEqual("{{victory-address}}" in meta["body"], award)
+                self.assertEqual(writer["crew"], "sol" if award else "opus")
+                if award:
+                    self.assertIn("co-MVPs", meta["title"])
+                    self.assertIn("MVP of the month", meta["authors"][0])
+                else:
+                    self.assertEqual(meta["title"], f"[Crew Ranking - {day}]")
+                    self.assertNotIn("MVP", path.read_text())
+
+    def test_monthly_award_without_a_qualified_board_has_no_winner_or_address(self):
+        self.freeze(rank_board(*TIED_BAND, qualified=False))
+        day = "2026-12-07"
+        proc = run(day, *self.args[1:])
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        meta = build.parse(self.notes / f"crew-rankings-{day}" / "index.md")
+        self.assertIn("no MVP this month", meta["authors"][0])
+        self.assertIn("model board has not qualified", meta["body"])
+        self.assertNotIn("Victory address", meta["body"])
+
     def test_an_existing_note_is_not_overwritten_without_force(self):
         note = self.generate()
         (note / "index.md").write_text("written address", encoding="utf-8")

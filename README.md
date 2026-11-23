@@ -45,13 +45,18 @@ freezes them in `data/crew-rankings/<date>/scorecards.json` (projected as the an
 snapshot projects them), freezes the settled model rank for the same date in
 `data/crew-rankings/<date>/rank.json` (`orbit agents rank --until <date>`, never the live
 board), and writes a draft `notes/crew-rankings-<date>/` with its CSVs.
-The MVP is the top tie band of that frozen model rank. The note is titled
+Starting with the November 30, 2026 note, the weekly draft dated the first Monday
+of each UTC month awards the monthly MVP (first award date: December 7). Other weekly
+drafts use the plain title `[Crew Ranking - <date>]`, the configured regular writer
+(`--fallback-crew`, default `opus`), and the same frozen data and CSVs.
+Only award notes with a winner carry a victory address.
+The MVP is the top tie band of the award date’s frozen model rank. The award note is titled
 `[Crew Ranking - <date>]: MVP <model>`, `co-MVPs <models>` for a shared band, or `no MVP`.
 The MVP line and summary quote each model's score and p10–p90 interval from `rank.json`;
-the byline names the writer, e.g. `sol (gpt-6.1-sol), MVP of the week, 114.6` (notes before
+the byline names the writer, e.g. `sol (gpt-6.1-sol), MVP of the month, 114.6` (notes before
 ORB-24204 wrote a bare crew key as `sol · effort unknown`).
 With no qualified, calibrated board the note names no MVP, says why, and its byline reads
-`<fallback> (fallback writer), no MVP this week`.
+`<fallback> (fallback writer), no MVP this month`.
 The band's first model in Orbit's order writes the note, through its crew with the most
 implemented tasks in the window; `--writer-only` prints that writer.
 Its body's `<!-- crews-by-role: data/crew-rankings/<date> -->` marker is replaced at build

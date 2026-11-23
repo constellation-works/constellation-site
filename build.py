@@ -26,10 +26,10 @@ Front matter is `key: value` lines between `---` fences:
     updated:  optional YYYY-MM-DD of the last material change; defaults to date
     image:    optional file in the note's directory for og:image (1200x630)
     author:   optional comma-separated authors; defaults to Constellation Works. A weekly
-              crew-ranking byline, `<crew label> (<model>), MVP of the week, <score>` (the crew
+              crew-ranking byline, `<crew label> (<model>), MVP of the month, <score>` (the crew
               as Model rank keys it, e.g. `sol`, or `sol@high` when the key carries an effort), is one author; a weekly
-              note with no MVP names its writer as `<crew> (fallback writer), no MVP this week`.
-              A weekly note's title is `[Crew Ranking - <date>]: MVP <model>`, `co-MVPs <models>`
+              note with no MVP names its writer as `<crew> (fallback writer), no MVP this month`.
+              Ordinary weeks use a dated title and a plain writer byline. An award note’s title is `[Crew Ranking - <date>]: MVP <model>`, `co-MVPs <models>`
               or `no MVP`.
     tags:     optional comma-separated topics
 

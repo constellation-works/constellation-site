@@ -7,6 +7,7 @@ import shutil
 import sys
 import analytics_page
 import markdown
+from scripts.ranking_cadence import award_period
 from build_common import ROOT, SITE, page
 
 
@@ -16,9 +17,9 @@ OUT = ROOT / "public" / "notes"
 
 FIELDS = {"title", "summary", "status", "date", "updated", "image", "author", "tags"}
 
-MVP_BYLINE = re.compile(r"[^,()]+(?: \(est\.\))? \([^()]+\), MVP of the week, [^,]+")
+MVP_BYLINE = re.compile(r"[^,()]+(?: \(est\.\))? \([^()]+\), MVP of the (?:week|month), [^,]+")
 
-FALLBACK_BYLINE = re.compile(r"[^,()]+ \(fallback writer\), no MVP this week")
+FALLBACK_BYLINE = re.compile(r"[^,()]+ \(fallback writer\), no MVP this (?:week|month)")
 
 WEEKLY_SLUG = re.compile(r"crew-rankings-\d{4}-\d{2}-\d{2}")
 
@@ -64,11 +65,18 @@ def parse(path):
         else [a.strip() for a in author.split(",") if a.strip()]
     ) or ["Constellation Works"]
     if WEEKLY_SLUG.fullmatch(path.parent.name):
-        if not WEEKLY_TITLE.fullmatch(meta["title"]):
-            sys.exit(f"{path}: a weekly crew-ranking title names its MVP, co-MVPs or no MVP, got {meta['title']!r}")
-        if not weekly_byline:
-            sys.exit(f"{path}: a weekly crew-ranking author is `<crew> (<model>), MVP of the week, <score>` "
-                     f"or `<crew> (fallback writer), no MVP this week`, got {author!r}")
+        note_day = datetime.date.fromisoformat(path.parent.name.removeprefix("crew-rankings-"))
+        period = award_period(note_day)
+        if not period:
+            if meta["title"] != f"[Crew Ranking - {note_day}]" or weekly_byline or not author:
+                sys.exit(f"{path}: ordinary weekly rankings require a dated title and a plain writer byline")
+            if VICTORY_PLACEHOLDER in text or "## Victory address" in text:
+                sys.exit(f"{path}: ordinary weekly rankings do not carry a victory address")
+        else:
+            if not WEEKLY_TITLE.fullmatch(meta["title"]):
+                sys.exit(f"{path}: an award title names its MVP, co-MVPs or no MVP, got {meta['title']!r}")
+            if not weekly_byline or not re.search(rf"\b{period}\b", author.partition(",")[2]):
+                sys.exit(f"{path}: expected the {period} award byline or fallback writer, got {author!r}")
     if meta.get("image") and not (path.parent / meta["image"]).is_file():
         sys.exit(f"{path}: image {meta['image']} not found")
     meta["slug"] = path.parent.name

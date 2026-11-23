@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a weekly crew-ranking note: the frozen record of the /ranking/ crew boards and its MVP.
+"""Build a weekly crew-ranking note: the frozen record of the /ranking/ crew boards, with a monthly MVP.
 
 The Ranking page keeps no history (its newest snapshot's 30 days only), so each
 weekly note freezes that page's Crews by role boards for the 30 days ending on
@@ -20,7 +20,8 @@ It writes:
 - notes/crew-rankings-<date>/: a draft index.md and the CSVs it publishes
   (all-tiers.csv, by-tier.csv, reviewers.csv, pilots.csv).
 
-The MVP is the top tie band of the settled model rank, never the live board: the
+On the first Monday UTC each month the weekly note awards the MVP. Other weeks publish
+the boards with a plain byline. The MVP is the top tie band of the settled model rank: the
 models whose rank is the lowest in the board (``1=`` when shared). A shared band
 gives co-MVPs. The rank is read with ``orbit agents rank --until <D>``, so its
 ranked window ends at the settle lag (14 days) before the note's date. Only a
@@ -54,6 +55,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+from ranking_cadence import award_period
 import analytics_snapshot as snap  # noqa: E402  (shared scorecard and rank projection)
 
 WINDOW = "30d"
@@ -241,13 +243,13 @@ def title_text(day, band):
     return f"[Crew Ranking - {day.isoformat()}]: co-MVPs {names(row['model'] for row in band)}"
 
 
-def byline_text(who, band):
+def byline_text(who, band, period):
     """The byline names the writer: its crew label, its model, and the MVP's score it writes under."""
     if who["source"] == "mvp":
-        return f"{crew_key_label(who['mvp_crew'])} ({who['model']}), MVP of the week, {score_text(who['score'])}"
+        return f"{crew_key_label(who['mvp_crew'])} ({who['model']}), MVP of the {period}, {score_text(who['score'])}"
     if band:
-        return f"{who['crew']} (fallback writer), MVP of the week, {score_text(band[0]['score'])}"
-    return f"{who['crew']} (fallback writer), no MVP this week"
+        return f"{who['crew']} (fallback writer), MVP of the {period}, {score_text(band[0]['score'])}"
+    return f"{who['crew']} (fallback writer), no MVP this {period}"
 
 
 def rule_text(band, who, why, fallback):
@@ -271,9 +273,9 @@ def rule_text(band, who, why, fallback):
             f"the crew with the most implemented tasks in the window ({tasks:,}).")
 
 
-def mvp_line(band, why):
+def mvp_line(band, why, period):
     if not band:
-        return f"**No MVP this week:** {why}."
+        return f"**No MVP this {period}:** {why}."
     if len(band) == 1:
         row = band[0]
         return (f"**MVP: {row['model']}, rank {row.get('rank_label') or row['rank']}, {score_text(row['score'])} "
@@ -285,47 +287,42 @@ def mvp_line(band, why):
 def note_text(day, scorecards, band, why, who, data_rel, fallback):
     impl = scorecards["implementers"]
     since, until = impl["window"]["since"], impl["window"]["until"]
+    period = award_period(day)
+    summary = f"The crew boards for the 30 days ending {day.isoformat()}: implementers, reviewers and pilots."
     if band:
         head = "MVP" if len(band) == 1 else "Co-MVPs"
-        summary = (f"The crew boards for the 30 days ending {day.isoformat()}: implementers, reviewers and pilots. "
-                   f"{head}: " + "; ".join(band_phrase(row) for row in band) + ".")
-    else:
-        summary = (f"The crew boards for the 30 days ending {day.isoformat()}: implementers, reviewers and pilots. "
-                   f"No MVP: {why}.")
+        summary += f" {head}: " + "; ".join(band_phrase(row) for row in band) + "."
+    elif period:
+        summary += f" No MVP: {why}."
     intro = (
         f"This is the weekly crew ranking for the 30 days from {since} to {until} (UTC), a frozen copy "
         "of the crew boards on the [Ranking page](/ranking/), which shows only the latest 30 days. "
         f"Each crew is scored in its role against the fleet's own rate, and [how the crew rankings work]({METHOD}) "
-        "explains the scores. The MVP comes from the settled model rank for the note's date, frozen beside the "
-        "boards in rank.json. The crew boards are shown for the record and earn nothing toward it."
+        "explains the scores."
     )
-    address = (f"{PLACEHOLDER} {who['crew']} replaces this line with a victory address: two to four short "
-               "first-person sentences, every number taken from this note's CSVs and its frozen rank.json, "
-               "no em dashes, and nothing that restates or reframes the boards.")
-    signature = band[0]["model"] if band else who["crew"]
+    award = ""
+    if period:
+        intro += " The MVP comes from the settled model rank for the note’s date, frozen beside the boards in rank.json."
+        award = "\n\n" + mvp_line(band, why, period)
+    if band or period == "week":
+        address = (f"{PLACEHOLDER} {who['crew']} replaces this line with a victory address: two to four short "
+                   "first-person sentences, every number taken from this note's CSVs and its frozen rank.json, "
+                   "no em dashes, and nothing that restates or reframes the boards.")
+        signature = band[0]["model"] if band else who["crew"]
+        award += f"\n\n## Victory address\n\n{rule_text(band, who, why, fallback)}\n\n> {address}\n>\n> — {signature}"
     limits = ("Limits: these are 30 days of one repository's managed tasks, not a controlled comparison; "
               "reviewer scores stay provisional until their findings settle; and implementer, reviewer "
               "and pilot scores are on different scales.")
     return f"""---
-title: {title_text(day, band)}
+title: {title_text(day, band) if period else f"[Crew Ranking - {day.isoformat()}]"}
 summary: {summary}
 status: draft
 date: {day.isoformat()}
-author: {byline_text(who, band)}
+author: {byline_text(who, band, period) if period else who["crew"]}
 tags: {TAGS}
 ---
 
-{intro}
-
-{mvp_line(band, why)}
-
-## Victory address
-
-{rule_text(band, who, why, fallback)}
-
-> {address}
->
-> — {signature}
+{intro}{award}
 
 ## Crews by role
 
@@ -357,6 +354,10 @@ def main():
         ap.error(f"date must be YYYY-MM-DD, got {a.date!r}")
     crews = {c.strip() for c in a.crews.split(",") if c.strip()} if a.crews else None
 
+    period = award_period(day)
+    if a.writer_only and not period:
+        print(json.dumps(no_writer(a.fallback_crew)))
+        return
     if a.source:
         source = pathlib.Path(a.source)
         scorecards = json.loads((source / "scorecards.json").read_text(encoding="utf-8"))
@@ -365,7 +366,7 @@ def main():
     else:
         scorecards = fetch(a.workspace, day_start(day), day_start(day - datetime.timedelta(days=30)))
         rank = fetch_rank(a.workspace, day_start(day))
-    band, why = mvp_band(rank)
+    band, why = mvp_band(rank) if period else ([], None)
     who = choose_writer(band, crews, a.fallback_crew) if band else no_writer(a.fallback_crew)
     if a.writer_only:
         print(json.dumps(who))
@@ -384,6 +385,7 @@ def main():
     impl, rev = scorecards["implementers"], scorecards["reviewers"]
     facts = {
         "date": day.isoformat(),
+        "award_period": period,
         "window": impl["window"],
         "windows": {"implementers": impl["window"], "implementers_by_tier": scorecards["implementers_by_tier"]["window"],
                     "reviewers_provisional": rev["provisional"]["window"],
