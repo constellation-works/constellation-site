@@ -1,0 +1,76 @@
+{
+  "dropped": {
+    "experiments": 0,
+    "experiments_omitted": 2,
+    "implementers": 2,
+    "implementers_by_tier": 4,
+    "metrics_diff": 0,
+    "metrics_durations": 0,
+    "metrics_friction": 0,
+    "metrics_tokens": 0,
+    "pilots": 0,
+    "rank": 1,
+    "reliability": 0,
+    "reviewers_provisional": 0,
+    "reviewers_settled": 0
+  },
+  "free_text_redactions": 2,
+  "generated_at": "2026-11-24T05:16:21Z",
+  "orbit_version": "0.54.0",
+  "reviewer_settled": true,
+  "schema_version": 1,
+  "windows": {
+    "experiments": [
+      "2026-11-24T05:16:56.909606693+00:00",
+      "2026-11-24T05:17:02.675865831+00:00",
+      "2026-11-24T05:16:53.650672160+00:00",
+      "2026-11-24T05:16:46.395879512+00:00"
+    ],
+    "implementers": {
+      "key": "30d",
+      "since": "2026-10-25T05:16:23Z",
+      "until": "2026-11-24T05:16:23Z"
+    },
+    "implementers_by_tier": {
+      "key": "30d",
+      "since": "2026-10-25T05:16:24Z",
+      "until": "2026-11-24T05:16:24Z"
+    },
+    "metrics": {
+      "bucket_seconds": 86400,
+      "key": "30d",
+      "lead_buckets": 0,
+      "previous_since": "2026-09-24T18:43:29.231386183+00:00",
+      "previous_until": "2026-10-25T00:00:00+00:00",
+      "since": "2026-10-25T00:00:00+00:00",
+      "until": "2026-11-24T05:16:30.768613817+00:00"
+    },
+    "pilots": {
+      "key": "30d",
+      "since": "2026-10-25T05:16:28Z",
+      "until": "2026-11-24T05:16:28Z"
+    },
+    "rank": {
+      "key": "30d",
+      "since": "2026-10-11T05:16:46Z",
+      "until": "2026-11-10T05:16:46Z"
+    },
+    "reliability": {
+      "bucket": "day",
+      "label": "30d",
+      "since": "2026-10-25T05:16:45.840361307Z",
+      "until": "2026-11-24T05:16:45.840361307Z"
+    },
+    "reviewers_provisional": {
+      "key": "30d",
+      "since": "2026-10-25T05:16:26Z",
+      "until": "2026-11-24T05:16:26Z"
+    },
+    "reviewers_settled": {
+      "key": "30d",
+      "since": "2026-09-25T05:16:28Z",
+      "until": "2026-10-25T05:16:28Z"
+    }
+  },
+  "workspace": "orbit"
+}
