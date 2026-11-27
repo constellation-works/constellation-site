@@ -581,43 +581,39 @@ class RankingPageTest(unittest.TestCase):
         self.assertIn('<nav class="group-nav" aria-label="Ranking views">', doc)
         self.assertIn('class="board-toggle" role="group" aria-label="Review window" hidden', doc)
 
-    def test_live_snapshot_heatmap_keeps_models_apart(self):
-        # luna on gpt-6-luna and luna on gpt-6.1-luna are separate rows, as on
-        # the overall board: summing every luna cell would read 654 low tasks.
-        directory = build.latest_analytics_dir()
-        data = json.loads((directory / "scorecards.json").read_text(encoding="utf-8"))
-        # A slot is one crew, model and effort; a snapshot that splits rows by
-        # effort has one slot per effort, each summing only its own cells.
-        slots, _min_support = build.tier_slots(data["implementers_by_tier"])
-        low = slots["low"]
-        for (crew, model, effort), slot in low.items():
-            if crew != "luna":
-                continue
-            expected = sum(
-                cell["n"] for cell in data["implementers_by_tier"]["cells"]
-                if cell["tier"] == "low" and cell["crew"] == crew and cell["model"] == model
-                and build.effort_text(cell) == effort
+    def test_tier_heatmap_keeps_models_apart(self):
+        # Use explicit model rows so elapsed time cannot age a case out.
+        data = scorecards()
+        block = data["implementers_by_tier"]
+        block["cells"] = [
+            {"tier": "low", "crew": "luna", "model": model, "type": kind,
+             "n": count, "crew_mean": mean}
+            for model, kind, count, mean in (
+                ("gpt-6-luna", "docs", 17, 110),
+                ("gpt-6-luna", "ui", 19, 110),
+                ("gpt-6.1-luna", "docs", 13, 90),
             )
-            self.assertEqual(slot["units"], expected)
-        self.assertTrue(any(key[:2] == ("luna", "gpt-6-luna") for key in low))
-        self.assertTrue(any(key[:2] == ("luna", "gpt-6.1-luna") for key in low))
-        main = max((slot for key, slot in low.items() if key[:2] == ("luna", "gpt-6-luna")), key=lambda slot: slot["units"])
-        doc = build.render_ranking_body(data, directory.name)
-        tiers = section(doc, "tiers")
-        self.assertIn(f'{main["units"]:,} tasks', tiers)
-        self.assertNotIn(f'{main["units"] + 1:,} tasks', tiers)
+        ]
+        slots, _ = build.tier_slots(block)
+        low = slots["low"]
+        self.assertEqual(low[("luna", "gpt-6-luna", None)]["units"], 36)
+        self.assertEqual(low[("luna", "gpt-6.1-luna", None)]["units"], 13)
+        tiers = section(build.render_ranking_body(data, "2026-11-08"), "tiers")
+        self.assertIn("36 tasks", tiers)
+        self.assertIn("13 tasks", tiers)
+        self.assertNotIn("49 tasks", tiers)
 
     def test_takeaways_are_derived_from_the_tiers(self):
         directory = build.latest_analytics_dir()
         data = json.loads((directory / "scorecards.json").read_text(encoding="utf-8"))
         doc = build.render_ranking_body(data, directory.name)
         cards = re.search(r'<ul class="tiles takeaways".*?</ul>', doc).group(0)
+        text = plain(cards)
         slots, _ = build.tier_slots(data["implementers_by_tier"])
         for tier in build.TIER_ORDER:
             leaders = [slot for slot in slots[tier].values() if slot["rank"] == 1]
             if leaders:
-                self.assertIn(leaders[0]["crew"], cards)
-        text = re.sub(r"<[^>]+>", "", cards)
+                self.assertIn(build.crew_label(leaders[0]), text)
         sized = [slot for tier in build.TIER_ORDER for slot in slots[tier].values() if slot["rank"] is not None]
         weakest = min(sized, key=lambda slot: slot["score"])
         self.assertIn(f'{build.crew_label(weakest)} {build.fmt_score(weakest["score"])}', text)
